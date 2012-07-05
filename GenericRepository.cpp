@@ -351,7 +351,6 @@ void GenericRepository::makeRequests(int time){
     trans.setResource(request_res); 
 
     Message* request = new Message(this, recipient, trans); 
-    request->setNextDest(this->facInst());
     request->sendOn();
   }
 }
