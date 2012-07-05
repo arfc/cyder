@@ -259,7 +259,7 @@ void GenericRepository::receiveMessage(msg_ptr msg)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void GenericRepository::addResource(msg_ptr msg, std::vector<rsrc_ptr> manifest) {
+void GenericRepository::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
   // grab each material object off of the manifest
   // and move it into the stocks.
   for (std::vector<rsrc_ptr>::iterator this_rsrc=manifest.begin();
@@ -269,7 +269,7 @@ void GenericRepository::addResource(msg_ptr msg, std::vector<rsrc_ptr> manifest)
     LOG(LEV_DEBUG2, "GenRepoFac") <<"GenericRepository " << ID() << " is receiving material with mass "
         << (*this_rsrc)->quantity();
     if((*this_rsrc)->type()==MATERIAL_RES){
-      stocks_.push_front(std::make_pair(boost::dynamic_pointer_cast<Material>(*this_rsrc), msg->trans().commod()));
+      stocks_.push_front(std::make_pair(boost::dynamic_pointer_cast<Material>(*this_rsrc), trans.commod()));
     } else {
       std::string err = "The GenericRepository only accepts Material-type Resources.";
       throw CycException(err);

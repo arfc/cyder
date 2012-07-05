@@ -110,7 +110,7 @@ public:
      @param trans the transaction to which these resource objects belong
      @param manifest is the set of resources being received
    */ 
-  virtual void addResource(msg_ptr msg, std::vector<rsrc_ptr> manifest);
+  virtual void addResource(Transaction trans, std::vector<rsrc_ptr> manifest);
 /* ------------------- */ 
 
 /* --------------------
