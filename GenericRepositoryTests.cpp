@@ -3,7 +3,7 @@
 #include <dlfcn.h>
 
 #include "GenericRepository.h"
-#include "Utility/Timer.h"
+#include "Timer.h"
 #include "ModelTests.h"
 #include "FacilityModelTests.h"
 

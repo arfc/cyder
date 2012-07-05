@@ -269,7 +269,7 @@ void GenericRepository::addResource(msg_ptr msg, std::vector<rsrc_ptr> manifest)
     LOG(LEV_DEBUG2, "GenRepoFac") <<"GenericRepository " << ID() << " is receiving material with mass "
         << (*this_rsrc)->quantity();
     if((*this_rsrc)->type()==MATERIAL_RES){
-      stocks_.push_front(std::make_pair(boost::dynamic_pointer_cast<Material>(*this_rsrc), msg->commod()));
+      stocks_.push_front(std::make_pair(boost::dynamic_pointer_cast<Material>(*this_rsrc), msg->trans().commod()));
     } else {
       std::string err = "The GenericRepository only accepts Material-type Resources.";
       throw CycException(err);
@@ -344,12 +344,11 @@ void GenericRepository::makeRequests(int time){
     GenericResource* request_res = new GenericResource(in_commod,"kg",requestAmt);
 
     // build the transaction and message
-    Transaction trans;
-    trans.commod = in_commod;
-    trans.is_offer = false;;
+    Transaction trans(this, REQUEST);
+    trans.setCommod(in_commod);
     trans.minfrac = minAmt/requestAmt;
-    trans.price = commod_price;
-    trans.resource = request_res; 
+    trans.setPrice(commod_price);
+    trans.setResource(request_res); 
 
     Message* request = new Message(this, recipient, trans); 
     request->setNextDest(this->facInst());
