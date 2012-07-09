@@ -97,6 +97,7 @@ SET(MODEL_PATH "/Models/Facility/GenericRepository")
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${MODEL_PATH})
 
+INCLUDE_DIRECTORY(GenericRepository)
 SET(GenericRepository_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepository.cpp 
   ${CMAKE_CURRENT_SOURCE_DIR}/Component.cpp
