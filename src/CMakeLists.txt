@@ -48,9 +48,6 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_DIR}/share/cmake-2.8/Modules")
 SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CYCERO_SOURCE_DIR}/CMake )
 
-# Include macros
-INCLUDE(CyceroModuleMacros)
-
 # Debian installs useful LibXML2 files to /usr/include/libxml2/libxml
 FIND_PACKAGE( LibXml2 REQUIRED )
 SET(CYCERO_INCLUDE_DIR ${CYCERO_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
@@ -95,8 +92,6 @@ ELSE (DOXYGEN_FOUND)
 ENDIF (DOXYGEN_FOUND)
 
 # ------------------------- Add the Models -----------------------------------
-ADD_SUBDIRECTORY(Models)
-
 SET(MODEL_PATH "/Models/Facility/GenericRepository")
 
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY
@@ -120,7 +115,7 @@ SET(CYCLUS_LIBRARIES ${CYCLUS_LIBRARIES} GenericRepository )
 
 
 CONFIGURE_FILE(
-  ${CYCLUS_SOURCE_DIR}/Core${MODEL_PATH}/GenericRepository.rng
+  ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepository.rng
   ${PROJECT_BINARY_DIR}/lib${MODEL_PATH}/GenericRepository.rng
   COPYONLY
   )
@@ -132,7 +127,7 @@ install(TARGETS GenericRepository
 
 SET(RNG_INCLUDES ${RNG_INCLUDES}
   "<include href='../lib${MODEL_PATH}/GenericRepository.rng'/>"
-  PARENT_SCOPE)
+  )
 
 install(FILES "GenericRepository.rng"
   DESTINATION cyclus/lib${MODEL_PATH}
@@ -142,11 +137,11 @@ install(FILES "GenericRepository.rng"
 SET(FacilityTestSource ${FacilityTestSource} 
   ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepositoryTests.cpp 
   ${GenericRepository_SRC}
-  PARENT_SCOPE)
+  )
 
 SET(Facility_REFS ${Facility_REFS}
   "<ref name='GenericRepository'/>"
-  PARENT_SCOPE)
+  )
 
 # ------------------------- Google Test -----------------------------------
 
