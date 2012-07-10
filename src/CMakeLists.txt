@@ -75,6 +75,7 @@ SET(LIBS ${LIBS} ${Boost_FILESYSTEM_LIBRARY})
 
 # include the model directories
 SET(CYCERO_INCLUDE_DIR ${CYCERO_INCLUDE_DIR} Testing )
+SET(CYCERO_INCLUDE_DIR ${CYCERO_INCLUDE_DIR} ${CYCERO_SOURCE_DIR})
 
 # include all the directories we just found
 INCLUDE_DIRECTORIES( ${CYCERO_INCLUDE_DIR} )
@@ -111,8 +112,9 @@ SET(GenericRepository_SRC
 
 ADD_LIBRARY( GenericRepository ${GenericRepository_SRC})
 
-SET(CYCLUS_LIBRARIES ${CYCLUS_LIBRARIES} GenericRepository )
+SET(CYCERO_LIBRARIES ${CYCERO_LIBRARIES} GenericRepository )
 
+TARGET_LINK_LIBRARIES( GenericRepository dl ${CYCERO_LIBRARIES} ${LIBS})
 
 CONFIGURE_FILE(
   ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepository.rng
