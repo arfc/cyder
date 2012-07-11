@@ -6,6 +6,8 @@ message("GENERATED TESTS ${GENERATED_FILTER_LIST}")
 # added to ctest.
 set ( CYCERO_TEST_CORE 
   ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepositoryTests.cpp
+  ${CYCLUS_CORE_SHARE_DIR}/FacilityModelTests.cpp
+  ${CYCLUS_CORE_SHARE_DIR}/ModelTests.cpp
   PARENT_SCOPE)
 
 # Add all the tests by parsing the source code

@@ -145,6 +145,16 @@ SET(Facility_REFS ${Facility_REFS}
   "<ref name='GenericRepository'/>"
   )
 
+CONFIGURE_FILE(${CYCLUS_CORE_SHARE_DIR}/cyclus.rng.in
+  ${PROJECT_BINARY_DIR}/share/cyclus.rng @ONLY
+  )
+
+INSTALL(FILES 
+  ${PROJECT_BINARY_DIR}/share/cyclus.rng
+  DESTINATION ${CYCLUS_CORE_SHARE_DIR}
+  COMPONENT data
+  )
+
 # ------------------------- Google Test -----------------------------------
 
 # Be sure to clear these each time
@@ -192,12 +202,6 @@ add_google_tests( ${EXECUTABLE_OUTPUT_PATH}/bin/CyceroUnitTestDriver
 INSTALL(TARGETS CyceroUnitTestDriver
   RUNTIME DESTINATION cycero/bin
   COMPONENT testing
-  )
-
-INSTALL(FILES 
-  ${PROJECT_BINARY_DIR}/share/cyclus.rng
-  DESTINATION ${CYCLUS_CORE_SHARE_DIR}
-  COMPONENT data
   )
 
 FILE(GLOB cyclus_shared "${CYCLUS_CORE_SHARE_DIR}/*")
