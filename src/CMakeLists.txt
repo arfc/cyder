@@ -149,12 +149,30 @@ SET(Facility_REFS ${Facility_REFS}
   "<ref name='GenericRepository'/>"
   )
 
+INCLUDE(CyclusModuleMacros)
 CONFIGURE_FILE(${CYCLUS_CORE_SHARE_DIR}/cyclus.rng.in
   ${PROJECT_BINARY_DIR}/share/cyclus.rng @ONLY
   )
+set_initial()
+CONFIGURE_FILE(${CYCLUS_CORE_SHARE_DIR}/cyclus.rng.in
+  ${PROJECT_BINARY_DIR/share/cyclus.rng.in.tmp @ONLY)
+update_includes()
+update_refs(Facility)
+update_refs(Inst)
+update_refs(Region)
+update_refs(Market)
+update_refs(Converter)
+
+CONFIGURE_FILE(${PROJECT_BINARY_DIR}/share/cyclus.rng.tmp
+  ${{PROJECT_BINARY_DIR}/share/cyclus.rng.in @ONLY)
 
 INSTALL(FILES 
   ${PROJECT_BINARY_DIR}/share/cyclus.rng
+  DESTINATION ${CYCLUS_CORE_SHARE_DIR}
+  COMPONENT data
+  )
+INSTALL(FILES 
+  ${PROJECT_BINARY_DIR}/share/cyclus.rng.in
   DESTINATION ${CYCLUS_CORE_SHARE_DIR}
   COMPONENT data
   )
