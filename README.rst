@@ -1,5 +1,5 @@
 _______________________________________________________________________
-Cycero
+Cyder
 _______________________________________________________________________
 
 This repository holds a generic nuclear repository model intended to be used 
@@ -9,7 +9,7 @@ nuclear repository performance assesment. Rather, it is intended to provide
 medium-fidelity performance metrics of disposal system concepts in generic 
 geologies within the broader cyclus simulation framework.
 
-To see user and developer documentation for this code, please visit the `Cycero Homepage`_.
+To see user and developer documentation for this code, please visit the `Cyder Homepage`_.
 
 
 -----------------------------------------------------------------------
@@ -49,14 +49,14 @@ LISCENSE
     POSSIBILITY OF SUCH DAMAGE.
 
 ------------------------------------------------------------------
-Building Cycero
+Building Cyder
 ------------------------------------------------------------------
 
-The `Cycero Homepage`_ has much more detailed guides and information.
+The `Cyder Homepage`_ has much more detailed guides and information.
 This Readme is intended to be a quick reference for building cyclus for the
 first time.
 
-The Cycero code requires the following software and libraries.
+The Cyder code requires the following software and libraries.
 
 ====================   ==================
 Package                Minimum Version   
@@ -69,18 +69,18 @@ Package                Minimum Version
 ====================   ==================
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Building and Running Cycero
+Building and Running Cyder
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to facilitate future compatibility with multiple platforms, Cycero is
+In order to facilitate future compatibility with multiple platforms, Cyder is
 built using  `Cmake <http://www.cmake.org>`_. This relies on CMake version
 2.8 or higher and the CMakeLists.txt file in `src/`. It is
-recommended that you use CMake to build the Cycero external to the
+recommended that you use CMake to build the Cyder external to the
 source code. To do this, execute the following steps::
 
-    .../cycero/$ mkdir build
-    .../cycero/$ cd build
-    .../cycero/build$ cmake ../src 
+    .../cyder/$ mkdir build
+    .../cyder/$ cd build
+    .../cyder/build$ cmake ../src 
 
 You should see output like this::
 
@@ -88,20 +88,20 @@ You should see output like this::
     ...
     >> -- Configuring done
     >> -- Generating done
-    >> -- Build files have been written to: .../cycero/build
-    /core/build$ make cycero
-    >> Scanning dependencies of target cycero
+    >> -- Build files have been written to: .../cyder/build
+    /core/build$ make cyder
+    >> Scanning dependencies of target cyder
     ...
     ...
-    >> [100%] Building CXX object CMakeFiles/cycero.dir/GenericRepository.cpp.o
-    >> Linking CXX executable cycero
-    >> [100%] Built target cycero
+    >> [100%] Building CXX object CMakeFiles/cyder.dir/GenericRepository.cpp.o
+    >> Linking CXX executable cyder
+    >> [100%] Built target cyder
 
 Now, you need to make and install the library in the cyclus module path. To do 
 so, execute the following steps ::
     
-    .../cycero/build$ make 
-    .../cycero/build$ make install
+    .../cyder/build$ make 
+    .../cyder/build$ make install
 
  If the installation directory is a system path, the ```make install``` step may 
  need to be ```sudo make install```.
@@ -115,7 +115,7 @@ The `Cyclus Homepage`_ has much more detailed guides and information.  If
 you intend to develop for *Cyclus*, please visit it to learn more.
 
 
-.. _`Cycero Homepage`: http://cycero.github.com
+.. _`Cyder Homepage`: http://cyder.github.com
 .. _`Cyclus Homepage`: http://cyclus.github.com
 
 
