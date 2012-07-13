@@ -6,8 +6,8 @@ message("GENERATED TESTS ${GENERATED_FILTER_LIST}")
 # added to ctest.
 set ( CYDER_TEST_CORE 
   ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepositoryTests.cpp
-  ${CYCLUS_CORE_SHARE_DIR}/FacilityModelTests.cpp
-  ${CYCLUS_CORE_SHARE_DIR}/ModelTests.cpp
+  ${CYCLUS_CORE_INCLUDE_DIR}/FacilityModelTests.cpp
+  ${CYCLUS_CORE_INCLUDE_DIR}/ModelTests.cpp
   PARENT_SCOPE)
 
 # Add all the tests by parsing the source code
