@@ -131,9 +131,10 @@ install(TARGETS GenericRepository
   COMPONENT ${MODEL_PATH}
   )
 
-SET(RNG_INCLUDES ${RNG_INCLUDES}
+SET(RNG_INCLUDES "${RNG_INCLUDES}"
   "<include href='../lib${MODEL_PATH}/GenericRepository.rng'/>"
   )
+STRING(REPLACE ";" "\n\ \ " RNG_INCLUDES "${RNG_INCLUDES}")
 
 install(FILES "GenericRepository.rng"
   DESTINATION cyclus/lib${MODEL_PATH}
@@ -145,37 +146,21 @@ SET(FacilityTestSource ${FacilityTestSource}
   ${GenericRepository_SRC}
   )
 
-SET(Facility_REFS ${Facility_REFS}
+SET(Facility_REFS "${Facility_REFS}"
   "<ref name='GenericRepository'/>"
   )
+STRING(REPLACE ";" "\n\ \ \ \ \ \ \ \ " Facility_REFS "${Facility_REFS}")
 
 INCLUDE(CyclusModuleMacros)
 CONFIGURE_FILE(${CYCLUS_CORE_SHARE_DIR}/cyclus.rng.in
   ${PROJECT_BINARY_DIR}/share/cyclus.rng @ONLY
   )
-set_initial()
-CONFIGURE_FILE(${CYCLUS_CORE_SHARE_DIR}/cyclus.rng.in
-  ${PROJECT_BINARY_DIR/share/cyclus.rng.in.tmp @ONLY)
-update_includes()
-update_refs(Facility)
-update_refs(Inst)
-update_refs(Region)
-update_refs(Market)
-update_refs(Converter)
-
-CONFIGURE_FILE(${PROJECT_BINARY_DIR}/share/cyclus.rng.tmp
-  ${{PROJECT_BINARY_DIR}/share/cyclus.rng.in @ONLY)
-
 INSTALL(FILES 
   ${PROJECT_BINARY_DIR}/share/cyclus.rng
   DESTINATION ${CYCLUS_CORE_SHARE_DIR}
   COMPONENT data
   )
-INSTALL(FILES 
-  ${PROJECT_BINARY_DIR}/share/cyclus.rng.in
-  DESTINATION ${CYCLUS_CORE_SHARE_DIR}
-  COMPONENT data
-  )
+install_rng_in()
 
 # ------------------------- Google Test -----------------------------------
 
