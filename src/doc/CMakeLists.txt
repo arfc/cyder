@@ -5,7 +5,7 @@
 # ---------------------------------
 
 IF (DOXYGEN_FOUND)
-  SET(DOXYGEN_SOURCE_DIR ${CYCAMORE_SOURCE_DIR})
+  SET(DOXYGEN_SOURCE_DIR ${CYDER_SOURCE_DIR})
   SET(DOXYGEN_INPUT ${DOC_INPUT_DIR}/doxygen.conf)
   SET(DOXYGEN_OUTPUT ${DOC_OUTPUT_DIR}/html/index.html)
 
