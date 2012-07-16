@@ -10,9 +10,8 @@
 
 #include "CycException.h"
 #include "Component.h"
-//#include "LLNLThermal.h"
-//#include "LumpThermal.h"
-//#include "SindaThermal.h"
+//#include "AnalyticThermal.h"
+#include "LumpedThermal.h"
 #include "StubThermal.h"
 #include "DegRateNuclide.h"
 #include "LumpedNuclide.h"
@@ -29,7 +28,7 @@ using namespace std;
 // Static variables to be initialized.
 int Component::nextID_ = 0;
 
-string Component::thermal_type_names_[] = {"LLNLThermal","LumpThermal","SindaThermal","StubThermal"};
+string Component::thermal_type_names_[] = {"AnalyticThermal","LumpedThermal","StubThermal"};
 string Component::nuclide_type_names_[] = {"DegRateNuclide","LumpedNuclide","MixedCellNuclide","OneDimPPMNuclide","StubNuclide", "TwoDimPPMNuclide" };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,15 +195,12 @@ ThermalModel* Component::getThermalModel(xmlNodePtr cur){
   
   switch(getThermalModelType(model_name))
   {
-//    case LLNL_THERMAL:
-//      toRet = new LLNLThermal(cur);
+//    case ANALYTIC_THERMAL:
+//      toRet = new AnalyticThermal(cur);
 //      break;
-//    case LUMP_THERMAL:
-//      toRet = new LumpThermal(cur);
-//      break;
-//    case SINDA_THERMAL:
-//      toRet = new SindaThermal(cur);
-//      break;
+    case LUMPED_THERMAL:
+      toRet = new LumpedThermal(cur);
+      break;
     case STUB_THERMAL:
       toRet = new StubThermal(cur);
       break;
@@ -251,18 +247,14 @@ ThermalModel* Component::copyThermalModel(ThermalModel* src){
   ThermalModel* toRet;
   switch( src->getThermalModelType() )
   {
-//    case LLNL_THERMAL:
-//      toRet = new LLNLThermal();
+//    case ANALYTIC_THERMAL:
+//      toRet = new AnalyticThermal();
 //      toRet->copy(src);
 //      break;
-//    case LUMP_THERMAL:
-//      toRet = new LumpThermal();
-//      toRet->copy(src);
-//      break;
-//    case SINDA_THERMAL:
-//      toRet = new SindaThermal();
-//      toRet->copy(src);
-//      break;
+    case LUMPED_THERMAL:
+      toRet = new LumpedThermal();
+      toRet->copy(src);
+      break;
     case STUB_THERMAL:
       toRet = new StubThermal();
       toRet->copy(src);
