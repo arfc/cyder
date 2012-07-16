@@ -589,7 +589,8 @@ Component* GenericRepository::setPlacement(Component* comp){
       throw CycException(err);
   }
   // figure out what buffer to put the waste package in
-  comp->setPlacement(x,y,z);
+  point_t point = {x,y,z};
+  comp->setPlacement(point);
   return comp; 
 }
 
