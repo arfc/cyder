@@ -27,7 +27,7 @@ typedef double Power;
 enum ThermalModelType{LLNL_THERMAL, LUMP_THERMAL, SINDA_THERMAL, STUB_THERMAL, LAST_THERMAL};  
 
 /** 
-   @brief Defines interface for thermal models to be used in the GenericRepository
+   @brief Abstract interface for heat transport models to be used in the GenericRepository
    
    ThermalModels such as LumpedHeat, Sinda, LLNL, etc,
    will share this virtual interface so that they can be interchanged within the  

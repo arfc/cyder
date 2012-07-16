@@ -41,7 +41,7 @@ typedef std::map<int, Concentration> ConcMap;
 
 
 /** 
-   @brief Pure Virtual interface for GenericRepository nuclide transport 
+   @brief Abstract interface for GenericRepository nuclide transport 
    
    NuclideModels such as MixedCell, OneDimPPM, etc., will share a 
    virtual interface defined here so that information passing concerning 
