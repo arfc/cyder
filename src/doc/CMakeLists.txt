@@ -55,7 +55,7 @@ ENDIF (WIN32)
 
 ADD_CUSTOM_COMMAND(
   OUTPUT ${DOXYGEN_OUTPUT}
-  COMMAND ${CMAKE_COMMAND} -E echo_append "Building cycamore Documentation..."
+  COMMAND ${CMAKE_COMMAND} -E echo_append "Building cyder Documentation..."
   COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
   COMMAND ${CMAKE_COMMAND} -E echo "Done."
   WORKING_DIRECTORY ${DOC_OUTPUT_DIR}
@@ -63,10 +63,10 @@ ADD_CUSTOM_COMMAND(
   )
 
 
-ADD_CUSTOM_TARGET(cycamoredoc DEPENDS ${DOXYGEN_OUTPUT})
+ADD_CUSTOM_TARGET(cyderdoc DEPENDS ${DOXYGEN_OUTPUT})
 
-ADD_CUSTOM_TARGET(cycamoredoc_forced
-  COMMAND ${CMAKE_COMMAND} -E echo_append "Building cycamore Documentation..."
+ADD_CUSTOM_TARGET(cyderdoc_forced
+  COMMAND ${CMAKE_COMMAND} -E echo_append "Building cyder Documentation..."
   COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
   COMMAND ${CMAKE_COMMAND} -E echo "Done."
   WORKING_DIRECTORY ${DOC_OUTPUT_DIR})
