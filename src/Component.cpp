@@ -1,5 +1,6 @@
 /** \file Component.cpp
  * \brief Implements the Component class used by the Generic Repository 
+ * \author Kathryn D. Huff
  */
 
 #include <iostream>

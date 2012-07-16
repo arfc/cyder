@@ -1,5 +1,7 @@
-// GenericRepository.cpp
-// Implements the GenericRepository class
+/*! \file GenericRepository.cpp
+    \brief Implements the GenericRepository class, the central class of Cyder 
+    \author Kathryn D. Huff
+ */
 #include "Logger.h"
 
 #include "GenericRepository.h"

@@ -1,4 +1,7 @@
-// StubThermal.cpp
+/*! \file StubThermal.cpp
+    \brief Implements the StubThermal class, an example of a concrete ThermalModel
+    \author Kathryn D. Huff
+ */
 #include <iostream>
 #include "Logger.h"
 #include <fstream>

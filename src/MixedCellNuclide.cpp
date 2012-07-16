@@ -1,4 +1,7 @@
-// MixedCellNuclide.cpp
+/*! \file MixedCellNuclide.cpp
+    \brief Implements the MixedCellNuclide class used by the Generic Repository 
+    \author Kathryn D. Huff
+ */
 #include <iostream>
 #include "Logger.h"
 #include <fstream>

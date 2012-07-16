@@ -1,4 +1,7 @@
-// StubNuclide.cpp
+/*! \file StubNuclide.cpp
+    \brief Implements the StubNuclide class that gives an example of a concrete NuclideModel 
+    \author Kathryn D. Huff
+ */
 #include <iostream>
 #include "Logger.h"
 #include <fstream>
