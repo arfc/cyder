@@ -12,7 +12,14 @@
 /**
    enumerated list of types of nuclide transport model
  */
-enum NuclideModelType { DEGRATE_NUCLIDE, LUMPED_NUCLIDE, MIXEDCELL_NUCLIDE, ONEDIMPPM_NUCLIDE, STUB_NUCLIDE, TWODIMPPM_NUCLIDE, LAST_NUCLIDE};
+enum NuclideModelType { 
+  DEGRATE_NUCLIDE, 
+  LUMPED_NUCLIDE, 
+  MIXEDCELL_NUCLIDE, 
+  ONEDIMPPM_NUCLIDE, 
+  STUB_NUCLIDE, 
+  TWODIMPPM_NUCLIDE, 
+  LAST_NUCLIDE};
 
 /**
    type definition for Toxicity in units of Sv 
