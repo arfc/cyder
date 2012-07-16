@@ -1,4 +1,8 @@
-// OneDimPPMNuclide.h
+/*! \file OneDimPPM.h
+  \brief Declares the OneDimPPMclass, a one dimensional permeable porous 
+    medium nuclide transport model. 
+  \author Kathryn D. Huff
+ */
 #if !defined(_ONEDIMPPMNUCLIDE_H)
 #define _ONEDIMPPMNUCLIDE_H
 

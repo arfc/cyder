@@ -1,4 +1,7 @@
-// TwoDimPPMNuclide.h
+/*! \file TwoDimPPM.h
+  \brief Declares the TwoDimPPM class used by the Generic Repository 
+  \author Kathryn D. Huff
+ */
 #if !defined(_TWODIMPPMNUCLIDE_H)
 #define _TWODIMPPMNUCLIDE_H
 

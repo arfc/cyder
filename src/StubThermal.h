@@ -1,4 +1,7 @@
-// StubThermal.h
+/*! \file StubThermal.h
+  \brief Declares the StubThermal class that gives a concrete ThermalModel example 
+  \author Kathryn D. Huff
+ */
 #if !defined(_STUBTHERMAL_H)
 #define _STUBTHERMAL_H
 

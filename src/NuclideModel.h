@@ -1,4 +1,7 @@
-// NuclideModel.h
+/*! \file NuclideModel.h
+  \brief Declares the virtual NuclideModel class used by the Generic Repository 
+  \author Kathryn D. Huff
+ */
 #if !defined(_NUCLIDEMODEL_H)
 #define _NUCLIDEMODEL_H
 

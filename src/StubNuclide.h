@@ -1,4 +1,7 @@
-// StubNuclide.h
+/*! \file StubNuclie.h
+  \brief Declares the StubNuclide class that gives an example of a concrete NuclideModel. 
+  \author Kathryn D. Huff
+ */
 #if !defined(_STUBNUCLIDE_H)
 #define _STUBNUCLIDE_H
 

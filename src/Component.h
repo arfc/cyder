@@ -1,5 +1,6 @@
-/*! Component.h
- Declares the Component class
+/** \file Component.h
+ * \brief Declares the Component class used by the Generic Repository 
+ * \author Kathryn D. Huff
  */
 #if !defined(_COMPONENT_H)
 #define _COMPONENT_H

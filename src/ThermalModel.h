@@ -1,4 +1,7 @@
-// ThermalModel.h
+/*! \file ThermalModel.h
+  \brief Declares the ThermalModel virtual class defining the heat transport model interface. 
+  \author Kathryn D. Huff
+ */
 #if !defined(_THERMALMODEL_H)
 #define _THERMALMODEL_H
 

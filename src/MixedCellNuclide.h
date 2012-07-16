@@ -1,4 +1,7 @@
-// MixedCellNuclide.h
+/*! \file MixedCellNuclide.h
+  \brief Declares the MixedCellNuclide class used by the Generic Repository 
+  \author Kathryn D. Huff
+ */
 #if !defined(_MIXEDCELLNUCLIDE_H)
 #define _MIXEDCELLNUCLIDE_H
 

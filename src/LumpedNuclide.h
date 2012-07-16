@@ -1,4 +1,7 @@
-// LumpedNuclide.h
+/*! \file LumpedNuclide.h
+  \brief Declares the LumpedNuclide class used by the Generic Repository 
+  \author Kathryn D. Huff
+ */
 #if !defined(_LUMPEDNUCLIDE_H)
 #define _LUMPEDNUCLIDE_H
 
