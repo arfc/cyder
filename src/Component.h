@@ -1,5 +1,6 @@
-/*! Component.h
- Declares the Component class
+/** \file Component.h
+ * \brief Declares the Component class used by the Generic Repository 
+ * \author Kathryn D. Huff
  */
 #if !defined(_COMPONENT_H)
 #define _COMPONENT_H
@@ -53,14 +54,21 @@ enum ComponentType {BUFFER, ENV, FF, NF, WF, WP, LAST_EBS};
 /// Enum for type of boundary.
 enum BoundaryType {INNER, OUTER};
 
+/// type definition for an X, Y, Z point definition
+typedef struct point_t{
+  double x_; /**<The x coordinate of the centroid */
+  double y_; /**<The y coordinate of the centroid */
+  double z_; /**<The z coordinate of the centroid */
+}point_t;
+
+
 /// This struct stores the cylindrical Component geometry 
 typedef struct geometry_t{
   Radius inner_radius_; /**<Radius of the inner surface. 0 for solid objects. */
   Radius outer_radius_; /**<Radius of the outer surface. NULL for infinite objects. */
-  double x_; /**<The x coordinate of the centroid */
-  double y_; /**<The y coordinate of the centroid */
-  double z_; /**<The z coordinate of the centroid */
+  point_t centroid_; /**<The coordinate location of the centroid, a point. */
 }geometry_t;
+
 
 /** 
    @brief Defines interface for subcomponents of the GenericRepository
@@ -289,15 +297,15 @@ public:
 
   /// get the x component of the centroid position vector of the object
   const double getX(){
-    return geom_.x_;};
+    return geom_.centroid_.x_;};
 
   /// get the y component of the centroid position vector of the object
   const double getY(){
-    return geom_.y_;};
+    return geom_.centroid_.y_;};
 
   /// get the z component of the centroid position vector of the object
   const double getZ(){
-    return geom_.z_;};
+    return geom_.centroid_.z_;};
 
   /**
      set the parent component 
@@ -309,12 +317,10 @@ public:
   /**
      set the placement of the object
      
-     @param x is the x dimension of the centroid position vector
-     @param y is the y dimension of the centroid position vector
-     @param z is the z dimension of the centroid position vector
+     @param centroid is the centroid position vector
    */
-  void setPlacement(double x, double y, double z){
-    geom_.x_=x, geom_.y_=y, geom_.z_=z; };
+  void setPlacement(point_t centroid){
+    geom_.centroid_=centroid;};
 
 protected:
   /** 

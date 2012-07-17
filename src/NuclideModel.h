@@ -1,4 +1,7 @@
-// NuclideModel.h
+/*! \file NuclideModel.h
+  \brief Declares the virtual NuclideModel class used by the Generic Repository 
+  \author Kathryn D. Huff
+ */
 #if !defined(_NUCLIDEMODEL_H)
 #define _NUCLIDEMODEL_H
 
@@ -12,7 +15,14 @@
 /**
    enumerated list of types of nuclide transport model
  */
-enum NuclideModelType { DEGRATE_NUCLIDE, LUMPED_NUCLIDE, MIXEDCELL_NUCLIDE, ONEDIMPPM_NUCLIDE, STUB_NUCLIDE, TWODIMPPM_NUCLIDE, LAST_NUCLIDE};
+enum NuclideModelType { 
+  DEGRATE_NUCLIDE, 
+  LUMPED_NUCLIDE, 
+  MIXEDCELL_NUCLIDE, 
+  ONEDIMPPM_NUCLIDE, 
+  STUB_NUCLIDE, 
+  TWODIMPPM_NUCLIDE, 
+  LAST_NUCLIDE};
 
 /**
    type definition for Toxicity in units of Sv 
@@ -31,7 +41,7 @@ typedef std::map<int, Concentration> ConcMap;
 
 
 /** 
-   @brief Pure Virtual interface for GenericRepository nuclide transport 
+   @brief Abstract interface for GenericRepository nuclide transport 
    
    NuclideModels such as MixedCell, OneDimPPM, etc., will share a 
    virtual interface defined here so that information passing concerning 

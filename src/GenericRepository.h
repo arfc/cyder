@@ -1,4 +1,7 @@
-// GenericRepository.h
+/*! \file GenericRepository.h
+  \brief Declares the GenericRepository class, the central class of Cyder 
+  \author Kathryn D. Huff
+ */
 #if !defined(_GENERICREPOSITORY_H)
 #define _GENERICREPOSITORY_H
 #include "Logger.h"

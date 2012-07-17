@@ -1,4 +1,7 @@
-// DegRateNuclide.cpp
+/*! \file DegRateNuclide.cpp
+    \brief Implements the DegRateNuclide class used by the Generic Repository 
+    \author Kathryn D. Huff
+ */
 #include <iostream>
 #include "Logger.h"
 #include <fstream>

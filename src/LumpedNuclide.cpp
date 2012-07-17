@@ -1,4 +1,7 @@
-// LumpedNuclide.cpp
+/*! \file LumpedNuclide.cpp
+    \brief Implements the LumpedNuclide class used by the Generic Repository 
+    \author Kathryn D. Huff
+ */
 #include <iostream>
 #include "Logger.h"
 #include <fstream>

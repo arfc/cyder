@@ -1,5 +1,5 @@
-/*! \file StubThermal.cpp
-    \brief Implements the StubThermal class, an example of a concrete ThermalModel
+/*! \file LumpedThermal.cpp
+    \brief Implements the LumpedThermal class, an example of a concrete ThermalModel
     \author Kathryn D. Huff
  */
 #include <iostream>
@@ -10,50 +10,50 @@
 
 #include "CycException.h"
 #include "InputXML.h"
-#include "StubThermal.h"
+#include "LumpedThermal.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void StubThermal::init(xmlNodePtr cur){
+void LumpedThermal::init(xmlNodePtr cur){
   // move the xml pointer to the current model
-  cur = XMLinput->get_xpath_element(cur,"model/StubThermal");
+  cur = XMLinput->get_xpath_element(cur,"model/LumpedThermal");
   // for now, just say you've done it... 
-  LOG(LEV_DEBUG2,"GRSThm") << "The StubThermal Class init(cur) function has been called";;
+  LOG(LEV_DEBUG2,"GRSThm") << "The LumpedThermal Class init(cur) function has been called";;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-StubThermal* StubThermal::deepCopy(){
-  StubThermal* toRet = new StubThermal();
+LumpedThermal* LumpedThermal::deepCopy(){
+  LumpedThermal* toRet = new LumpedThermal();
   toRet->copy(this);
   return toRet;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void StubThermal::copy(ThermalModel* src){
+void LumpedThermal::copy(ThermalModel* src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void StubThermal::print(){
-    LOG(LEV_DEBUG2,"GRSThm") << "StubThermal Model";
+void LumpedThermal::print(){
+    LOG(LEV_DEBUG2,"GRSThm") << "LumpedThermal Model";
 }
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void StubThermal::transportHeat(){
+void LumpedThermal::transportHeat(){
   // This will transport the heat through the component at hand. 
   // It should send some kind of heat object or reset the temperatures. 
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Power StubThermal::getAvailCapacity(){
+Power LumpedThermal::getAvailCapacity(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Temp StubThermal::getPeakTemp(){
+Temp LumpedThermal::getPeakTemp(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Temp StubThermal::getTemp(){
+Temp LumpedThermal::getTemp(){
 }
 
 
