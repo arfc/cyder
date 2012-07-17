@@ -102,6 +102,7 @@ SET(GenericRepository_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/Component.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/DegRateNuclide.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/LumpedNuclide.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/LumpedThermal.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MixedCellNuclide.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OneDimPPMNuclide.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/StubNuclide.cpp

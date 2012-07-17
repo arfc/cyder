@@ -1,4 +1,7 @@
-// TwoDimPPMNuclide.cpp
+/*! \file TwoDimPPMNuclide.cpp
+    \brief Implements the TwoDimPPMNuclide class used by the Generic Repository 
+    \author Kathryn D. Huff
+ */
 #include <iostream>
 #include "Logger.h"
 #include <fstream>

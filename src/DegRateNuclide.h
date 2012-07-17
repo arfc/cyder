@@ -1,4 +1,7 @@
-// DegRateNuclide.h
+/*! \file DegRateNuclide.h
+  \brief Declares the DegRateNuclide class used by the Generic Repository 
+  \author Kathryn D. Huff
+ */
 #if !defined(_DEGRATENUCLIDE_H)
 #define _DEGRATENUCLIDE_H
 

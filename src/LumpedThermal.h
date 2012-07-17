@@ -1,9 +1,9 @@
-/*! \file StubThermal.h
-  \brief Declares the StubThermal class that gives a concrete ThermalModel example 
+/*! \file LumpedThermal.h
+  \brief Declares the LumpedThermal class that gives a concrete ThermalModel example 
   \author Kathryn D. Huff
  */
-#if !defined(_STUBTHERMAL_H)
-#define _STUBTHERMAL_H
+#if !defined(_LUMPEDTHERMAL_H)
+#define _LUMPEDTHERMAL_H
 
 #include <iostream>
 #include "Logger.h"
@@ -16,34 +16,34 @@
 #include "ThermalModel.h"
 
 /** 
-   @brief StubThermal is a skeleton component model that does nothing.
+   @brief LumpedThermal is a skeleton component model that does nothing.
    
    This disposal system component will do nothing. This Component is 
    intended as a skeleton to guide the implementation of new Components. 
    
-   The StubThermal model can be used to represent components of the 
+   The LumpedThermal model can be used to represent components of the 
    disposal system such as the Waste Form, Waste Package, Buffer, Near Field,
    Far Field, and Envrionment.
  */
-class StubThermal : public ThermalModel {
+class LumpedThermal : public ThermalModel {
 public:
   
   /**
      Default constructor for the component class. Creates an empty component.
    */
-  StubThermal(){}; 
+  LumpedThermal(){}; 
 
   /**
      primary constructor reads input from XML node
      
      @param cur input XML node
    */
-  StubThermal(xmlNodePtr cur){};
+  LumpedThermal(xmlNodePtr cur){};
 
   /** 
      Default destructor does nothing.
    */
-  ~StubThermal() {};
+  ~LumpedThermal() {};
 
   /**
      initializes the model parameters from an xmlNodePtr
@@ -55,7 +55,7 @@ public:
   /**
      A function that copies deeply.
    */
-  StubThermal* deepCopy();
+  LumpedThermal* deepCopy();
 
   /**
      copies a component and its parameters from another
@@ -85,14 +85,14 @@ public:
      
      @return impl_name_ the name of the ThermalModel implementation 
    */
-  const virtual ThermalModelType getThermalModelType(){return STUB_THERMAL;}; 
+  const virtual ThermalModelType getThermalModelType(){return LUMPED_THERMAL;}; 
 
   /**
      return the thermal model implementation type
      
      @return impl_name_ the name of the ThermalModel implementation 
    */
-  virtual std::string getThermalModelName(){return "STUB_THERMAL";}; 
+  virtual std::string getThermalModelName(){return "LUMPED_THERMAL";}; 
   
   /**
      gets the peak temperature that this component will experience on the 

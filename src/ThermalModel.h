@@ -1,4 +1,7 @@
-// ThermalModel.h
+/*! \file ThermalModel.h
+  \brief Declares the ThermalModel virtual class defining the heat transport model interface. 
+  \author Kathryn D. Huff
+ */
 #if !defined(_THERMALMODEL_H)
 #define _THERMALMODEL_H
 
@@ -21,12 +24,16 @@ typedef double Power;
 /**
    enumerator for the component models available to the repo
  */
-enum ThermalModelType{LLNL_THERMAL, LUMP_THERMAL, SINDA_THERMAL, STUB_THERMAL, LAST_THERMAL};  
+enum ThermalModelType{
+  ANALYTIC_THERMAL, 
+  LUMPED_THERMAL,
+  STUB_THERMAL, 
+  LAST_THERMAL};  
 
 /** 
-   @brief Defines interface for thermal models to be used in the GenericRepository
+   @brief Abstract interface for heat transport models to be used in the GenericRepository
    
-   ThermalModels such as LumpedHeat, Sinda, LLNL, etc,
+   ThermalModels such as LumpedHeat, Analytic, etc,
    will share this virtual interface so that they can be interchanged within the  
    GenericRepository.
  */
