@@ -67,7 +67,7 @@ class GenericRepositoryTest : public ::testing::Test {
       test_model_1 = new_model();
       test_model_2 = new_model();
       test_model_1->setModelType("Facility");
-      test_model_1->setModelType("Facility");
+      test_model_2->setModelType("Facility");
     };
     virtual void TearDown() {
     }
@@ -94,6 +94,21 @@ TEST_F(GenericRepositoryTest, loadModel) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-//INSTANTIATE_TEST_CASE_P(GenericRepositoryFac, FacilityModelTests, Values(&GenericRepositoryFacilityConstructor));
-//INSTANTIATE_TEST_CASE_P(GenericRepositoryFac, ModelTests, Values(&GenericRepositoryModelConstructor));
+INSTANTIATE_TEST_CASE_P(GenericRepositoryFac, FacilityModelTests, Values(&GenericRepositoryFacilityConstructor));
+INSTANTIATE_TEST_CASE_P(GenericRepositoryFac, ModelTests, Values(&GenericRepositoryModelConstructor));
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+
+
+
+
 

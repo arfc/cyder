@@ -25,7 +25,6 @@ typedef double Power;
    enumerator for the component models available to the repo
  */
 enum ThermalModelType{
-  ANALYTIC_THERMAL, 
   LUMPED_THERMAL,
   STUB_THERMAL, 
   LAST_THERMAL};  
@@ -33,7 +32,7 @@ enum ThermalModelType{
 /** 
    @brief Abstract interface for heat transport models to be used in the GenericRepository
    
-   ThermalModels such as LumpedHeat, Analytic, etc,
+   ThermalModels such as Lumped, Stub etc,
    will share this virtual interface so that they can be interchanged within the  
    GenericRepository.
  */
@@ -56,13 +55,12 @@ public:
   virtual void copy(ThermalModel* src)=0; 
 
   /**
-     standard verbose printer includes current temp and concentrations
+     standard verbose printer should include current temp and concentrations
    */
   virtual void print()=0; 
 
   /**
      Reports the peak thermal source, in Watts, that a component can contain
-     
    */
   virtual Power getAvailCapacity() = 0;
 

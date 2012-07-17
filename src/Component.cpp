@@ -10,7 +10,6 @@
 
 #include "CycException.h"
 #include "Component.h"
-//#include "AnalyticThermal.h"
 #include "LumpedThermal.h"
 #include "StubThermal.h"
 #include "DegRateNuclide.h"
@@ -28,14 +27,26 @@ using namespace std;
 // Static variables to be initialized.
 int Component::nextID_ = 0;
 
-string Component::thermal_type_names_[] = {"AnalyticThermal","LumpedThermal","StubThermal"};
-string Component::nuclide_type_names_[] = {"DegRateNuclide","LumpedNuclide","MixedCellNuclide","OneDimPPMNuclide","StubNuclide", "TwoDimPPMNuclide" };
+string Component::thermal_type_names_[] = {
+  "LumpedThermal",
+  "StubThermal"
+};
+string Component::nuclide_type_names_[] = {
+  "DegRateNuclide",
+  "LumpedNuclide",
+  "MixedCellNuclide",
+  "OneDimPPMNuclide",
+  "StubNuclide", 
+  "TwoDimPPMNuclide" 
+};
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component(){
   name_ = "";
   geom_.inner_radius_ = 0;  // 0 indicates a solid
   geom_.outer_radius_ = NULL;   // NULL indicates an infinite object
+  point_t center = {0,0,0};
+  geom_.centroid_ = center; // by default, the origin is the center
 
   temperature_ = 0;
   temperature_lim_ = 373;
@@ -49,6 +60,10 @@ Component::Component(){
   mass_hist_ = MassHistory();
 
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
+};
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::init(xmlNodePtr cur){
@@ -109,6 +124,38 @@ void Component::print(){
   }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::absorb(mat_rsrc_ptr mat_to_add){
+  try{
+    nuclide_model_->absorb(mat_to_add);
+  } catch ( exception& e ) {
+    CLOG(LEV_ERROR) << "Error occured in component absorb function." << e.what();
+  }
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::extract(mat_rsrc_ptr mat_to_rem){
+  try{
+    nuclide_model_->extract(mat_to_rem);
+  } catch ( exception& e ) {
+    CLOG(LEV_ERROR) << "Error occured in component extract function." << e.what();
+  }
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::transportHeat(){
+  if ( NULL == thermal_model_ ) {
+    CLOG(LEV_ERROR) << "Error, no thermal_model_ loaded before Component::transportHeat." ;
+  } else {
+    thermal_model_->transportHeat();
+  }
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::transportNuclides(){
+  if ( NULL == nuclide_model_ ) {
+    CLOG(LEV_ERROR) << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
+  } else { 
+    nuclide_model_->transportNuclides();
+  }
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* Component::load(ComponentType type, Component* to_load) {
   to_load->setParent(this);
@@ -195,9 +242,6 @@ ThermalModel* Component::getThermalModel(xmlNodePtr cur){
   
   switch(getThermalModelType(model_name))
   {
-//    case ANALYTIC_THERMAL:
-//      toRet = new AnalyticThermal(cur);
-//      break;
     case LUMPED_THERMAL:
       toRet = new LumpedThermal(cur);
       break;
@@ -247,10 +291,6 @@ ThermalModel* Component::copyThermalModel(ThermalModel* src){
   ThermalModel* toRet;
   switch( src->getThermalModelType() )
   {
-//    case ANALYTIC_THERMAL:
-//      toRet = new AnalyticThermal();
-//      toRet->copy(src);
-//      break;
     case LUMPED_THERMAL:
       toRet = new LumpedThermal();
       toRet->copy(src);

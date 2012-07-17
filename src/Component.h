@@ -69,7 +69,6 @@ typedef struct geometry_t{
   point_t centroid_; /**<The coordinate location of the centroid, a point. */
 }geometry_t;
 
-
 /** 
    @brief Defines interface for subcomponents of the GenericRepository
    
@@ -89,7 +88,7 @@ public:
   /** 
      Default destructor does nothing.
    */
-  ~Component() {};
+  ~Component();
 
   /**
      initializes the model parameters from an xmlNodePtr
@@ -113,31 +112,31 @@ public:
   /**
      Absorbs the contents of the given Material into this Component.
      
-     @param matToAdd the Component to be absorbed
+     @param mat_to_add the Material to be absorbed
    */
-  void absorb(mat_rsrc_ptr matToAdd){nuclide_model_->absorb(matToAdd);};
+  void absorb(mat_rsrc_ptr mat_to_add);
 
   /**
      Extracts the contents of the given Material from this Component. Use this 
      function for decrementing a Component's mass balance after transferring 
      through a link. 
      
-     @param matToRem the Material whose composition we want to decrement 
+     @param mat_to_rem the Material whose composition we want to decrement 
      against this Component
    */
-  void extract(mat_rsrc_ptr matToRem){nuclide_model_->extract(matToRem);};
+  void extract(mat_rsrc_ptr mat_to_rem);
 
   /**
      Transports heat from the inner boundary to the outer boundary in this 
      component
    */
-  void transportHeat(){thermal_model_->transportHeat();};
+  void transportHeat();
 
   /**
      Transports nuclides from the inner boundary to the outer boundary in this 
      component
    */
-  void transportNuclides(){nuclide_model_->transportNuclides();};
+  void transportNuclides();
 
   /** 
      Loads this component with another component.
