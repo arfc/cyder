@@ -10,7 +10,6 @@
 
 #include "CycException.h"
 #include "Component.h"
-//#include "AnalyticThermal.h"
 #include "LumpedThermal.h"
 #include "StubThermal.h"
 #include "DegRateNuclide.h"
@@ -28,8 +27,16 @@ using namespace std;
 // Static variables to be initialized.
 int Component::nextID_ = 0;
 
-string Component::thermal_type_names_[] = {"AnalyticThermal","LumpedThermal","StubThermal"};
-string Component::nuclide_type_names_[] = {"DegRateNuclide","LumpedNuclide","MixedCellNuclide","OneDimPPMNuclide","StubNuclide", "TwoDimPPMNuclide" };
+string Component::thermal_type_names_[] = {
+  "LumpedThermal",
+  "StubThermal"};
+string Component::nuclide_type_names_[] = {
+  "DegRateNuclide",
+  "LumpedNuclide",
+  "MixedCellNuclide",
+  "OneDimPPMNuclide",
+  "StubNuclide", 
+  "TwoDimPPMNuclide" };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component(){
@@ -49,6 +56,9 @@ Component::Component(){
   mass_hist_ = MassHistory();
 
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Component::~Component(){ // @TODO is there anything to delete? Make this virtual? };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::init(xmlNodePtr cur){
@@ -195,9 +205,6 @@ ThermalModel* Component::getThermalModel(xmlNodePtr cur){
   
   switch(getThermalModelType(model_name))
   {
-//    case ANALYTIC_THERMAL:
-//      toRet = new AnalyticThermal(cur);
-//      break;
     case LUMPED_THERMAL:
       toRet = new LumpedThermal(cur);
       break;
@@ -247,10 +254,6 @@ ThermalModel* Component::copyThermalModel(ThermalModel* src){
   ThermalModel* toRet;
   switch( src->getThermalModelType() )
   {
-//    case ANALYTIC_THERMAL:
-//      toRet = new AnalyticThermal();
-//      toRet->copy(src);
-//      break;
     case LUMPED_THERMAL:
       toRet = new LumpedThermal();
       toRet->copy(src);
