@@ -236,21 +236,34 @@ void GenericRepository::copyFreshModel(Model* src)
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-std::string GenericRepository::str() { 
+std::string GenericRepository::str() {
+ 
   // this should ultimately print all of the components loaded into this repository.
   std::stringstream fac_model_ss;
   fac_model_ss << FacilityModel::str(); 
   std::string gen_repo_msg;
-  gen_repo_msg += "with far_field_ {" +  far_field_->name()
-    + "}, buffer {"
-    + buffer_template_->name() 
-    + "}, wp {"
-    + wp_templates_.front()->name()
-    + "}, wf {"
-    + wf_templates_.front()->name()
-    + "} which stores commodity {"
-    + in_commods_.front()
-    + "} among others.";
+
+  gen_repo_msg += "}, wf {";
+  for( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
+      iter != waste_forms_.end();
+      iter++){
+    gen_repo_msg += (*iter)->name();
+  }
+  gen_repo_msg += "}, wp {";
+  for( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
+      iter != waste_packages_.end();
+      iter++){
+    gen_repo_msg += (*iter)->name();
+  }
+  gen_repo_msg += "}, buffer {";
+  for( std::deque< Component* >::const_iterator iter = buffers_.begin();
+      iter != buffers_.end();
+      iter++){
+    gen_repo_msg += (*iter)->name();
+  }
+  if(NULL != far_field_){
+    gen_repo_msg += "with far_field_ {" +  far_field_->name();
+  }
   fac_model_ss << gen_repo_msg;
   return fac_model_ss.str();
 };
@@ -357,7 +370,6 @@ void GenericRepository::makeRequests(int time){
     request->sendOn();
   }
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double GenericRepository::getCapacity(std::string commod){
@@ -640,7 +652,9 @@ void GenericRepository::transportNuclides(){
       iter++){
     (*iter)->transportNuclides();
   }
-  far_field_->transportNuclides();
+  if(NULL != far_field_){
+    far_field_->transportNuclides();
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

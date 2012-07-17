@@ -150,10 +150,10 @@ void Component::transportHeat(){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportNuclides(){
-  try{
+  if ( NULL == nuclide_model_ ) {
+    CLOG(LEV_ERROR) << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
+  } else { 
     nuclide_model_->transportNuclides();
-  } catch ( exception& e ) {
-    CLOG(LEV_ERROR) << "Error occured in component transport_nuclides function." << e.what();
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
