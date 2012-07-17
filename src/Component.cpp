@@ -29,20 +29,24 @@ int Component::nextID_ = 0;
 
 string Component::thermal_type_names_[] = {
   "LumpedThermal",
-  "StubThermal"};
+  "StubThermal"
+};
 string Component::nuclide_type_names_[] = {
   "DegRateNuclide",
   "LumpedNuclide",
   "MixedCellNuclide",
   "OneDimPPMNuclide",
   "StubNuclide", 
-  "TwoDimPPMNuclide" };
+  "TwoDimPPMNuclide" 
+};
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component(){
   name_ = "";
   geom_.inner_radius_ = 0;  // 0 indicates a solid
   geom_.outer_radius_ = NULL;   // NULL indicates an infinite object
+  point_t center = {0,0,0};
+  geom_.centroid_ = center; // by default, the origin is the center
 
   temperature_ = 0;
   temperature_lim_ = 373;
@@ -58,7 +62,8 @@ Component::Component(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component::~Component(){ // @TODO is there anything to delete? Make this virtual? };
+Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
+};
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::init(xmlNodePtr cur){
@@ -119,6 +124,38 @@ void Component::print(){
   }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::absorb(mat_rsrc_ptr mat_to_add){
+  try{
+    nuclide_model_->absorb(mat_to_add);
+  } catch ( exception& e ) {
+    CLOG(LEV_ERROR) << "Error occured in component absorb function." << e.what();
+  }
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::extract(mat_rsrc_ptr mat_to_rem){
+  try{
+    nuclide_model_->extract(mat_to_rem);
+  } catch ( exception& e ) {
+    CLOG(LEV_ERROR) << "Error occured in component extract function." << e.what();
+  }
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::transportHeat(){
+  if ( NULL == thermal_model_ ) {
+    CLOG(LEV_ERROR) << "Error, no thermal_model_ loaded before Component::transportHeat." ;
+  } else {
+    thermal_model_->transportHeat();
+  }
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::transportNuclides(){
+  try{
+    nuclide_model_->transportNuclides();
+  } catch ( exception& e ) {
+    CLOG(LEV_ERROR) << "Error occured in component transport_nuclides function." << e.what();
+  }
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* Component::load(ComponentType type, Component* to_load) {
   to_load->setParent(this);

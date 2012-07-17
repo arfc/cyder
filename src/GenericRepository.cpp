@@ -60,6 +60,7 @@ GenericRepository::GenericRepository() {
   inventory_ = std::deque< WasteStream >();
   waste_packages_ = std::deque< Component* >();
   waste_forms_ = std::deque< Component* >();
+  far_field_ = new Component(); 
   is_full_ = false;
   mapVars("x","FLOAT", &x_) ;
   mapVars("y","FLOAT", &y_) ;
@@ -615,7 +616,9 @@ void GenericRepository::transportHeat(){
       iter++){
     (*iter)->transportHeat();
   }
-  far_field_->transportHeat();
+  if(NULL != far_field_){
+    far_field_->transportHeat();
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

@@ -67,7 +67,7 @@ class GenericRepositoryTest : public ::testing::Test {
       test_model_1 = new_model();
       test_model_2 = new_model();
       test_model_1->setModelType("Facility");
-      test_model_1->setModelType("Facility");
+      test_model_2->setModelType("Facility");
     };
     virtual void TearDown() {
     }
