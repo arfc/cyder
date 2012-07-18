@@ -129,7 +129,7 @@ void Component::absorb(mat_rsrc_ptr mat_to_add){
   try{
     nuclide_model_->absorb(mat_to_add);
   } catch ( exception& e ) {
-    CLOG(LEV_ERROR) << "Error occured in component absorb function." << e.what();
+    LOG(LEV_ERROR, "GRComp") << "Error occured in component absorb function." << e.what();
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -137,13 +137,13 @@ void Component::extract(mat_rsrc_ptr mat_to_rem){
   try{
     nuclide_model_->extract(mat_to_rem);
   } catch ( exception& e ) {
-    CLOG(LEV_ERROR) << "Error occured in component extract function." << e.what();
+    LOG(LEV_ERROR, "GRComp") << "Error occured in component extract function." << e.what();
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportHeat(){
   if ( NULL == thermal_model_ ) {
-    CLOG(LEV_ERROR) << "Error, no thermal_model_ loaded before Component::transportHeat." ;
+    LOG(LEV_ERROR, "GRComp") << "Error, no thermal_model_ loaded before Component::transportHeat." ;
   } else {
     thermal_model_->transportHeat();
   }
@@ -151,7 +151,7 @@ void Component::transportHeat(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportNuclides(){
   if ( NULL == nuclide_model_ ) {
-    CLOG(LEV_ERROR) << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
+    LOG(LEV_ERROR, "GRComp") << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
   } else { 
     nuclide_model_->transportNuclides();
   }
