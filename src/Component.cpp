@@ -70,12 +70,12 @@ void Component::init(xmlNodePtr cur){
   ID_=nextID_++;
   
   name_ = XMLinput->get_xpath_content(cur,"name");
-  type_ = getComponentType(XMLinput->get_xpath_content(cur,"componenttype"));
+  type_ = componentEnum(XMLinput->get_xpath_content(cur,"componenttype"));
   geom_.inner_radius_ = strtod(XMLinput->get_xpath_content(cur,"innerradius"),NULL);
   geom_.outer_radius_ = strtod(XMLinput->get_xpath_content(cur,"outerradius"),NULL);
 
-  thermal_model_ = getThermalModel(cur);
-  nuclide_model_ = getNuclideModel(cur);
+  thermal_model_ = thermal_model(cur);
+  nuclide_model_ = nuclide_model(cur);
 
   parent_component_ = NULL;
 
@@ -165,11 +165,14 @@ Component* Component::load(ComponentType type, Component* to_load) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool Component::isFull() {
-  return true; //TEMPORARY
+  return true; // @TODO imperative, add logic here
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ComponentType Component::getComponentType(std::string type_name) {
+ComponentType Component::type(){return type_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ComponentType Component::componentEnum(std::string type_name) {
   ComponentType toRet = LAST_EBS;
   string component_type_names[] = {"BUFFER", "ENV", "FF", "NF", "WF", "WP"};
   for(int type = 0; type < LAST_EBS; type++){
@@ -192,7 +195,7 @@ ComponentType Component::getComponentType(std::string type_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ThermalModelType Component::getThermalModelType(std::string type_name) {
+ThermalModelType Component::thermalEnum(std::string type_name) {
   ThermalModelType toRet = LAST_THERMAL;
   for(int type = 0; type < LAST_THERMAL; type++){
     if(thermal_type_names_[type] == type_name){
@@ -214,7 +217,7 @@ ThermalModelType Component::getThermalModelType(std::string type_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelType Component::getNuclideModelType(std::string type_name) {
+NuclideModelType Component::nuclideEnum(std::string type_name) {
   NuclideModelType toRet = LAST_NUCLIDE;
   for(int type = 0; type < LAST_NUCLIDE; type++){
     if(nuclide_type_names_[type] == type_name){
@@ -236,11 +239,11 @@ NuclideModelType Component::getNuclideModelType(std::string type_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ThermalModel* Component::getThermalModel(xmlNodePtr cur){
+ThermalModel* Component::thermal_model(xmlNodePtr cur){
   ThermalModel* toRet;
   string model_name = XMLinput->get_xpath_name(cur,"thermalmodel/*");
   
-  switch(getThermalModelType(model_name))
+  switch(thermalEnum(model_name))
   {
     case LUMPED_THERMAL:
       toRet = new LumpedThermal(cur);
@@ -254,12 +257,12 @@ ThermalModel* Component::getThermalModel(xmlNodePtr cur){
   return toRet;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* Component::getNuclideModel(xmlNodePtr cur){
+NuclideModel* Component::nuclide_model(xmlNodePtr cur){
   NuclideModel* toRet;
 
   string model_name = XMLinput->get_xpath_name(cur,"nuclidemodel/*");
 
-  switch(getNuclideModelType(model_name))
+  switch(nuclideEnum(model_name))
   {
     case DEGRATE_NUCLIDE:
       toRet = new DegRateNuclide(cur);
@@ -289,7 +292,7 @@ NuclideModel* Component::getNuclideModel(xmlNodePtr cur){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModel* Component::copyThermalModel(ThermalModel* src){
   ThermalModel* toRet;
-  switch( src->getThermalModelType() )
+  switch( src->type() )
   {
     case LUMPED_THERMAL:
       toRet = new LumpedThermal();
@@ -308,7 +311,7 @@ ThermalModel* Component::copyThermalModel(ThermalModel* src){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* Component::copyNuclideModel(NuclideModel* src){
   NuclideModel* toRet;
-  switch(src->getNuclideModelType())
+  switch(src->type())
   {
     case DEGRATE_NUCLIDE:
       toRet = new DegRateNuclide();

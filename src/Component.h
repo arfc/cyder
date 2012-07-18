@@ -154,11 +154,11 @@ public:
   bool isFull() ;
 
   /**
-     Returns the ComponentType of this component
+     Returns the ComponentType of this component (WF, WP, etc.)
      
      @return type_ the ComponentType of this component
    */
-  ComponentType getComponentType(){return type_;};
+  ComponentType type_;
 
   /**
      Enumerates a string if it is one of the named ComponentTypes
@@ -167,21 +167,21 @@ public:
      @return the ComponentType enum associated with this string by the 
      component_type_names_ list 
    */
-  ComponentType getComponentType(std::string type);
+  ComponentType componentEnum(std::string type);
   
   /**
      Enumerates a string if it is one of the named ThermalModelTypes
      
      @param type the name of the ThermalModelType (i.e. StubThermal)
    */
-  ThermalModelType getThermalModelType(std::string type);
+  ThermalModelType thermalEnum(std::string type);
 
   /** 
      Enumerates a string if it is one of the named NuclideModelTypes
      
      @param type the name of the NuclideModelType (i.e. StubNuclide)
    */
-  NuclideModelType getNuclideModelType(std::string type);
+  NuclideModelType nuclideEnum(std::string type);
 
   /** 
      Returns a new thermal model of the string type xml node pointer
@@ -286,13 +286,18 @@ public:
   const Temp getTemp(){return temperature_;};
 
   /**
-     get a Radius of the object
+     get the inner radius of the object
      
-     @param type indicates whether to return the inner or outer radius
-     @return inner_radius__ or outer_radius__
+     @return inner_radius_ in [meters]
    */
-  const Radius getRadius(BoundaryType type){
-    return (type==INNER)?geom_.inner_radius_:geom_.outer_radius_; };
+  const Radius inner_radius();
+
+  /**
+     get the inner radius of the object
+
+     @return outer_radius_ in [meters]
+   */
+  const Radius outer_radius();
 
   /// get the x component of the centroid position vector of the object
   const double getX(){

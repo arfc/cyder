@@ -121,14 +121,14 @@ void GenericRepository::initComponents(xmlNodePtr cur) {
   // first, initialize the waste forms.
   for (int i=0;i<nodes->nodeNr;i++) {
     xmlNodePtr comp_node = nodes->nodeTab[i];
-    if (new_comp->getComponentType(XMLinput->get_xpath_content(comp_node,"componenttype")) == WF){
+    if (new_comp->componentEnum(XMLinput->get_xpath_content(comp_node,"componenttype")) == WF){
       this->initComponent(comp_node);
     }
   }
   // now, initialize the rest 
   for (int i=0;i<nodes->nodeNr;i++) {
     xmlNodePtr comp_node = nodes->nodeTab[i];
-    if (new_comp->getComponentType(XMLinput->get_xpath_content(comp_node,"componenttype")) 
+    if (new_comp->componentEnum(XMLinput->get_xpath_content(comp_node,"componenttype")) 
        != WF){
       this->initComponent(comp_node);
     }
@@ -148,7 +148,7 @@ Component* GenericRepository::initComponent(xmlNodePtr cur){
   xmlNodeSetPtr allowed_sub_nodes;
   std::string allowed_commod;
 
-  switch(toRet->getComponentType(comp_type)) {
+  switch(toRet->componentEnum(comp_type)) {
     case BUFFER:
       buffer_template_ = toRet;
       // do the buffers have allowed waste package types?
@@ -573,7 +573,7 @@ Component* GenericRepository::loadBuffer(Component* waste_package){
 Component* GenericRepository::setPlacement(Component* comp){
   double x,y,z;
   // figure out what type of component it is
-  switch(comp->getComponentType()) 
+  switch(comp->type()) 
   {
     case FF :
       x = x_/2;
@@ -597,7 +597,7 @@ Component* GenericRepository::setPlacement(Component* comp){
       break;
     default :
       std::string err = "ComponentType, '";
-      err += comp->getComponentType();
+      err += comp->type();
       err +="' is not a valid type for Component ";
       err += comp->name();
       err += ".";
