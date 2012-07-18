@@ -49,11 +49,11 @@ Power StubThermal::getAvailCapacity(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Temp StubThermal::getPeakTemp(){
+Temp StubThermal::peak_temp(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Temp StubThermal::getTemp(){
+Temp StubThermal::temp(){
 }
 
 

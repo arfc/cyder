@@ -48,13 +48,13 @@ Component::Component(){
   point_t center = {0,0,0};
   geom_.centroid_ = center; // by default, the origin is the center
 
-  temperature_ = 0;
-  temperature_lim_ = 373;
-  toxicity_lim_ = 10 ;
+  temp_ = 0;
+  temp_lim_ = 373;
+  tox_lim_ = 10 ;
 
   thermal_model_ = NULL;
   nuclide_model_ = NULL;
-  parent_component_ = NULL;
+  parent_ = NULL;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -77,7 +77,7 @@ void Component::init(xmlNodePtr cur){
   thermal_model_ = thermal_model(cur);
   nuclide_model_ = nuclide_model(cur);
 
-  parent_component_ = NULL;
+  parent_ = NULL;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -104,11 +104,11 @@ void Component::copy(Component* src){
     throw CycException(err);
   }
   nuclide_model_ = copyNuclideModel(src->nuclide_model_);
-  parent_component_ = NULL;
+  parent_ = NULL;
 
-  temperature_ = src->temperature_;
-  temperature_lim_ = src->temperature_lim_ ;
-  toxicity_lim_ = src->toxicity_lim_ ;
+  temp_ = src->temp_;
+  temp_lim_ = src->temp_lim_ ;
+  tox_lim_ = src->tox_lim_ ;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -119,7 +119,7 @@ void Component::copy(Component* src){
 void Component::print(){
   LOG(LEV_DEBUG2,"GRComp") << "Component: " << this->name();
   LOG(LEV_DEBUG2,"GRComp") << "Contains Materials:";
-  for(int i=0; i<this->getWastes().size() ; i++){
+  for(int i=0; i<this->wastes().size() ; i++){
     LOG(LEV_DEBUG2,"GRComp") << wastes_[i];
   }
 }
@@ -159,7 +159,7 @@ void Component::transportNuclides(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* Component::load(ComponentType type, Component* to_load) {
   to_load->setParent(this);
-  daughter_components_.push_back(to_load);
+  daughters_.push_back(to_load);
   return this;
 }
 
@@ -337,4 +337,51 @@ NuclideModel* Component::copyNuclideModel(NuclideModel* src){
   toRet->copy(src);
   return toRet;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const int Component::ID(){return ID_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const std::string Component::name(){return name_;} 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const std::vector<Component*> Component::daughters(){return daughters_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+Component* Component::parent(){return parent_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const vector<mat_rsrc_ptr> Component::wastes(){return wastes_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Temp Component::temp_lim(){return temp_lim_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Tox Component::tox_lim(){return tox_lim_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Temp Component::peak_temp(BoundaryType type) { 
+  return (type==INNER)?peak_inner_temp_:peak_outer_temp_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Radius Component::inner_radius(){return geom_.inner_radius_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Radius Component::outer_radius(){return geom_.outer_radius_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const point_t Component::centroid(){return geom_.centroid_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const double Component::x(){return (centroid()).x_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const double Component::y(){return (centroid()).y_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const double Component::z(){return (centroid()).z_;}
+
+
+
+
 

@@ -22,22 +22,20 @@ class FakeComponent : public Component {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 class ComponentTest : public ::testing::Test {
   protected:
-    Component* test_component;
+    FakeComponent* test_component;
 
     virtual void SetUp(){
-      test_component=new Component();
-    };
+      test_component = new FakeComponent();
+    }
     virtual void TearDown() {
     }
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, defaultConstructor) {
-  ASSERT_EQUAL(test_component->name(), "");
-  ASSERT_EQUAL(test_component->inner_radius(), 0);
-  ASSERT_EQUAL(test_component->outer_radius(), NULL);
+  ASSERT_EQ(test_component->name(), "");
+  ASSERT_EQ(test_component->inner_radius(), 0);
+  ASSERT_EQ(test_component->outer_radius(), NULL);
 }
 
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 

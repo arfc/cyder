@@ -456,9 +456,9 @@ void GenericRepository::emplaceWaste(){
       // if the package is full
       if( iter->isFull()
           // and not too hot
-          //&& (*iter)->getPeakTemp(OUTER) <= current_buffer->getTempLim() or 
+          //&& (*iter)->peak_temp(OUTER) <= current_buffer->temp_lim() or 
           //too toxic
-          //&& (*iter)->getPeakTox() <= current_buffer->getToxLim()
+          //&& (*iter)->peak_tox() <= current_buffer->tox_lim()
           ) {
         // emplace it in the buffer
         loadBuffer(iter);
@@ -559,7 +559,7 @@ Component* GenericRepository::loadBuffer(Component* waste_package){
   setPlacement(waste_package);
   addComponentToTable(waste_package);
   // set the location of the waste forms within the waste package
-  std::vector<Component*> daughters = waste_package->getDaughters();
+  std::vector<Component*> daughters = waste_package->daughters();
   for (std::vector<Component*>::iterator iter = daughters.begin();  
       iter != daughters.end(); 
       iter ++){
@@ -586,14 +586,14 @@ Component* GenericRepository::setPlacement(Component* comp){
       z = dz_ ; 
       break;
     case WP :
-      x = (comp->getParent())->getX();
+      x = (comp->parent())->x();
       y = (emplaced_waste_packages_.size()*dy_ - dy_/2) ; 
       z = dz_ ; 
       break;
     case WF :
-      x = (comp->getParent())->getX();
-      y = (comp->getParent())->getY();
-      z = (comp->getParent())->getZ();
+      x = (comp->parent())->x();
+      y = (comp->parent())->y();
+      z = (comp->parent())->z();
       break;
     default :
       std::string err = "ComponentType, '";

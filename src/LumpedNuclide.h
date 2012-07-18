@@ -111,12 +111,12 @@ public:
   /**
      Returns the nuclide model type
    */
-  virtual NuclideModelType getNuclideModelType(){return LUMPED_NUCLIDE;};
+  virtual NuclideModelType type(){return LUMPED_NUCLIDE;};
 
   /**
      Returns the nuclide model type name
    */
-  virtual std::string getNuclideModelName(){return "LUMPED_NUCLIDE";};
+  virtual std::string name(){return "LUMPED_NUCLIDE";};
 
   /**
      returns the peak Toxicity this object will experience during the 
@@ -124,14 +124,14 @@ public:
      
      @return peak_toxicity
    */
-  const virtual Tox getPeakTox(){};
+  const virtual Tox peak_tox(){};
 
   /**
      returns the concentration map for this component at the time specified
      
      @param time the time to query the concentration map
    */
-  virtual ConcMap getConcMap(int time){};
+  virtual ConcMap conc_map(int time){};
 
 private:
   /**
