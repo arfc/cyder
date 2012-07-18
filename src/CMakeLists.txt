@@ -132,11 +132,6 @@ install(TARGETS GenericRepository
   COMPONENT ${MODEL_PATH}
   )
 
-SET(RNG_INCLUDES "${RNG_INCLUDES}"
-  "<include href='../lib${MODEL_PATH}/GenericRepository.rng'/>"
-  )
-STRING(REPLACE ";" "\n\ \ " RNG_INCLUDES "${RNG_INCLUDES}")
-
 install(FILES "GenericRepository.rng"
   DESTINATION cyclus/lib${MODEL_PATH}
   COMPONENT "${MODEL_PATH}.rng"
@@ -147,21 +142,7 @@ SET(FacilityTestSource ${FacilityTestSource}
   ${GenericRepository_SRC}
   )
 
-SET(Facility_REFS "${Facility_REFS}"
-  "<ref name='GenericRepository'/>"
-  )
-STRING(REPLACE ";" "\n\ \ \ \ \ \ \ \ " Facility_REFS "${Facility_REFS}")
-
 INCLUDE(CyclusModuleMacros)
-CONFIGURE_FILE(${CYCLUS_CORE_SHARE_DIR}/cyclus.rng.in
-  ${PROJECT_BINARY_DIR}/share/cyclus.rng @ONLY
-  )
-INSTALL(FILES 
-  ${PROJECT_BINARY_DIR}/share/cyclus.rng
-  DESTINATION ${CYCLUS_CORE_SHARE_DIR}
-  COMPONENT data
-  )
-install_rng_in()
 
 # ------------------------- Google Test -----------------------------------
 
@@ -241,4 +222,7 @@ SET(CPACK_PACKAGE_EXECUTABLES "cyder" "CyderUnitTestDriver")
 
 INCLUDE(CPack)
 
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/post_install/postinstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/post_install/postinstall.cmake" @ONLY)
 
+ADD_SUBDIRECTORY(post_install)
