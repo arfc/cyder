@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "Component.h"
+#include "CycException.h"
 
 using namespace std;
 
@@ -41,6 +42,7 @@ class ComponentTest : public ::testing::Test {
       nuclide_model=NULL;
     }
     virtual void TearDown() {
+      delete test_component;
     }
 };
 
@@ -75,4 +77,12 @@ TEST_F(ComponentTest, initFunctionNoXML) {
   ASSERT_EQ(outer_radius, test_component->outer_radius());
   ASSERT_EQ(thermal_model, test_component->thermal_model());
   ASSERT_EQ(nuclide_model, test_component->nuclide_model());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(ComponentTest, copy) {
+  EXPECT_NO_THROW(test_component->init(name, type, inner_radius, outer_radius, 
+        thermal_model, nuclide_model));
+  Component* test_copy;
+  ASSERT_THROW(test_copy->copy(test_component), CycException);
 }
