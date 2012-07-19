@@ -13,11 +13,23 @@
 #include "DegRateNuclide.h"
 
 using namespace std;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DegRateNuclide::DegRateNuclide(){
+  deg_rate_=0;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model
   cur = XMLinput->get_xpath_element(cur,"model/DegRateNuclide");
-  deg_rate_ = strtod(XMLinput->get_xpath_content(cur, "degradation"), NULL);
+  double deg_rate = strtod(XMLinput->get_xpath_content(cur, "degradation"), NULL);
+  init(deg_rate);
+  LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class init(cur) function has been called";;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void DegRateNuclide::init(double deg_rate) {
+  deg_rate_ = deg_rate;
   if (deg_rate_ < 0 | deg_rate_ > 1) {
     string err = "Expected a fractional degradation rate. The value provided: ";
     err += deg_rate_ ;
@@ -25,12 +37,12 @@ void DegRateNuclide::init(xmlNodePtr cur){
     LOG(LEV_ERROR,"GRDRNuc") << err ;;
     throw CycException(err);
   }
-  LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class init(cur) function has been called";;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModel* DegRateNuclide::copy(NuclideModel* src){
   DegRateNuclide* toRet = new DegRateNuclide();
+  deg_rate_ = dynamic_cast<DegRateNuclide*>(src)->deg_rate_;
   return (NuclideModel*)toRet;
 }
 

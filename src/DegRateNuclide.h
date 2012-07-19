@@ -38,7 +38,7 @@ public:
   /**
      Default constructor for the nuclide model class. Creates an empty nuclide model.
    */
-  DegRateNuclide(){ }; 
+  DegRateNuclide(); 
 
   /**
      primary constructor reads input from XML node
@@ -58,6 +58,13 @@ public:
      @param cur is the current xmlNodePtr
    */
   virtual void init(xmlNodePtr cur); 
+
+  /**
+     initializes the model parameters from an xmlNodePtr
+     
+     @param deg_rate the degradation rate, fraction per yr (a fraction 0-1)
+   */
+  virtual void init(double deg_rate); 
 
   /**
      copies a nuclide model and its parameters from another
@@ -117,6 +124,13 @@ public:
      @param time the time to query the concentration map
    */
   virtual ConcMap conc_map(int time){};
+
+  /** 
+   * returns the degradation rate that characterizes this model
+   *
+   * @return deg_rate_ fraction per year
+   */
+  double deg_rate() {return deg_rate_;};
 
 private:
   /**
