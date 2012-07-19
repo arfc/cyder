@@ -4,51 +4,72 @@
 
 #include "DegRateNuclide.h"
 #include "CycException.h"
+#include "Material.h"
+#include "Timer.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 class DegRateNuclideTest : public ::testing::Test {
   protected:
-    DegRateNuclide* test_deg_rate_nuclide;
-    double test_rate;
+    DegRateNuclide* test_deg_rate_nuclide_;
+    double test_rate_;
+    CompMapPtr test_comp_;
+    mat_rsrc_ptr test_mat_;
+    int one_mol_;
+    int u235_, am241_;
+    double test_size_;
+    int time_;
 
     virtual void SetUp(){
-      test_deg_rate_nuclide = new DegRateNuclide();
-      test_rate = 0.1;
+      // test_deg_rate_nuclide model setup
+      test_deg_rate_nuclide_ = new DegRateNuclide();
+      test_rate_ = 0.1;
+
+      // composition set up
+      u235_=92235;
+      one_mol_=1.0;
+      test_comp_= CompMapPtr(new CompMap(MASS));
+      (*test_comp_)[u235_] = one_mol_;
+      test_size_=10.0;
+
+      // material creation
+      test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
+      test_mat_->setQuantity(test_size_);
+      int time_ = TI->time();
     }
     virtual void TearDown() {
-      delete test_deg_rate_nuclide;
+      delete test_deg_rate_nuclide_;
     }
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, defaultConstructor) {
-  ASSERT_EQ("DEGRATE_NUCLIDE", test_deg_rate_nuclide->name());
-  ASSERT_EQ(DEGRATE_NUCLIDE, test_deg_rate_nuclide->type());
-  ASSERT_FLOAT_EQ(0,test_deg_rate_nuclide->deg_rate());
+  ASSERT_EQ("DEGRATE_NUCLIDE", test_deg_rate_nuclide_->name());
+  ASSERT_EQ(DEGRATE_NUCLIDE, test_deg_rate_nuclide_->type());
+  ASSERT_FLOAT_EQ(0,test_deg_rate_nuclide_->deg_rate());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, initFunctionNoXML) { 
-  EXPECT_NO_THROW(test_deg_rate_nuclide->init(test_rate));
-  ASSERT_EQ(test_rate, test_deg_rate_nuclide->deg_rate());
+  EXPECT_NO_THROW(test_deg_rate_nuclide_->init(test_rate_));
+  ASSERT_EQ(test_rate_, test_deg_rate_nuclide_->deg_rate());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, copy) {
-  EXPECT_NO_THROW(test_deg_rate_nuclide->init(test_rate));
+  EXPECT_NO_THROW(test_deg_rate_nuclide_->init(test_rate_));
   DegRateNuclide* test_copy = new DegRateNuclide();
-  EXPECT_NO_THROW(test_copy->copy(test_deg_rate_nuclide));
-  EXPECT_FLOAT_EQ(test_rate, test_copy->deg_rate());
+  EXPECT_NO_THROW(test_copy->copy(test_deg_rate_nuclide_));
+  EXPECT_FLOAT_EQ(test_rate_, test_copy->deg_rate());
   delete test_copy;
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, absorb){
   // if you absorb a material, the conc_map should reflect that
   // you shouldn't absorb more material than you can handle. how much is that?
+  EXPECT_NO_THROW(test_deg_rate_nuclide_->absorb(test_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -61,9 +82,8 @@ TEST_F(DegRateNuclideTest, extract){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDR0){ 
   // if the degradation rate is zero, nothing should be released
-  test_rate=0;
-  EXPECT_NO_THROW();
-  EXPECT_FLOAT_EQ();
+  test_rate_=0;
+  EXPECT_NO_THROW(test_deg_rate_nuclide->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -72,6 +92,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // nothing more
   // check that timestep 3 doesn't crash
   // check that it doesn't keep sending material it doesn't have
+  EXPECT_NO_THROW(test_deg_rate_nuclide->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -80,6 +101,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   // nothing more
   // check that timestep 2 doesn't crash
   // check that it doesn't keep sending material it doesn't have
+  EXPECT_NO_THROW(test_deg_rate_nuclide->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
