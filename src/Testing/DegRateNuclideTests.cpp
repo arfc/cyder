@@ -40,5 +40,14 @@ TEST_F(DegRateNuclideTest, copy) {
   EXPECT_NO_THROW(test_deg_rate_nuclide->init(test_rate));
   DegRateNuclide* test_copy = new DegRateNuclide();
   EXPECT_NO_THROW(test_copy->copy(test_deg_rate_nuclide));
+  EXPECT_FLOAT_EQ(test_rate, test_copy->deg_rate());
   delete test_copy;
+
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
