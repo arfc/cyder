@@ -311,6 +311,20 @@ public:
   const double z();
 
   /**
+     gets the pointer to the nuclide model being used in this component
+     
+     @return nuclide_model_
+   */
+  const NuclideModel* nuclide_model();
+
+  /**
+     gets the pointer to the thermal model being used in this component
+     
+     @return thermal_model_
+   */
+  const ThermalModel* thermal_model();
+
+  /**
      set the parent component 
      
      @param parent is the component that should be set as the parent
@@ -435,7 +449,10 @@ protected:
      The concentrations of contaminant isotopes in the component
    */
   ConcMap concentrations_;
+
+
 };
+
 
 
 #endif

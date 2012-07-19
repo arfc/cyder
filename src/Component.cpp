@@ -364,6 +364,9 @@ const Temp Component::peak_temp(BoundaryType type) {
   return (type==INNER)?peak_inner_temp_:peak_outer_temp_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Temp Component::temp(){return temp_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Radius Component::inner_radius(){return geom_.inner_radius_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -380,6 +383,13 @@ const double Component::y(){return (centroid()).y_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const double Component::z(){return (centroid()).z_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const NuclideModel* Component::nuclide_model(){return nuclide_model_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const ThermalModel* Component::thermal_model(){return thermal_model_;}
+
 
 
 
