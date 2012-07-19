@@ -110,6 +110,3 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRsmall){
   // in the long term. 
 }
 
-
-
-
