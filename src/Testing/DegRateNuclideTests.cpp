@@ -46,8 +46,48 @@ TEST_F(DegRateNuclideTest, copy) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, absorb){
+  // if you absorb a material, the conc_map should reflect that
+  // you shouldn't absorb more material than you can handle. how much is that?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, extract){ 
+  // if you extract a meterial, the conc_map should reflect that
+  // you shouldn't extrac more material than you have how much is that?
+}
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, transportNuclidesDR0){ 
+  // if the degradation rate is zero, nothing should be released
+  test_rate=0;
+  EXPECT_NO_THROW();
+  EXPECT_FLOAT_EQ();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){ 
+  // if the degradation rate is .5, everything should be released in two years
+  // nothing more
+  // check that timestep 3 doesn't crash
+  // check that it doesn't keep sending material it doesn't have
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, transportNuclidesDR1){ 
+  // if the degradation rate is one, everything should be released in a year
+  // nothing more
+  // check that timestep 2 doesn't crash
+  // check that it doesn't keep sending material it doesn't have
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, transportNuclidesDRsmall){ 
+  // if the degradation rate is very very small, see if the model behaves well 
+  // in the long term. 
+}
+
+
+
+
