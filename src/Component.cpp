@@ -111,21 +111,21 @@ void Component::copy(Component* src){
   geom_.inner_radius_ = src->geom_.inner_radius_;
   geom_.outer_radius_ = src->geom_.outer_radius_;
 
-  if (!thermal_model_){
+  if ( !(src->thermal_model_) ){
     string err = "The " ;
     err += name_;
     err += " model with ID: ";
-    err += ID_;
+    err += src->ID_;
     err += " does not have a thermal model";
     throw CycException(err);
-  }else { 
+  } else { 
     thermal_model_ = copyThermalModel(src->thermal_model_);
   }
-  if (!nuclide_model_){
+  if ( !(src->nuclide_model_) ) {
     string err = "The " ;
     err += name_;
     err += " model with ID: ";
-    err += ID_;
+    err += src->ID_;
     err += " does not have a nuclide model";
     throw CycException(err);
   }else { 
