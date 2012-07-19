@@ -92,10 +92,24 @@ public:
 
   /**
      initializes the model parameters from an xmlNodePtr
+     and calls the explicit init(ID, name, ...) function. 
      
      @param cur is the current xmlNodePtr
    */
   void init(xmlNodePtr cur); 
+
+  /**
+     initializes the model parameters from an xmlNodePtr
+     
+     @param name  the name_ data member, a string
+     @param type the type_ data member, a ComponentType enum value
+     @param inner_radius the inner_radius_ data member, in meters
+     @param outer_radius the outer_radius_ data member, in meters 
+     @param thermal_model the thermal_model_ data member, a pointer
+     @param nuclide_model the nuclide_model_ data member, a pointer
+   */
+  void init(std::string name, ComponentType type, Radius inner_radius,
+      Radius outer_radius, ThermalModel* thermal_model, NuclideModel* nuclide_model); 
 
   /**
      copies a component and its parameters from another
@@ -154,11 +168,11 @@ public:
   bool isFull() ;
 
   /**
-     Returns the ComponentType of this component
+     Returns the ComponentType of this component (WF, WP, etc.)
      
      @return type_ the ComponentType of this component
    */
-  ComponentType getComponentType(){return type_;};
+  ComponentType type();
 
   /**
      Enumerates a string if it is one of the named ComponentTypes
@@ -167,21 +181,21 @@ public:
      @return the ComponentType enum associated with this string by the 
      component_type_names_ list 
    */
-  ComponentType getComponentType(std::string type);
+  ComponentType componentEnum(std::string type);
   
   /**
      Enumerates a string if it is one of the named ThermalModelTypes
      
      @param type the name of the ThermalModelType (i.e. StubThermal)
    */
-  ThermalModelType getThermalModelType(std::string type);
+  ThermalModelType thermalEnum(std::string type);
 
   /** 
      Enumerates a string if it is one of the named NuclideModelTypes
      
      @param type the name of the NuclideModelType (i.e. StubNuclide)
    */
-  NuclideModelType getNuclideModelType(std::string type);
+  NuclideModelType nuclideEnum(std::string type);
 
   /** 
      Returns a new thermal model of the string type xml node pointer
@@ -189,7 +203,7 @@ public:
      @param cur the xml node pointer defining the thermal model
      @return thermal_model_ a pointer to the ThermalModel that was created
    */
-  ThermalModel* getThermalModel(xmlNodePtr cur);
+  ThermalModel* thermal_model(xmlNodePtr cur);
 
   /** 
      Returns a new nuclide model of the string type and xml node pointer
@@ -197,7 +211,7 @@ public:
      @param cur the xml node pointer defining the nuclide model
      @return nuclide_model_ a pointer to the NuclideModel that was created
    */
-  NuclideModel* getNuclideModel(xmlNodePtr cur);
+  NuclideModel* nuclide_model(xmlNodePtr cur);
 
   /** 
      Returns a new thermal model that is a copy of the src model
@@ -217,101 +231,119 @@ public:
      
      @return ID_
    */
-  const int ID(){return ID_;};
+  const int ID();
 
   /**
      get the Name
      
      @return name_
    */
-  const std::string name(){return name_;};
+  const std::string name();
  
   /**
      get the list of daughter components 
      
      @return components
    */
-  const std::vector<Component*> getDaughters(){return daughter_components_;};
+  const std::vector<Component*> daughters();
 
   /**
      get the parent component 
      
      @return component
    */
-  Component* getParent(){return parent_component_;};
+  Component* parent();
 
   /**
      get the list of waste objects 
      
      @return wastes
    */
-  const std::vector<mat_rsrc_ptr> getWastes(){return wastes_;};
+  const std::vector<mat_rsrc_ptr> wastes();
 
   /**
      get the maximum Temperature this object allows at its boundaries 
      
-     @return temperature_lim_
+     @return temp_lim_
    */
-  const Temp getTempLim(){return temperature_lim_;};
+  const Temp temp_lim();
 
   /**
      get the maximum Toxicity this object allows at its boundaries 
      
-     @return toxicity_lim_
+     @return tox_lim_
    */
-  const Tox getToxLim(){return toxicity_lim_;};
+  const Tox tox_lim();
 
   /**
      get the peak Temperature this object will experience during the simulation
      
      @param type indicates whether to return the inner or outer peak temp
      
-     @return peak_temperature_
+     @return peak_temp_
    */
-  const Temp getPeakTemp(BoundaryType type){
-    return (type==INNER)?peak_inner_temperature_:peak_outer_temperature_; };
+  const Temp peak_temp(BoundaryType type);
 
   /**
      get the peak Toxicity this object will experience during the simulation
      
-     @return peak_toxicity_
+     @return peak_tox_
    */
-  const Tox getPeakTox(){return peak_toxicity_;};
+  const Tox peak_tox();
 
   /**
      get the Temperature
      
-     @return temperature_
+     @return temp_
    */
-  const Temp getTemp(){return temperature_;};
+  const Temp temp();
 
   /**
-     get a Radius of the object
+     get the inner radius of the object
      
-     @param type indicates whether to return the inner or outer radius
-     @return inner_radius__ or outer_radius__
+     @return inner_radius_ in [meters]
    */
-  const Radius getRadius(BoundaryType type){
-    return (type==INNER)?geom_.inner_radius_:geom_.outer_radius_; };
+  const Radius inner_radius();
+
+  /**
+     get the inner radius of the object
+
+     @return outer_radius_ in [meters]
+   */
+  const Radius outer_radius();
+
+  /// get the centroid position vector of the object
+  const point_t centroid();
 
   /// get the x component of the centroid position vector of the object
-  const double getX(){
-    return geom_.centroid_.x_;};
+  const double x();
 
   /// get the y component of the centroid position vector of the object
-  const double getY(){
-    return geom_.centroid_.y_;};
+  const double y();
 
   /// get the z component of the centroid position vector of the object
-  const double getZ(){
-    return geom_.centroid_.z_;};
+  const double z();
+
+  /**
+     gets the pointer to the nuclide model being used in this component
+     
+     @return nuclide_model_
+   */
+  const NuclideModel* nuclide_model();
+
+  /**
+     gets the pointer to the thermal model being used in this component
+     
+     @return thermal_model_
+   */
+  const ThermalModel* thermal_model();
 
   /**
      set the parent component 
      
      @param parent is the component that should be set as the parent
    */
-  void setParent(Component* parent){parent_component_ = parent;};
+  void setParent(Component* parent){parent_ = parent;};
 
   /**
      set the placement of the object
@@ -369,12 +401,12 @@ protected:
   /**
      The immediate parent component of this component.
    */
-  Component* parent_component_;
+  Component* parent_;
 
   /**
      The immediate daughter components of this component.
    */
-  std::vector<Component*> daughter_components_;
+  std::vector<Component*> daughters_;
 
   /**
      The contained contaminants, a list of material objects..
@@ -397,41 +429,44 @@ protected:
   ComponentType type_;
 
   /**
-     The temperature limit of this component 
+     The temp limit of this component 
    */
-  Temp temperature_lim_;
+  Temp temp_lim_;
 
   /**
-     The toxicitylimit of this component 
+     The toxlimit of this component 
    */
-  Tox toxicity_lim_;
+  Tox tox_lim_;
 
   /**
-     The peak temperature achieved at the outer boundary 
+     The peak temp achieved at the outer boundary 
    */
-  Temp peak_outer_temperature_;
+  Temp peak_outer_temp_;
 
   /**
-     The peak temperature achieved at the inner boundary 
+     The peak temp achieved at the inner boundary 
    */
-  Temp peak_inner_temperature_;
+  Temp peak_inner_temp_;
 
   /**
-     The peak toxicity achieved  
+     The peak tox achieved  
    */
-  Tox peak_toxicity_;
+  Tox peak_tox_;
 
   /**
-     The temperature taken to be the homogeneous temperature of the whole 
+     The temp taken to be the homogeneous temp of the whole 
      component.
    */
-  Temp temperature_;
+  Temp temp_;
 
   /**
      The concentrations of contaminant isotopes in the component
    */
   ConcMap concentrations_;
+
+
 };
+
 
 
 #endif

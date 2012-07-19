@@ -5,6 +5,8 @@ message("GENERATED TESTS ${GENERATED_FILTER_LIST}")
 # To add a new file, just add it to this list.  Any GoogleTests inside will be automatically
 # added to ctest.
 set ( CYDER_TEST_CORE 
+  ${CMAKE_CURRENT_SOURCE_DIR}/ComponentTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/DegRateNuclideTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepositoryTests.cpp
   ${CYCLUS_CORE_INCLUDE_DIR}/FacilityModelTests.cpp
   ${CYCLUS_CORE_INCLUDE_DIR}/ModelTests.cpp

@@ -49,11 +49,11 @@ Power LumpedThermal::getAvailCapacity(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Temp LumpedThermal::getPeakTemp(){
+Temp LumpedThermal::peak_temp(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Temp LumpedThermal::getTemp(){
+Temp LumpedThermal::temp(){
 }
 
 

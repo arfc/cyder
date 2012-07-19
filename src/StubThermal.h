@@ -85,27 +85,27 @@ public:
      
      @return impl_name_ the name of the ThermalModel implementation 
    */
-  const virtual ThermalModelType getThermalModelType(){return STUB_THERMAL;}; 
+  const virtual ThermalModelType type(){return STUB_THERMAL;}; 
 
   /**
      return the thermal model implementation type
      
      @return impl_name_ the name of the ThermalModel implementation 
    */
-  virtual std::string getThermalModelName(){return "STUB_THERMAL";}; 
+  virtual std::string name(){return "STUB_THERMAL";}; 
   
   /**
      gets the peak temperature that this component will experience on the 
      boundary
      
    */
-  virtual Temp getPeakTemp();
+  virtual Temp peak_temp();
 
   /**
      gets the temperature average in the component
      
    */
-  virtual Temp getTemp();
+  virtual Temp temp();
 
 };
 #endif

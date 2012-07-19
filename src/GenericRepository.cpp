@@ -121,14 +121,14 @@ void GenericRepository::initComponents(xmlNodePtr cur) {
   // first, initialize the waste forms.
   for (int i=0;i<nodes->nodeNr;i++) {
     xmlNodePtr comp_node = nodes->nodeTab[i];
-    if (new_comp->getComponentType(XMLinput->get_xpath_content(comp_node,"componenttype")) == WF){
+    if (new_comp->componentEnum(XMLinput->get_xpath_content(comp_node,"componenttype")) == WF){
       this->initComponent(comp_node);
     }
   }
   // now, initialize the rest 
   for (int i=0;i<nodes->nodeNr;i++) {
     xmlNodePtr comp_node = nodes->nodeTab[i];
-    if (new_comp->getComponentType(XMLinput->get_xpath_content(comp_node,"componenttype")) 
+    if (new_comp->componentEnum(XMLinput->get_xpath_content(comp_node,"componenttype")) 
        != WF){
       this->initComponent(comp_node);
     }
@@ -148,7 +148,7 @@ Component* GenericRepository::initComponent(xmlNodePtr cur){
   xmlNodeSetPtr allowed_sub_nodes;
   std::string allowed_commod;
 
-  switch(toRet->getComponentType(comp_type)) {
+  switch(toRet->componentEnum(comp_type)) {
     case BUFFER:
       buffer_template_ = toRet;
       // do the buffers have allowed waste package types?
@@ -456,9 +456,9 @@ void GenericRepository::emplaceWaste(){
       // if the package is full
       if( iter->isFull()
           // and not too hot
-          //&& (*iter)->getPeakTemp(OUTER) <= current_buffer->getTempLim() or 
+          //&& (*iter)->peak_temp(OUTER) <= current_buffer->temp_lim() or 
           //too toxic
-          //&& (*iter)->getPeakTox() <= current_buffer->getToxLim()
+          //&& (*iter)->peak_tox() <= current_buffer->tox_lim()
           ) {
         // emplace it in the buffer
         loadBuffer(iter);
@@ -559,7 +559,7 @@ Component* GenericRepository::loadBuffer(Component* waste_package){
   setPlacement(waste_package);
   addComponentToTable(waste_package);
   // set the location of the waste forms within the waste package
-  std::vector<Component*> daughters = waste_package->getDaughters();
+  std::vector<Component*> daughters = waste_package->daughters();
   for (std::vector<Component*>::iterator iter = daughters.begin();  
       iter != daughters.end(); 
       iter ++){
@@ -573,7 +573,7 @@ Component* GenericRepository::loadBuffer(Component* waste_package){
 Component* GenericRepository::setPlacement(Component* comp){
   double x,y,z;
   // figure out what type of component it is
-  switch(comp->getComponentType()) 
+  switch(comp->type()) 
   {
     case FF :
       x = x_/2;
@@ -586,18 +586,18 @@ Component* GenericRepository::setPlacement(Component* comp){
       z = dz_ ; 
       break;
     case WP :
-      x = (comp->getParent())->getX();
+      x = (comp->parent())->x();
       y = (emplaced_waste_packages_.size()*dy_ - dy_/2) ; 
       z = dz_ ; 
       break;
     case WF :
-      x = (comp->getParent())->getX();
-      y = (comp->getParent())->getY();
-      z = (comp->getParent())->getZ();
+      x = (comp->parent())->x();
+      y = (comp->parent())->y();
+      z = (comp->parent())->z();
       break;
     default :
       std::string err = "ComponentType, '";
-      err += comp->getComponentType();
+      err += comp->type();
       err +="' is not a valid type for Component ";
       err += comp->name();
       err += ".";

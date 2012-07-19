@@ -96,26 +96,26 @@ public:
   /** 
      returns the NuclideModelType of the model
    */
-  virtual NuclideModelType getNuclideModelType() = 0;
+  virtual NuclideModelType type() = 0;
 
   /** 
      returns the name of the NuclideModelType of the model
    */
-  virtual std::string getNuclideModelName() = 0;
+  virtual std::string name() = 0;
 
   /**
      get the peak Toxicity this object will experience during the simulation
      
      @return peak_toxicity_
    */
-  const virtual Tox getPeakTox()=0;
+  const virtual Tox peak_tox()=0;
 
   /**
      returns the concentration map for this component at the time specified
      
      @param time
    */
-  virtual ConcMap getConcMap(int time) = 0;
+  virtual ConcMap conc_map(int time) = 0;
 
 };
 

@@ -43,18 +43,19 @@ string Component::nuclide_type_names_[] = {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component(){
   name_ = "";
+  type_=LAST_EBS;
   geom_.inner_radius_ = 0;  // 0 indicates a solid
   geom_.outer_radius_ = NULL;   // NULL indicates an infinite object
   point_t center = {0,0,0};
   geom_.centroid_ = center; // by default, the origin is the center
 
-  temperature_ = 0;
-  temperature_lim_ = 373;
-  toxicity_lim_ = 10 ;
+  temp_ = 0;
+  temp_lim_ = 373;
+  tox_lim_ = 10 ;
 
   thermal_model_ = NULL;
   nuclide_model_ = NULL;
-  parent_component_ = NULL;
+  parent_ = NULL;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -67,21 +68,37 @@ Component::~Component(){ // @TODO is there anything to delete? Make this virtual
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::init(xmlNodePtr cur){
+
+  string name = XMLinput->get_xpath_content(cur,"name");
+  ComponentType type = componentEnum(XMLinput->get_xpath_content(cur,"componenttype"));
+  Radius inner_radius = strtod(XMLinput->get_xpath_content(cur,"innerradius"),NULL);
+  Radius outer_radius = strtod(XMLinput->get_xpath_content(cur,"outerradius"),NULL);
+
+  LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(cur) function has been called.";;
+
+  init(name, type, inner_radius, outer_radius, thermal_model(cur), nuclide_model(cur));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::init(string name, ComponentType type, 
+    Radius inner_radius, Radius outer_radius, ThermalModel* thermal_model, 
+    NuclideModel* nuclide_model){
+
   ID_=nextID_++;
   
-  name_ = XMLinput->get_xpath_content(cur,"name");
-  type_ = getComponentType(XMLinput->get_xpath_content(cur,"componenttype"));
-  geom_.inner_radius_ = strtod(XMLinput->get_xpath_content(cur,"innerradius"),NULL);
-  geom_.outer_radius_ = strtod(XMLinput->get_xpath_content(cur,"outerradius"),NULL);
+  name_ = name;
+  type_ = type;
+  geom_.inner_radius_ = inner_radius;
+  geom_.outer_radius_ = outer_radius;
 
-  thermal_model_ = getThermalModel(cur);
-  nuclide_model_ = getNuclideModel(cur);
+  thermal_model_ = thermal_model;
+  nuclide_model_ = nuclide_model;
 
-  parent_component_ = NULL;
+  parent_ = NULL;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
-  LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(cur) function has been called.";;
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -94,21 +111,31 @@ void Component::copy(Component* src){
   geom_.inner_radius_ = src->geom_.inner_radius_;
   geom_.outer_radius_ = src->geom_.outer_radius_;
 
-  thermal_model_ = copyThermalModel(src->thermal_model_);
-  if (!thermal_model_){
+  if ( !(src->thermal_model_) ){
     string err = "The " ;
     err += name_;
     err += " model with ID: ";
-    err += ID_;
+    err += src->ID_;
     err += " does not have a thermal model";
     throw CycException(err);
+  } else { 
+    thermal_model_ = copyThermalModel(src->thermal_model_);
   }
-  nuclide_model_ = copyNuclideModel(src->nuclide_model_);
-  parent_component_ = NULL;
+  if ( !(src->nuclide_model_) ) {
+    string err = "The " ;
+    err += name_;
+    err += " model with ID: ";
+    err += src->ID_;
+    err += " does not have a nuclide model";
+    throw CycException(err);
+  }else { 
+    nuclide_model_ = copyNuclideModel(src->nuclide_model_);
+  }
+  parent_ = NULL;
 
-  temperature_ = src->temperature_;
-  temperature_lim_ = src->temperature_lim_ ;
-  toxicity_lim_ = src->toxicity_lim_ ;
+  temp_ = src->temp_;
+  temp_lim_ = src->temp_lim_ ;
+  tox_lim_ = src->tox_lim_ ;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -119,7 +146,7 @@ void Component::copy(Component* src){
 void Component::print(){
   LOG(LEV_DEBUG2,"GRComp") << "Component: " << this->name();
   LOG(LEV_DEBUG2,"GRComp") << "Contains Materials:";
-  for(int i=0; i<this->getWastes().size() ; i++){
+  for(int i=0; i<this->wastes().size() ; i++){
     LOG(LEV_DEBUG2,"GRComp") << wastes_[i];
   }
 }
@@ -159,17 +186,20 @@ void Component::transportNuclides(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* Component::load(ComponentType type, Component* to_load) {
   to_load->setParent(this);
-  daughter_components_.push_back(to_load);
+  daughters_.push_back(to_load);
   return this;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool Component::isFull() {
-  return true; //TEMPORARY
+  return true; // @TODO imperative, add logic here
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ComponentType Component::getComponentType(std::string type_name) {
+ComponentType Component::type(){return type_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ComponentType Component::componentEnum(std::string type_name) {
   ComponentType toRet = LAST_EBS;
   string component_type_names[] = {"BUFFER", "ENV", "FF", "NF", "WF", "WP"};
   for(int type = 0; type < LAST_EBS; type++){
@@ -192,7 +222,7 @@ ComponentType Component::getComponentType(std::string type_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ThermalModelType Component::getThermalModelType(std::string type_name) {
+ThermalModelType Component::thermalEnum(std::string type_name) {
   ThermalModelType toRet = LAST_THERMAL;
   for(int type = 0; type < LAST_THERMAL; type++){
     if(thermal_type_names_[type] == type_name){
@@ -214,7 +244,7 @@ ThermalModelType Component::getThermalModelType(std::string type_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelType Component::getNuclideModelType(std::string type_name) {
+NuclideModelType Component::nuclideEnum(std::string type_name) {
   NuclideModelType toRet = LAST_NUCLIDE;
   for(int type = 0; type < LAST_NUCLIDE; type++){
     if(nuclide_type_names_[type] == type_name){
@@ -236,11 +266,11 @@ NuclideModelType Component::getNuclideModelType(std::string type_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ThermalModel* Component::getThermalModel(xmlNodePtr cur){
+ThermalModel* Component::thermal_model(xmlNodePtr cur){
   ThermalModel* toRet;
   string model_name = XMLinput->get_xpath_name(cur,"thermalmodel/*");
   
-  switch(getThermalModelType(model_name))
+  switch(thermalEnum(model_name))
   {
     case LUMPED_THERMAL:
       toRet = new LumpedThermal(cur);
@@ -254,12 +284,12 @@ ThermalModel* Component::getThermalModel(xmlNodePtr cur){
   return toRet;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* Component::getNuclideModel(xmlNodePtr cur){
+NuclideModel* Component::nuclide_model(xmlNodePtr cur){
   NuclideModel* toRet;
 
   string model_name = XMLinput->get_xpath_name(cur,"nuclidemodel/*");
 
-  switch(getNuclideModelType(model_name))
+  switch(nuclideEnum(model_name))
   {
     case DEGRATE_NUCLIDE:
       toRet = new DegRateNuclide(cur);
@@ -289,7 +319,7 @@ NuclideModel* Component::getNuclideModel(xmlNodePtr cur){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModel* Component::copyThermalModel(ThermalModel* src){
   ThermalModel* toRet;
-  switch( src->getThermalModelType() )
+  switch( src->type() )
   {
     case LUMPED_THERMAL:
       toRet = new LumpedThermal();
@@ -308,7 +338,7 @@ ThermalModel* Component::copyThermalModel(ThermalModel* src){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* Component::copyNuclideModel(NuclideModel* src){
   NuclideModel* toRet;
-  switch(src->getNuclideModelType())
+  switch(src->type())
   {
     case DEGRATE_NUCLIDE:
       toRet = new DegRateNuclide();
@@ -334,4 +364,56 @@ NuclideModel* Component::copyNuclideModel(NuclideModel* src){
   toRet->copy(src);
   return toRet;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const int Component::ID(){return ID_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const std::string Component::name(){return name_;} 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const std::vector<Component*> Component::daughters(){return daughters_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+Component* Component::parent(){return parent_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const vector<mat_rsrc_ptr> Component::wastes(){return wastes_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Temp Component::temp_lim(){return temp_lim_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Tox Component::tox_lim(){return tox_lim_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Temp Component::peak_temp(BoundaryType type) { 
+  return (type==INNER)?peak_inner_temp_:peak_outer_temp_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Temp Component::temp(){return temp_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Radius Component::inner_radius(){return geom_.inner_radius_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Radius Component::outer_radius(){return geom_.outer_radius_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const point_t Component::centroid(){return geom_.centroid_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const double Component::x(){return (centroid()).x_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const double Component::y(){return (centroid()).y_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const double Component::z(){return (centroid()).z_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const NuclideModel* Component::nuclide_model(){return nuclide_model_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const ThermalModel* Component::thermal_model(){return thermal_model_;}
 

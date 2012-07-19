@@ -72,26 +72,26 @@ public:
   /**
      get the thermal model implementation type
    */
-  const virtual ThermalModelType getThermalModelType()=0;
+  const virtual ThermalModelType type()=0;
 
   /**
      get the name of the thermal model implementation type
    */
-  virtual std::string getThermalModelName()=0;
+  virtual std::string name()=0;
 
   /**
      get the peak Temperature this object will experience during the simulation
      
      
    */
-  virtual Temp getPeakTemp() = 0;
+  virtual Temp peak_temp() = 0;
 
   /**
      get the Temperature
      
      @return temperature_
    */
-  virtual Temp getTemp()=0;
+  virtual Temp temp()=0;
 
 };
 
