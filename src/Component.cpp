@@ -43,6 +43,7 @@ string Component::nuclide_type_names_[] = {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component(){
   name_ = "";
+  type_=LAST_EBS;
   geom_.inner_radius_ = 0;  // 0 indicates a solid
   geom_.outer_radius_ = NULL;   // NULL indicates an infinite object
   point_t center = {0,0,0};
@@ -67,21 +68,37 @@ Component::~Component(){ // @TODO is there anything to delete? Make this virtual
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::init(xmlNodePtr cur){
+
+  string name = XMLinput->get_xpath_content(cur,"name");
+  ComponentType type = componentEnum(XMLinput->get_xpath_content(cur,"componenttype"));
+  Radius inner_radius = strtod(XMLinput->get_xpath_content(cur,"innerradius"),NULL);
+  Radius outer_radius = strtod(XMLinput->get_xpath_content(cur,"outerradius"),NULL);
+
+  LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(cur) function has been called.";;
+
+  init(name, type, inner_radius, outer_radius, thermal_model(cur), nuclide_model(cur));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::init(string name, ComponentType type, 
+    Radius inner_radius, Radius outer_radius, ThermalModel* thermal_model, 
+    NuclideModel* nuclide_model){
+
   ID_=nextID_++;
   
-  name_ = XMLinput->get_xpath_content(cur,"name");
-  type_ = componentEnum(XMLinput->get_xpath_content(cur,"componenttype"));
-  geom_.inner_radius_ = strtod(XMLinput->get_xpath_content(cur,"innerradius"),NULL);
-  geom_.outer_radius_ = strtod(XMLinput->get_xpath_content(cur,"outerradius"),NULL);
+  name_ = name;
+  type_ = type;
+  geom_.inner_radius_ = inner_radius;
+  geom_.outer_radius_ = outer_radius;
 
-  thermal_model_ = thermal_model(cur);
-  nuclide_model_ = nuclide_model(cur);
+  thermal_model_ = thermal_model;
+  nuclide_model_ = nuclide_model;
 
   parent_ = NULL;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
-  LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(cur) function has been called.";;
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -389,9 +406,4 @@ const NuclideModel* Component::nuclide_model(){return nuclide_model_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const ThermalModel* Component::thermal_model(){return thermal_model_;}
-
-
-
-
-
 

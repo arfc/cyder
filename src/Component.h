@@ -92,10 +92,24 @@ public:
 
   /**
      initializes the model parameters from an xmlNodePtr
+     and calls the explicit init(ID, name, ...) function. 
      
      @param cur is the current xmlNodePtr
    */
   void init(xmlNodePtr cur); 
+
+  /**
+     initializes the model parameters from an xmlNodePtr
+     
+     @param name  the name_ data member, a string
+     @param type the type_ data member, a ComponentType enum value
+     @param inner_radius the inner_radius_ data member, in meters
+     @param outer_radius the outer_radius_ data member, in meters 
+     @param thermal_model the thermal_model_ data member, a pointer
+     @param nuclide_model the nuclide_model_ data member, a pointer
+   */
+  void init(std::string name, ComponentType type, Radius inner_radius,
+      Radius outer_radius, ThermalModel* thermal_model, NuclideModel* nuclide_model); 
 
   /**
      copies a component and its parameters from another

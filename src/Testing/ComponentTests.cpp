@@ -24,10 +24,21 @@ class ComponentTest : public ::testing::Test {
   protected:
     FakeComponent* test_component;
     Temp OneHundredCinK;
+    string name;
+    ComponentType type;
+    Radius inner_radius, outer_radius;
+    ThermalModel* thermal_model;
+    NuclideModel* nuclide_model;
 
     virtual void SetUp(){
       test_component = new FakeComponent();
       OneHundredCinK=373;
+      name = "Test";
+      type = BUFFER;
+      inner_radius = 2;
+      outer_radius = 10;
+      thermal_model=NULL;
+      nuclide_model=NULL;
     }
     virtual void TearDown() {
     }
@@ -36,6 +47,7 @@ class ComponentTest : public ::testing::Test {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, defaultConstructor) {
   ASSERT_EQ("", test_component->name());
+  ASSERT_EQ(LAST_EBS, test_component->type());
   ASSERT_FLOAT_EQ(0,test_component->inner_radius());
   ASSERT_EQ(NULL, test_component->outer_radius());
 
@@ -53,4 +65,14 @@ TEST_F(ComponentTest, defaultConstructor) {
   ASSERT_EQ(NULL, test_component->nuclide_model());
 }
 
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(ComponentTest, initFunctionNoXML) { 
+  EXPECT_NO_THROW(test_component->init(name, type, inner_radius, outer_radius, 
+        thermal_model, nuclide_model));
+  ASSERT_EQ(name, test_component->name());
+  ASSERT_EQ(type, test_component->type());
+  ASSERT_EQ(inner_radius, test_component->inner_radius());
+  ASSERT_EQ(outer_radius, test_component->outer_radius());
+  ASSERT_EQ(thermal_model, test_component->thermal_model());
+  ASSERT_EQ(nuclide_model, test_component->nuclide_model());
+}
