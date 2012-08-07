@@ -32,7 +32,7 @@ class DegRateNuclideTest : public ::testing::Test {
       // other vars
       theta_ = 0.3; // percent porosity
       adv_vel_ = 1; // m/yr
-      vol_ = 2*3.1.159; // m^3 
+      vol_ = 2*3.1159; // m^3 
 
       // composition set up
       u235_=92235;
@@ -116,7 +116,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   // if the degradation rate is zero, nothing should be released
   // set the degradation rate
   deg_rate_=0;
-  double expected_src = deg_rate*test_size_;
+  double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/vol_;
 
 
@@ -142,7 +142,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
 TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){ 
   // if the degradation rate is .5, everything should be released in two years
   deg_rate_= 0.5;
-  double expected_src = deg_rate*test_size_;
+  double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/vol_;
 
   // set the degradation rate
@@ -199,7 +199,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
 TEST_F(DegRateNuclideTest, transportNuclidesDR1){ 
   // if the degradation rate is one, everything should be released in a timestep
   deg_rate_= 1;
-  double expected_src = deg_rate*test_size_;
+  double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/vol_;
 
   // set the degradation rate

@@ -115,7 +115,25 @@ double DegRateNuclide::contained_mass(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-mat_rsrc_ptr DegRateNuclide::source_term(){
+mat_rsrc_ptr DegRateNuclide::source_term_bc(){
   mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
   return m_ij;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return contained_mass(TI->time());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return contained_mass(TI->time());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return contained_mass(TI->time());
 }
