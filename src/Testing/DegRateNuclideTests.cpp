@@ -106,28 +106,57 @@ TEST_F(DegRateNuclideTest, set_deg_rate){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDR0){ 
   // if the degradation rate is zero, nothing should be released
+  // set the degradation rate
   deg_rate_=0;
-  deg_rate_model_->set_deg_rate(deg_rate_);
-
+  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  EXPECT_FLOAT_EQ(deg_rate_, deg_rate_model_->deg_rate());
+  // get the initial mass
+  double initial_mass = deg_rate_model_->contained_mass();
+  // transport the nuclides
   EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  // check that the contained mass matches the initial mass
+  EXPECT_FLOAT_EQ(initial_mass, deg_rate_model_->contained_mass()); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){ 
   // if the degradation rate is .5, everything should be released in two years
-  // nothing more
-  // check that timestep 3 doesn't crash
-  // check that it doesn't keep sending material it doesn't have
+  deg_rate_= 0.5;
+  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
+  // fill it with some material
+  EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+  // check that half that material is offered as the source term in one year
   EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_FLOAT_EQ(0.5*test_size_, deg_rate_model_->source_term()->quantity());
+  // remove the source term offered
+  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term()));
+  // check that the remaining half is offered as the source term in year two
+  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_FLOAT_EQ(0.5*test_size_, deg_rate_model_->source_term()->quantity());
+  // remove the source term offered
+  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term()));
+  // check that timestep 3 doesn't crash
+  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term()->quantity());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDR1){ 
-  // if the degradation rate is one, everything should be released in a year
-  // nothing more
-  // check that timestep 2 doesn't crash
-  // check that it doesn't keep sending material it doesn't have
+  // if the degradation rate is one, everything should be released in a timestep
+  deg_rate_= 1;
+  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
+  // fill it with some material
+  EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+  // check that half that material is offered as the source term in one timestep
   EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_FLOAT_EQ(test_size_, deg_rate_model_->source_term()->quantity());
+  // remove the source term offered
+  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term()));
+  // check that nothing more is offered in time step 2
+  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term()->quantity());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

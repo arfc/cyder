@@ -136,11 +136,39 @@ public:
    * returns the degradation rate that characterizes this model
    *
    * @param deg_rate fraction per timestep, between 0 and 1
-   * @TODO @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
+   * @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
    */
-  void set_deg_rate(double deg_rate) {deg_rate_=deg_rate;};
+  void set_deg_rate(double deg_rate);
+
+  /** 
+   * returns the current contained contaminant mass, in kg
+   *
+   * @return contained_mass_[now] throughout the component volume, in kg
+   */
+  double contained_mass();
+
+  /** 
+   * returns the current contained contaminant mass, in kg, at time
+   *
+   * @param time the time to query the contained contaminant mass
+   * @return contained_mass_ throughout the component volume, in kg, at time
+   */
+  double contained_mass(int time);
+
+  /**
+   * returns the available material source term at the outer boundary of the 
+   * component
+   *
+   * @return m_ij the available source term outer boundary condition 
+   */
+  mat_rsrc_ptr source_term();
 
 private:
+
+  /**
+   * total contaminant mass, in kg, throughout the volume, for each timestep.
+   */
+  std::vector<double> contained_mass_;
 
   /**
     The degradation rate that defines this model, fraction per year.

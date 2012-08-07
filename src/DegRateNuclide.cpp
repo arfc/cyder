@@ -4,6 +4,7 @@
  */
 #include <iostream>
 #include "Logger.h"
+#include "Timer.h"
 #include <fstream>
 #include <vector>
 #include <time.h>
@@ -17,6 +18,7 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(){
   deg_rate_=0;
+  contained_mass_ = vector<double>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -89,3 +91,31 @@ void DegRateNuclide::transportNuclides(){
 }
 
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_deg_rate(double deg_rate){
+  if( deg_rate < 0 || deg_rate > 1 ) {
+    string msg = "The DegRateNuclide degradation rate range is 0 to 1, inclusive.";
+    msg += " The value provided was ";
+    msg += deg_rate;
+    msg += ".";
+    throw CycRangeException(msg);
+  } else {
+    deg_rate_ = deg_rate;
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::contained_mass(int time){
+  return contained_mass_.at(time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::contained_mass(){
+  return contained_mass(TI->time());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr DegRateNuclide::source_term(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
