@@ -6,24 +6,10 @@
 
 using namespace std;
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class FakeComponent : public Component {
-  public:
-    FakeComponent() : Component() {
-
-      // initialize ordinary objects
-
-      // initialize things that don't depend on the input
-    }
-
-    virtual ~FakeComponent() {
-    }
-};
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 class ComponentTest : public ::testing::Test {
   protected:
-    FakeComponent* test_component;
+    Component* test_component;
     Temp OneHundredCinK;
     string name;
     ComponentType type;
@@ -32,7 +18,7 @@ class ComponentTest : public ::testing::Test {
     NuclideModel* nuclide_model;
 
     virtual void SetUp(){
-      test_component = new FakeComponent();
+      test_component = new Component();
       OneHundredCinK=373;
       name = "Test";
       type = BUFFER;

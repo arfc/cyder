@@ -4,6 +4,7 @@
  */
 #include <iostream>
 #include "Logger.h"
+#include "Timer.h"
 #include <fstream>
 #include <vector>
 #include <time.h>
@@ -13,11 +14,24 @@
 #include "DegRateNuclide.h"
 
 using namespace std;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DegRateNuclide::DegRateNuclide(){
+  deg_rate_=0;
+  contained_mass_ = vector<double>();
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model
   cur = XMLinput->get_xpath_element(cur,"model/DegRateNuclide");
-  deg_rate_ = strtod(XMLinput->get_xpath_content(cur, "degradation"), NULL);
+  double deg_rate = strtod(XMLinput->get_xpath_content(cur, "degradation"), NULL);
+  init(deg_rate);
+  LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class init(cur) function has been called";;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void DegRateNuclide::init(double deg_rate) {
+  deg_rate_ = deg_rate;
   if (deg_rate_ < 0 | deg_rate_ > 1) {
     string err = "Expected a fractional degradation rate. The value provided: ";
     err += deg_rate_ ;
@@ -25,12 +39,12 @@ void DegRateNuclide::init(xmlNodePtr cur){
     LOG(LEV_ERROR,"GRDRNuc") << err ;;
     throw CycException(err);
   }
-  LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class init(cur) function has been called";;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModel* DegRateNuclide::copy(NuclideModel* src){
   DegRateNuclide* toRet = new DegRateNuclide();
+  deg_rate_ = dynamic_cast<DegRateNuclide*>(src)->deg_rate_;
   return (NuclideModel*)toRet;
 }
 
@@ -77,3 +91,49 @@ void DegRateNuclide::transportNuclides(){
 }
 
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_deg_rate(double deg_rate){
+  if( deg_rate < 0 || deg_rate > 1 ) {
+    string msg = "The DegRateNuclide degradation rate range is 0 to 1, inclusive.";
+    msg += " The value provided was ";
+    msg += deg_rate;
+    msg += ".";
+    throw CycRangeException(msg);
+  } else {
+    deg_rate_ = deg_rate;
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::contained_mass(int time){
+  return contained_mass_.at(time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::contained_mass(){
+  return contained_mass(TI->time());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr DegRateNuclide::source_term_bc(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return contained_mass(TI->time());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return contained_mass(TI->time());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return contained_mass(TI->time());
+}
