@@ -83,7 +83,7 @@ TEST_F(DegRateNuclideTest, extract){
 TEST_F(DegRateNuclideTest, transportNuclidesDR0){ 
   // if the degradation rate is zero, nothing should be released
   test_rate_=0;
-  EXPECT_NO_THROW(test_deg_rate_nuclide->transportNuclides());
+  EXPECT_NO_THROW(test_deg_rate_nuclide_->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
