@@ -12,8 +12,8 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 class DegRateNuclideTest : public ::testing::Test {
   protected:
-    DegRateNuclide* test_deg_rate_nuclide_;
-    double test_rate_;
+    DegRateNuclide* deg_rate_model_;
+    double deg_rate_;
     CompMapPtr test_comp_;
     mat_rsrc_ptr test_mat_;
     int one_mol_;
@@ -23,8 +23,8 @@ class DegRateNuclideTest : public ::testing::Test {
 
     virtual void SetUp(){
       // test_deg_rate_nuclide model setup
-      test_deg_rate_nuclide_ = new DegRateNuclide();
-      test_rate_ = 0.1;
+      deg_rate_model_ = new DegRateNuclide();
+      deg_rate_ = 0.1;
 
       // composition set up
       u235_=92235;
@@ -39,29 +39,29 @@ class DegRateNuclideTest : public ::testing::Test {
       int time_ = TI->time();
     }
     virtual void TearDown() {
-      delete test_deg_rate_nuclide_;
+      delete deg_rate_model_;
     }
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, defaultConstructor) {
-  ASSERT_EQ("DEGRATE_NUCLIDE", test_deg_rate_nuclide_->name());
-  ASSERT_EQ(DEGRATE_NUCLIDE, test_deg_rate_nuclide_->type());
-  ASSERT_FLOAT_EQ(0,test_deg_rate_nuclide_->deg_rate());
+  ASSERT_EQ("DEGRATE_NUCLIDE", deg_rate_model_->name());
+  ASSERT_EQ(DEGRATE_NUCLIDE, deg_rate_model_->type());
+  ASSERT_FLOAT_EQ(0,deg_rate_model_->deg_rate());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, initFunctionNoXML) { 
-  EXPECT_NO_THROW(test_deg_rate_nuclide_->init(test_rate_));
-  ASSERT_EQ(test_rate_, test_deg_rate_nuclide_->deg_rate());
+  EXPECT_NO_THROW(deg_rate_model_->init(deg_rate_));
+  ASSERT_EQ(deg_rate_, deg_rate_model_->deg_rate());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, copy) {
-  EXPECT_NO_THROW(test_deg_rate_nuclide_->init(test_rate_));
+  EXPECT_NO_THROW(deg_rate_model_->init(deg_rate_));
   DegRateNuclide* test_copy = new DegRateNuclide();
-  EXPECT_NO_THROW(test_copy->copy(test_deg_rate_nuclide_));
-  EXPECT_FLOAT_EQ(test_rate_, test_copy->deg_rate());
+  EXPECT_NO_THROW(test_copy->copy(deg_rate_model_));
+  EXPECT_FLOAT_EQ(deg_rate_, test_copy->deg_rate());
   delete test_copy;
 }
 
@@ -69,7 +69,7 @@ TEST_F(DegRateNuclideTest, copy) {
 TEST_F(DegRateNuclideTest, absorb){
   // if you absorb a material, the conc_map should reflect that
   // you shouldn't absorb more material than you can handle. how much is that?
-  EXPECT_NO_THROW(test_deg_rate_nuclide_->absorb(test_mat_));
+  EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -82,8 +82,8 @@ TEST_F(DegRateNuclideTest, extract){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDR0){ 
   // if the degradation rate is zero, nothing should be released
-  test_rate_=0;
-  EXPECT_NO_THROW(test_deg_rate_nuclide_->transportNuclides());
+  deg_rate_=0;
+  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -92,7 +92,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // nothing more
   // check that timestep 3 doesn't crash
   // check that it doesn't keep sending material it doesn't have
-  EXPECT_NO_THROW(test_deg_rate_nuclide_->transportNuclides());
+  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -101,7 +101,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   // nothing more
   // check that timestep 2 doesn't crash
   // check that it doesn't keep sending material it doesn't have
-  EXPECT_NO_THROW(test_deg_rate_nuclide_->transportNuclides());
+  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
