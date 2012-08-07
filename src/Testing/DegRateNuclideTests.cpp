@@ -92,7 +92,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // nothing more
   // check that timestep 3 doesn't crash
   // check that it doesn't keep sending material it doesn't have
-  EXPECT_NO_THROW(test_deg_rate_nuclide->transportNuclides());
+  EXPECT_NO_THROW(test_deg_rate_nuclide_->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -101,7 +101,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   // nothing more
   // check that timestep 2 doesn't crash
   // check that it doesn't keep sending material it doesn't have
-  EXPECT_NO_THROW(test_deg_rate_nuclide->transportNuclides());
+  EXPECT_NO_THROW(test_deg_rate_nuclide_->transportNuclides());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
