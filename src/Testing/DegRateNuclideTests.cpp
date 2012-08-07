@@ -74,15 +74,41 @@ TEST_F(DegRateNuclideTest, absorb){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, extract){ 
-  // if you extract a meterial, the conc_map should reflect that
-  // you shouldn't extrac more material than you have how much is that?
+  // it should be able to extract all of the material it absorbed
+  EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+  EXPECT_NO_THROW(deg_rate_model_->extract(test_mat_));
+  // if you extract a material, the conc_map should reflect that
+  // you shouldn't extract more material than you have how much is that?
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, set_deg_rate){ 
+  // the deg rate must be between 0 and 1, inclusive
+  deg_rate_=0;
+  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
+  deg_rate_=1;
+  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
+  // it should accept floats
+  deg_rate_= 0.1;
+  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
+  // an exception should be thrown if it's set outside the bounds
+  deg_rate_= -1;
+  EXPECT_THROW(deg_rate_model_->set_deg_rate(deg_rate_), CycRangeException);
+  EXPECT_NE(deg_rate_model_->deg_rate(), deg_rate_);
+  deg_rate_= 2;
+  EXPECT_THROW(deg_rate_model_->set_deg_rate(deg_rate_), CycRangeException);
+  EXPECT_NE(deg_rate_model_->deg_rate(), deg_rate_);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDR0){ 
   // if the degradation rate is zero, nothing should be released
   deg_rate_=0;
+  deg_rate_model_->set_deg_rate(deg_rate_);
+
   EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
 }
 

@@ -132,7 +132,16 @@ public:
    */
   double deg_rate() {return deg_rate_;};
 
+  /** 
+   * returns the degradation rate that characterizes this model
+   *
+   * @param deg_rate fraction per timestep, between 0 and 1
+   * @TODO @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
+   */
+  void set_deg_rate(double deg_rate) {deg_rate_=deg_rate;};
+
 private:
+
   /**
     The degradation rate that defines this model, fraction per year.
    */
