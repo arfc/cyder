@@ -20,11 +20,19 @@ class DegRateNuclideTest : public ::testing::Test {
     int u235_, am241_;
     double test_size_;
     int time_;
+    double theta_;
+    double adv_vel_;
+    double vol_;
 
     virtual void SetUp(){
       // test_deg_rate_nuclide model setup
       deg_rate_model_ = new DegRateNuclide();
       deg_rate_ = 0.1;
+
+      // other vars
+      theta_ = 0.3; // percent porosity
+      adv_vel_ = 1; // m/yr
+      vol_ = 2*3.1.159; // m^3 
 
       // composition set up
       u235_=92235;
@@ -108,6 +116,10 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   // if the degradation rate is zero, nothing should be released
   // set the degradation rate
   deg_rate_=0;
+  double expected_src = deg_rate*test_size_;
+  double expected_conc = expected_src/vol_;
+
+
   EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_, deg_rate_model_->deg_rate());
   // get the initial mass
@@ -116,47 +128,106 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
   // check that the contained mass matches the initial mass
   EXPECT_FLOAT_EQ(initial_mass, deg_rate_model_->contained_mass()); 
+  // check the source term 
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
+  // check the boundary concentration ?
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc());
+  // check the boundary flux
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->cauchy_bc());
+  // check the neumann
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){ 
   // if the degradation rate is .5, everything should be released in two years
   deg_rate_= 0.5;
+  double expected_src = deg_rate*test_size_;
+  double expected_conc = expected_src/vol_;
+
+  // set the degradation rate
   EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   // fill it with some material
   EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+
+  // TRANSPORT NUCLIDES 
+  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+
   // check that half that material is offered as the source term in one year
-  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
-  EXPECT_FLOAT_EQ(0.5*test_size_, deg_rate_model_->source_term()->quantity());
+  // Source Term
+  EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
+  // Dirichlet
+  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc());
+  // Cauchy
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc());
+  // Neumann
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
+
   // remove the source term offered
-  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term()));
+  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
+  // TRANSPORT NUCLIDES 
+  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+
   // check that the remaining half is offered as the source term in year two
-  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
-  EXPECT_FLOAT_EQ(0.5*test_size_, deg_rate_model_->source_term()->quantity());
+  // Source Term
+  EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
+  // Dirichlet
+  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc());
+  // Cauchy
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc());
+  // Neumann 
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
+
   // remove the source term offered
-  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term()));
-  // check that timestep 3 doesn't crash
+  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
+  // TRANSPORT NUCLIDES 
   EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term()->quantity());
+
+  // check that timestep 3 doesn't crash or offer material it doesn't have
+  // Source Term
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
+  // Dirichlet
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc());
+  // Cauchy
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->cauchy_bc());
+  // Neumann
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDR1){ 
   // if the degradation rate is one, everything should be released in a timestep
   deg_rate_= 1;
+  double expected_src = deg_rate*test_size_;
+  double expected_conc = expected_src/vol_;
+
+  // set the degradation rate
   EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   // fill it with some material
   EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+
   // check that half that material is offered as the source term in one timestep
+  // TRANSPORT NUCLIDES
   EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
-  EXPECT_FLOAT_EQ(test_size_, deg_rate_model_->source_term()->quantity());
+
+  // Source Term
+  EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
+  // Dirichlet
+  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc());
+  // Cauchy
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc());
+  // Neumann 
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
+
   // remove the source term offered
-  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term()));
-  // check that nothing more is offered in time step 2
+  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
+  // TRANSPORT NUCLIDES
   EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term()->quantity());
+
+  // check that nothing more is offered in time step 2
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
