@@ -3,13 +3,13 @@
     \author Kathryn D. Huff
  */
 #include <iostream>
-#include "Logger.h"
 #include <fstream>
 #include <vector>
 #include <time.h>
 
 #include "CycException.h"
 #include "InputXML.h"
+#include "Logger.h"
 #include "Timer.h"
 #include "MixedCellNuclide.h"
 

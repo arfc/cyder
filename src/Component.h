@@ -15,6 +15,7 @@
 #include "Material.h"
 #include "ThermalModel.h"
 #include "NuclideModel.h"
+#include "Geometry.h"
 
 /*!
 A map for storing the composition history of a material.
@@ -30,9 +31,6 @@ A map for storing the mass history of a material.
 */
 typedef std::map<int, std::map<int, double> > MassHistory;
 
-/// type definition for Radius in meters
-typedef double Radius;
-
 /// type definition for Concentrations in kg/m^3
 typedef double Concentration;
 
@@ -47,24 +45,6 @@ typedef double Power;
 
 /// Enum for type of engineered barrier component.
 enum ComponentType {BUFFER, ENV, FF, NF, WF, WP, LAST_EBS};
-
-/// Enum for type of boundary.
-enum BoundaryType {INNER, OUTER};
-
-/// type definition for an X, Y, Z point definition
-typedef struct point_t{
-  double x_; /**<The x coordinate of the centroid */
-  double y_; /**<The y coordinate of the centroid */
-  double z_; /**<The z coordinate of the centroid */
-}point_t;
-
-
-/// This struct stores the cylindrical Component geometry 
-typedef struct geometry_t{
-  Radius inner_radius_; /**<Radius of the inner surface. 0 for solid objects. */
-  Radius outer_radius_; /**<Radius of the outer surface. NULL for infinite objects. */
-  point_t centroid_; /**<The coordinate location of the centroid, a point. */
-}geometry_t;
 
 /** 
    @brief Defines interface for subcomponents of the GenericRepository
@@ -107,6 +87,17 @@ public:
    */
   void init(std::string name, ComponentType type, Radius inner_radius,
       Radius outer_radius, ThermalModel* thermal_model, NuclideModel* nuclide_model); 
+  /**
+     initializes the model parameters from an xmlNodePtr
+     
+     @param name  the name_ data member, a string
+     @param type the type_ data member, a ComponentType enum value
+     @param geom the geom_ data member, a Geometry object pointer
+     @param thermal_model the thermal_model_ data member, a pointer
+     @param nuclide_model the nuclide_model_ data member, a pointer
+   */
+  void init(std::string name, ComponentType type, Geometry* geom,
+     ThermalModel* thermal_model, NuclideModel* nuclide_model); 
 
   /**
      copies a component and its parameters from another
@@ -418,7 +409,7 @@ protected:
   /**
      The geometry of the cylindrical component
    */
-  geometry_t geom_;
+  Geometry* geom_;
 
   /**
      The type of component that this component represents (ff, buffer, wp, etc.) 
