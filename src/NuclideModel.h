@@ -24,6 +24,14 @@ enum NuclideModelType {
   TWODIMPPM_NUCLIDE, 
   LAST_NUCLIDE};
 
+/** 
+   enumerated list of boundary locations, that is, geometric 
+   locations where the boundary condition can exist.
+  */
+enum BoundaryType{
+  INNER,
+  OUTER };
+
 /**
    type definition for Toxicity in units of Sv 
  */
@@ -116,6 +124,36 @@ public:
      @param time
    */
   virtual ConcMap conc_map(int time) = 0;
+
+  /**
+     returns the available material source term at the outer boundary of the 
+     component
+    
+     @return m_ij the available source term outer boundary condition 
+   */
+  virtual mat_rsrc_ptr source_term_bc()=0;
+
+  /**
+     returns the prescribed concentration at the boundary, the dirichlet bc
+     in kg/m^3
+    
+     @return C the concentration at the boundary in kg/m^3
+   */
+  virtual double dirichlet_bc() = 0;
+
+  /**
+     returns the concentration gradient at the boundary, the Neumann bc
+    
+     @return dCdx the concentration gradient at the boundary in kg/m^3
+   */
+  virtual double neumann_bc() = 0;
+
+  /**
+     returns the flux at the boundary, the Neumann bc
+    
+     @return qC the solute flux at the boundary in kg/m^2/s
+   */
+  virtual double cauchy_bc() = 0;
 
 };
 

@@ -33,9 +33,6 @@ typedef std::map<int, std::map<int, double> > MassHistory;
 /// type definition for Radius in meters
 typedef double Radius;
 
-/// type definition for Toxicity in units of Sv 
-typedef double Tox;
-
 /// type definition for Concentrations in kg/m^3
 typedef double Concentration;
 

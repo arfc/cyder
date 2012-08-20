@@ -126,69 +126,69 @@ public:
   virtual ConcMap conc_map(int time){};
 
   /** 
-   * returns the degradation rate that characterizes this model
+     returns the degradation rate that characterizes this model
    *
-   * @return deg_rate_ fraction per year
+     @return deg_rate_ fraction per year
    */
   double deg_rate() {return deg_rate_;};
 
   /** 
-   * returns the degradation rate that characterizes this model
+     returns the degradation rate that characterizes this model
    *
-   * @param deg_rate fraction per timestep, between 0 and 1
-   * @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
+     @param deg_rate fraction per timestep, between 0 and 1
+     @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
    */
   void set_deg_rate(double deg_rate);
 
   /** 
-   * returns the current contained contaminant mass, in kg
+     returns the current contained contaminant mass, in kg
    *
-   * @return contained_mass_[now] throughout the component volume, in kg
+     @return contained_mass_[now] throughout the component volume, in kg
    */
   double contained_mass();
 
   /** 
-   * returns the current contained contaminant mass, in kg, at time
+     returns the current contained contaminant mass, in kg, at time
    *
-   * @param time the time to query the contained contaminant mass
-   * @return contained_mass_ throughout the component volume, in kg, at time
+     @param time the time to query the contained contaminant mass
+     @return contained_mass_ throughout the component volume, in kg, at time
    */
   double contained_mass(int time);
 
   /**
-   * returns the available material source term at the outer boundary of the 
-   * component
+     returns the available material source term at the outer boundary of the 
+     component
    *
-   * @return m_ij the available source term outer boundary condition 
+     @return m_ij the available source term outer boundary condition 
    */
-  mat_rsrc_ptr source_term_bc();
+  virtual mat_rsrc_ptr source_term_bc();
 
   /**
-   * returns the prescribed concentration at the boundary, the dirichlet bc
-   * in kg/m^3
+     returns the prescribed concentration at the boundary, the dirichlet bc
+     in kg/m^3
    *
-   * @return C the concentration at the boundary in kg/m^3
+     @return C the concentration at the boundary in kg/m^3
    */
-  double dirichlet_bc();
+  virtual double dirichlet_bc();
 
   /**
-   * returns the concentration gradient at the boundary, the Neumann bc
+     returns the concentration gradient at the boundary, the Neumann bc
    *
-   * @return dCdx the concentration gradient at the boundary in kg/m^3
+     @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  double neumann_bc();
+  virtual double neumann_bc();
 
   /**
-   * returns the flux at the boundary, the Neumann bc
+     returns the flux at the boundary, the Neumann bc
    *
-   * @return qC the solute flux at the boundary in kg/m^2/s
+     @return qC the solute flux at the boundary in kg/m^2/s
    */
-  double cauchy_bc();
+  virtual double cauchy_bc();
 
 private:
 
   /**
-   * total contaminant mass, in kg, throughout the volume, for each timestep.
+     total contaminant mass, in kg, throughout the volume, for each timestep.
    */
   std::vector<double> contained_mass_;
 

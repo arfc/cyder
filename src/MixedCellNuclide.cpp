@@ -10,6 +10,7 @@
 
 #include "CycException.h"
 #include "InputXML.h"
+#include "Timer.h"
 #include "MixedCellNuclide.h"
 
 using namespace std;
@@ -64,9 +65,32 @@ void MixedCellNuclide::transportNuclides(){
   // If these fluxes are negative, nuclides aphysically flow toward the waste package 
   // It will send the adjacent components information?
   // The MixedCellNuclide class should transport all nuclides
-
+  mixCell();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MixedCellNuclide::mixCell(){}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr MixedCellNuclide::source_term_bc(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}

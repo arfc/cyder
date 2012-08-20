@@ -63,4 +63,26 @@ void StubNuclide::transportNuclides(){
 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr StubNuclide::source_term_bc(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double StubNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double StubNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double StubNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}

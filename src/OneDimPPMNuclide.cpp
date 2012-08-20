@@ -81,3 +81,26 @@ void OneDimPPMNuclide::transportNuclides(){
 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr OneDimPPMNuclide::source_term_bc(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
