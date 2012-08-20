@@ -44,11 +44,7 @@ string Component::nuclide_type_names_[] = {
 Component::Component(){
   name_ = "";
   type_=LAST_EBS;
-  geom_.inner_radius_ = 0;  // 0 indicates a solid
-  geom_.outer_radius_ = NULL;   // NULL indicates an infinite object
-  point_t center = {0,0,0};
-  geom_.centroid_ = center; // by default, the origin is the center
-
+  geom_ = new Geometry();
   temp_ = 0;
   temp_lim_ = 373;
   tox_lim_ = 10 ;
@@ -64,6 +60,9 @@ Component::Component(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
+  delete geom_;
+  delete nuclide_model_;
+  delete thermal_model_;
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,8 +87,8 @@ void Component::init(string name, ComponentType type,
   
   name_ = name;
   type_ = type;
-  geom_.inner_radius_ = inner_radius;
-  geom_.outer_radius_ = outer_radius;
+  geom_->set_radius(INNER, inner_radius);
+  geom_->set_outer_radius(OUTER,outer_radius);
 
   thermal_model_ = thermal_model;
   nuclide_model_ = nuclide_model;
@@ -108,8 +107,7 @@ void Component::copy(Component* src){
   name_ = src->name_;
   type_ = src->type_;
 
-  geom_.inner_radius_ = src->geom_.inner_radius_;
-  geom_.outer_radius_ = src->geom_.outer_radius_;
+  geom_ = (src->geom_)->copy();
 
   if ( !(src->thermal_model_) ){
     string err = "The " ;
@@ -394,22 +392,22 @@ const Temp Component::peak_temp(BoundaryType type) {
 const Temp Component::temp(){return temp_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const Radius Component::inner_radius(){return geom_.inner_radius_;}
+const Radius Component::inner_radius(){return geom_->inner_radius();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const Radius Component::outer_radius(){return geom_.outer_radius_;}
+const Radius Component::outer_radius(){return geom_->outer_radius();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const point_t Component::centroid(){return geom_.centroid_;}
+const point_t Component::centroid(){return geom_->centroid();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const double Component::x(){return (centroid()).x_;}
+const double Component::x(){return geom_->x();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const double Component::y(){return (centroid()).y_;}
+const double Component::y(){return geom_->y();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const double Component::z(){return (centroid()).z_;}
+const double Component::z(){return geom_->z();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const NuclideModel* Component::nuclide_model(){return nuclide_model_;}
