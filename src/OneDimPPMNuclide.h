@@ -114,15 +114,17 @@ public:
      simulation.
      
      @return peak_toxicity
+     @TODO issue #36
    */
-  const virtual Tox peak_tox(){};
+  const virtual Tox peak_tox(){return NULL;};
 
   /**
      returns the concentration map for this component at the time specified
      
      @param time the time to query the concentration map
+     @TODO issue #36
    */
-  virtual ConcMap conc_map(int time){};
+  virtual ConcMap conc_map(int time){return conc_hist_.at(time);};
 
   /**
      returns the available material source term at the outer boundary of the 

@@ -339,7 +339,7 @@ public:
      @param centroid is the centroid position vector
    */
   void setPlacement(point_t centroid){
-    geom_.centroid_=centroid;};
+    geom_->set_centroid(centroid);};
 
 protected:
   /** 

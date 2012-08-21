@@ -24,14 +24,6 @@ enum NuclideModelType {
   TWODIMPPM_NUCLIDE, 
   LAST_NUCLIDE};
 
-/** 
-   enumerated list of boundary locations, that is, geometric 
-   locations where the boundary condition can exist.
-  */
-enum BoundaryType{
-  INNER,
-  OUTER };
-
 /**
    type definition for Toxicity in units of Sv 
  */
@@ -154,6 +146,10 @@ public:
      @return qC the solute flux at the boundary in kg/m^2/s
    */
   virtual double cauchy_bc() = 0;
+
+protected:
+  /// The map of times to isotops to concentrations, in kg/m^3
+  std::map<int, ConcMap> conc_hist_;
 
 };
 

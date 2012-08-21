@@ -4,7 +4,7 @@
  * \author Kathryn D. Huff
  */
 #if !defined(_GEOMETRY_H)
-#define (_GEOMETRY_H)
+#define _GEOMETRY_H
 
 /// type definition for Radius in meters
 typedef double Radius;
@@ -86,4 +86,4 @@ protected:
   point_t centroid_; 
 
 };
-
+#endif
