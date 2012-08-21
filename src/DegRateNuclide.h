@@ -47,10 +47,10 @@ public:
    */
   DegRateNuclide(xmlNodePtr cur){};
 
-  /** 
-     Default destructor does nothing.
-   */
-  ~DegRateNuclide() {};
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~DegRateNuclide();
 
   /**
      initializes the model parameters from an xmlNodePtr

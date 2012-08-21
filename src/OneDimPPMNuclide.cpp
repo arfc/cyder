@@ -14,8 +14,13 @@
 #include "OneDimPPMNuclide.h"
 
 using namespace std;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::OneDimPPMNuclide(){ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+OneDimPPMNuclide::~OneDimPPMNuclide(){ }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void OneDimPPMNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model

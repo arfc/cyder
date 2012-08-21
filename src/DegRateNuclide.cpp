@@ -22,6 +22,10 @@ DegRateNuclide::DegRateNuclide(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DegRateNuclide::~DegRateNuclide(){
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model
   cur = XMLinput->get_xpath_element(cur,"model/DegRateNuclide");

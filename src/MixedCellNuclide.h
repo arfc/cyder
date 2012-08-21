@@ -52,10 +52,10 @@ public:
    */
   MixedCellNuclide(xmlNodePtr cur){};
 
-  /** 
-     Default destructor does nothing.
-   */
-  ~MixedCellNuclide() {};
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~MixedCellNuclide();
 
   /**
      initializes the model parameters from an xmlNodePtr

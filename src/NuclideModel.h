@@ -55,7 +55,8 @@ public:
   /**
      A virtual destructor
     */
-  virtual ~NuclideModel() = 0;
+  virtual ~NuclideModel() {};
+
   /**
      initializes the model parameters from an xmlNodePtr
      

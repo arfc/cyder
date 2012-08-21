@@ -107,7 +107,9 @@ void Component::copy(Component* src){
   name_ = src->name_;
   type_ = src->type_;
 
-  geom_ = (src->geom_)->copy();
+  // warning, you are currently copying the centroid as well. 
+  // does this object lay on top of the one being copied?
+  geom_->copy(src->geom_,src->centroid());
 
   if ( !(src->thermal_model_) ){
     string err = "The " ;

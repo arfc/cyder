@@ -14,8 +14,13 @@
 #include "TwoDimPPMNuclide.h"
 
 using namespace std;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 TwoDimPPMNuclide::TwoDimPPMNuclide(){ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+TwoDimPPMNuclide::~TwoDimPPMNuclide(){ }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void TwoDimPPMNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model

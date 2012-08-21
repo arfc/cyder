@@ -16,6 +16,11 @@
 using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(){ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LumpedNuclide::~LumpedNuclide(){
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void LumpedNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model

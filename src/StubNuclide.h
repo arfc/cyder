@@ -33,7 +33,7 @@ public:
   /**
      Default constructor for the nuclide model class. Creates an empty nuclide model.
    */
-  StubNuclide(){ }; 
+  StubNuclide(); 
 
   /**
      primary constructor reads input from XML node
@@ -42,10 +42,10 @@ public:
    */
   StubNuclide(xmlNodePtr cur){};
 
-  /** 
-     Default destructor does nothing.
-   */
-  ~StubNuclide() {};
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~StubNuclide();
 
   /**
      initializes the model parameters from an xmlNodePtr

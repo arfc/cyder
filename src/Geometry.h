@@ -47,10 +47,11 @@ public:
      A copy constructor
 
      @param src the original Geometry object, to copy
+     @param centroid a new central position for the new cylinder
 
      @return a copy of the src object
     */
-  Geometry* copy(Geometry* src);
+  Geometry* copy(Geometry* src, point_t centroid);
 
   /**
      Set the radius of the surface at the boundary indicated. 
@@ -74,19 +75,19 @@ public:
 
      @return the inner radius of the cylindrical geometry object
     */
-  Radius inner_radius(); 
+  const Radius inner_radius(); 
 
   /**
      Returns the radius of the outer surface. NULL for infinite objects.[m] 
 
      @return the outer radius of the cylindrical geometry object
     */
-  Radius outer_radius(); 
+  const Radius outer_radius(); 
 
   /**
      Returns the coordinate location of the centroid, a point. [m]
     */
-  point_t centroid(); 
+  const point_t centroid(); 
 
   /// get the x component of the centroid position vector of the object
   const double x();

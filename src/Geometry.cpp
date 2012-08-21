@@ -4,8 +4,12 @@
  * \author Kathryn D. Huff
  */
 
-#include "Geometry.h"
+#include <iostream>
 
+#include "Geometry.h"
+#include "CycException.h"
+
+using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Geometry::Geometry() {
@@ -24,13 +28,14 @@ Geometry::Geometry(Radius inner_radius, Radius outer_radius, point_t centroid) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Geometry::copy(Geometry* src, point_t centroid){
-  inner_radius_ = src->inner_radius(); 
-  outer_radius_ = src->outer_radius(); 
+Geometry* Geometry::copy(Geometry* src, point_t centroid){
   // need a fresh central position for each geometry,
   // no two objects may have exactly the same properties.
   // http://plato.stanford.edu/entries/identity-indiscernible/
-  centroid_ = centroid;
+  Geometry* to_ret = new Geometry(src->inner_radius(),
+      src->outer_radius(),
+      centroid);
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -44,6 +49,7 @@ void Geometry::set_radius(BoundaryType boundary, Radius radius) {
       break;
     default:
       throw CycException("Only INNER or OUTER radii may be set.");
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

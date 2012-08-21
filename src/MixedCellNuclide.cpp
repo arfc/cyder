@@ -14,8 +14,13 @@
 #include "MixedCellNuclide.h"
 
 using namespace std;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MixedCellNuclide::MixedCellNuclide(){ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MixedCellNuclide::~MixedCellNuclide(){ }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void MixedCellNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model

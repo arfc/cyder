@@ -14,6 +14,13 @@
 #include "StubNuclide.h"
 
 using namespace std;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+StubNuclide::StubNuclide(){};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+StubNuclide::~StubNuclide(){};
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void StubNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model

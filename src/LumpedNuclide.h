@@ -61,10 +61,10 @@ public:
    */
   LumpedNuclide(xmlNodePtr cur){};
 
-  /** 
-     Default destructor does nothing.
-   */
-  ~LumpedNuclide() {};
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~LumpedNuclide();
 
   /**
      initializes the model parameters from an xmlNodePtr

@@ -52,10 +52,10 @@ public:
    */
   TwoDimPPMNuclide(xmlNodePtr cur){};
 
-  /** 
-     Default destructor does nothing.
-   */
-  ~TwoDimPPMNuclide() {};
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~TwoDimPPMNuclide() ;
 
   /**
      initializes the model parameters from an xmlNodePtr
