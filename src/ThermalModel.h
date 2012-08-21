@@ -43,7 +43,8 @@ public:
   /** 
      A virtual destructor
     */
-  virtual ~ThermalModel() = 0;
+  virtual ~ThermalModel() {};
+
   /**
      initializes the model parameters from an xmlNodePtr
      
