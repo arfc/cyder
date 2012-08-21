@@ -29,6 +29,30 @@ class Geometry {
   
 public:
   /**
+     Default Constructor
+    */
+  Geometry();
+
+  /**
+     Detailed Constructor
+
+     @param inner_radius the inner_radius_ data member [m]
+     @param outer_radius the outer_radius_ data member [m]
+     @param centroid the centroid_ data member [m]
+     @return a geometry object
+    */
+  Geometry(Radius inner_radius, Radius outer_radius, point_t centroid);
+
+  /**
+     A copy constructor
+
+     @param src the original Geometry object, to copy
+
+     @return a copy of the src object
+    */
+  Geometry* copy(Geometry* src);
+
+  /**
      Set the radius of the surface at the boundary indicated. 
      inner radius is 0 for solid objects. [m]
      outer radius is null for infinite objects. [m]
@@ -47,11 +71,15 @@ public:
 
   /**
      Radius of the inner surface. 0 for solid objects. [m]
+
+     @return the inner radius of the cylindrical geometry object
     */
   Radius inner_radius(); 
 
   /**
      Returns the radius of the outer surface. NULL for infinite objects.[m] 
+
+     @return the outer radius of the cylindrical geometry object
     */
   Radius outer_radius(); 
 

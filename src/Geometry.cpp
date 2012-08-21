@@ -24,6 +24,16 @@ Geometry::Geometry(Radius inner_radius, Radius outer_radius, point_t centroid) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+Geometry::copy(Geometry* src, point_t centroid){
+  inner_radius_ = src->inner_radius(); 
+  outer_radius_ = src->outer_radius(); 
+  // need a fresh central position for each geometry,
+  // no two objects may have exactly the same properties.
+  // http://plato.stanford.edu/entries/identity-indiscernible/
+  centroid_ = centroid;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void Geometry::set_radius(BoundaryType boundary, Radius radius) { 
   switch(boundary){
     case INNER:

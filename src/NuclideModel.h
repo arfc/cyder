@@ -11,6 +11,7 @@
 #include <libxml/xpathInternals.h>
 
 #include "Material.h"
+#include "Geometry.h"
 
 /**
    enumerated list of types of nuclide transport model
@@ -51,6 +52,10 @@ typedef std::map<int, Concentration> ConcMap;
 class NuclideModel {
 
 public:
+  /**
+     A virtual destructor
+    */
+  virtual ~NuclideModel() = 0;
   /**
      initializes the model parameters from an xmlNodePtr
      

@@ -88,7 +88,7 @@ void Component::init(string name, ComponentType type,
   name_ = name;
   type_ = type;
   geom_->set_radius(INNER, inner_radius);
-  geom_->set_outer_radius(OUTER,outer_radius);
+  geom_->set_radius(OUTER,outer_radius);
 
   thermal_model_ = thermal_model;
   nuclide_model_ = nuclide_model;

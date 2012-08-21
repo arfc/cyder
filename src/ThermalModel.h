@@ -40,6 +40,10 @@ class ThermalModel {
 
 public:
 
+  /** 
+     A virtual destructor
+    */
+  virtual ~ThermalModel() = 0;
   /**
      initializes the model parameters from an xmlNodePtr
      
