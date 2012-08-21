@@ -129,7 +129,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   // check that the contained mass matches the initial mass
   EXPECT_FLOAT_EQ(initial_mass, deg_rate_model_->contained_mass()); 
   // check the source term 
-  //EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
   // check the boundary concentration ?
   EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc());
   // check the boundary flux

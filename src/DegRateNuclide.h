@@ -187,7 +187,21 @@ public:
    */
   virtual double cauchy_bc();
 
-private:
+protected:
+  /// sets the boundary conditions of the 0th through 3rd kind
+  void set_bcs();
+
+  /// sets the boundary condition of the 0th kind
+  void set_source_term_bc();
+
+  /// sets the boundary condition of the 1st kind
+  void set_dirichlet_bc();
+  
+  /// sets the boundary condition of the 2nd kind
+  void set_neumann_bc();
+  
+  /// sets the boundary condition of the 3rd kind
+  void set_cauchy_bc();
 
   /**
      total contaminant mass, in kg, throughout the volume, for each timestep.
@@ -198,5 +212,6 @@ private:
     The degradation rate that defines this model, fraction per year.
    */
   double deg_rate_;
+
 };
 #endif

@@ -157,6 +157,9 @@ protected:
   /// The map of times to isotops to concentrations, in kg/m^3
   std::map<int, ConcMap> conc_hist_;
 
-};
 
+  /// The vector of wastes contained by this component
+  std::vector<mat_rsrc_ptr> wastes_;
+
+};
 #endif

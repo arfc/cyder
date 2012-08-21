@@ -66,6 +66,7 @@ void DegRateNuclide::absorb(mat_rsrc_ptr matToAdd)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide is absorbing material: ";
   matToAdd->print();
+  wastes_.push_back(matToAdd);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -93,8 +94,9 @@ void DegRateNuclide::transportNuclides(){
   // if S is the crossectional area perpendicular to water flow and v is water 
   // velocity : f[i,z,t] = C[i,t] * v * d(z)  = volumetric source term
 
+  // retrieve data about the component
+  set_bcs();
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::set_deg_rate(double deg_rate){
@@ -142,3 +144,25 @@ double DegRateNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
   return contained_mass(TI->time());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_bcs(){
+  set_source_term_bc();
+  set_dirichlet_bc();
+  set_neumann_bc();
+  set_cauchy_bc();
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_source_term_bc(){ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_dirichlet_bc(){}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_neumann_bc(){}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_cauchy_bc(){}
+
