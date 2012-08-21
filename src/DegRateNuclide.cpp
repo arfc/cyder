@@ -122,9 +122,9 @@ double DegRateNuclide::contained_mass(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-mat_rsrc_ptr DegRateNuclide::source_term_bc(){
-  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
-  return m_ij;
+IsoVector DegRateNuclide::source_term_bc(){
+  IsoVector iso_vec = new IsoVector();
+  return iso_vec;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -153,9 +153,16 @@ void DegRateNuclide::set_bcs(){
   set_cauchy_bc();
 }
 
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::set_source_term_bc(){ }
+void DegRateNuclide::set_source_term_bc(){ 
+  // the source term is just the contained material times the current degradation 
+  // That'll be part of each contained waste
+  IsoVector iso_vec = new IsoVector();
+  vector<mat_rsrc_ptr>::iterator waste;
+  for(waste = wastes_.begin(), waste != wastes_.end(), ++waste){ 
+    (*waste) ;
+  }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::set_dirichlet_bc(){}
