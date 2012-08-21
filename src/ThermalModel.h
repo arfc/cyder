@@ -5,6 +5,7 @@
 #if !defined(_THERMALMODEL_H)
 #define _THERMALMODEL_H
 
+#include <map>
 #include <libxml/tree.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
@@ -15,6 +16,11 @@
    type definition for Temperature in Kelvin
  */
 typedef double Temp;
+
+/**
+   type definition for the history of the component temperature. Time, Temp.
+  */
+typedef std::map<int, Temp> TempHist;
 
 /**
    type definition for Power in Watts
@@ -65,11 +71,6 @@ public:
   virtual void print()=0; 
 
   /**
-     Reports the peak thermal source, in Watts, that a component can contain
-   */
-  virtual Power getAvailCapacity() = 0;
-
-  /**
      transports the heat
    */
   virtual void transportHeat() =0;
@@ -97,6 +98,10 @@ public:
      @return temperature_
    */
   virtual Temp temp()=0;
+
+protected:
+  TempHist temp_hist_;
+  Temp temperature_;
 
 };
 

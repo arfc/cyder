@@ -75,12 +75,6 @@ public:
   virtual void transportHeat();
 
   /**
-     Get the available capacity within the component
-     
-   */
-  virtual Power getAvailCapacity();
-
-  /**
      return the thermal model implementation type
      
      @return impl_name_ the name of the ThermalModel implementation 
@@ -97,7 +91,8 @@ public:
   /**
      gets the peak temperature that this component will experience on the 
      boundary
-     
+
+     @TODO this is a placeholder!!! deal with it.
    */
   virtual Temp peak_temp();
 

@@ -44,16 +44,16 @@ void LumpedThermal::transportHeat(){
   // This will transport the heat through the component at hand. 
   // It should send some kind of heat object or reset the temperatures. 
 }
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Power LumpedThermal::getAvailCapacity(){
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Temp LumpedThermal::peak_temp(){
+  TempHist::iterator start = temp_hist_.begin();
+  TempHist::iterator stop = temp_hist_.end();
+  TempHist::iterator max = max_element(start, stop);
+  return (*max).second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Temp LumpedThermal::temp(){
+  return temperature_;
 }
-
-
