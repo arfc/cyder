@@ -192,7 +192,7 @@ private:
   /**
      total contaminant mass, in kg, throughout the volume, for each timestep.
    */
-  std::vector<double> contained_mass_;
+  std::map<int,double> contained_mass_;
 
   /**
     The degradation rate that defines this model, fraction per year.
