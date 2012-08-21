@@ -213,5 +213,8 @@ protected:
    */
   double deg_rate_;
 
+  /// the available source term in isovector form @TODO fix this in cyclus #311
+  IsoVector avail_iso_vec_;
+
 };
 #endif

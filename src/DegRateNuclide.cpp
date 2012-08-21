@@ -12,6 +12,7 @@
 #include "Logger.h"
 #include "Timer.h"
 #include "DegRateNuclide.h"
+#include "Material.h"
 
 using namespace std;
 
@@ -122,9 +123,9 @@ double DegRateNuclide::contained_mass(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoVector DegRateNuclide::source_term_bc(){
-  IsoVector iso_vec = new IsoVector();
-  return iso_vec;
+mat_rsrc_ptr DegRateNuclide::source_term_bc(){
+  mat_rsrc_ptr src_term= new Material(avail_iso_vec_);
+  return src_term;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -157,11 +158,20 @@ void DegRateNuclide::set_bcs(){
 void DegRateNuclide::set_source_term_bc(){ 
   // the source term is just the contained material times the current degradation 
   // That'll be part of each contained waste
-  IsoVector iso_vec = new IsoVector();
+  IsoVector curr_vec;
+  IsoVector vec_to_add;
   vector<mat_rsrc_ptr>::iterator waste;
-  for(waste = wastes_.begin(), waste != wastes_.end(), ++waste){ 
-    (*waste) ;
+  double tot_mass = 0;
+  double this_mass = 0;
+  double ratio = 0;
+  for(waste = wastes_.begin(); waste != wastes_.end(); ++waste){ 
+    this_mass = (*waste)->quantity(); // @TODO issue  #311 should make this easier
+    tot_mass += this_mass;
+    ratio = this_mass/tot_mass;
+    vec_to_add = IsoVector((*waste)->isoVector().comp());
+    curr_vec.mix(vec_to_add, ratio);
   }
+  avail_iso_vec_ = IsoVector(curr_vec);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
