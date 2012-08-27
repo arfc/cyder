@@ -171,20 +171,32 @@ public:
   virtual IsoConcMap cauchy_bc();
 
 protected:
-  /// sets the boundary conditions of the 0th through 3rd kind
-  void set_bcs();
+  /**
+     sets the boundary conditions of the 0th through 3rd kind
+
+     @param conc_map the current map of concentrations at the boundary
+    */
+  void set_bcs(int time, IsoConcMap conc_map);
 
   /// sets the boundary condition of the 0th kind
-  void set_source_term_bc();
+  void set_source_term_bc(int time, IsoConcMap conc_map);
 
   /// sets the boundary condition of the 1st kind
-  void set_dirichlet_bc();
+  void set_dirichlet_bc(int time, IsoConcMap conc_map);
   
   /// sets the boundary condition of the 2nd kind
-  void set_neumann_bc();
+  void set_neumann_bc(int time, IsoConcMap conc_map);
   
   /// sets the boundary condition of the 3rd kind
-  void set_cauchy_bc();
+  void set_cauchy_bc(int time, IsoConcMap conc_map);
+
+  /**
+     updates the current conc_hist_
+
+     @param time is the time at which to update the history
+     @returns the IsoConcMap added to conc_hist_ at that time
+    */
+  IsoConcMap update_hist(int time);
 
   /**
      total contaminant mass, in kg, throughout the volume, for each timestep.

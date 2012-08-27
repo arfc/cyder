@@ -150,13 +150,19 @@ public:
   virtual IsoConcMap cauchy_bc() = 0;
   Concentration cauchy_bc(Iso tope) {return this->cauchy_bc().at(tope);};
 
+   //void set_component(Component* component){component_=component;};
+   //Component* component(){return component_;};
+
 protected:
-  /// The map of times to isotopes to concentrations, in kg/m^3
-  ConcHist conc_hist_;
-
-
-  /// The vector of wastes contained by this component
+  /// A vector of the wastes contained by this component
+  ///wastes(){return component_->wastes();};
   std::vector<mat_rsrc_ptr> wastes_;
 
+  /// The map of times to isotopes to concentrations, in kg/m^3
+  ConcHist conc_hist_;
+  
+  /// A pointer to the component that owns this nuclide model
+  //Component* component_;
+ 
 };
 #endif
