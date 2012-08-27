@@ -127,21 +127,21 @@ public:
   /**
      returns the prescribed concentration at the boundary, the dirichlet bc
      in kg/m^3
-   
-     @return C the concentration at the boundary in kg/m^3
+   *
+     @return C the concentration at the boundary in kg/m^3 for each isotope
    */
   virtual IsoConcMap dirichlet_bc();
 
   /**
      returns the concentration gradient at the boundary, the Neumann bc
-   
+   *
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
   virtual IsoConcMap neumann_bc();
 
   /**
      returns the flux at the boundary, the Neumann bc
-   
+   *
      @return qC the solute flux at the boundary in kg/m^2/s
    */
   virtual IsoConcMap cauchy_bc();

@@ -146,13 +146,15 @@ public:
      @return C the concentration at the boundary in kg/m^3
    */
   virtual IsoConcMap dirichlet_bc() = 0;
-
+  Concentration dirichlet_bc(Iso tope) {return this->dirichlet_bc().at(tope);};
+  
   /**
      returns the concentration gradient at the boundary, the Neumann bc
     
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
   virtual IsoConcMap neumann_bc() = 0;
+  Concentration neumann_bc(Iso tope) {return this->neumann_bc().at(tope);}; 
 
   /**
      returns the flux at the boundary, the Neumann bc
@@ -160,6 +162,7 @@ public:
      @return qC the solute flux at the boundary in kg/m^2/s
    */
   virtual IsoConcMap cauchy_bc() = 0;
+  Concentration cauchy_bc(Iso tope) {return this->cauchy_bc().at(tope);};
 
 protected:
   /// The map of times to isotopes to concentrations, in kg/m^3

@@ -1,8 +1,10 @@
 // DegRateNuclideTests.cpp
 #include <vector>
+#include <map>
 #include <gtest/gtest.h>
 
 #include "DegRateNuclide.h"
+#include "NuclideModel.h"
 #include "CycException.h"
 #include "Material.h"
 #include "Timer.h"
@@ -13,6 +15,7 @@ using namespace std;
 class DegRateNuclideTest : public ::testing::Test {
   protected:
     DegRateNuclide* deg_rate_model_;
+    NuclideModel* dr_nuc_model_ptr_;
     double deg_rate_;
     CompMapPtr test_comp_;
     mat_rsrc_ptr test_mat_;
@@ -28,6 +31,7 @@ class DegRateNuclideTest : public ::testing::Test {
       // test_deg_rate_nuclide model setup
       deg_rate_model_ = new DegRateNuclide();
       deg_rate_ = 0.1;
+      dr_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(deg_rate_model_);
 
       // other vars
       theta_ = 0.3; // percent porosity
@@ -53,8 +57,8 @@ class DegRateNuclideTest : public ::testing::Test {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, defaultConstructor) {
-  ASSERT_EQ("DEGRATE_NUCLIDE", deg_rate_model_->name());
-  ASSERT_EQ(DEGRATE_NUCLIDE, deg_rate_model_->type());
+  ASSERT_EQ("DEGRATE_NUCLIDE", dr_nuc_model_ptr_->name());
+  ASSERT_EQ(DEGRATE_NUCLIDE, dr_nuc_model_ptr_->type());
   ASSERT_FLOAT_EQ(0,deg_rate_model_->deg_rate());
 }
 
@@ -69,6 +73,7 @@ TEST_F(DegRateNuclideTest, copy) {
   ASSERT_NO_THROW(deg_rate_model_->init(deg_rate_));
   DegRateNuclide* test_copy = new DegRateNuclide();
   EXPECT_NO_THROW(test_copy->copy(deg_rate_model_));
+  EXPECT_NO_THROW(test_copy->copy(dr_nuc_model_ptr_));
   EXPECT_FLOAT_EQ(deg_rate_, test_copy->deg_rate());
   delete test_copy;
 }
@@ -77,14 +82,14 @@ TEST_F(DegRateNuclideTest, copy) {
 TEST_F(DegRateNuclideTest, absorb){
   // if you absorb a material, the conc_map should reflect that
   // you shouldn't absorb more material than you can handle. how much is that?
-  EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->absorb(test_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, extract){ 
   // it should be able to extract all of the material it absorbed
-  ASSERT_NO_THROW(deg_rate_model_->absorb(test_mat_));
-  EXPECT_NO_THROW(deg_rate_model_->extract(test_mat_));
+  ASSERT_NO_THROW(dr_nuc_model_ptr_->absorb(test_mat_));
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->extract(test_mat_));
   // if you extract a material, the conc_map should reflect that
   // you shouldn't extract more material than you have how much is that?
 }
@@ -125,17 +130,17 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   // get the initial mass
   double initial_mass = deg_rate_model_->contained_mass();
   // transport the nuclides
-  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->transportNuclides());
   // check that the contained mass matches the initial mass
   EXPECT_FLOAT_EQ(initial_mass, deg_rate_model_->contained_mass()); 
   // check the source term 
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->source_term_bc()->quantity());
   // check the boundary concentration ?
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->dirichlet_bc(u235_));
   // check the boundary flux
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->cauchy_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->cauchy_bc(u235_));
   // check the neumann
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->neumann_bc(u235_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -149,50 +154,50 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   // fill it with some material
-  EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->absorb(test_mat_));
 
   // TRANSPORT NUCLIDES 
-  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->transportNuclides());
 
   // check that half that material is offered as the source term in one year
   // Source Term
-  EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(expected_src, dr_nuc_model_ptr_->source_term_bc()->quantity());
   // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc().at(u235_));
+  EXPECT_FLOAT_EQ(expected_conc, dr_nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc().at(u235_));
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, dr_nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->extract(dr_nuc_model_ptr_->source_term_bc()));
   // TRANSPORT NUCLIDES 
-  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->transportNuclides());
 
   // check that the remaining half is offered as the source term in year two
   // Source Term
-  EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(expected_src, dr_nuc_model_ptr_->source_term_bc()->quantity());
   // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc().at(u235_));
+  EXPECT_FLOAT_EQ(expected_conc, dr_nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc().at(u235_));
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, dr_nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->extract(dr_nuc_model_ptr_->source_term_bc()));
   // TRANSPORT NUCLIDES 
-  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->transportNuclides());
 
   // check that timestep 3 doesn't crash or offer material it doesn't have
   // Source Term
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->source_term_bc()->quantity());
   // Dirichlet
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->cauchy_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->neumann_bc(u235_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -206,28 +211,28 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   // fill it with some material
-  EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->absorb(test_mat_));
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
-  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->transportNuclides());
 
   // Source Term
-  EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(expected_src, dr_nuc_model_ptr_->source_term_bc()->quantity());
   // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc().at(u235_));
+  EXPECT_FLOAT_EQ(expected_conc, dr_nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc().at(u235_));
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, dr_nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->extract(dr_nuc_model_ptr_->source_term_bc()));
   // TRANSPORT NUCLIDES
-  EXPECT_NO_THROW(deg_rate_model_->transportNuclides());
+  EXPECT_NO_THROW(dr_nuc_model_ptr_->transportNuclides());
 
   // check that nothing more is offered in time step 2
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(0, dr_nuc_model_ptr_->source_term_bc()->quantity());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
