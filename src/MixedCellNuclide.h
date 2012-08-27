@@ -109,13 +109,6 @@ public:
   virtual std::string name(){return "MIXEDCELL_NUCLIDE";};
 
   /**
-     returns the concentration map for this component at the time specified
-     
-     @param time the time to query the concentration map
-   */
-  virtual ConcProfile conc_profile(int time){return conc_hist_.at(time);};
-
-  /**
      returns the available material source term at the outer boundary of the 
      component
    *

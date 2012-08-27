@@ -124,7 +124,6 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/vol_;
 
-
   ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_, deg_rate_model_->deg_rate());
   // get the initial mass

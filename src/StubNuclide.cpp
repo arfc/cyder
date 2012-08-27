@@ -80,17 +80,17 @@ mat_rsrc_ptr StubNuclide::source_term_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap StubNuclide::dirichlet_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap StubNuclide::neumann_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap StubNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }

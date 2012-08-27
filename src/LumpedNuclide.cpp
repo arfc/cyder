@@ -101,17 +101,17 @@ mat_rsrc_ptr LumpedNuclide::source_term_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::dirichlet_bc(){
   /// @TODO This is just a placeholder should call actual outer radius
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap  LumpedNuclide::neumann_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }

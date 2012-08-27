@@ -110,14 +110,6 @@ public:
    */
   virtual std::string name(){return "DEGRATE_NUCLIDE";};
 
-  /**
-     returns the concentration map for this component at the time specified
-     
-     @param time the time to query the concentration map
-     @TODO issue #36
-   */
-  virtual ConcProfile conc_profile(int time){return conc_hist_.at(time);};
-
   /** 
      returns the degradation rate that characterizes this model
    *

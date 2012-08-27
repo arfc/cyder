@@ -42,19 +42,12 @@ typedef double Concentration;
   */
 typedef std::map<int, Concentration> IsoConcMap;
 
-/**
-   type definition for a map from radial positions to IsoConcMaps 
-   The keys are the radial positions in the component
-   The values are the IsoConcMap maps that exist at that position
- */
-typedef std::map<double, IsoConcMap> ConcProfile;
-
 /** 
-   type definition fro a map from times to ConcProfiles
+   type definition fro a map from times to IsoConcMap
    The keys are timesteps, in the unit of the timesteps in the simulation.
-   The values are the ConcProfile maps at those timesteps
+   The values are the IsoConcMap maps at those timesteps
   */
-typedef std::map<int, ConcProfile> ConcHist;
+typedef std::map<int, IsoConcMap> ConcHist;
 
 /** 
    @brief Abstract interface for GenericRepository nuclide transport 
@@ -123,13 +116,6 @@ public:
      returns the name of the NuclideModelType of the model
    */
   virtual std::string name() = 0;
-
-  /**
-     returns the concentration map for this component at the time specified
-     
-     @param time
-   */
-  virtual ConcProfile conc_profile(int time) = 0;
 
   /**
      returns the available material source term at the outer boundary of the 

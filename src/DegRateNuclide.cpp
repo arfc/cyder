@@ -22,6 +22,9 @@ DegRateNuclide::DegRateNuclide(){
   contained_mass_ = map<int,double>();
   contained_mass_.insert(make_pair(TI->time(), 0));
   conc_hist_ = ConcHist();
+  IsoConcMap zero_map;
+  zero_map.insert(make_pair(92235,0.0));
+  conc_hist_.insert(pair(TI->time(), zero_map ));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -133,19 +136,19 @@ mat_rsrc_ptr DegRateNuclide::source_term_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER); 
+  return conc_hist_.at(TI->time()); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::neumann_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER); 
+  return conc_hist_.at(TI->time()); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER); 
+  return conc_hist_.at(TI->time()); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

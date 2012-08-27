@@ -95,17 +95,17 @@ mat_rsrc_ptr TwoDimPPMNuclide::source_term_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap TwoDimPPMNuclide::dirichlet_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap TwoDimPPMNuclide::neumann_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap TwoDimPPMNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()).at(OUTER);
+  return conc_hist_.at(TI->time());
 }
