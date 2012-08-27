@@ -66,7 +66,7 @@ TEST_F(DegRateNuclideTest, initFunctionNoXML) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, copy) {
-  EXPECT_NO_THROW(deg_rate_model_->init(deg_rate_));
+  ASSERT_NO_THROW(deg_rate_model_->init(deg_rate_));
   DegRateNuclide* test_copy = new DegRateNuclide();
   EXPECT_NO_THROW(test_copy->copy(deg_rate_model_));
   EXPECT_FLOAT_EQ(deg_rate_, test_copy->deg_rate());
@@ -83,7 +83,7 @@ TEST_F(DegRateNuclideTest, absorb){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, extract){ 
   // it should be able to extract all of the material it absorbed
-  EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
+  ASSERT_NO_THROW(deg_rate_model_->absorb(test_mat_));
   EXPECT_NO_THROW(deg_rate_model_->extract(test_mat_));
   // if you extract a material, the conc_map should reflect that
   // you shouldn't extract more material than you have how much is that?
@@ -93,14 +93,14 @@ TEST_F(DegRateNuclideTest, extract){
 TEST_F(DegRateNuclideTest, set_deg_rate){ 
   // the deg rate must be between 0 and 1, inclusive
   deg_rate_=0;
-  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   deg_rate_=1;
-  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   // it should accept floats
   deg_rate_= 0.1;
-  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   // an exception should be thrown if it's set outside the bounds
   deg_rate_= -1;
@@ -120,7 +120,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   double expected_conc = expected_src/vol_;
 
 
-  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_, deg_rate_model_->deg_rate());
   // get the initial mass
   double initial_mass = deg_rate_model_->contained_mass();
@@ -146,7 +146,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   double expected_conc = expected_src/vol_;
 
   // set the degradation rate
-  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   // fill it with some material
   EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));
@@ -203,7 +203,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   double expected_conc = expected_src/vol_;
 
   // set the degradation rate
-  EXPECT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
+  ASSERT_NO_THROW(deg_rate_model_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_model_->deg_rate(), deg_rate_);
   // fill it with some material
   EXPECT_NO_THROW(deg_rate_model_->absorb(test_mat_));

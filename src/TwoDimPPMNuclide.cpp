@@ -3,18 +3,24 @@
     \author Kathryn D. Huff
  */
 #include <iostream>
-#include "Logger.h"
 #include <fstream>
 #include <vector>
 #include <time.h>
 
 #include "CycException.h"
 #include "InputXML.h"
+#include "Logger.h"
+#include "Timer.h"
 #include "TwoDimPPMNuclide.h"
 
 using namespace std;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 TwoDimPPMNuclide::TwoDimPPMNuclide(){ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+TwoDimPPMNuclide::~TwoDimPPMNuclide(){ }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void TwoDimPPMNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model
@@ -80,4 +86,26 @@ void TwoDimPPMNuclide::transportNuclides(){
   // The TwoDimPPMNuclide class should transport all nuclides
 
 }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr TwoDimPPMNuclide::source_term_bc(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double TwoDimPPMNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double TwoDimPPMNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double TwoDimPPMNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}

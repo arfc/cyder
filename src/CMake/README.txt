@@ -1,14 +1,15 @@
 _______________________________________________________________________
-Cyclus Core
+Cyder
 _______________________________________________________________________
 
-**Last Updated: 2.28.2012**
+This repository holds a generic nuclear repository model intended to be used 
+within the Cyclus nuclear fuel cycle simulator from the University of 
+Wisconsin - Madison. This repository model is not meant for site specific 
+nuclear repository performance assesment. Rather, it is intended to provide 
+medium-fidelity performance metrics of disposal system concepts in generic 
+geologies within the broader cyclus simulation framework.
 
-The core of the Cyclus nuclear fuel cycle simulator from the University of 
-Wisconsin - Madison is intended to be a simulation framework upon which to 
-develop innovative fuel cycle simulations. 
-
-To see user and developer documentation for this code, please visit the `Cyclus Homepage`_.
+To see user and developer documentation for this code, please visit the `Cyder Homepage`_.
 
 
 -----------------------------------------------------------------------
@@ -48,37 +49,38 @@ LISCENSE
     POSSIBILITY OF SUCH DAMAGE.
 
 ------------------------------------------------------------------
-Building Cyclus
+Building Cyder
 ------------------------------------------------------------------
 
-The `Cyclus Homepage`_ has much more detailed guides and information.
+The `Cyder Homepage`_ has much more detailed guides and information.
 This Readme is intended to be a quick reference for building cyclus for the
 first time.
 
-The Cyclus code requires the following software and libraries.
+The Cyder code requires the following software and libraries.
 
 ====================   ==================
 Package                Minimum Version   
 ====================   ==================
+`Cyclus`               0.1 
 `CMake`                2.8            
 `boost`                1.34.1
 `libxml2`              2                 
 `sqlite3`              3.7.10            
 ====================   ==================
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Building and Running Cyclus
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Building and Running Cyder
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to facilitate future compatibility with multiple platforms, Cyclus is
+In order to facilitate future compatibility with multiple platforms, Cyder is
 built using  `Cmake <http://www.cmake.org>`_. This relies on CMake version
 2.8 or higher and the CMakeLists.txt file in `src/`. It is
-recommended that you use CMake to build the Cyclus executable external to the
+recommended that you use CMake to build the Cyder external to the
 source code. To do this, execute the following steps::
 
-    .../core/$ mkdir build
-    .../core/$ cd build
-    .../core/build$ cmake ../src
+    .../cyder/$ mkdir build
+    .../cyder/$ cd build
+    .../cyder/build$ cmake ../src 
 
 You should see output like this::
 
@@ -86,218 +88,35 @@ You should see output like this::
     ...
     >> -- Configuring done
     >> -- Generating done
-    >> -- Build files have been written to: .../core/build
-    /core/build$ make cyclus
-    >> Scanning dependencies of target cyclus
+    >> -- Build files have been written to: .../cyder/build
+    /core/build$ make cyder
+    >> Scanning dependencies of target cyder
     ...
     ...
-    >> [100%] Building CXX object CMakeFiles/cyclus.dir/SourceFac.cpp.o
-    >> Linking CXX executable cyclus
-    >> [100%] Built target cyclus
+    >> [100%] Building CXX object CMakeFiles/cyder.dir/GenericRepository.cpp.o
+    >> Linking CXX executable cyder
+    >> [100%] Built target cyder
 
-Now, you can make cyclus, and run it with some input file, for this example, call it `input.xml`::
+Now, you need to make and install the library in the cyclus module path. To do 
+so, execute the following steps ::
+    
+    .../cyder/build$ make 
+    .../cyder/build$ make install
 
-    .../core/build$ make
-    .../core/build$ ./cyclus input.xml
+ If the installation directory is a system path, the ```make install``` step may 
+ need to be ```sudo make install```.
+
+This module is a Facility type module, so it is installed in the cyclus/Models/Facility 
+directory where cyclus is installed.
+
+Now, you can run your installed cyclus program with an input file that defines a Generic Repository.
 
 The `Cyclus Homepage`_ has much more detailed guides and information.  If
 you intend to develop for *Cyclus*, please visit it to learn more.
 
 
+.. _`Cyder Homepage`: http://cyder.github.com
 .. _`Cyclus Homepage`: http://cyclus.github.com
 
 
---------------------------------------------------------------------------
-The Developer Workflow
---------------------------------------------------------------------------
 
-*Note that "blessed" repository refers to the primary `cyclus/core` repository.*
-
-As you do your development, push primarily only to your own fork. Push to
-the blessed repository (usually the "develop" branch) only after:
-
-  * You have pulled the latest changes from the blessed repository.
-  * You have completed a logical set of changes.
-  * Cyclus compiles with no errors.
-  * All tests pass.
-  * Cyclus input files run as expected.
-  * (recommended) your code has been reviewed by another developer.
-
-Code from the "develop" branch generally must pass even more rigorous checks
-before being integrated into the "master" branch. Hotfixes would be a
-possible exception to this.
-
-~~~~~~~~~~~~~~~~~~~
-Workflow Notes
-~~~~~~~~~~~~~~~~~~~
-
-  * Use a branching workflow similar to the one described at
-    http://progit.org/book/ch3-4.html.
-
-  * The "develop" branch is how core developers will share (generally compilable) progress
-    when we are not yet ready for the code to become 'production'.
-
-  * Keep your own "master" and "develop" branches in sync with the blessed repository's
-    "master" and "develop" branches. The master branch should always be the 'stable'
-    or 'production' release of cyclus.
-    
-     - Pull the most recent history from the blessed repository "master"
-       and/or "develop" branches before you merge changes into your
-       corresponding local branch. Consider doing a rebase pull instead of
-       a regular pull or 'fetch and merge'.  For example::
-
-         git checkout develop
-         git pull --rebase blessed develop
-
-     - Only merge changes into your "master" or "develop" branch when you
-       are ready for those changes to be integrated into the blessed
-       repository's corresponding branch. 
-
-  * As you do development on topic branches in your own fork, consider rebasing
-    the topic branch onto the "master" and/or "develop"  branches after *pulls* from the blessed
-    repository rather than merging the pulled changes into your branch.  This
-    will help maintain a more linear (and clean) history.
-    *Please see caution about rebasing below*.  For example::
-
-      git checkout [your topic branch]
-      git rebase develop
-
-  * In general, **every commit** (notice this is not 'every push') to the
-    "develop" and "master" branches should compile and pass tests. This
-    means that when you are ready to move changes from one of your topic
-    branches into the "develop" branch, you should use a NON-fast-forward
-    merge.  For example::
-    
-      git checkout develop
-      git merge --no-ff [your topic branch]
-    
-    Possible exceptions to this 'no fast-forward' merge
-    include:
-
-     - your topic branch consists of only one (compileable and passes
-       tests) commit.
-
-     - every commit in your topic branch is compileable and passes tests.
-
-
-~~~~~~~~~~~~~~~~~~~
-Cautions
-~~~~~~~~~~~~~~~~~~~
-
-  * **NEVER** merge the "master" branch into the "develop"
-    branch. Changes should only flow *to* the "master" branch *from* the
-    "develop" branch.
-
-  * **DO NOT** rebase any commits that have been pulled/pushed anywhere
-    else other than your own fork (especially if those commits have been
-    integrated into the blessed repository.  You should NEVER rebase
-    commits that are a part of the 'master' branch.  *If you do, you will be
-    flogged publicly*.
-
-  * Make sure that you are pushing/pulling from/to the right branches.
-    When in doubt, use the following syntax::
-
-      git push [remote] [from-branch]:[to-branch]
-
-    and (*note that pull always merges into the current checked out branch*)::
-
-      git pull [remote] [from-branch]
-
-
-~~~~~~~~~~~~~~~~~~~
-An Example
-~~~~~~~~~~~~~~~~~~~
-
-
-Introduction
-============
-
-As this type of workflow can be complicated to converts from SVN and very complicated
-for brand new programmers, an example is provided.
-
-For the sake of simplicity, let us assume that we want a single "sandbox" branch
-in which we would like to work, i.e. where we can store all of our work that may not
-yet pass tests or even compile, but where we also want to save our progress. Let us 
-call this branch "Work". So, when all is said and done, in our fork there will be 
-three branches: "Master", "Develop", and "Work".
-
-Acquiring Cyclus and Workflow
-=============================
-
-We begin with a fork of the main ("blessed") Cyclus repository. After initially forking
-the repo, we will have two branches in our fork: "Master" and "Develop".
-
-Acquiring a Fork of the Cyclus Repository
------------------------------------------
-
-A fork is *your* copy of Cyclus. Github offers an excelent 
-`tutorial <http://help.github.com/fork-a-repo/>`_ on how to set one up. The rest of this
-example assumes you have set up the "upstream" repository as cyclus/core. Note that git
-refers to your fork as "origin".
-
-First, let's make our "work" branch:
-::
-
-    .../cyclus_dir/$ git branch work
-    .../cyclus_dir/$ git push origin work
-
-
-We now have the following situation: there exists the "blessed" copy of the Master and
-Develop branches, there exists your fork's copy of the Master, Develop, and Work branches,
-*AND* there exists your *local* copy of the Master, Develop, and Work branches. It is 
-important now to note that you may wish to work from home or the office. If you keep your 
-fork's branches up to date (i.e., "push" your changes before you leave), only your *local*
-copies of your branches may be different when you next sit down at the other location.
-
-Workflow: The Beginning
------------------------
-
-Now, for the workflow! This is by no means the only way to perform this type of workflow, 
-but I assume that you wish to handle conflicts as often as possible (so as to keep their total 
-number small). Let us imagine that you have been at work, finished, and successfully pushed 
-your changes to your *Origin* repository. You are now at home, perhaps after dinner (let's just 
-say some time has passed), and want to continue working a bit (you're industrious, I suppose... 
-or a grad student). To begin, let's update our *home's local branches*.
-::
-
-    .../cyclus_dir/$ git checkout develop
-    .../cyclus_dir/$ git pull origin develop 
-    .../cyclus_dir/$ git pull upstream develop
-    .../cyclus_dir/$ git push origin develop
-
-    .../cyclus_dir/$ git checkout work
-    .../cyclus_dir/$ git pull origin work
-    .../cyclus_dir/$ git merge develop
-    .../cyclus_dir/$ git push origin work
-
-Perhaps a little explanation is required. We first want to make sure that this new local copy of 
-the develop branch is up-to-date with respect to the remote origin's branch and remote upstream's
-branch. If there was a change from the remote upstream's branch, we want to push that to origin. 
-We then follow the same process to update the work branch, except:
-
-#. we don't need to worry about the *upstream* repo because it doesn't have a work branch, and
-#. we want to incorporate any changes which may have been introduced in the develop branch update.
-
-Workflow: The End
------------------
-
-As time passes, you make some changes to files, and you commit those changes (to your *local work
-branch*). Eventually (hopefully) you come to a stopping point where you have finished your project 
-on your work branch *AND* it compiles *AND* it runs input files correctly *AND* it passes all tests!
-Perhaps you have found Nirvana. In any case, you've performed the final commit to your work branch,
-so it's time to merge those changes with the local develop branch and push them to origin's develop
-branch: ::
-
-    .../cyclus_dir/$ git checkout develop
-    .../cyclus_dir/$ git pull upstream develop
-    .../cyclus_dir/$ git merge work 
-    .../cyclus_dir/$ git push origin develop
-
-    .../cyclus_dir/$ git checkout work
-    .../cyclus_dir/$ git merge develop
-    .../cyclus_dir/$ git push origin work
-
-This time we want to update our local develop branch based on the changes we made in work. First we
-checkout and update develop in case the upstream develop branch introduced any changes. We then
-apply our changes via merging work into develop, and push that back up to origin. In case the upstream
-pull did introduce changes, we go ahead and update the work branch on origin.

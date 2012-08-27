@@ -3,18 +3,24 @@
     \author Kathryn D. Huff
  */
 #include <iostream>
-#include "Logger.h"
 #include <fstream>
 #include <vector>
 #include <time.h>
 
 #include "CycException.h"
 #include "InputXML.h"
+#include "Logger.h"
+#include "Timer.h"
 #include "LumpedNuclide.h"
 
 using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(){ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LumpedNuclide::~LumpedNuclide(){
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void LumpedNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model
@@ -86,4 +92,26 @@ void LumpedNuclide::transportNuclides(){
 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr LumpedNuclide::source_term_bc(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}

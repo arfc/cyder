@@ -2,17 +2,17 @@
     \brief Implements the GenericRepository class, the central class of Cyder 
     \author Kathryn D. Huff
  */
-#include "Logger.h"
-
-#include "GenericRepository.h"
 
 #include <string>
 #include <deque>
 #include <vector>
+
 #include "GenericResource.h"
 #include "CycException.h"
 #include "InputXML.h"
 #include "Timer.h"
+#include "Logger.h"
+#include "GenericRepository.h"
 
 
 /**
@@ -51,40 +51,41 @@
  *
  */
 
-table_ptr GenericRepository::gr_params_table = new Table("GenericRepositoryParams");
+table_ptr GenericRepository::gr_params_table = new Table(
+    "GenericRepositoryParams");
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GenericRepository::GenericRepository() {
   // initialize things that don't depend on the input
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
   waste_packages_ = std::deque< Component* >();
   waste_forms_ = std::deque< Component* >();
-  far_field_ = new Component(); 
+  far_field_ = new Component();
   is_full_ = false;
-  mapVars("x","FLOAT", &x_) ;
-  mapVars("y","FLOAT", &y_) ;
-  mapVars("z","FLOAT", &z_) ;
-  mapVars("dx","FLOAT", &dx_) ;
-  mapVars("dy","FLOAT", &dy_) ;
-  mapVars("dz","FLOAT", &dz_) ;
-  mapVars("capacity","FLOAT", &capacity_) ;
-  mapVars("inventorysize","FLOAT", &inventory_size_) ;
-  mapVars("lifetime","FLOAT", &lifetime_) ;
-  mapVars("startOperYear","INTEGER", &start_op_yr_) ;
-  mapVars("startOperMonth","INTEGER", &start_op_mo_) ;
+  mapVars("x", "FLOAT", &x_);
+  mapVars("y", "FLOAT", &y_);
+  mapVars("z", "FLOAT", &z_);
+  mapVars("dx", "FLOAT", &dx_);
+  mapVars("dy", "FLOAT", &dy_);
+  mapVars("dz", "FLOAT", &dz_);
+  mapVars("capacity", "FLOAT", &capacity_);
+  mapVars("inventorysize", "FLOAT", &inventory_size_);
+  mapVars("lifetime", "FLOAT", &lifetime_);
+  mapVars("startOperYear", "INTEGER", &start_op_yr_);
+  mapVars("startOperMonth", "INTEGER", &start_op_mo_);
 }
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void GenericRepository::init(xmlNodePtr cur)
-{ FacilityModel::init(cur);
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void GenericRepository::init(xmlNodePtr cur) { 
+  FacilityModel::init(cur);
   
   // move XML pointer to current model
-  cur = XMLinput->get_xpath_element(cur,"model/GenericRepository");
+  cur = XMLinput->get_xpath_element(cur, "model/GenericRepository");
 
   // initialize ordinary objects
-  std::map<std::string,std::string>::iterator item;
-  for(item = member_types_.begin(); item != member_types_.end(); item++) {
-    if(item->second =="INTEGER"){
+  std::map<std::string, std::string>::iterator item;
+  for (item = member_types_.begin(); item != member_types_.end(); item++) {
+    if (item->second =="INTEGER"){
       *(static_cast<int*>(member_refs_[item->first])) = strtol(XMLinput->get_xpath_content(cur,item->first.c_str()), NULL, 10);
     } else if (item->second == "FLOAT") {
       *(static_cast<double*>(member_refs_[item->first])) = strtod(XMLinput->get_xpath_content(cur,item->first.c_str()), NULL);
@@ -114,7 +115,7 @@ void GenericRepository::init(xmlNodePtr cur)
 }
 
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::initComponents(xmlNodePtr cur) {
   Component* new_comp;
   xmlNodeSetPtr nodes = XMLinput->get_xpath_elements(cur,"component");
@@ -135,7 +136,7 @@ void GenericRepository::initComponents(xmlNodePtr cur) {
   }
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* GenericRepository::initComponent(xmlNodePtr cur){
   Component* toRet = new Component();
   // the component class initialization function will pass down the xml pointer
@@ -189,7 +190,7 @@ Component* GenericRepository::initComponent(xmlNodePtr cur){
   return toRet;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::copy(GenericRepository* src)
 {
 
@@ -228,14 +229,14 @@ void GenericRepository::copy(GenericRepository* src)
   is_full_ = false;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::copyFreshModel(Model* src)
 {
   copy(dynamic_cast<GenericRepository*>(src));
 }
 
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::string GenericRepository::str() {
  
   // this should ultimately print all of the components loaded into this repository.
@@ -244,37 +245,37 @@ std::string GenericRepository::str() {
   std::string gen_repo_msg;
 
   gen_repo_msg += "}, wf {";
-  for( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
+  for ( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       iter++){
     gen_repo_msg += (*iter)->name();
   }
   gen_repo_msg += "}, wp {";
-  for( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
+  for ( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
     gen_repo_msg += (*iter)->name();
   }
   gen_repo_msg += "}, buffer {";
-  for( std::deque< Component* >::const_iterator iter = buffers_.begin();
+  for ( std::deque< Component* >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
     gen_repo_msg += (*iter)->name();
   }
-  if(NULL != far_field_){
+  if (NULL != far_field_){
     gen_repo_msg += "with far_field_ {" +  far_field_->name();
   }
   fac_model_ss << gen_repo_msg;
   return fac_model_ss.str();
 };
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::receiveMessage(msg_ptr msg)
 {
   throw CycException("GenericRepository doesn't know what to do with a msg.");
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
   // grab each material object off of the manifest
   // and move it into the stocks.
@@ -284,7 +285,7 @@ void GenericRepository::addResource(Transaction trans, std::vector<rsrc_ptr> man
   {
     LOG(LEV_DEBUG2, "GenRepoFac") <<"GenericRepository " << ID() << " is receiving material with mass "
         << (*this_rsrc)->quantity();
-    if((*this_rsrc)->type()==MATERIAL_RES){
+    if ((*this_rsrc)->type()==MATERIAL_RES){
       stocks_.push_front(std::make_pair(boost::dynamic_pointer_cast<Material>(*this_rsrc), trans.commod()));
     } else {
       std::string err = "The GenericRepository only accepts Material-type Resources.";
@@ -294,7 +295,7 @@ void GenericRepository::addResource(Transaction trans, std::vector<rsrc_ptr> man
   }
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::handleTick(int time)
 {
   // if this is the first timestep, register the far field
@@ -307,7 +308,7 @@ void GenericRepository::handleTick(int time)
   makeRequests(time);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::handleTock(int time) {
 
   // emplace the waste that's ready
@@ -324,7 +325,7 @@ void GenericRepository::handleTock(int time) {
   FacilityModel::handleTock(time);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::makeRequests(int time){
 
   // should this model make requests for all of the commodities it accepts?
@@ -371,7 +372,7 @@ void GenericRepository::makeRequests(int time){
   }
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double GenericRepository::getCapacity(std::string commod){
   double toRet;
   // if the overall repo has a legislative limit, report it
@@ -392,7 +393,7 @@ double GenericRepository::getCapacity(std::string commod){
   } return toRet;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double GenericRepository::checkInventory(){
   double total = 0;
 
@@ -405,14 +406,14 @@ double GenericRepository::checkInventory(){
 
   return total;
 }
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double GenericRepository::checkStocks(){
   double total = 0;
 
   // Iterate through the stocks and sum the amount of whatever
   // material unit is in each object.
 
-  if(!stocks_.empty()){
+  if (!stocks_.empty()){
     for (std::deque< WasteStream >::iterator iter = stocks_.begin(); iter != 
         stocks_.end(); iter ++) {
         total += iter->first->quantity();
@@ -421,10 +422,10 @@ double GenericRepository::checkStocks(){
   return total;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::emplaceWaste(){
   // if there's anything in the stocks, try to emplace it
-  if(!stocks_.empty()) {
+  if (!stocks_.empty()) {
     // for each waste stream in the stocks
     for (std::deque< WasteStream >::const_iterator iter = stocks_.begin(); iter != 
         stocks_.end(); iter ++) {
@@ -440,12 +441,12 @@ void GenericRepository::emplaceWaste(){
       packageWaste((*iter));
     }
     int nwf = current_waste_forms_.size();
-    for(int i=0; i < nwf; i++){
+    for (int i=0; i < nwf; i++){
       waste_forms_.push_back(current_waste_forms_.front());
       current_waste_forms_.pop_front();
     }
     int nwp = current_waste_packages_.size();
-    for(int i=0; i < nwp; i++){
+    for (int i=0; i < nwp; i++){
       Component* iter = current_waste_packages_.front();
       // try to load each package in the current buffer 
       Component* current_buffer = buffers_.front();
@@ -454,7 +455,7 @@ void GenericRepository::emplaceWaste(){
         throw CycException(err_msg);
       }
       // if the package is full
-      if( iter->isFull()
+      if ( iter->isFull()
           // and not too hot
           //&& (*iter)->peak_temp(OUTER) <= current_buffer->temp_lim() or 
           //too toxic
@@ -462,10 +463,10 @@ void GenericRepository::emplaceWaste(){
           ) {
         // emplace it in the buffer
         loadBuffer(iter);
-        if( current_buffer->isFull() ) {
+        if ( current_buffer->isFull() ) {
           buffers_.push_back(buffers_.front());
           buffers_.pop_front();
-          if( buffers_.front()->isFull()){
+          if ( buffers_.front()->isFull()){
             // all buffers are now full, capacity reached
             is_full_ = true;
           } else {
@@ -487,12 +488,12 @@ void GenericRepository::emplaceWaste(){
   }
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* GenericRepository::conditionWaste(WasteStream waste_stream){
   // figure out what waste form to put the waste stream in
   Component* chosen_wf_template = NULL;
   chosen_wf_template = commod_wf_map_[waste_stream.second];
-  if(chosen_wf_template == NULL){
+  if (chosen_wf_template == NULL){
     std::string err_msg = "The commodity '";
     err_msg += waste_stream.second;
     err_msg +="' does not have a matching WF in the GenericRepository.";
@@ -508,14 +509,14 @@ Component* GenericRepository::conditionWaste(WasteStream waste_stream){
   return current_waste_forms_.back();
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* GenericRepository::packageWaste(Component* waste_form){
   // figure out what waste package to put the waste form in
   bool loaded = false;
   Component* chosen_wp_template = NULL;
   std::string name = waste_form->name();
   chosen_wp_template = wf_wp_map_[name];
-  if(chosen_wp_template == NULL){
+  if (chosen_wp_template == NULL){
     std::string err_msg = "The waste form '";
     err_msg += (waste_form)->name();
     err_msg +="' does not have a matching WP in the GenericRepository.";
@@ -530,7 +531,7 @@ Component* GenericRepository::packageWaste(Component* waste_form){
         iter != current_waste_packages_.end();
         iter++){
       // if there already exists an only partially full one of the right kind
-      if( !(*iter)->isFull() && (*iter)->name() == 
+      if ( !(*iter)->isFull() && (*iter)->name() == 
           chosen_wp_template->name()){
         // fill it
         (*iter)->load(WP, waste_form);
@@ -547,7 +548,7 @@ Component* GenericRepository::packageWaste(Component* waste_form){
   return toRet;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* GenericRepository::loadBuffer(Component* waste_package){
   // figure out what buffer to put the waste package in
   Component* chosen_buffer = buffers_.front();
@@ -569,7 +570,7 @@ Component* GenericRepository::loadBuffer(Component* waste_package){
   return buffers_.front();
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component* GenericRepository::setPlacement(Component* comp){
   double x,y,z;
   // figure out what type of component it is
@@ -609,66 +610,66 @@ Component* GenericRepository::setPlacement(Component* comp){
   return comp; 
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::transportHeat(){
   // update the thermal BCs everywhere
   // pass the transport heat signal through the components, inner -> outer
-  for( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
+  for ( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       iter++){
     (*iter)->transportHeat();
   }
-  for( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
+  for ( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
     (*iter)->transportHeat();
   }
-  for( std::deque< Component* >::const_iterator iter = buffers_.begin();
+  for ( std::deque< Component* >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
     (*iter)->transportHeat();
   }
-  if(NULL != far_field_){
+  if (NULL != far_field_){
     far_field_->transportHeat();
   }
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::transportNuclides(){
   // update the nuclide transport BCs everywhere
   // pass the transport nuclides signal through the components, inner -> outer
-  for( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
+  for ( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       iter++){
     (*iter)->transportNuclides();
   }
-  for( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
+  for ( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
     (*iter)->transportNuclides();
   }
-  for( std::deque< Component* >::const_iterator iter = buffers_.begin();
+  for ( std::deque< Component* >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
     (*iter)->transportNuclides();
   }
-  if(NULL != far_field_){
+  if (NULL != far_field_){
     far_field_->transportNuclides();
   }
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::mapVars(std::string name, std::string type, void* ref) {
   member_types_.insert(std::make_pair( name , type));
   member_refs_.insert(std::make_pair( name , ref ));
 }
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::makeParamsTable(){
   // declare the table columns
   std::vector<column> columns;
   columns.push_back(std::make_pair("facID", "INTEGER"));
   std::map<std::string, std::string>::iterator item;
-  for(item = member_types_.begin(); item != member_types_.end(); item++){
+  for (item = member_types_.begin(); item != member_types_.end(); item++){
     columns.push_back(std::make_pair(item->first, item->second));
   }
   // declare the table's primary key
@@ -677,12 +678,12 @@ void GenericRepository::makeParamsTable(){
   gr_params_table->defineTable(columns,pk);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::defineComponentsTable(){
 
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::addComponentToTable(Component* comp){
 
 }

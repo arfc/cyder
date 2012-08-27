@@ -3,16 +3,24 @@
     \author Kathryn D. Huff
  */
 #include <iostream>
-#include "Logger.h"
 #include <fstream>
 #include <vector>
 #include <time.h>
 
 #include "CycException.h"
 #include "InputXML.h"
+#include "Logger.h"
+#include "Timer.h"
 #include "StubNuclide.h"
 
 using namespace std;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+StubNuclide::StubNuclide(){};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+StubNuclide::~StubNuclide(){};
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void StubNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model
@@ -63,4 +71,26 @@ void StubNuclide::transportNuclides(){
 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr StubNuclide::source_term_bc(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double StubNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double StubNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double StubNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}

@@ -11,6 +11,7 @@
 #include <libxml/xpathInternals.h>
 
 #include "Material.h"
+#include "Geometry.h"
 
 /**
    enumerated list of types of nuclide transport model
@@ -51,6 +52,11 @@ typedef std::map<int, Concentration> ConcMap;
 class NuclideModel {
 
 public:
+  /**
+     A virtual destructor
+    */
+  virtual ~NuclideModel() {};
+
   /**
      initializes the model parameters from an xmlNodePtr
      
@@ -117,6 +123,43 @@ public:
    */
   virtual ConcMap conc_map(int time) = 0;
 
-};
+  /**
+     returns the available material source term at the outer boundary of the 
+     component
+    
+     @return m_ij the available source term outer boundary condition 
+   */
+  virtual mat_rsrc_ptr source_term_bc()=0;
 
+  /**
+     returns the prescribed concentration at the boundary, the dirichlet bc
+     in kg/m^3
+    
+     @return C the concentration at the boundary in kg/m^3
+   */
+  virtual double dirichlet_bc() = 0;
+
+  /**
+     returns the concentration gradient at the boundary, the Neumann bc
+    
+     @return dCdx the concentration gradient at the boundary in kg/m^3
+   */
+  virtual double neumann_bc() = 0;
+
+  /**
+     returns the flux at the boundary, the Neumann bc
+    
+     @return qC the solute flux at the boundary in kg/m^2/s
+   */
+  virtual double cauchy_bc() = 0;
+
+protected:
+  /// The map of times to isotops to concentrations, in kg/m^3
+  std::map<int, ConcMap> conc_hist_;
+
+
+  /// The vector of wastes contained by this component
+  std::vector<mat_rsrc_ptr> wastes_;
+
+};
 #endif

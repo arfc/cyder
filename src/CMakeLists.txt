@@ -100,6 +100,7 @@ SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY
 SET(GenericRepository_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepository.cpp 
   ${CMAKE_CURRENT_SOURCE_DIR}/Component.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Geometry.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/DegRateNuclide.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/LumpedNuclide.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/LumpedThermal.cpp

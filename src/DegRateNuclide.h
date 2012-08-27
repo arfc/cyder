@@ -47,10 +47,10 @@ public:
    */
   DegRateNuclide(xmlNodePtr cur){};
 
-  /** 
-     Default destructor does nothing.
-   */
-  ~DegRateNuclide() {};
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~DegRateNuclide();
 
   /**
      initializes the model parameters from an xmlNodePtr
@@ -115,86 +115,110 @@ public:
      simulation.
      
      @return peak_tox_
+     @TODO issue #36
    */
-  const virtual Tox peak_tox(){};
+  const virtual Tox peak_tox(){return NULL;};
 
   /**
      returns the concentration map for this component at the time specified
      
      @param time the time to query the concentration map
+     @TODO issue #36
    */
-  virtual ConcMap conc_map(int time){};
+  virtual ConcMap conc_map(int time){return conc_hist_.at(time);};
 
   /** 
-   * returns the degradation rate that characterizes this model
+     returns the degradation rate that characterizes this model
    *
-   * @return deg_rate_ fraction per year
+     @return deg_rate_ fraction per year
    */
   double deg_rate() {return deg_rate_;};
 
   /** 
-   * returns the degradation rate that characterizes this model
+     returns the degradation rate that characterizes this model
    *
-   * @param deg_rate fraction per timestep, between 0 and 1
-   * @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
+     @param deg_rate fraction per timestep, between 0 and 1
+     @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
    */
   void set_deg_rate(double deg_rate);
 
   /** 
-   * returns the current contained contaminant mass, in kg
+     returns the current contained contaminant mass, in kg
    *
-   * @return contained_mass_[now] throughout the component volume, in kg
+     @return contained_mass_[now] throughout the component volume, in kg
    */
   double contained_mass();
 
   /** 
-   * returns the current contained contaminant mass, in kg, at time
+     returns the current contained contaminant mass, in kg, at time
    *
-   * @param time the time to query the contained contaminant mass
-   * @return contained_mass_ throughout the component volume, in kg, at time
+     @param time the time to query the contained contaminant mass
+     @return contained_mass_ throughout the component volume, in kg, at time
    */
   double contained_mass(int time);
 
   /**
-   * returns the available material source term at the outer boundary of the 
-   * component
+     returns the available material source term at the outer boundary of the 
+     component
    *
-   * @return m_ij the available source term outer boundary condition 
+     @return m_ij the available source term outer boundary condition 
    */
-  mat_rsrc_ptr source_term_bc();
+  virtual mat_rsrc_ptr source_term_bc();
 
   /**
-   * returns the prescribed concentration at the boundary, the dirichlet bc
-   * in kg/m^3
+     returns the prescribed concentration at the boundary, the dirichlet bc
+     in kg/m^3
    *
-   * @return C the concentration at the boundary in kg/m^3
+     @return C the concentration at the boundary in kg/m^3 for each isotope
    */
-  double dirichlet_bc();
+  virtual double dirichlet_bc();
 
   /**
-   * returns the concentration gradient at the boundary, the Neumann bc
+     returns the concentration gradient at the boundary, the Neumann bc
    *
-   * @return dCdx the concentration gradient at the boundary in kg/m^3
+     @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  double neumann_bc();
+  virtual double neumann_bc();
 
   /**
-   * returns the flux at the boundary, the Neumann bc
+     returns the flux at the boundary, the Neumann bc
    *
-   * @return qC the solute flux at the boundary in kg/m^2/s
+     @return qC the solute flux at the boundary in kg/m^2/s
    */
-  double cauchy_bc();
+  virtual double cauchy_bc();
 
-private:
+protected:
+  /// sets the boundary conditions of the 0th through 3rd kind
+  void set_bcs();
+
+  /// sets the boundary condition of the 0th kind
+  void set_source_term_bc();
+
+  /// sets the boundary condition of the 1st kind
+  void set_dirichlet_bc();
+  
+  /// sets the boundary condition of the 2nd kind
+  void set_neumann_bc();
+  
+  /// sets the boundary condition of the 3rd kind
+  void set_cauchy_bc();
 
   /**
-   * total contaminant mass, in kg, throughout the volume, for each timestep.
+     total contaminant mass, in kg, throughout the volume, for each timestep.
    */
-  std::vector<double> contained_mass_;
+  std::map<int,double> contained_mass_;
 
   /**
     The degradation rate that defines this model, fraction per year.
    */
   double deg_rate_;
+
+  /// the available source term in isovector form 
+  IsoVector avail_iso_vec_;
+
+  /// the available source term amount
+  double avail_kg_;
+
+
 };
 #endif

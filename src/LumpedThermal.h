@@ -75,12 +75,6 @@ public:
   virtual void transportHeat();
 
   /**
-     Get the available capacity within the component
-     
-   */
-  virtual Power getAvailCapacity();
-
-  /**
      return the thermal model implementation type
      
      @return impl_name_ the name of the ThermalModel implementation 

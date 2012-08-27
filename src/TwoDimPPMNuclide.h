@@ -52,10 +52,10 @@ public:
    */
   TwoDimPPMNuclide(xmlNodePtr cur){};
 
-  /** 
-     Default destructor does nothing.
-   */
-  ~TwoDimPPMNuclide() {};
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~TwoDimPPMNuclide() ;
 
   /**
      initializes the model parameters from an xmlNodePtr
@@ -113,15 +113,47 @@ public:
      simulation.
      
      @return peak_toxicity
+     @TODO issue #36
    */
-  const virtual Tox peak_tox(){};
+  const virtual Tox peak_tox(){return NULL;};
 
   /**
      returns the concentration map for this component at the time specified
      
      @param time the time to query the concentration map
+     @TODO issue #36
    */
-  virtual ConcMap conc_map(int time){};
+  virtual ConcMap conc_map(int time){return conc_hist_.at(time);};
+
+  /**
+     returns the available material source term at the outer boundary of the 
+     component
+   
+     @return m_ij the available source term outer boundary condition 
+   */
+  virtual mat_rsrc_ptr source_term_bc();
+
+  /**
+     returns the prescribed concentration at the boundary, the dirichlet bc
+     in kg/m^3
+   
+     @return C the concentration at the boundary in kg/m^3
+   */
+  virtual double dirichlet_bc();
+
+  /**
+     returns the concentration gradient at the boundary, the Neumann bc
+   
+     @return dCdx the concentration gradient at the boundary in kg/m^3
+   */
+  virtual double neumann_bc();
+
+  /**
+     returns the flux at the boundary, the Neumann bc
+   
+     @return qC the solute flux at the boundary in kg/m^2/s
+   */
+  virtual double cauchy_bc();
 
 private:
   /**

@@ -3,18 +3,24 @@
     \author Kathryn D. Huff
  */
 #include <iostream>
-#include "Logger.h"
 #include <fstream>
 #include <vector>
 #include <time.h>
 
 #include "CycException.h"
 #include "InputXML.h"
+#include "Logger.h"
+#include "Timer.h"
 #include "MixedCellNuclide.h"
 
 using namespace std;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MixedCellNuclide::MixedCellNuclide(){ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MixedCellNuclide::~MixedCellNuclide(){ }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void MixedCellNuclide::init(xmlNodePtr cur){
   // move the xml pointer to the current model
@@ -64,9 +70,32 @@ void MixedCellNuclide::transportNuclides(){
   // If these fluxes are negative, nuclides aphysically flow toward the waste package 
   // It will send the adjacent components information?
   // The MixedCellNuclide class should transport all nuclides
-
+  mixCell();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MixedCellNuclide::mixCell(){}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr MixedCellNuclide::source_term_bc(){
+  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
+  return m_ij;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::neumann_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::cauchy_bc(){
+  /// @TODO This is just a placeholder
+  return conc_map(TI->time())[OUTER];
+}

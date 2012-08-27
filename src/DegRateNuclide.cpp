@@ -3,22 +3,28 @@
     \author Kathryn D. Huff
  */
 #include <iostream>
-#include "Logger.h"
-#include "Timer.h"
 #include <fstream>
 #include <vector>
 #include <time.h>
 
 #include "CycException.h"
 #include "InputXML.h"
+#include "Logger.h"
+#include "Timer.h"
 #include "DegRateNuclide.h"
+#include "Material.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(){
   deg_rate_=0;
-  contained_mass_ = vector<double>();
+  contained_mass_ = map<int,double>();
+  contained_mass_.insert(make_pair(TI->time(), 0));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DegRateNuclide::~DegRateNuclide(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,6 +67,7 @@ void DegRateNuclide::absorb(mat_rsrc_ptr matToAdd)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide is absorbing material: ";
   matToAdd->print();
+  wastes_.push_back(matToAdd);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,8 +95,9 @@ void DegRateNuclide::transportNuclides(){
   // if S is the crossectional area perpendicular to water flow and v is water 
   // velocity : f[i,z,t] = C[i,t] * v * d(z)  = volumetric source term
 
+  // retrieve data about the component
+  set_bcs();
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::set_deg_rate(double deg_rate){
@@ -116,8 +124,9 @@ double DegRateNuclide::contained_mass(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr DegRateNuclide::source_term_bc(){
-  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
-  return m_ij;
+  mat_rsrc_ptr src_term= new Material(avail_iso_vec_);
+  src_term->setQuantity(avail_kg_);
+  return src_term;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -137,3 +146,48 @@ double DegRateNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
   return contained_mass(TI->time());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_bcs(){
+  set_source_term_bc();
+  set_dirichlet_bc();
+  set_neumann_bc();
+  set_cauchy_bc();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_source_term_bc(){ 
+  // the source term is just the contained material times the current degradation 
+  // That'll be part of each contained waste
+  IsoVector curr_vec;
+  IsoVector vec_to_add;
+  vector<mat_rsrc_ptr>::iterator waste;
+  double tot_mass = 0;
+  double this_mass = 0;
+  double ratio = 0;
+  for(waste = wastes_.begin(); waste != wastes_.end(); ++waste){ 
+    this_mass = (*waste)->mass(KG);
+    tot_mass += this_mass;
+    ratio = this_mass/tot_mass;
+    vec_to_add = IsoVector((*waste)->isoVector().comp());
+    curr_vec.mix(vec_to_add, ratio);
+  }
+  avail_iso_vec_ = IsoVector(curr_vec);
+  avail_kg_= avail_kg_ + tot_mass*deg_rate_;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_dirichlet_bc(){
+  // using the information about the available material,
+  // the available concentration should be that material,
+  // divided by the volume.
+  // it should be a ConcMap to give the concentration for each isotope
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_neumann_bc(){}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::set_cauchy_bc(){}
+
