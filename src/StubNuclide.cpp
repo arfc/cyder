@@ -78,19 +78,19 @@ mat_rsrc_ptr StubNuclide::source_term_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double StubNuclide::dirichlet_bc(){
+IsoConcMap StubNuclide::dirichlet_bc(){
   /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+  return conc_hist_.at(TI->time()).at(OUTER);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double StubNuclide::neumann_bc(){
+IsoConcMap StubNuclide::neumann_bc(){
   /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+  return conc_hist_.at(TI->time()).at(OUTER);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double StubNuclide::cauchy_bc(){
+IsoConcMap StubNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+  return conc_hist_.at(TI->time()).at(OUTER);
 }

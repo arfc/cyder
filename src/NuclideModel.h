@@ -36,10 +36,25 @@ typedef double Tox;
 typedef double Concentration;
 
 /**
-   type definition for ConcMap 
- */
-typedef std::map<int, Concentration> ConcMap;
+   type definition for a map from isotopes to concentrations
+   The keys are the isotope identifiers Z*1000 + A
+   The values are the Concentrations of each isotope
+  */
+typedef std::map<int, Concentration> IsoConcMap;
 
+/**
+   type definition for a map from radial positions to IsoConcMaps 
+   The keys are the radial positions in the component
+   The values are the IsoConcMap maps that exist at that position
+ */
+typedef std::map<double, IsoConcMap> ConcProfile;
+
+/** 
+   type definition fro a map from times to ConcProfiles
+   The keys are timesteps, in the unit of the timesteps in the simulation.
+   The values are the ConcProfile maps at those timesteps
+  */
+typedef std::map<int, ConcProfile> ConcHist;
 
 /** 
    @brief Abstract interface for GenericRepository nuclide transport 
@@ -121,7 +136,7 @@ public:
      
      @param time
    */
-  virtual ConcMap conc_map(int time) = 0;
+  virtual ConcProfile conc_profile(int time) = 0;
 
   /**
      returns the available material source term at the outer boundary of the 
@@ -137,25 +152,25 @@ public:
     
      @return C the concentration at the boundary in kg/m^3
    */
-  virtual double dirichlet_bc() = 0;
+  virtual IsoConcMap dirichlet_bc() = 0;
 
   /**
      returns the concentration gradient at the boundary, the Neumann bc
     
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  virtual double neumann_bc() = 0;
+  virtual IsoConcMap neumann_bc() = 0;
 
   /**
      returns the flux at the boundary, the Neumann bc
     
      @return qC the solute flux at the boundary in kg/m^2/s
    */
-  virtual double cauchy_bc() = 0;
+  virtual IsoConcMap cauchy_bc() = 0;
 
 protected:
-  /// The map of times to isotops to concentrations, in kg/m^3
-  std::map<int, ConcMap> conc_hist_;
+  /// The map of times to isotopes to concentrations, in kg/m^3
+  ConcHist conc_hist_;
 
 
   /// The vector of wastes contained by this component

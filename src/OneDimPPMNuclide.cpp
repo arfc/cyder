@@ -94,19 +94,19 @@ mat_rsrc_ptr OneDimPPMNuclide::source_term_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclide::dirichlet_bc(){
+IsoConcMap OneDimPPMNuclide::dirichlet_bc(){
   /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+  return conc_hist_.at(TI->time()).at(OUTER);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclide::neumann_bc(){
+IsoConcMap OneDimPPMNuclide::neumann_bc(){
   /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+  return conc_hist_.at(TI->time()).at(OUTER);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclide::cauchy_bc(){
+IsoConcMap OneDimPPMNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+  return conc_hist_.at(TI->time()).at(OUTER);
 }
