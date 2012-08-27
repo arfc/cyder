@@ -169,7 +169,7 @@ public:
      returns the prescribed concentration at the boundary, the dirichlet bc
      in kg/m^3
    *
-     @return C the concentration at the boundary in kg/m^3
+     @return C the concentration at the boundary in kg/m^3 for each isotope
    */
   virtual double dirichlet_bc();
 
