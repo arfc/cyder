@@ -166,7 +166,7 @@ void DegRateNuclide::set_source_term_bc(){
   double this_mass = 0;
   double ratio = 0;
   for(waste = wastes_.begin(); waste != wastes_.end(); ++waste){ 
-    this_mass = (*waste)->mass(KG); // @TODO issue  #311 should make this easier
+    this_mass = (*waste)->mass(KG);
     tot_mass += this_mass;
     ratio = this_mass/tot_mass;
     vec_to_add = IsoVector((*waste)->isoVector().comp());
@@ -177,7 +177,13 @@ void DegRateNuclide::set_source_term_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::set_dirichlet_bc(){}
+void DegRateNuclide::set_dirichlet_bc(){
+  // using the information about the available material,
+  // the available concentration should be that material,
+  // divided by the volume.
+  // it should be a ConcMap to give the concentration for each isotope
+
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::set_neumann_bc(){}
