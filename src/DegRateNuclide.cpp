@@ -125,6 +125,7 @@ double DegRateNuclide::contained_mass(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr DegRateNuclide::source_term_bc(){
   mat_rsrc_ptr src_term= new Material(avail_iso_vec_);
+  src_term->setQuantity(avail_kg_);
   return src_term;
 }
 
@@ -165,13 +166,14 @@ void DegRateNuclide::set_source_term_bc(){
   double this_mass = 0;
   double ratio = 0;
   for(waste = wastes_.begin(); waste != wastes_.end(); ++waste){ 
-    this_mass = (*waste)->quantity(); // @TODO issue  #311 should make this easier
+    this_mass = (*waste)->mass(KG); // @TODO issue  #311 should make this easier
     tot_mass += this_mass;
     ratio = this_mass/tot_mass;
     vec_to_add = IsoVector((*waste)->isoVector().comp());
     curr_vec.mix(vec_to_add, ratio);
   }
   avail_iso_vec_ = IsoVector(curr_vec);
+  avail_kg_= avail_kg_ + tot_mass*deg_rate_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

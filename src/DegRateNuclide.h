@@ -213,8 +213,12 @@ protected:
    */
   double deg_rate_;
 
-  /// the available source term in isovector form @TODO fix this in cyclus #311
+  /// the available source term in isovector form 
   IsoVector avail_iso_vec_;
+
+  /// the available source term amount
+  double avail_kg_;
+
 
 };
 #endif
