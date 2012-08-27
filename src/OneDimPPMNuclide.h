@@ -110,15 +110,6 @@ public:
   virtual std::string name(){return "ONEDIMPPM_NUCLIDE";};
 
   /**
-     returns the peak Toxicity this object will experience during the 
-     simulation.
-     
-     @return peak_toxicity
-     @TODO issue #36
-   */
-  const virtual Tox peak_tox(){return NULL;};
-
-  /**
      returns the concentration map for this component at the time specified
      
      @param time the time to query the concentration map

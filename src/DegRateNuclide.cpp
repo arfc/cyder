@@ -21,6 +21,7 @@ DegRateNuclide::DegRateNuclide(){
   deg_rate_=0;
   contained_mass_ = map<int,double>();
   contained_mass_.insert(make_pair(TI->time(), 0));
+  conc_hist_ = ConcHist();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

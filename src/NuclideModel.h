@@ -26,8 +26,8 @@ enum NuclideModelType {
   LAST_NUCLIDE};
 
 /**
-   type definition for Toxicity in units of Sv 
- */
+   type definition for radiotoxicity in Sv
+  */
 typedef double Tox;
 
 /**
@@ -123,13 +123,6 @@ public:
      returns the name of the NuclideModelType of the model
    */
   virtual std::string name() = 0;
-
-  /**
-     get the peak Toxicity this object will experience during the simulation
-     
-     @return peak_toxicity_
-   */
-  const virtual Tox peak_tox()=0;
 
   /**
      returns the concentration map for this component at the time specified
