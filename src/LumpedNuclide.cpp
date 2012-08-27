@@ -99,19 +99,19 @@ mat_rsrc_ptr LumpedNuclide::source_term_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double LumpedNuclide::dirichlet_bc(){
-  /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+IsoConcMap LumpedNuclide::dirichlet_bc(){
+  /// @TODO This is just a placeholder should call actual outer radius
+  return conc_hist_.at(TI->time()).at(OUTER);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double LumpedNuclide::neumann_bc(){
+IsoConcMap  LumpedNuclide::neumann_bc(){
   /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+  return conc_hist_.at(TI->time()).at(OUTER);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double LumpedNuclide::cauchy_bc(){
+IsoConcMap LumpedNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
-  return conc_map(TI->time())[OUTER];
+  return conc_hist_.at(TI->time()).at(OUTER);
 }

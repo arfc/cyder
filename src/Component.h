@@ -273,13 +273,6 @@ public:
   const Temp peak_temp(BoundaryType type);
 
   /**
-     get the peak Toxicity this object will experience during the simulation
-     
-     @return peak_tox_
-   */
-  const Tox peak_tox();
-
-  /**
      get the Temperature
      
      @return temp_

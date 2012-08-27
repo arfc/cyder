@@ -131,11 +131,11 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   // check the source term 
   EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
   // check the boundary concentration ?
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc().at(u235_));
   // check the boundary flux
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->cauchy_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->cauchy_bc().at(u235_));
   // check the neumann
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -158,11 +158,11 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Source Term
   EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
   // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc());
+  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc().at(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc());
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc().at(u235_));
   // Neumann
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
 
   // remove the source term offered
   EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
@@ -173,11 +173,11 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Source Term
   EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
   // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc());
+  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc().at(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc());
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc().at(u235_));
   // Neumann 
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
 
   // remove the source term offered
   EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
@@ -188,11 +188,11 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Source Term
   EXPECT_FLOAT_EQ(0, deg_rate_model_->source_term_bc()->quantity());
   // Dirichlet
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->dirichlet_bc().at(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->cauchy_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->cauchy_bc().at(u235_));
   // Neumann
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -215,11 +215,11 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   // Source Term
   EXPECT_FLOAT_EQ(expected_src, deg_rate_model_->source_term_bc()->quantity());
   // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc());
+  EXPECT_FLOAT_EQ(expected_conc, deg_rate_model_->dirichlet_bc().at(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc());
+  EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, deg_rate_model_->cauchy_bc().at(u235_));
   // Neumann 
-  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc());
+  EXPECT_FLOAT_EQ(0, deg_rate_model_->neumann_bc().at(u235_));
 
   // remove the source term offered
   EXPECT_NO_THROW(deg_rate_model_->extract(deg_rate_model_->source_term_bc()));
