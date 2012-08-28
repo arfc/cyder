@@ -92,11 +92,11 @@ public:
      
      @param name  the name_ data member, a string
      @param type the type_ data member, a ComponentType enum value
-     @param geom the geom_ data member, a Geometry object pointer
+     @param geom the geom_ data member, a Geometry object shared pointer
      @param thermal_model the thermal_model_ data member, a pointer
      @param nuclide_model the nuclide_model_ data member, a pointer
    */
-  void init(std::string name, ComponentType type, Geometry* geom,
+  void init(std::string name, ComponentType type, GeometryPtr geom,
      ThermalModel* thermal_model, NuclideModel* nuclide_model); 
 
   /**
@@ -400,9 +400,9 @@ protected:
   std::string name_;
 
   /**
-     The geometry of the cylindrical component
+     The geometry of the cylindrical component, a shared pointer
    */
-  Geometry* geom_;
+  GeometryPtr geom_;
 
   /**
      The type of component that this component represents (ff, buffer, wp, etc.) 

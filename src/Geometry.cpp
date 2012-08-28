@@ -28,13 +28,13 @@ Geometry::Geometry(Radius inner_radius, Radius outer_radius, point_t centroid) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Geometry* Geometry::copy(Geometry* src, point_t centroid){
+GeometryPtr Geometry::copy(GeometryPtr src, point_t centroid){
   // need a fresh central position for each geometry,
   // no two objects may have exactly the same properties.
   // http://plato.stanford.edu/entries/identity-indiscernible/
-  Geometry* to_ret = new Geometry(src->inner_radius(),
+  GeometryPtr to_ret = GeometryPtr(new Geometry(src->inner_radius(),
       src->outer_radius(),
-      centroid);
+      centroid));
   return to_ret;
 }
 

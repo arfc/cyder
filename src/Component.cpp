@@ -44,7 +44,7 @@ string Component::nuclide_type_names_[] = {
 Component::Component(){
   name_ = "";
   type_=LAST_EBS;
-  geom_ = new Geometry();
+  geom_ = GeometryPtr(new Geometry());
   temp_ = 0;
   temp_lim_ = 373;
   tox_lim_ = 10 ;
@@ -60,7 +60,6 @@ Component::Component(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
-  delete geom_;
   delete nuclide_model_;
   delete thermal_model_;
 };
@@ -89,6 +88,9 @@ void Component::init(string name, ComponentType type,
   type_ = type;
   geom_->set_radius(INNER, inner_radius);
   geom_->set_radius(OUTER,outer_radius);
+
+  thermal_model->set_geom(geom_);
+  nuclide_model->set_geom(geom_);
 
   thermal_model_ = thermal_model;
   nuclide_model_ = nuclide_model;

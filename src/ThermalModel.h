@@ -11,6 +11,7 @@
 #include <libxml/xpathInternals.h>
 
 #include "Material.h"
+#include "Geometry.h"
 
 /**  
    type definition for Temperature in Kelvin
@@ -99,9 +100,22 @@ public:
    */
   virtual Temp temp()=0;
 
+  /**
+     set the geometry shared pointer
+
+     @param geom the geometry of the component, a shared pointer
+     */
+  void set_geom(GeometryPtr geom){geom_=geom;};
+
 protected:
+  /// The temperature history of this component
   TempHist temp_hist_;
+
+  /// The temperature of this component, on average
   Temp temperature_;
+
+  /// A shared pointer to the geometry of this component
+  GeometryPtr geom_;
 
 };
 

@@ -150,8 +150,8 @@ public:
   virtual IsoConcMap cauchy_bc() = 0;
   Concentration cauchy_bc(Iso tope) {return this->cauchy_bc().at(tope);};
 
-   //void set_component(Component* component){component_=component;};
-   //Component* component(){return component_;};
+  /// Allows the geometry object to be set
+  void set_geom(GeometryPtr geom){ geom_=geom; };
 
 protected:
   /// A vector of the wastes contained by this component
@@ -161,8 +161,8 @@ protected:
   /// The map of times to isotopes to concentrations, in kg/m^3
   ConcHist conc_hist_;
   
-  /// A pointer to the component that owns this nuclide model
-  //Component* component_;
+  /// A shared pointer to the geometry of the component
+  GeometryPtr geom_;
  
 };
 #endif

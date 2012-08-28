@@ -6,6 +6,8 @@
 #if !defined(_GEOMETRY_H)
 #define _GEOMETRY_H
 
+#include "boost/shared_ptr.hpp"
+
 /// type definition for Radius in meters
 typedef double Radius;
 
@@ -18,6 +20,11 @@ typedef struct point_t{
   double y_; /**<The y coordinate of the centroid */
   double z_; /**<The z coordinate of the centroid */
 }point_t;
+
+/// type definition for a shared pointer to a Geometry object
+class Geometry;
+typedef boost::shared_ptr<Geometry> GeometryPtr;
+
 
 /**
    @brief The Geometry class stores the cylindrical Component geometry 
@@ -51,7 +58,7 @@ public:
 
      @return a copy of the src object
     */
-  Geometry* copy(Geometry* src, point_t centroid);
+  GeometryPtr copy(GeometryPtr src, point_t centroid);
 
   /**
      Set the radius of the surface at the boundary indicated. 
@@ -115,4 +122,6 @@ protected:
   point_t centroid_; 
 
 };
+
+
 #endif
