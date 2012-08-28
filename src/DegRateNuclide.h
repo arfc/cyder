@@ -170,6 +170,34 @@ public:
    */
   virtual IsoConcMap cauchy_bc();
 
+  /**
+     sums the materials in the vector, filling the vec and kg with 
+     the cumulative IsoVector and total mass, in kg.
+     @TODO should put this in a toolkit or something. Doesn't belong here.
+
+     @param mats the vector of materials to be summed (not mixed)
+     @param kg the total mass of the materials, passed by reference
+     @param vec normalized IsoVector that results from the summing, passed by reference
+    */
+  void sum_mats(std::vector<mat_rsrc_ptr> mats, IsoVector &vec, double &kg);
+
+  /**
+     updates the total degradation and makes time the last degraded time.
+    
+     @param time the time at which to update the degradation
+     @param mats the vector of materials contained in the component
+     @return the current isotopic concentration map at the outer border
+    */
+  IsoConcMap update_conc_hist(int time, std::vector<mat_rsrc_ptr> mats);
+
+  /**
+     updates the total degradation and makes time the last degraded time.
+    
+     @param time the time at which to update the degradation
+     @param deg_rate is the degradation rate since the last degradation, fraction. 
+    */
+  double update_degradation(int time, double deg_rate);
+
 protected:
   /**
      sets the boundary conditions of the 0th through 3rd kind
@@ -219,6 +247,8 @@ protected:
 
   /// the time this nuclide model was initialized, the beginning of degradation
   double init_time_;
+
+  double tot_deg_;
 
 
 };
