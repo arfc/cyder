@@ -72,7 +72,7 @@ TEST_F(ComponentTest, initFunctionNoXML) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, copy) {
   Component* test_copy = new Component();
-  //ASSERT_THROW(test_copy->copy(test_copy), CycException);
+  ASSERT_THROW(test_copy->copy(test_copy), CycException);
 
   EXPECT_NO_THROW(test_component_->init(name_, type_, inner_radius_, outer_radius_, 
         thermal_model_, nuclide_model_));
