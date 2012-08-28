@@ -79,5 +79,8 @@ TEST_F(ComponentTest, copy) {
   EXPECT_NO_THROW(test_copy->copy(test_component_));
 
   EXPECT_EQ(inner_radius_, test_copy->inner_radius());
+  EXPECT_EQ(outer_radius_, test_copy->outer_radius());
+  EXPECT_EQ("STUB_THERMAL", test_copy->thermal_model()->name());
+  EXPECT_EQ("STUB_NUCLIDE", test_copy->nuclide_model()->name());
   delete test_copy;
 }

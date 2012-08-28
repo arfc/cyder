@@ -96,7 +96,7 @@ public:
   /**
      Returns the nuclide model type name
    */
-  virtual std::string name(){return "STUB_NUCLIDE";};
+  virtual std::string name(){return "STUB_NUCLIDE";}; 
 
   /**
      returns the available material source term at the outer boundary of the 

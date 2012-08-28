@@ -419,8 +419,8 @@ const double Component::y(){return geom_->y();}
 const double Component::z(){return geom_->z();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const NuclideModel* Component::nuclide_model(){return nuclide_model_;}
+NuclideModel* Component::nuclide_model(){return nuclide_model_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const ThermalModel* Component::thermal_model(){return thermal_model_;}
+ThermalModel* Component::thermal_model(){return thermal_model_;}
 

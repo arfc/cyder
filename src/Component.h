@@ -313,14 +313,14 @@ public:
      
      @return nuclide_model_
    */
-  const NuclideModel* nuclide_model();
+  NuclideModel* nuclide_model();
 
   /**
      gets the pointer to the thermal model being used in this component
      
      @return thermal_model_
    */
-  const ThermalModel* thermal_model();
+  ThermalModel* thermal_model();
 
   /**
      set the parent component 
