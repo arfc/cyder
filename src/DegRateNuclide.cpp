@@ -44,6 +44,7 @@ void DegRateNuclide::init(xmlNodePtr cur){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::init(double deg_rate) {
   deg_rate_ = deg_rate;
+  init_time_ = TI->time();
   if (deg_rate_ < 0 | deg_rate_ > 1) {
     string err = "Expected a fractional degradation rate. The value provided: ";
     err += deg_rate_ ;
@@ -138,8 +139,13 @@ mat_rsrc_ptr DegRateNuclide::source_term_bc(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
-  /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time()); 
+  IsoConcMap dirichlet;
+  IsoConcMap whole_vol = conc_hist_.at(TI->time()); 
+  IsoConcMap::const_iterator it;
+  for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
+    dirichlet.insert(make_pair((*it).first, tot_deg()*(*it).second));
+  }
+  return dirichlet;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -204,16 +210,19 @@ IsoConcMap DegRateNuclide::update_hist(int time){
   contained_mass_[time]=tot_mass;
 
   // @TODO figure out how to get the volume... 
-  double vol = 1;
-  double scale = tot_mass/vol;
+  double scale = tot_mass/geom_->volume();
   CompMap::iterator it;
   CompMapPtr curr_comp = curr_vec.comp();
   IsoConcMap curr_iso_conc;
   for(it = (*curr_comp).begin(); it != (*curr_comp).end(); ++it) {
-    curr_iso_conc.insert(make_pair((*it).first, (*it).second*scale));
+    curr_iso_conc.insert(make_pair((*it).first, ((*it).second)*scale));
   }
   conc_hist_.insert(make_pair(time, curr_iso_conc));
   return curr_iso_conc;
 }
 
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double DegRateNuclide::tot_deg(){
+  double to_ret = deg_rate()*(TI->time() - init_time_);
+  return min(1.0,to_ret);
+}

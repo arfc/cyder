@@ -198,6 +198,9 @@ protected:
     */
   IsoConcMap update_hist(int time);
 
+  /// returns the total degradation of the component
+  double tot_deg();
+
   /**
      total contaminant mass, in kg, throughout the volume, for each timestep.
    */
@@ -213,6 +216,9 @@ protected:
 
   /// the available source term amount
   double avail_kg_;
+
+  /// the time this nuclide model was initialized, the beginning of degradation
+  double init_time_;
 
 
 };
