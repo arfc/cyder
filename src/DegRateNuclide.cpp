@@ -132,7 +132,7 @@ double DegRateNuclide::contained_mass(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr DegRateNuclide::source_term_bc(){
-  mat_rsrc_ptr src_term= new Material(avail_iso_vec_);
+  mat_rsrc_ptr src_term= new Material( avail_iso_vec_ );
   src_term->setQuantity(avail_kg_);
   return src_term;
 }
@@ -172,7 +172,7 @@ void DegRateNuclide::set_bcs(int time, IsoConcMap conc_map){
 void DegRateNuclide::set_source_term_bc(int time, IsoConcMap conc_map){ 
   // the source term is just the contained material times the current degradation 
   // That'll be part of each contained waste
-  avail_kg_= contained_mass(time)*deg_rate_;
+  avail_kg_= contained_mass(time)*tot_deg();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -209,7 +209,6 @@ IsoConcMap DegRateNuclide::update_hist(int time){
   avail_iso_vec_ = IsoVector(curr_vec);
   contained_mass_[time]=tot_mass;
 
-  // @TODO figure out how to get the volume... 
   double scale = tot_mass/geom_->volume();
   CompMap::iterator it;
   CompMapPtr curr_comp = curr_vec.comp();
