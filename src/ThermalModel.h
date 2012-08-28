@@ -104,8 +104,8 @@ public:
      set the geometry shared pointer
 
      @param geom the geometry of the component, a shared pointer
-     */
-  void set_geom(GeometryPtr geom){geom_=geom;};
+    */
+  void set_geom(GeometryPtr geom){geom_ = geom;};
 
 protected:
   /// The temperature history of this component

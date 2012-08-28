@@ -25,7 +25,10 @@ class DegRateNuclideTest : public ::testing::Test {
     int time_;
     double theta_;
     double adv_vel_;
-    double vol_;
+    GeometryPtr geom_;
+    Radius r_four_, r_five_;
+    Length len_five_;
+    point_t origin_;
 
     virtual void SetUp(){
       // test_deg_rate_nuclide model setup
@@ -33,10 +36,16 @@ class DegRateNuclideTest : public ::testing::Test {
       deg_rate_ = 0.1;
       nuc_model_ptr_ = dynamic_cast<NuclideModel*>(deg_rate_ptr_);
 
+      // set up geometry. this usually happens in the component init
+      r_four_ = 4;
+      r_five_ = 5;
+      point_t origin_ = {0,0,0}; 
+      len_five_ = 5;
+      geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
+
       // other vars
       theta_ = 0.3; // percent porosity
       adv_vel_ = 1; // m/yr
-      vol_ = 2*3.1159; // m^3 
 
       // composition set up
       u235_=92235;
@@ -60,6 +69,7 @@ TEST_F(DegRateNuclideTest, defaultConstructor) {
   ASSERT_EQ("DEGRATE_NUCLIDE", nuc_model_ptr_->name());
   ASSERT_EQ(DEGRATE_NUCLIDE, nuc_model_ptr_->type());
   ASSERT_FLOAT_EQ(0,deg_rate_ptr_->deg_rate());
+  ASSERT_FLOAT_EQ(0,deg_rate_ptr_->geom()->length());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -76,6 +86,13 @@ TEST_F(DegRateNuclideTest, copy) {
   EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
   EXPECT_FLOAT_EQ(deg_rate_, test_copy->deg_rate());
   delete test_copy;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, setGeometry) {  
+  //@TODO tests like this should be interface tests for the NuclideModel class concrete instances.
+  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
+  EXPECT_FLOAT_EQ(len_five_ , nuc_model_ptr_->geom()->length());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -121,8 +138,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   // if the degradation rate is zero, nothing should be released
   // set the degradation rate
   deg_rate_=0;
+  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/vol_;
+  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
 
   ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_, deg_rate_ptr_->deg_rate());
@@ -146,8 +164,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
 TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){ 
   // if the degradation rate is .5, everything should be released in two years
   deg_rate_= 0.5;
+  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/vol_;
+  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
 
   // set the degradation rate
   ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
@@ -203,8 +222,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
 TEST_F(DegRateNuclideTest, transportNuclidesDR1){ 
   // if the degradation rate is one, everything should be released in a timestep
   deg_rate_= 1;
+  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/vol_;
+  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
 
   // set the degradation rate
   ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));

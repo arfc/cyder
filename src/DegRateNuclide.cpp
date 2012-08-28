@@ -18,13 +18,15 @@ using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(){
-  deg_rate_=0;
+  set_deg_rate(0);
   contained_mass_ = map<int,double>();
   contained_mass_.insert(make_pair(TI->time(), 0));
   conc_hist_ = ConcHist();
   IsoConcMap zero_map;
   zero_map.insert(make_pair(92235,0.0));
   conc_hist_.insert(make_pair(TI->time(), zero_map ));
+
+  set_geom(GeometryPtr(new Geometry()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

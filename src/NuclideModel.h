@@ -153,6 +153,10 @@ public:
   /// Allows the geometry object to be set
   void set_geom(GeometryPtr geom){ geom_=geom; };
 
+  /// Returns the geom_ data member
+  GeometryPtr geom() {return geom_;};
+
+
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};

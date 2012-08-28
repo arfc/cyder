@@ -11,6 +11,12 @@
 /// type definition for Radius in meters
 typedef double Radius;
 
+/// type definition for Length in meters
+typedef double Length;
+
+/// type definition for Volume in meters^3
+typedef double Volume;
+
 /// Enum for type of boundary.
 enum BoundaryType {INNER, OUTER};
 
@@ -46,9 +52,11 @@ public:
      @param inner_radius the inner_radius_ data member [m]
      @param outer_radius the outer_radius_ data member [m]
      @param centroid the centroid_ data member [m]
+     @param length the length_ data memeber [m]
      @return a geometry object
     */
-  Geometry(Radius inner_radius, Radius outer_radius, point_t centroid);
+  Geometry(Radius inner_radius, Radius outer_radius, 
+      point_t centroid, Length length);
 
   /**
      A copy constructor
@@ -73,9 +81,16 @@ public:
   /**
      Set the coordinate location of the centroid, a point. [m]
 
-     @param centroid the central point of the cylinder
+     @param centroid the new central point of the cylinder
     */
   void set_centroid(point_t centroid); 
+
+  /**
+     Set the length_ datamember of the cylinder [m]
+
+     @param length the new length of the cylinder 
+     */
+  void set_length(Length length); 
 
   /**
      Radius of the inner surface. 0 for solid objects. [m]
@@ -105,7 +120,28 @@ public:
   /// get the z component of the centroid position vector of the object
   const double z();
 
+  /// get the length of the component 
+  const Length length();
+
+  /** 
+     get the volume of the component 
+
+     @return NULL if the volume is infinite
+     */
+  const Volume volume();
+
+
 protected:
+  /**
+     Returns the (solid) volume of a cylinder, not explicitly the one 
+     represented by this geometry.
+     
+     @param radius the (outer) radius of the (solid) cylindrical volume [m]
+     @param length the length of the cylindrical volume [m]
+     @return the volume of a solid cylinder with radius=radius and length=length
+    */
+  Volume solid_volume(Radius radius, Length length); 
+
   /**
      Radius of the inner surface. 0 for solid objects. [m]
     */
@@ -121,6 +157,11 @@ protected:
     */
   point_t centroid_; 
 
+  /** 
+     The length of the cylindrical section [m]
+     NULL if infinite
+    */
+  Length length_;
 };
 
 

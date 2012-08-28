@@ -3,73 +3,80 @@
 
 #include "Component.h"
 #include "CycException.h"
+#include "StubThermal.h"
+#include "StubNuclide.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 class ComponentTest : public ::testing::Test {
   protected:
-    Component* test_component;
+    Component* test_component_;
     Temp OneHundredCinK;
-    string name;
-    ComponentType type;
-    Radius inner_radius, outer_radius;
-    ThermalModel* thermal_model;
-    NuclideModel* nuclide_model;
+    string name_;
+    ComponentType type_;
+    Radius inner_radius_, outer_radius;
+    ThermalModel* thermal_model_;
+    NuclideModel* nuclide_model_;
 
     virtual void SetUp(){
-      test_component = new Component();
+      test_component_ = new Component();
       OneHundredCinK=373;
-      name = "Test";
-      type = BUFFER;
-      inner_radius = 2;
+      name_ = "Test";
+      type_ = BUFFER;
+      inner_radius_ = 2;
       outer_radius = 10;
-      thermal_model=NULL;
-      nuclide_model=NULL;
+      thermal_model_ = new StubThermal();
+      nuclide_model_ = new StubNuclide();
     }
     virtual void TearDown() {
-      delete test_component;
+      delete test_component_;
     }
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, defaultConstructor) {
-  ASSERT_EQ("", test_component->name());
-  ASSERT_EQ(LAST_EBS, test_component->type());
-  ASSERT_FLOAT_EQ(0,test_component->inner_radius());
-  ASSERT_EQ(NULL, test_component->outer_radius());
+  ASSERT_EQ("", test_component_->name());
+  ASSERT_EQ(LAST_EBS, test_component_->type());
+  ASSERT_FLOAT_EQ(0,test_component_->inner_radius());
+  ASSERT_EQ(NULL, test_component_->outer_radius());
 
-  ASSERT_FLOAT_EQ(0, test_component->centroid().x_);
-  ASSERT_FLOAT_EQ(0, test_component->centroid().y_);
-  ASSERT_FLOAT_EQ(0, test_component->centroid().z_);
+  ASSERT_FLOAT_EQ(0, test_component_->centroid().x_);
+  ASSERT_FLOAT_EQ(0, test_component_->centroid().y_);
+  ASSERT_FLOAT_EQ(0, test_component_->centroid().z_);
 
-  ASSERT_FLOAT_EQ(0, test_component->x());
-  ASSERT_FLOAT_EQ(0, test_component->y());
-  ASSERT_FLOAT_EQ(0, test_component->z());
+  ASSERT_FLOAT_EQ(0, test_component_->x());
+  ASSERT_FLOAT_EQ(0, test_component_->y());
+  ASSERT_FLOAT_EQ(0, test_component_->z());
 
-  ASSERT_FLOAT_EQ(0, test_component->temp());
-  ASSERT_FLOAT_EQ(OneHundredCinK, test_component->temp_lim());
-  ASSERT_EQ(NULL, test_component->thermal_model());
-  ASSERT_EQ(NULL, test_component->nuclide_model());
+  ASSERT_FLOAT_EQ(0, test_component_->temp());
+  ASSERT_FLOAT_EQ(OneHundredCinK, test_component_->temp_lim());
+  ASSERT_EQ(NULL, test_component_->thermal_model());
+  ASSERT_EQ(NULL, test_component_->nuclide_model());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, initFunctionNoXML) { 
-  EXPECT_NO_THROW(test_component->init(name, type, inner_radius, outer_radius, 
-        thermal_model, nuclide_model));
-  ASSERT_EQ(name, test_component->name());
-  ASSERT_EQ(type, test_component->type());
-  ASSERT_EQ(inner_radius, test_component->inner_radius());
-  ASSERT_EQ(outer_radius, test_component->outer_radius());
-  ASSERT_EQ(thermal_model, test_component->thermal_model());
-  ASSERT_EQ(nuclide_model, test_component->nuclide_model());
+  EXPECT_THROW(test_component_->init(name_, type_, inner_radius_, outer_radius, 
+        NULL, NULL), CycException);
+  EXPECT_NO_THROW(test_component_->init(name_, type_, inner_radius_, outer_radius, 
+        thermal_model_, nuclide_model_));
+  ASSERT_EQ(name_, test_component_->name());
+  ASSERT_EQ(type_, test_component_->type());
+  ASSERT_EQ(inner_radius_, test_component_->inner_radius());
+  ASSERT_EQ(outer_radius, test_component_->outer_radius());
+  ASSERT_EQ(thermal_model_, test_component_->thermal_model());
+  ASSERT_EQ(nuclide_model_, test_component_->nuclide_model());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, copy) {
-  EXPECT_NO_THROW(test_component->init(name, type, inner_radius, outer_radius, 
-        thermal_model, nuclide_model));
+  EXPECT_NO_THROW(test_component_->init(name_, type_, inner_radius_, outer_radius, 
+        thermal_model_, nuclide_model_));
   Component* test_copy = new Component();
-  ASSERT_THROW(test_copy->copy(test_component), CycException);
+  ASSERT_THROW(test_copy->copy(test_copy), CycException);
+  EXPECT_NO_THROW(test_copy->copy(test_component_));
+
+  EXPECT_EQ(inner_radius_, test_copy->inner_radius());
   delete test_copy;
 }

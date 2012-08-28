@@ -87,13 +87,18 @@ void Component::init(string name, ComponentType type,
   name_ = name;
   type_ = type;
   geom_->set_radius(INNER, inner_radius);
-  geom_->set_radius(OUTER,outer_radius);
+  geom_->set_radius(OUTER, outer_radius);
 
-  thermal_model->set_geom(geom_);
-  nuclide_model->set_geom(geom_);
+  if ( !(thermal_model) || !(nuclide_model) ) {
+    string err = "The thermal or nuclide model provided is null " ;
+    throw CycException(err);
+  } else { 
+    thermal_model->set_geom(geom_);
+    nuclide_model->set_geom(geom_);
 
-  thermal_model_ = thermal_model;
-  nuclide_model_ = nuclide_model;
+    thermal_model_ = thermal_model;
+    nuclide_model_ = nuclide_model;
+  }
 
   parent_ = NULL;
 
