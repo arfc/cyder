@@ -305,6 +305,9 @@ public:
   /// get the z component of the centroid position vector of the object
   const double z();
 
+  /// get the pointer to the geometry object
+  const GeometryPtr geom() {return geom_;};
+
   /**
      gets the pointer to the nuclide model being used in this component
      
