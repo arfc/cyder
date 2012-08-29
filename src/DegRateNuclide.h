@@ -177,7 +177,7 @@ public:
 
      @param mats the vector of materials to be summed (not mixed)
     */
-  void sum_mats(std::vector<mat_rsrc_ptr> mats);
+  std::pair<IsoVector, double> sum_mats(std::vector<mat_rsrc_ptr> mats);
 
   /**
      updates the total degradation and makes time the last degraded time.
@@ -195,6 +195,9 @@ public:
      @param deg_rate is the degradation rate since the last degradation, fraction. 
     */
   double update_degradation(int time, double deg_rate);
+
+  IsoVector contained_vec(int time);
+  void update_vec_hist(int time);
 
 protected:
   /**
@@ -228,20 +231,9 @@ protected:
   double tot_deg();
 
   /**
-     total contaminant mass, in kg, throughout the volume, for each timestep.
-   */
-  std::map<int,double> contained_mass_;
-
-  /**
     The degradation rate that defines this model, fraction per year.
    */
   double deg_rate_;
-
-  /// the available source term in isovector form 
-  IsoVector avail_iso_vec_;
-
-  /// the available source term amount
-  double avail_kg_;
 
   /// the time this nuclide model was initialized, the beginning of degradation
   double init_time_;

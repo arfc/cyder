@@ -43,11 +43,19 @@ typedef double Concentration;
 typedef std::map<int, Concentration> IsoConcMap;
 
 /** 
-   type definition fro a map from times to IsoConcMap
+   type definition for a map from times to IsoConcMap
    The keys are timesteps, in the unit of the timesteps in the simulation.
    The values are the IsoConcMap maps at those timesteps
   */
 typedef std::map<int, IsoConcMap> ConcHist;
+
+
+/**
+   type definition for a map from times to (normalized) IsoVectors, 
+   paired with masses
+
+  */
+typedef std::map<int, std::pair<IsoVector, double> > VecHist;
 
 /** 
    @brief Abstract interface for GenericRepository nuclide transport 
@@ -164,6 +172,9 @@ protected:
 
   /// The map of times to isotopes to concentrations, in kg/m^3
   ConcHist conc_hist_;
+  
+  /// The map of times to IsoVectors
+  VecHist vec_hist_;
   
   /// A shared pointer to the geometry of the component
   GeometryPtr geom_;

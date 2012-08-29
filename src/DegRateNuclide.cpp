@@ -20,12 +20,7 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(){
   set_deg_rate(0);
-  contained_mass_ = map<int,double>();
-  contained_mass_.insert(make_pair(TI->time(), 0));
-  conc_hist_ = ConcHist();
-  IsoConcMap zero_map;
-  zero_map.insert(make_pair(92235,0.0));
-  conc_hist_.insert(make_pair(TI->time(), zero_map ));
+  vec_hist_ = VecHist();
 
   set_geom(GeometryPtr(new Geometry()));
 }
@@ -123,7 +118,7 @@ void DegRateNuclide::set_deg_rate(double deg_rate){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::contained_mass(int time){
-  return contained_mass_.at(time);
+  return vec_hist_.at(time).second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -133,8 +128,8 @@ double DegRateNuclide::contained_mass(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr DegRateNuclide::source_term_bc(){
-  mat_rsrc_ptr src_term= new Material( avail_iso_vec_ );
-  src_term->setQuantity(avail_kg_);
+  mat_rsrc_ptr src_term = mat_rsrc_ptr( new Material( contained_vec(TI->time()) ) );
+  src_term->setQuantity( tot_deg()*contained_mass(TI->time()) );
   return src_term;
 }
 
@@ -173,7 +168,7 @@ void DegRateNuclide::set_bcs(int time, IsoConcMap conc_map){
 void DegRateNuclide::set_source_term_bc(int time, IsoConcMap conc_map){ 
   // the source term is just the contained material times the current degradation 
   // That'll be part of each contained waste
-  avail_kg_= contained_mass(time)*deg_rate_;
+  // nothing really to set
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -201,18 +196,14 @@ IsoConcMap DegRateNuclide::update_hist(int time){
 IsoConcMap DegRateNuclide::update_conc_hist(int time, vector<mat_rsrc_ptr> wastes){
 
   IsoConcMap to_ret;
-  double kg_sum;
-  IsoVector vec_sum;
 
-  sum_mats(wastes);
+  pair<IsoVector, double> sum_pair; 
+  sum_pair = make_pair(vec_hist_.at(time).first, vec_hist_.at(time).second);
 
-  avail_iso_vec_ = IsoVector(avail_iso_vec_);
-  contained_mass_[time]=avail_kg_;
-
-  double scale = avail_kg_/geom_->volume();
+  double scale = sum_pair.second/geom_->volume();
 
   CompMap::iterator it;
-  CompMapPtr curr_comp = avail_iso_vec_.comp();
+  CompMapPtr curr_comp = sum_pair.first.comp();
   for(it = (*curr_comp).begin(); it != (*curr_comp).end(); ++it) {
     to_ret.insert(make_pair((*it).first, ((*it).second)*scale));
   }
@@ -222,23 +213,23 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, vector<mat_rsrc_ptr> waste
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::sum_mats(vector<mat_rsrc_ptr> mats){
+pair<IsoVector, double> DegRateNuclide::sum_mats(vector<mat_rsrc_ptr> mats){
   IsoVector vec_to_add, vec;
   vector<mat_rsrc_ptr>::iterator mat;
-  avail_kg_ = 0;
+  double kg = 0;
   double this_mass = 0;
   double ratio = 0;
 
   for(mat = mats.begin(); mat != mats.end(); ++mat){ 
     this_mass = (*mat)->mass(KG);
-    avail_kg_ += this_mass;
-    ratio = this_mass/avail_kg_;
+    kg += this_mass;
+    ratio = this_mass/kg;
     vec_to_add = IsoVector((*mat)->isoVector().comp());
     vec.mix(vec_to_add, ratio);
   }
 
   vec.normalize();
-  avail_iso_vec_=vec;
+  return make_pair(vec, kg);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -255,3 +246,15 @@ double DegRateNuclide::update_degradation(int time, double deg_rate){
 double DegRateNuclide::tot_deg(){
   return tot_deg_;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::update_vec_hist(int time){
+  vec_hist_.insert( make_pair( time, sum_mats(wastes_)) );
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoVector DegRateNuclide::contained_vec(int time){
+  IsoVector to_ret = vec_hist_.at(time).first;
+  return to_ret;
+}
+
