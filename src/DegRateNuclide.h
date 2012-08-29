@@ -196,10 +196,51 @@ public:
     */
   double update_degradation(int time, double deg_rate);
 
+  /** 
+     The IsoVector representing the summed, normalized material in 
+     the component.
+     @TODO should put this in a toolkit or something. Doesn't belong here.
+
+     @param time the time at which to retrieve the IsoVector
+
+     @return vec_hist(time).first
+    */
   IsoVector contained_vec(int time);
+
+  /**
+     Updates the isotopic vector history at the time
+
+     @param time the time at which to update the vector history
+     @throws an exception if the time provided is less than the 
+     last_degraded_ time.
+     */
   void update_vec_hist(int time);
+
+  /**
+     Returns the map of isotopes to concentrations at the time profided
+     @TODO should put this in a toolkit or something. Doesn't belong here.
+
+     @param time the time at which to query the concentration history
+     @return conc_hist_.at(time). If not found an empty IsoConcMap is return
+    */
   IsoConcMap conc_hist(int time);
+
+  /**
+     Returns the concetration of a certain isotope at a certain time
+
+     @param time the time to query the concentration history
+     @param tope the isotope to query
+     @return conc_hist(time)[iso].second, or zero if not found
+     */
   Concentration conc_hist(int time, Iso tope);
+
+  /**
+     Returns the IsoVector mass pair for a certain time
+
+     @param time the time to query the isotopic history
+     @return vec_hist_.at(time). If not found an empty pair is returned.
+     */
+  std::pair<IsoVector, double> vec_hist(int time);
 
 
 protected:
@@ -208,10 +249,10 @@ protected:
 
      @param conc_map the current map of concentrations at the boundary
     */
-  void set_bcs(int time, IsoConcMap conc_map);
+  void set_bcs(int time);
 
   /// sets the boundary condition of the 0th kind
-  void set_source_term_bc(int time, IsoConcMap conc_map);
+  void set_source_term_bc(int time, std::pair<IsoVector,double> vec);
 
   /// sets the boundary condition of the 1st kind
   void set_dirichlet_bc(int time, IsoConcMap conc_map);
@@ -228,7 +269,7 @@ protected:
      @param time is the time at which to update the history
      @returns the IsoConcMap added to conc_hist_ at that time
     */
-  IsoConcMap update_hist(int time);
+  void update_hist(int time);
 
   /// returns the total degradation of the component
   double tot_deg();
