@@ -20,8 +20,16 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(){
   set_deg_rate(0);
-  vec_hist_ = VecHist();
 
+  vec_hist_ = VecHist();
+  vec_hist_.insert(make_pair(0, make_pair(IsoVector(),0)));
+
+  conc_hist_ = ConcHist();
+  IsoConcMap zero_map;
+  zero_map.insert(make_pair(92235,0));
+  conc_hist_.insert(make_pair(0, zero_map));
+
+  last_degraded_ = 0;
   set_geom(GeometryPtr(new Geometry()));
 }
 
@@ -117,8 +125,8 @@ void DegRateNuclide::set_deg_rate(double deg_rate){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double DegRateNuclide::contained_mass(int time){
-  return vec_hist_.at(time).second;
+double DegRateNuclide::contained_mass(int time){ 
+  return (*vec_hist_.find(time)).second.second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -135,8 +143,8 @@ mat_rsrc_ptr DegRateNuclide::source_term_bc(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
-  IsoConcMap dirichlet;
-  IsoConcMap whole_vol = conc_hist_.at(TI->time()); 
+  IsoConcMap dirichlet, whole_vol;
+  whole_vol = conc_hist(TI->time());
   IsoConcMap::const_iterator it;
   for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
     dirichlet.insert(make_pair((*it).first, tot_deg()*(*it).second));
@@ -189,6 +197,7 @@ void DegRateNuclide::set_cauchy_bc(int time, IsoConcMap conc_map){}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::update_hist(int time){
   update_degradation(time, deg_rate_);
+  update_vec_hist(time);
   return update_conc_hist(time, wastes_);
 }
 
@@ -257,4 +266,31 @@ IsoVector DegRateNuclide::contained_vec(int time){
   IsoVector to_ret = vec_hist_.at(time).first;
   return to_ret;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap DegRateNuclide::conc_hist(int time){
+  IsoConcMap to_ret;
+  ConcHist::iterator it;
+  it = conc_hist_.find(time);
+  if( it != conc_hist_.end() ){
+    to_ret = (*it).second;
+  } else {
+    to_ret.insert(make_pair(92235,0)); // zero
+  }
+  return to_ret;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+Concentration DegRateNuclide::conc_hist(int time, Iso tope){
+  Concentration to_ret;
+  IsoConcMap conc_map = conc_hist(time);
+  IsoConcMap::iterator it;
+  it = conc_map.find(tope);
+  if(it != conc_map.end()){
+    to_ret = (*it).second;
+  }else{
+    to_ret = 0;
+  }
+  return to_ret;
+}
+
 

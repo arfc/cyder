@@ -198,6 +198,9 @@ public:
 
   IsoVector contained_vec(int time);
   void update_vec_hist(int time);
+  IsoConcMap conc_hist(int time);
+  Concentration conc_hist(int time, Iso tope);
+
 
 protected:
   /**
