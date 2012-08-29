@@ -45,7 +45,7 @@ void DegRateNuclide::init(xmlNodePtr cur){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::init(double deg_rate) {
   deg_rate_ = deg_rate;
-  init_time_ = TI->time();
+  last_degraded_ = TI->time();
   if (deg_rate_ < 0 | deg_rate_ > 1) {
     string err = "Expected a fractional degradation rate. The value provided: ";
     err += deg_rate_ ;
@@ -204,15 +204,15 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, vector<mat_rsrc_ptr> waste
   double kg_sum;
   IsoVector vec_sum;
 
-  sum_mats(wastes, &vec_sum, &kg_sum);
+  sum_mats(wastes);
 
-  avail_iso_vec_ = IsoVector(vec_sum);
-  contained_mass_[time]=kg_sum;
+  avail_iso_vec_ = IsoVector(avail_iso_vec_);
+  contained_mass_[time]=avail_kg_;
 
-  double scale = kg_sum/geom_->volume();
+  double scale = avail_kg_/geom_->volume();
 
   CompMap::iterator it;
-  CompMapPtr curr_comp = vec_sum.comp();
+  CompMapPtr curr_comp = avail_iso_vec_.comp();
   for(it = (*curr_comp).begin(); it != (*curr_comp).end(); ++it) {
     to_ret.insert(make_pair((*it).first, ((*it).second)*scale));
   }
@@ -222,22 +222,23 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, vector<mat_rsrc_ptr> waste
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::sum_mats(vector<mat_rsrc_ptr> mats, IsoVector &vec, double &kg){
-  IsoVector vec_to_add;
+void DegRateNuclide::sum_mats(vector<mat_rsrc_ptr> mats){
+  IsoVector vec_to_add, vec;
   vector<mat_rsrc_ptr>::iterator mat;
-  kg = 0;
+  avail_kg_ = 0;
   double this_mass = 0;
   double ratio = 0;
 
   for(mat = mats.begin(); mat != mats.end(); ++mat){ 
     this_mass = (*mat)->mass(KG);
-    kg += this_mass;
-    ratio = this_mass/tot_mass;
-    vec_to_add = IsoVector((*waste)->isoVector().comp());
+    avail_kg_ += this_mass;
+    ratio = this_mass/avail_kg_;
+    vec_to_add = IsoVector((*mat)->isoVector().comp());
     vec.mix(vec_to_add, ratio);
   }
 
   vec.normalize();
+  avail_iso_vec_=vec;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

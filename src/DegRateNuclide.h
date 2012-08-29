@@ -176,10 +176,8 @@ public:
      @TODO should put this in a toolkit or something. Doesn't belong here.
 
      @param mats the vector of materials to be summed (not mixed)
-     @param kg the total mass of the materials, passed by reference
-     @param vec normalized IsoVector that results from the summing, passed by reference
     */
-  void sum_mats(std::vector<mat_rsrc_ptr> mats, IsoVector &vec, double &kg);
+  void sum_mats(std::vector<mat_rsrc_ptr> mats);
 
   /**
      updates the total degradation and makes time the last degraded time.
@@ -249,6 +247,8 @@ protected:
   double init_time_;
 
   double tot_deg_;
+
+  int last_degraded_;
 
 
 };
