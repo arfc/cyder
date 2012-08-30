@@ -234,7 +234,9 @@ pair<IsoVector, double> DegRateNuclide::sum_mats(vector<mat_rsrc_ptr> mats){
 double DegRateNuclide::update_degradation(int time, double deg_rate){
   assert(last_degraded_ <= time);
   assert(deg_rate<=1.0 && deg_rate >= 0.0);
-  tot_deg_ += deg_rate*(time - last_degraded_);
+  double total;
+  total = tot_deg_ + deg_rate*(time - last_degraded_);
+  tot_deg_ = min(1.0, total);
   last_degraded_ = time;
 
   return tot_deg_;

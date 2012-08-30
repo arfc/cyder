@@ -244,6 +244,9 @@ public:
      */
   std::pair<IsoVector, double> vec_hist(int time);
 
+  /// returns the total degradation of the component
+  double tot_deg();
+
 
 protected:
   /**
@@ -272,9 +275,6 @@ protected:
      @returns the IsoConcMap added to conc_hist_ at that time
     */
   void update_hist(int time);
-
-  /// returns the total degradation of the component
-  double tot_deg();
 
   /**
     The degradation rate that defines this model, fraction per year.

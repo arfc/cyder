@@ -131,6 +131,35 @@ TEST_F(DegRateNuclideTest, set_deg_rate){
   EXPECT_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_), CycRangeException);
   EXPECT_NE(deg_rate_ptr_->deg_rate(), deg_rate_);
 }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, total_degradation){
+  deg_rate_=0.3;
+  int max_degs = 1.0/deg_rate_;
+  // Check deg rate
+  ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
+  ASSERT_FLOAT_EQ(deg_rate_ptr_->deg_rate(), deg_rate_);
+
+  ASSERT_EQ(0, time_);
+  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
+
+  ASSERT_EQ(1, time_);
+  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
+
+  ASSERT_EQ(2, time_);
+  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
+
+  ASSERT_EQ(3, time_);
+  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
+
+  ASSERT_EQ(4, time_);
+  ASSERT_TRUE(time_ > max_degs);
+  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  EXPECT_FLOAT_EQ(1, deg_rate_ptr_->tot_deg());
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDR0){ 
