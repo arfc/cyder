@@ -218,6 +218,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
 
   // TRANSPORT NUCLIDES 
+  ASSERT_EQ(0, time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that half that material is offered as the source term in one year
@@ -233,6 +236,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // remove the source term offered
   EXPECT_NO_THROW(nuc_model_ptr_->extract(nuc_model_ptr_->source_term_bc()));
   // TRANSPORT NUCLIDES 
+  ASSERT_EQ(3, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that the remaining half is offered as the source term in year two
@@ -248,6 +252,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // remove the source term offered
   EXPECT_NO_THROW(nuc_model_ptr_->extract(nuc_model_ptr_->source_term_bc()));
   // TRANSPORT NUCLIDES 
+  ASSERT_EQ(4, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that timestep 3 doesn't crash or offer material it doesn't have
