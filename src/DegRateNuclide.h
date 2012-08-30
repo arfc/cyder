@@ -284,6 +284,7 @@ protected:
   /// the time this nuclide model was initialized, the beginning of degradation
   double init_time_;
 
+  /// the total fraction that this component has degraded
   double tot_deg_;
 
   int last_degraded_;
