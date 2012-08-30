@@ -98,7 +98,8 @@ void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
     left_over->absorb(wastes_.back());
     wastes_.pop_back();
   }
-  //left_over->extract(vec_to_rem);
+  left_over->extract(vec_to_rem);
+  wastes_.push_back(left_over);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -124,7 +125,7 @@ void DegRateNuclide::set_deg_rate(double deg_rate){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::contained_mass(int time){ 
-  return (*vec_hist_.find(time)).second.second;
+  return vec_hist(time).second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

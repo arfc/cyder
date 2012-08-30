@@ -221,7 +221,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
 
   // TRANSPORT NUCLIDES 
   ASSERT_EQ(0, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
