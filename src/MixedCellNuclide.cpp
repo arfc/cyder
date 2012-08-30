@@ -63,7 +63,7 @@ void MixedCellNuclide::extract(mat_rsrc_ptr matToRem)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void MixedCellNuclide::transportNuclides(){
+void MixedCellNuclide::transportNuclides(int time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   // The convention will be that flux is positive in the radial direction

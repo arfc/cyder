@@ -175,19 +175,19 @@ void Component::extract(mat_rsrc_ptr mat_to_rem){
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::transportHeat(){
+void Component::transportHeat(int time){
   if ( NULL == thermal_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no thermal_model_ loaded before Component::transportHeat." ;
   } else {
-    thermal_model_->transportHeat();
+    thermal_model_->transportHeat(time);
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::transportNuclides(){
+void Component::transportNuclides(int time){
   if ( NULL == nuclide_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
   } else { 
-    nuclide_model_->transportNuclides();
+    nuclide_model_->transportNuclides(time);
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

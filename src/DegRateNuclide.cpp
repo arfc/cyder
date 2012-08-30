@@ -47,14 +47,14 @@ void DegRateNuclide::init(xmlNodePtr cur){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::init(double deg_rate) {
-  deg_rate_ = deg_rate;
-  last_degraded_ = TI->time();
   if (deg_rate_ < 0 | deg_rate_ > 1) {
     string err = "Expected a fractional degradation rate. The value provided: ";
     err += deg_rate_ ;
     err += ", is not between 0 and 1 (inclusive).";
     LOG(LEV_ERROR,"GRDRNuc") << err ;;
     throw CycException(err);
+  } else {
+    deg_rate_ = deg_rate;
   }
 }
 
@@ -62,6 +62,7 @@ void DegRateNuclide::init(double deg_rate) {
 NuclideModel* DegRateNuclide::copy(NuclideModel* src){
   DegRateNuclide* toRet = new DegRateNuclide();
   deg_rate_ = dynamic_cast<DegRateNuclide*>(src)->deg_rate_;
+  last_degraded_ = TI->time();
   return (NuclideModel*)toRet;
 }
 
@@ -92,23 +93,11 @@ void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::transportNuclides(){
+void DegRateNuclide::transportNuclides(int time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
-  // The convention will be that flux is positive in the radial direction
-  // If these fluxes are negative, nuclides aphysically flow toward the waste package 
-  // It will send the adjacent components information?
-  //
-  // Sometimes it's easier to use the dissolution rate as a source term in the 
-  // transport equations
-  //
-  // Dissolution rate : m_dot[i,t] = C[i,t]*Q;
-  // if S is the crossectional area perpendicular to water flow and v is water 
-  // velocity : f[i,z,t] = C[i,t] * v * d(z)  = volumetric source term
-
-  // retrieve data about the component
-  update_hist(TI->time());
-  set_bcs(TI->time());
+  update_hist(time);
+  set_bcs(time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -131,20 +120,20 @@ double DegRateNuclide::contained_mass(int time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::contained_mass(){
-  return contained_mass(TI->time());
+  return contained_mass(last_degraded_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr DegRateNuclide::source_term_bc(){
-  mat_rsrc_ptr src_term = mat_rsrc_ptr( new Material( contained_vec(TI->time()) ) );
-  src_term->setQuantity( tot_deg()*contained_mass(TI->time()) );
+  mat_rsrc_ptr src_term = mat_rsrc_ptr( new Material( contained_vec(last_degraded_) ) );
+  src_term->setQuantity( tot_deg()*contained_mass(last_degraded_) );
   return src_term;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
   IsoConcMap dirichlet, whole_vol;
-  whole_vol = conc_hist(TI->time());
+  whole_vol = conc_hist(last_degraded_);
   IsoConcMap::const_iterator it;
   for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
     dirichlet.insert(make_pair((*it).first, tot_deg()*(*it).second));
@@ -155,13 +144,13 @@ IsoConcMap DegRateNuclide::dirichlet_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::neumann_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist(TI->time()); 
+  return conc_hist(last_degraded_); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist(TI->time()); 
+  return conc_hist(last_degraded_); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -197,6 +186,7 @@ void DegRateNuclide::set_cauchy_bc(int time, IsoConcMap conc_map){}
 void DegRateNuclide::update_hist(int time){
   update_degradation(time, deg_rate_);
   update_vec_hist(time);
+  update_conc_hist(time, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

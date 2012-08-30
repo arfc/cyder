@@ -105,8 +105,10 @@ public:
 
   /**
      Transports nuclides from the inner to the outer boundary 
+
+     @param time the timestep at which to transport the nuclides
    */
-  virtual void transportNuclides();
+  virtual void transportNuclides(int time);
 
   /**
      Returns the nuclide model type

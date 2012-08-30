@@ -40,7 +40,7 @@ void LumpedThermal::print(){
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void LumpedThermal::transportHeat(){
+void LumpedThermal::transportHeat(int time){
   // This will transport the heat through the component at hand. 
   // It should send some kind of heat object or reset the temperatures. 
 }

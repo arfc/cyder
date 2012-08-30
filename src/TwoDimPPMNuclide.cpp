@@ -77,7 +77,7 @@ void TwoDimPPMNuclide::extract(mat_rsrc_ptr matToRem)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void TwoDimPPMNuclide::transportNuclides(){
+void TwoDimPPMNuclide::transportNuclides(int time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   // The convention will be that flux is positive in the radial direction

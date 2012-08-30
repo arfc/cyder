@@ -7,7 +7,6 @@
 #include "NuclideModel.h"
 #include "CycException.h"
 #include "Material.h"
-#include "Timer.h"
 
 using namespace std;
 
@@ -22,13 +21,13 @@ class DegRateNuclideTest : public ::testing::Test {
     int one_mol_;
     int u235_, am241_;
     double test_size_;
-    int time_;
     double theta_;
     double adv_vel_;
     GeometryPtr geom_;
     Radius r_four_, r_five_;
     Length len_five_;
     point_t origin_;
+    int time_;
 
     virtual void SetUp(){
       // test_deg_rate_nuclide model setup
@@ -46,6 +45,7 @@ class DegRateNuclideTest : public ::testing::Test {
       // other vars
       theta_ = 0.3; // percent porosity
       adv_vel_ = 1; // m/yr
+      time_ = 0;
 
       // composition set up
       u235_=92235;
@@ -57,7 +57,6 @@ class DegRateNuclideTest : public ::testing::Test {
       // material creation
       test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
       test_mat_->setQuantity(test_size_);
-      int time_ = TI->time();
     }
     virtual void TearDown() {
       delete deg_rate_ptr_;
@@ -147,7 +146,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   // get the initial mass
   double initial_mass = deg_rate_ptr_->contained_mass();
   // transport the nuclides
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides());
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
   // check that the contained mass matches the initial mass
   EXPECT_FLOAT_EQ(initial_mass, deg_rate_ptr_->contained_mass()); 
   // check the source term 
@@ -175,7 +174,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
 
   // TRANSPORT NUCLIDES 
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides());
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that half that material is offered as the source term in one year
   // Source Term
@@ -190,7 +189,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // remove the source term offered
   EXPECT_NO_THROW(nuc_model_ptr_->extract(nuc_model_ptr_->source_term_bc()));
   // TRANSPORT NUCLIDES 
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides());
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that the remaining half is offered as the source term in year two
   // Source Term
@@ -205,7 +204,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // remove the source term offered
   EXPECT_NO_THROW(nuc_model_ptr_->extract(nuc_model_ptr_->source_term_bc()));
   // TRANSPORT NUCLIDES 
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides());
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that timestep 3 doesn't crash or offer material it doesn't have
   // Source Term
@@ -234,7 +233,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides());
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc()->quantity());
@@ -248,7 +247,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   // remove the source term offered
   EXPECT_NO_THROW(nuc_model_ptr_->extract(nuc_model_ptr_->source_term_bc()));
   // TRANSPORT NUCLIDES
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides());
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that nothing more is offered in time step 2
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc()->quantity());

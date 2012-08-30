@@ -131,14 +131,18 @@ public:
   /**
      Transports heat from the inner boundary to the outer boundary in this 
      component
+     
+     @param time the timestep at which to transport the heat
    */
-  void transportHeat();
+  void transportHeat(int time);
 
   /**
      Transports nuclides from the inner boundary to the outer boundary in this 
      component
+
+     @param time the timestep at which to transport the nuclides
    */
-  void transportNuclides();
+  void transportNuclides(int time);
 
   /** 
      Loads this component with another component.

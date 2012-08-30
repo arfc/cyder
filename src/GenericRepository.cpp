@@ -315,10 +315,10 @@ void GenericRepository::handleTock(int time) {
   emplaceWaste();
 
   // calculate the heat
-  transportHeat();
+  transportHeat(time);
   
   // calculate the nuclide transport
-  transportNuclides();
+  transportNuclides(time);
   
   // call the facility model's handle tock last 
   // to check for decommissioning
@@ -611,50 +611,50 @@ Component* GenericRepository::setPlacement(Component* comp){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::transportHeat(){
+void GenericRepository::transportHeat(int time){
   // update the thermal BCs everywhere
   // pass the transport heat signal through the components, inner -> outer
   for ( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       iter++){
-    (*iter)->transportHeat();
+    (*iter)->transportHeat(time);
   }
   for ( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
-    (*iter)->transportHeat();
+    (*iter)->transportHeat(time);
   }
   for ( std::deque< Component* >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
-    (*iter)->transportHeat();
+    (*iter)->transportHeat(time);
   }
   if (NULL != far_field_){
-    far_field_->transportHeat();
+    far_field_->transportHeat(time);
   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::transportNuclides(){
+void GenericRepository::transportNuclides(int time){
   // update the nuclide transport BCs everywhere
   // pass the transport nuclides signal through the components, inner -> outer
   for ( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       iter++){
-    (*iter)->transportNuclides();
+    (*iter)->transportNuclides(time);
   }
   for ( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
-    (*iter)->transportNuclides();
+    (*iter)->transportNuclides(time);
   }
   for ( std::deque< Component* >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
-    (*iter)->transportNuclides();
+    (*iter)->transportNuclides(time);
   }
   if (NULL != far_field_){
-    far_field_->transportNuclides();
+    far_field_->transportNuclides(time);
   }
 }
 

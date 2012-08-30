@@ -71,8 +71,10 @@ public:
 
   /**
      transports the heat
+
+     @param time the timestep at which to transport the heat
    */
-  virtual void transportHeat();
+  virtual void transportHeat(int time);
 
   /**
      return the thermal model implementation type

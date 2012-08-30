@@ -393,13 +393,17 @@ protected:
 
     /**
        Do heat transport calculations. 
+
+       @param time the timestep at which to transport the heat
      */
-    void transportHeat() ;
+    void transportHeat(int time) ;
 
     /**
        Do nuclide transport calculations
+
+       @param time the timestep at which to transport the nuclides
      */
-    void transportNuclides() ;
+    void transportNuclides(int time) ;
 
     /**
        get the commodity-specific capacity of the GenericRepository
