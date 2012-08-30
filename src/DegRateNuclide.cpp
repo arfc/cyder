@@ -91,6 +91,14 @@ void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting material: ";
   matToRem->print() ;
+  IsoVector vec_to_rem = matToRem->isoVector();
+  int num = wastes_.size();
+  mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
+  for (int i = 0; i<num; i++){
+    left_over->absorb(wastes_.back());
+    wastes_.pop_back();
+  }
+  //left_over->extract(vec_to_rem);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

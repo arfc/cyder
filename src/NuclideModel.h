@@ -142,7 +142,10 @@ public:
      @return C the concentration at the boundary in kg/m^3
    */
   virtual IsoConcMap dirichlet_bc() = 0;
-  Concentration dirichlet_bc(Iso tope) {return this->dirichlet_bc().at(tope);};
+  Concentration dirichlet_bc(Iso tope) { 
+    IsoConcMap::iterator found = this->dirichlet_bc().find(tope);
+    return(found != this->dirichlet_bc().end() ? (*found).second : 0);
+  };
   
   /**
      returns the concentration gradient at the boundary, the Neumann bc
@@ -150,7 +153,10 @@ public:
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
   virtual IsoConcMap neumann_bc() = 0;
-  Concentration neumann_bc(Iso tope) {return this->neumann_bc().at(tope);}; 
+  Concentration neumann_bc(Iso tope) {
+    IsoConcMap::iterator found = this->neumann_bc().find(tope);
+    return(found != this->neumann_bc().end() ? (*found).second : 0);
+  };
 
   /**
      returns the flux at the boundary, the Neumann bc
@@ -158,7 +164,11 @@ public:
      @return qC the solute flux at the boundary in kg/m^2/s
    */
   virtual IsoConcMap cauchy_bc() = 0;
-  Concentration cauchy_bc(Iso tope) {return this->cauchy_bc().at(tope);};
+  Concentration cauchy_bc(Iso tope) {
+    IsoConcMap::iterator found = this->cauchy_bc().find(tope);
+    return(found != this->cauchy_bc().end() ? (*found).second : 0);
+  };
+    
 
   /// Allows the geometry object to be set
   void set_geom(GeometryPtr geom){ geom_=geom; };

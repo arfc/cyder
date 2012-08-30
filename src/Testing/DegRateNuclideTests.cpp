@@ -96,6 +96,7 @@ TEST_F(DegRateNuclideTest, setGeometry) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, absorb){
+  //@TODO tests like this should be interface tests for the NuclideModel class concrete instances.
   // if you absorb a material, the conc_map should reflect that
   // you shouldn't absorb more material than you can handle. how much is that?
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
@@ -103,6 +104,7 @@ TEST_F(DegRateNuclideTest, absorb){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, extract){ 
+  //@TODO tests like this should be interface tests for the NuclideModel class concrete instances.
   // it should be able to extract all of the material it absorbed
   ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   EXPECT_NO_THROW(nuc_model_ptr_->extract(test_mat_));
