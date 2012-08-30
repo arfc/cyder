@@ -30,6 +30,7 @@ DegRateNuclide::DegRateNuclide(){
   conc_hist_.insert(make_pair(0, zero_map));
 
   last_degraded_ = 0;
+  tot_deg_ = 0;
   set_geom(GeometryPtr(new Geometry()));
 }
 
