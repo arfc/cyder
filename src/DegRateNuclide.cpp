@@ -222,7 +222,7 @@ double DegRateNuclide::tot_deg(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::update_vec_hist(int time){
-  vec_hist_.insert( make_pair( time, sum_mats(wastes_)) );
+  vec_hist_[ time ] = sum_mats(wastes_) ;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -236,11 +236,7 @@ pair<IsoVector, double> DegRateNuclide::vec_hist(int time){
   pair<IsoVector, double> to_ret;
   VecHist::iterator it;
   it = vec_hist_.find(time);
-  if( it != vec_hist_.end() ){
-    to_ret = (*it).second;
-  } else {
-    to_ret = make_pair(IsoVector(),0); // zero
-  }
+  to_ret = (*it).second;
   return to_ret;
 }
 
