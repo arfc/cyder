@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "Logger.h"
+#include <deque>
 #include <vector>
 #include <map>
 #include <string>
@@ -179,7 +180,7 @@ public:
 
      @param mats the vector of materials to be summed (not mixed)
     */
-  std::pair<IsoVector, double> sum_mats(std::vector<mat_rsrc_ptr> mats);
+  std::pair<IsoVector, double> sum_mats(std::deque<mat_rsrc_ptr> mats);
 
   /**
      updates the total degradation and makes time the last degraded time.
@@ -188,7 +189,7 @@ public:
      @param mats the vector of materials contained in the component
      @return the current isotopic concentration map at the outer border
     */
-  IsoConcMap update_conc_hist(int time, std::vector<mat_rsrc_ptr> mats);
+  IsoConcMap update_conc_hist(int time, std::deque<mat_rsrc_ptr> mats);
 
   /**
      updates the total degradation and makes time the last degraded time.

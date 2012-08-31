@@ -4,7 +4,7 @@
  */
 #include <iostream>
 #include <fstream>
-#include <vector>
+#include <deque>
 #include <time.h>
 
 #include "CycException.h"

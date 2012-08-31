@@ -4,7 +4,7 @@
  */
 #include <iostream>
 #include <fstream>
-#include <vector>
+#include <deque>
 #include <time.h>
 #include <assert.h>
 
@@ -164,7 +164,7 @@ IsoConcMap DegRateNuclide::cauchy_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap DegRateNuclide::update_conc_hist(int time, vector<mat_rsrc_ptr> wastes){
+IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> wastes){
 
   IsoConcMap to_ret;
 
@@ -184,9 +184,9 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, vector<mat_rsrc_ptr> waste
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-pair<IsoVector, double> DegRateNuclide::sum_mats(vector<mat_rsrc_ptr> mats){
+pair<IsoVector, double> DegRateNuclide::sum_mats(deque<mat_rsrc_ptr> mats){
   IsoVector vec_to_add, vec;
-  vector<mat_rsrc_ptr>::iterator mat;
+  deque<mat_rsrc_ptr>::iterator mat;
   double kg = 0;
   double this_mass = 0;
   double ratio = 0;
@@ -208,7 +208,7 @@ double DegRateNuclide::update_degradation(int time, double deg_rate){
   assert(last_degraded_ <= time);
   assert(deg_rate<=1.0 && deg_rate >= 0.0);
   double total;
-  total = tot_deg_ + deg_rate*(time - last_degraded_);
+  total = tot_deg() + deg_rate*(time - last_degraded_);
   tot_deg_ = min(1.0, total);
   last_degraded_ = time;
 

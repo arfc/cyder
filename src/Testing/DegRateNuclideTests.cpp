@@ -1,5 +1,5 @@
 // DegRateNuclideTests.cpp
-#include <vector>
+#include <deque>
 #include <map>
 #include <gtest/gtest.h>
 
@@ -119,10 +119,40 @@ TEST_F(DegRateNuclideTest, absorb){
 TEST_F(DegRateNuclideTest, extract){ 
   //@TODO tests like this should be interface tests for the NuclideModel class concrete instances.
   // it should be able to extract all of the material it absorbed
+  double frac = 0.2;
+  
   ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   EXPECT_NO_THROW(nuc_model_ptr_->extract(test_mat_));
   // if you extract a material, the conc_map should reflect that
   // you shouldn't extract more material than you have how much is that?
+  mat_rsrc_ptr to_extract1;
+  mat_rsrc_ptr to_extract2;
+  mat_rsrc_ptr to_extract3;
+  to_extract1 = mat_rsrc_ptr(new Material(test_mat_->isoVector()));
+  to_extract2 = mat_rsrc_ptr(new Material(test_mat_->isoVector()));
+  to_extract3 = mat_rsrc_ptr(new Material(test_mat_->isoVector()));
+  to_extract1->setQuantity(frac*test_size_);
+  to_extract2->setQuantity(frac*test_size_);
+  to_extract3->setQuantity(frac*test_size_);
+
+  ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  ASSERT_EQ(0,time_);
+  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
+  EXPECT_FLOAT_EQ(test_mat_->quantity(), deg_rate_ptr_->contained_mass(time_));
+  EXPECT_FLOAT_EQ(test_size_, deg_rate_ptr_->contained_mass(time_));
+
+  time_++;
+  ASSERT_EQ(1,time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract1));
+  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
+  EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, deg_rate_ptr_->contained_mass(time_));
+
+  time_++;
+  ASSERT_EQ(2,time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract2));
+  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
+  EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, deg_rate_ptr_->contained_mass(time_));
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -181,7 +211,7 @@ TEST_F(DegRateNuclideTest, sum_mats){
   mat_rsrc_ptr new_test_mat = mat_rsrc_ptr(new Material(test_comp_));
   new_test_mat->setQuantity(2*test_size_);
 
-  vector<mat_rsrc_ptr> mats;
+  deque<mat_rsrc_ptr> mats;
   mats.push_back(test_mat_);
   mats.push_back(new_test_mat);
   
@@ -236,7 +266,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   ASSERT_EQ(0, time_);
   time_++;
   ASSERT_EQ(1, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
   // check that half that material is offered as the source term in one year
   // Source Term
@@ -254,8 +284,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
   EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
   // TRANSPORT NUCLIDES 
+  time_++;
   ASSERT_EQ(2, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
   // check that the remaining half is offered as the source term in year two
   // Source Term
@@ -272,8 +303,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
   EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
   // TRANSPORT NUCLIDES 
+  time_++;
   ASSERT_EQ(3, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
   // check that timestep 3 doesn't crash or offer material it doesn't have
   // Source Term

@@ -5,7 +5,7 @@
 #if !defined(_NUCLIDEMODEL_H)
 #define _NUCLIDEMODEL_H
 
-#include <vector>
+#include <deque>
 #include <libxml/tree.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
@@ -179,7 +179,7 @@ public:
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};
-  std::vector<mat_rsrc_ptr> wastes_;
+  std::deque<mat_rsrc_ptr> wastes_;
 
   /// The map of times to isotopes to concentrations, in kg/m^3
   ConcHist conc_hist_;
