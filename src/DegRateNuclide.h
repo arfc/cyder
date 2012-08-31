@@ -250,13 +250,6 @@ public:
 
 protected:
   /**
-     sets the boundary conditions of the 0th through 3rd kind
-
-     @param conc_map the current map of concentrations at the boundary
-    */
-  void set_bcs(int time);
-
-  /**
     The degradation rate that defines this model, fraction per year.
    */
   double deg_rate_;
