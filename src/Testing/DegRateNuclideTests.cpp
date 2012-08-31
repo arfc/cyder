@@ -196,7 +196,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   // check that the contained mass matches the initial mass
   EXPECT_FLOAT_EQ(initial_mass, deg_rate_ptr_->contained_mass()); 
   // check the source term 
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
   // check the boundary concentration ?
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
   // check the boundary flux
@@ -227,7 +227,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
 
   // check that half that material is offered as the source term in one year
   // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
@@ -236,14 +236,17 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(nuc_model_ptr_->source_term_bc()));
+  mat_rsrc_ptr to_extract;
+  to_extract = mat_rsrc_ptr(new Material(nuc_model_ptr_->source_term_bc().first));
+  to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
+  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
   // TRANSPORT NUCLIDES 
   ASSERT_EQ(2, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that the remaining half is offered as the source term in year two
   // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
@@ -252,14 +255,16 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(nuc_model_ptr_->source_term_bc()));
+  to_extract = mat_rsrc_ptr(new Material(nuc_model_ptr_->source_term_bc().first));
+  to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
+  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
   // TRANSPORT NUCLIDES 
   ASSERT_EQ(3, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that timestep 3 doesn't crash or offer material it doesn't have
   // Source Term
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
   // Dirichlet
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
@@ -287,7 +292,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
@@ -296,12 +301,15 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(nuc_model_ptr_->source_term_bc()));
+  mat_rsrc_ptr to_extract;
+  to_extract = mat_rsrc_ptr(new Material(nuc_model_ptr_->source_term_bc().first));
+  to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
+  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
   // TRANSPORT NUCLIDES
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // check that nothing more is offered in time step 2
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc()->quantity());
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

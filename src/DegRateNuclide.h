@@ -148,7 +148,7 @@ public:
    *
      @return m_ij the available source term outer boundary condition 
    */
-  virtual mat_rsrc_ptr source_term_bc();
+  virtual std::pair<IsoVector, double> source_term_bc();
 
   /**
      returns the prescribed concentration at the boundary, the dirichlet bc
@@ -255,26 +255,6 @@ protected:
      @param conc_map the current map of concentrations at the boundary
     */
   void set_bcs(int time);
-
-  /// sets the boundary condition of the 0th kind
-  void set_source_term_bc(int time, std::pair<IsoVector,double> vec);
-
-  /// sets the boundary condition of the 1st kind
-  void set_dirichlet_bc(int time, IsoConcMap conc_map);
-  
-  /// sets the boundary condition of the 2nd kind
-  void set_neumann_bc(int time, IsoConcMap conc_map);
-  
-  /// sets the boundary condition of the 3rd kind
-  void set_cauchy_bc(int time, IsoConcMap conc_map);
-
-  /**
-     updates the current conc_hist_
-
-     @param time is the time at which to update the history
-     @returns the IsoConcMap added to conc_hist_ at that time
-    */
-  void update_hist(int time);
 
   /**
     The degradation rate that defines this model, fraction per year.

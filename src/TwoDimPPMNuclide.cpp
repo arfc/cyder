@@ -87,9 +87,10 @@ void TwoDimPPMNuclide::transportNuclides(int time){
 
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-mat_rsrc_ptr TwoDimPPMNuclide::source_term_bc(){
-  mat_rsrc_ptr m_ij = mat_rsrc_ptr(new Material());
-  return m_ij;
+pair<IsoVector, double> TwoDimPPMNuclide::source_term_bc(){
+  /// @TODO This is just a placeholder
+  pair<IsoVector, double> to_ret;
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

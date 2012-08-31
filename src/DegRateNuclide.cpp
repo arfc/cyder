@@ -106,8 +106,9 @@ void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
 void DegRateNuclide::transportNuclides(int time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
-  update_hist(time);
-  set_bcs(time);
+  update_degradation(time, deg_rate_);
+  update_vec_hist(time);
+  update_conc_hist(time, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -134,10 +135,9 @@ double DegRateNuclide::contained_mass(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-mat_rsrc_ptr DegRateNuclide::source_term_bc(){
-  mat_rsrc_ptr src_term = mat_rsrc_ptr( new Material( contained_vec(last_degraded_) ) );
-  src_term->setQuantity( tot_deg()*contained_mass(last_degraded_) );
-  return src_term;
+pair<IsoVector, double> DegRateNuclide::source_term_bc(){
+  return make_pair(contained_vec(last_degraded_), 
+      tot_deg()*contained_mass(last_degraded_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -161,42 +161,6 @@ IsoConcMap DegRateNuclide::neumann_bc(){
 IsoConcMap DegRateNuclide::cauchy_bc(){
   /// @TODO This is just a placeholder
   return conc_hist(last_degraded_); 
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::set_bcs(int time){
-  set_source_term_bc(time, vec_hist(time));
-  set_dirichlet_bc(time, conc_hist(time));
-  set_neumann_bc(time, conc_hist(time));
-  set_cauchy_bc(time, conc_hist(time));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::set_source_term_bc(int time, pair<IsoVector,double> vec){ 
-  // the source term is just the contained material times the current degradation 
-  // That'll be part of each contained waste
-  // nothing really to set
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::set_dirichlet_bc(int time, IsoConcMap conc_map){
-  // using the information about the available material,
-  // the available concentration should be that material,
-  // divided by the volume.
-  // it should be a ConcMap to give the concentration for each isotope
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::set_neumann_bc(int time, IsoConcMap conc_map){}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::set_cauchy_bc(int time, IsoConcMap conc_map){}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::update_hist(int time){
-  update_degradation(time, deg_rate_);
-  update_vec_hist(time);
-  update_conc_hist(time, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

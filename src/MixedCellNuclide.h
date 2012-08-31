@@ -114,9 +114,9 @@ public:
      returns the available material source term at the outer boundary of the 
      component
    *
-     @return m_ij the available source term outer boundary condition 
+     @return the available IsoVector and mass defingin the outer boundary condition 
    */
-  virtual mat_rsrc_ptr source_term_bc();
+  virtual std::pair<IsoVector, double> source_term_bc();
   /**
      returns the prescribed concentration at the boundary, the dirichlet bc
      in kg/m^3
