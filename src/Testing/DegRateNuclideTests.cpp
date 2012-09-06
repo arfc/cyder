@@ -121,8 +121,8 @@ TEST_F(DegRateNuclideTest, extract){
   // it should be able to extract all of the material it absorbed
   double frac = 0.2;
   
-  ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(test_mat_));
+  //ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  //EXPECT_NO_THROW(nuc_model_ptr_->extract(test_mat_));
   // if you extract a material, the conc_map should reflect that
   // you shouldn't extract more material than you have how much is that?
   mat_rsrc_ptr to_extract1;

@@ -91,14 +91,15 @@ void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting material: ";
   matToRem->print() ;
-  IsoVector vec_to_rem = matToRem->isoVector();
-  int num = wastes_.size();
   mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
-  for (int i = 0; i<num; i++){
+  double amt;
+  while (!wastes_.empty()){
     left_over->absorb(wastes_.back());
     wastes_.pop_back();
   }
-  left_over->extract(vec_to_rem);
+  amt = left_over->mass(KG); // 0
+  left_over->extract(matToRem);
+  amt = left_over->mass(KG);
   wastes_.push_back(left_over);
 }
 
@@ -185,21 +186,28 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> wastes
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::sum_mats(deque<mat_rsrc_ptr> mats){
-  IsoVector vec_to_add, vec;
+  IsoVector vec;
+  CompMapPtr sum_comp = CompMapPtr();
+  CompMapPtr comp_to_add;
   deque<mat_rsrc_ptr>::iterator mat;
   double kg = 0;
-  double this_mass = 0;
-  double ratio = 0;
+  int iso;
+  CompMap::iterator comp;
 
   for(mat = mats.begin(); mat != mats.end(); ++mat){ 
-    this_mass = (*mat)->mass(KG);
-    kg += this_mass;
-    ratio = this_mass/kg;
-    vec_to_add = IsoVector((*mat)->isoVector().comp());
-    vec.mix(vec_to_add, ratio);
+    comp_to_add = (*mat)->unnormalizeComp(MASS);
+    kg += (*mat)->mass(KG);
+    for(comp = (*comp_to_add).begin(); comp != (*comp_to_add).end(); ++comp) {
+      iso = comp->first;
+      if(sum_comp->count(iso)!=0) {
+        (*sum_comp)[iso] = (*sum_comp)[iso] + comp->second;
+      } else { 
+        (*sum_comp)[iso] = comp->second;
+      }
+    }
   }
 
-  vec.normalize();
+  vec = IsoVector(sum_comp);
   return make_pair(vec, kg);
 }
 
