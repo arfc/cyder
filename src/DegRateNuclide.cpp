@@ -187,7 +187,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> wastes
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::sum_mats(deque<mat_rsrc_ptr> mats){
   IsoVector vec;
-  CompMapPtr sum_comp = CompMapPtr();
+  CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
   CompMapPtr comp_to_add;
   deque<mat_rsrc_ptr>::iterator mat;
   double kg = 0;
