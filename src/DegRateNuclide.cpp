@@ -170,7 +170,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> wastes
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = make_pair(vec_hist(time).first, vec_hist(time).second);
+  sum_pair = sum_mats(wastes);
 
   double scale = sum_pair.second/geom_->volume();
 
