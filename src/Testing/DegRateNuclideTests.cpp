@@ -334,6 +334,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
+  ASSERT_EQ(0, time_);
+  time_++;
+  ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
 
   // Source Term
