@@ -337,7 +337,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   ASSERT_EQ(0, time_);
   time_++;
   ASSERT_EQ(1, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
@@ -354,7 +354,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
   EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
   // TRANSPORT NUCLIDES
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  time_++;
+  ASSERT_EQ(2, time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
   // check that nothing more is offered in time step 2
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
@@ -366,3 +368,24 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRsmall){
   // in the long term. 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, updateDegradation){ 
+  time_++;
+  double deg_rate=0.1;
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  time_++;
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  time_++;
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  time_++;
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  time_++;
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  time_++;
+
+}
