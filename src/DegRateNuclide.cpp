@@ -92,14 +92,11 @@ void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting material: ";
   matToRem->print() ;
   mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
-  double amt;
   while (!wastes_.empty()){
     left_over->absorb(wastes_.back());
     wastes_.pop_back();
   }
-  amt = left_over->mass(KG); // 0
   left_over->extract(matToRem);
-  amt = left_over->mass(KG);
   wastes_.push_back(left_over);
 }
 
