@@ -387,6 +387,17 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRsmall){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, updateVecHist){ 
+  time_++;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, vecHist){ 
+  time_++;
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, updateDegradation){ 
   time_++;
   double deg_rate=0.1;

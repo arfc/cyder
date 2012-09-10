@@ -119,6 +119,7 @@ void DegRateNuclide::set_deg_rate(double deg_rate){
     msg += " The value provided was ";
     msg += deg_rate;
     msg += ".";
+    LOG(LEV_ERROR,"GRDRNuc") << msg;;
     throw CycRangeException(msg);
   } else {
     deg_rate_ = deg_rate;
