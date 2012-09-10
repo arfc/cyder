@@ -56,6 +56,7 @@ NuclideModel* DegRateNuclide::copy(NuclideModel* src){
 
   set_deg_rate(src_ptr->deg_rate_);
   tot_deg_ = 0;
+  last_degraded_ = TI->time();
   wastes_ = deque<mat_rsrc_ptr>();
 
   set_geom(GeometryPtr(new Geometry()));
@@ -103,12 +104,12 @@ void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::transportNuclides(int time){
+void DegRateNuclide::transportNuclides(int the_time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
-  update_degradation(time, deg_rate_);
-  update_vec_hist(time);
-  update_conc_hist(time);
+  update_degradation(the_time, deg_rate_);
+  update_vec_hist(the_time);
+  update_conc_hist(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -125,8 +126,8 @@ void DegRateNuclide::set_deg_rate(double deg_rate){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double DegRateNuclide::contained_mass(int time){ 
-  return vec_hist(time).second;
+double DegRateNuclide::contained_mass(int the_time){ 
+  return vec_hist(the_time).second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -164,17 +165,18 @@ IsoConcMap DegRateNuclide::cauchy_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap DegRateNuclide::update_conc_hist(int time){
-  return update_conc_hist(time, wastes_);
+IsoConcMap DegRateNuclide::update_conc_hist(int the_time){
+  return update_conc_hist(the_time, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> mats){
+IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
+  assert(last_degraded_ <= the_time);
 
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = sum_mats(mats);
+  sum_pair = vec_hist(the_time);
 
   CompMap::iterator it;
   if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
@@ -186,7 +188,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> mats){
   } else {
     to_ret.insert(make_pair( 92235, 0)); 
   }
-  conc_hist_.insert(make_pair(time, to_ret));
+  conc_hist_.insert(make_pair(the_time, to_ret));
   return to_ret;
 }
 
@@ -222,13 +224,13 @@ pair<IsoVector, double> DegRateNuclide::sum_mats(deque<mat_rsrc_ptr> mats){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double DegRateNuclide::update_degradation(int time, double deg_rate){
-  assert(last_degraded_ <= time);
+double DegRateNuclide::update_degradation(int the_time, double deg_rate){
+  assert(last_degraded_ <= the_time);
   assert(deg_rate<=1.0 && deg_rate >= 0.0);
   double total;
-  total = tot_deg() + deg_rate*(time - last_degraded_);
+  total = tot_deg() + deg_rate*(the_time - last_degraded_);
   tot_deg_ = min(1.0, total);
-  last_degraded_ = time;
+  last_degraded_ = the_time;
 
   return tot_deg_;
 }
@@ -239,45 +241,49 @@ double DegRateNuclide::tot_deg(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void DegRateNuclide::update_vec_hist(int time){
-  vec_hist_[ time ] = sum_mats(wastes_) ;
+void DegRateNuclide::update_vec_hist(int the_time){
+  vec_hist_[ the_time ] = sum_mats(wastes_) ;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoVector DegRateNuclide::contained_vec(int time){
-  IsoVector to_ret = vec_hist(time).first;
+IsoVector DegRateNuclide::contained_vec(int the_time){
+  IsoVector to_ret = vec_hist(the_time).first;
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-pair<IsoVector, double> DegRateNuclide::vec_hist(int time){
+pair<IsoVector, double> DegRateNuclide::vec_hist(int the_time){
   pair<IsoVector, double> to_ret;
-  VecHist::iterator it;
-  it = vec_hist_.find(time);
-  if( time == last_degraded_ || it != vec_hist_.end() ){
+  VecHist::const_iterator it;
+  if(vec_hist_.size() != 0) {it = vec_hist_.find(the_time);}
+  if(the_time == last_degraded_ || it != vec_hist_.end() ){
     to_ret = (*it).second;
+    assert(to_ret.second < 1000 );
   } else { 
-    to_ret = make_pair(IsoVector(),0);
+    CompMapPtr zero_comp = CompMapPtr(new CompMap(MASS));
+    (*zero_comp)[92235] = 0;
+    to_ret = make_pair(IsoVector(zero_comp),0);
   }
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap DegRateNuclide::conc_hist(int time){
+IsoConcMap DegRateNuclide::conc_hist(int the_time){
   IsoConcMap to_ret;
   ConcHist::iterator it;
-  it = conc_hist_.find(time);
-  if( time == last_degraded_ && it != conc_hist_.end() ){
+  it = conc_hist_.find(the_time);
+  if( the_time == last_degraded_ && it != conc_hist_.end() ){
     to_ret = (*it).second;
   } else {
     to_ret.insert(make_pair(92235,0)); // zero
   }
   return to_ret;
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Concentration DegRateNuclide::conc_hist(int time, Iso tope){
+Concentration DegRateNuclide::conc_hist(int the_time, Iso tope){
   Concentration to_ret;
-  IsoConcMap conc_map = conc_hist(time);
+  IsoConcMap conc_map = conc_hist(the_time);
   IsoConcMap::iterator it;
   it = conc_map.find(tope);
   if(it != conc_map.end()){
