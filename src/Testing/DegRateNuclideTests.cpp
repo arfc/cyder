@@ -67,8 +67,10 @@ class DegRateNuclideTest : public ::testing::Test {
 TEST_F(DegRateNuclideTest, defaultConstructor) {
   ASSERT_EQ("DEGRATE_NUCLIDE", nuc_model_ptr_->name());
   ASSERT_EQ(DEGRATE_NUCLIDE, nuc_model_ptr_->type());
-  ASSERT_FLOAT_EQ(0,deg_rate_ptr_->deg_rate());
-  ASSERT_FLOAT_EQ(0,deg_rate_ptr_->geom()->length());
+  ASSERT_FLOAT_EQ(0, deg_rate_ptr_->deg_rate());
+  ASSERT_FLOAT_EQ(0, deg_rate_ptr_->geom()->length());
+  EXPECT_FLOAT_EQ(0, deg_rate_ptr_->contained_mass(time_));
+  EXPECT_FLOAT_EQ(0, deg_rate_ptr_->tot_deg());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

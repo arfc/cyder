@@ -30,7 +30,6 @@ DegRateNuclide::DegRateNuclide(){
   conc_hist_.insert(make_pair(0, zero_map));
 
   last_degraded_ = 0;
-  tot_deg_ = 0;
   set_geom(GeometryPtr(new Geometry()));
 }
 
@@ -169,20 +168,17 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> mats){
   pair<IsoVector, double> sum_pair; 
   sum_pair = sum_mats(mats);
 
-  double scale;
-  if( geom_->volume() != numeric_limits<double>::infinity()) { 
-    scale = sum_pair.second/geom_->volume();
-  } else { 
-    scale = 0;
-  }
-
   CompMap::iterator it;
-  CompMapPtr curr_comp = sum_pair.first.comp();
-  for(it = (*curr_comp).begin(); it != (*curr_comp).end(); ++it) {
-    to_ret.insert(make_pair((*it).first, ((*it).second)*scale));
+  if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
+    double scale = sum_pair.second/geom_->volume();
+    CompMapPtr curr_comp = sum_pair.first.comp();
+    for(it = (*curr_comp).begin(); it != (*curr_comp).end(); ++it) {
+      to_ret.insert(make_pair((*it).first, ((*it).second)*scale));
+    }
+  } else {
+    to_ret.insert(make_pair( 92235, 0)); 
   }
   conc_hist_.insert(make_pair(time, to_ret));
-
   return to_ret;
 }
 
@@ -249,7 +245,11 @@ pair<IsoVector, double> DegRateNuclide::vec_hist(int time){
   pair<IsoVector, double> to_ret;
   VecHist::iterator it;
   it = vec_hist_.find(time);
-  to_ret = (*it).second;
+  if( it != vec_hist_.end() ){
+    to_ret = (*it).second;
+  } else { 
+    to_ret = make_pair(IsoVector(CompMapPtr(new CompMap(MASS))),0); //zero
+  }
   return to_ret;
 }
 
