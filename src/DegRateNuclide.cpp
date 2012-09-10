@@ -30,6 +30,7 @@ DegRateNuclide::DegRateNuclide(){
   conc_hist_.insert(make_pair(0, zero_map));
 
   last_degraded_ = 0;
+  tot_deg_ = 0;
   set_geom(GeometryPtr(new Geometry()));
 }
 
@@ -47,21 +48,13 @@ void DegRateNuclide::init(xmlNodePtr cur){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::init(double deg_rate) {
-  if (deg_rate_ < 0 | deg_rate_ > 1) {
-    string err = "Expected a fractional degradation rate. The value provided: ";
-    err += deg_rate_ ;
-    err += ", is not between 0 and 1 (inclusive).";
-    LOG(LEV_ERROR,"GRDRNuc") << err ;;
-    throw CycException(err);
-  } else {
-    deg_rate_ = deg_rate;
-  }
+  set_deg_rate(deg_rate);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModel* DegRateNuclide::copy(NuclideModel* src){
   DegRateNuclide* toRet = new DegRateNuclide();
-  deg_rate_ = dynamic_cast<DegRateNuclide*>(src)->deg_rate_;
+  set_deg_rate(dynamic_cast<DegRateNuclide*>(src)->deg_rate_);
   last_degraded_ = TI->time();
   return (NuclideModel*)toRet;
 }
@@ -245,10 +238,10 @@ pair<IsoVector, double> DegRateNuclide::vec_hist(int time){
   pair<IsoVector, double> to_ret;
   VecHist::iterator it;
   it = vec_hist_.find(time);
-  if( it != vec_hist_.end() ){
+  if( time == last_degraded_ || it != vec_hist_.end() ){
     to_ret = (*it).second;
   } else { 
-    to_ret = make_pair(IsoVector(CompMapPtr(new CompMap(MASS))),0); //zero
+    to_ret = make_pair(IsoVector(),0);
   }
   return to_ret;
 }
@@ -258,7 +251,7 @@ IsoConcMap DegRateNuclide::conc_hist(int time){
   IsoConcMap to_ret;
   ConcHist::iterator it;
   it = conc_hist_.find(time);
-  if( it != conc_hist_.end() ){
+  if( time == last_degraded_ && it != conc_hist_.end() ){
     to_ret = (*it).second;
   } else {
     to_ret.insert(make_pair(92235,0)); // zero
