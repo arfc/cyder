@@ -78,100 +78,100 @@ void DegRateNuclide::absorb(mat_rsrc_ptr matToAdd)
   // Get the given DegRateNuclide's contaminant material.
   // add the material to it with the material absorb function.
   // each nuclide model should override this function
-LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide is absorbing material: ";
-matToAdd->print();
-wastes_.push_back(matToAdd);
+  LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide is absorbing material: ";
+  matToAdd->print();
+  wastes_.push_back(matToAdd);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
 {
-// Get the given DegRateNuclide's contaminant material.
-// add the material to it with the material extract function.
-// each nuclide model should override this function
-LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting material: ";
-matToRem->print() ;
-mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
-while (!wastes_.empty()){
-  left_over->absorb(wastes_.back());
-  wastes_.pop_back();
-}
-left_over->extract(matToRem);
-wastes_.push_back(left_over);
+  // Get the given DegRateNuclide's contaminant material.
+  // add the material to it with the material extract function.
+  // each nuclide model should override this function
+  LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting material: ";
+  matToRem->print() ;
+  mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
+  while (!wastes_.empty()){
+    left_over->absorb(wastes_.back());
+    wastes_.pop_back();
+  }
+  left_over->extract(matToRem);
+  wastes_.push_back(left_over);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::transportNuclides(int time){
-// This should transport the nuclides through the component.
-// It will likely rely on the internal flux and will produce an external flux. 
-update_degradation(time, deg_rate_);
-update_vec_hist(time);
-update_conc_hist(time, wastes_);
+  // This should transport the nuclides through the component.
+  // It will likely rely on the internal flux and will produce an external flux. 
+  update_degradation(time, deg_rate_);
+  update_vec_hist(time);
+  update_conc_hist(time, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::set_deg_rate(double deg_rate){
-if( deg_rate < 0 || deg_rate > 1 ) {
-  string msg = "The DegRateNuclide degradation rate range is 0 to 1, inclusive.";
-  msg += " The value provided was ";
-  msg += deg_rate;
-  msg += ".";
-  throw CycRangeException(msg);
-} else {
-  deg_rate_ = deg_rate;
-}
+  if( deg_rate < 0 || deg_rate > 1 ) {
+    string msg = "The DegRateNuclide degradation rate range is 0 to 1, inclusive.";
+    msg += " The value provided was ";
+    msg += deg_rate;
+    msg += ".";
+    throw CycRangeException(msg);
+  } else {
+    deg_rate_ = deg_rate;
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::contained_mass(int time){ 
-return vec_hist(time).second;
+  return vec_hist(time).second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::contained_mass(){
-return contained_mass(last_degraded_);
+  return contained_mass(last_degraded_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::source_term_bc(){
-return make_pair(contained_vec(last_degraded_), 
-    tot_deg()*contained_mass(last_degraded_));
+  return make_pair(contained_vec(last_degraded_), 
+      tot_deg()*contained_mass(last_degraded_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
-IsoConcMap dirichlet, whole_vol;
-whole_vol = conc_hist(last_degraded_);
-IsoConcMap::const_iterator it;
-for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
-  dirichlet.insert(make_pair((*it).first, tot_deg()*(*it).second));
-}
-return dirichlet;
+  IsoConcMap dirichlet, whole_vol;
+  whole_vol = conc_hist(last_degraded_);
+  IsoConcMap::const_iterator it;
+  for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
+    dirichlet.insert(make_pair((*it).first, tot_deg()*(*it).second));
+  }
+  return dirichlet;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::neumann_bc(){
-/// @TODO This is just a placeholder
-return conc_hist(last_degraded_); 
+  /// @TODO This is just a placeholder
+  return conc_hist(last_degraded_); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::cauchy_bc(){
-/// @TODO This is just a placeholder
-return conc_hist(last_degraded_); 
+  /// @TODO This is just a placeholder
+  return conc_hist(last_degraded_); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> mats){
 
-IsoConcMap to_ret;
+  IsoConcMap to_ret;
 
-pair<IsoVector, double> sum_pair; 
-sum_pair = sum_mats(mats);
+  pair<IsoVector, double> sum_pair; 
+  sum_pair = sum_mats(mats);
 
-double scale;
-if( geom_->volume() != numeric_limits<double>::infinity()) { 
-  scale = sum_pair.second/geom_->volume();
+  double scale;
+  if( geom_->volume() != numeric_limits<double>::infinity()) { 
+    scale = sum_pair.second/geom_->volume();
   } else { 
     scale = 0;
   }
