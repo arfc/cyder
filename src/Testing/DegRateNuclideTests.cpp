@@ -92,6 +92,21 @@ TEST_F(DegRateNuclideTest, setGeometry) {
   //@TODO tests like this should be interface tests for the NuclideModel class concrete instances.
   EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   EXPECT_FLOAT_EQ(len_five_ , nuc_model_ptr_->geom()->length());
+  EXPECT_FLOAT_EQ(r_four_ , nuc_model_ptr_->geom()->inner_radius());
+  EXPECT_FLOAT_EQ(r_five_ , nuc_model_ptr_->geom()->outer_radius());
+  double vol = len_five_*3.14159*(r_five_*r_five_ - r_four_*r_four_);
+  EXPECT_NEAR( vol , nuc_model_ptr_->geom()->volume(), 0.1);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, getVolume) {  
+  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
+  double vol = len_five_*3.14159*(r_five_*r_five_ - r_four_*r_four_);
+  EXPECT_NEAR( vol , nuc_model_ptr_->geom()->volume(), 0.1);
+  EXPECT_NO_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, r_four_));
+  EXPECT_FLOAT_EQ( 0 , nuc_model_ptr_->geom()->volume());
+  EXPECT_NO_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()));
+  EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), nuc_model_ptr_->geom()->volume());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

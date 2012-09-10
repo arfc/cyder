@@ -100,7 +100,8 @@ public:
   const Radius inner_radius(); 
 
   /**
-     Returns the radius of the outer surface. NULL for infinite objects.[m] 
+     Returns the radius of the outer surface. 
+     numeric_limits<double>::infinity for infinite objects.[m] 
 
      @return the outer radius of the cylindrical geometry object
     */
@@ -126,7 +127,7 @@ public:
   /** 
      get the volume of the component 
 
-     @return NULL if the volume is infinite
+     @return numeric_limits<double>::infinity() if the volume is infinite
      */
   const Volume volume();
 
@@ -148,7 +149,8 @@ protected:
   Radius inner_radius_; 
 
   /**
-     Radius of the outer surface. NULL for infinite objects. [m]
+     Radius of the outer surface. numeric_limits<double>::infinity() 
+     for infinite objects. [m]
     */
   Radius outer_radius_; 
 
@@ -159,7 +161,7 @@ protected:
 
   /** 
      The length of the cylindrical section [m]
-     NULL if infinite
+     numeric_limits<double>::infinity() if infinite
     */
   Length length_;
 };

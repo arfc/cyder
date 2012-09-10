@@ -15,10 +15,10 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Geometry::Geometry() {
   inner_radius_ = 0; // 0 indicates a solid
-  outer_radius_ = NULL; // NULL indicates an infinite object.
+  outer_radius_ = numeric_limits<double>::infinity(); // inf indicates an infinite object.
   point_t origin = {0,0,0}; 
   centroid_ = origin; // by default, the origin is the centroid
-
+  length_ = 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -89,8 +89,9 @@ const double Geometry::z(){return (centroid()).z_;}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Volume Geometry::volume(){
   // infinite until proven finite
-  Volume to_ret = NULL; 
-  if( outer_radius() != NULL ) { 
+  double infty = numeric_limits<double>::infinity(); 
+  Volume to_ret = infty; 
+  if( outer_radius() != infty ) { 
     to_ret = solid_volume( outer_radius(), length() )
            - solid_volume( inner_radius(), length() );
   }

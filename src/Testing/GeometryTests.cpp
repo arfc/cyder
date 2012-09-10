@@ -12,6 +12,7 @@ class GeometryTest : public ::testing::Test {
     Radius r_zero_, r_null_, r_five_, r_four_;
     Length len_zero_, len_null_, len_five_, len_four_;
     point_t origin_, x_offset_, y_offset_, z_offset_;
+    double infty_;
 
     virtual void SetUp(){
       r_zero_ = 0;
@@ -26,6 +27,7 @@ class GeometryTest : public ::testing::Test {
       point_t x_offset_ = {len_five_, 0, 0};
       point_t y_offset_ = {0, len_five_, 0};
       point_t z_offset_ = {0, 0, len_five_};
+      infty_ = numeric_limits<double>::infinity();
       default_geom_ = GeometryPtr(new Geometry());
       test_geom_ = GeometryPtr(new Geometry(r_four_, r_five_, x_offset_, len_five_));
     }
@@ -35,8 +37,8 @@ class GeometryTest : public ::testing::Test {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(GeometryTest, defaultConstructor) {
-  EXPECT_FLOAT_EQ(0,    default_geom_->inner_radius());
-  EXPECT_EQ(      NULL, default_geom_->outer_radius());
+  EXPECT_FLOAT_EQ(0, default_geom_->inner_radius());
+  EXPECT_EQ( infty_, default_geom_->outer_radius());
 
   EXPECT_FLOAT_EQ(0, default_geom_->centroid().x_);
   EXPECT_FLOAT_EQ(0, default_geom_->centroid().y_);
