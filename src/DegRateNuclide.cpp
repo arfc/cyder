@@ -105,7 +105,7 @@ void DegRateNuclide::transportNuclides(int time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   update_degradation(time, deg_rate_);
-  update_vec_hist(time);
+  update_vec_hist(time, wastes_);
   update_conc_hist(time, wastes_);
 }
 
@@ -116,6 +116,7 @@ void DegRateNuclide::set_deg_rate(double deg_rate){
     msg += " The value provided was ";
     msg += deg_rate;
     msg += ".";
+    LOG(LEV_ERROR,"GRDRNuc") << msg;;
     throw CycRangeException(msg);
   } else {
     deg_rate_ = deg_rate;
@@ -167,8 +168,8 @@ IsoConcMap DegRateNuclide::update_conc_hist(int time, deque<mat_rsrc_ptr> wastes
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = sum_mats(wastes);
 
+  sum_pair = vec_hist(time);
   double scale = sum_pair.second/geom_->volume();
 
   CompMap::iterator it;
@@ -230,7 +231,12 @@ double DegRateNuclide::tot_deg(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::update_vec_hist(int time){
-  vec_hist_[ time ] = sum_mats(wastes_) ;
+  update_vec_hist(time, wastes_);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::update_vec_hist(int time, deque<mat_rsrc_ptr> mats){
+  vec_hist_[ time ] = sum_mats(mats) ;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -242,9 +248,16 @@ IsoVector DegRateNuclide::contained_vec(int time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::vec_hist(int time){
   pair<IsoVector, double> to_ret;
-  VecHist::iterator it;
-  it = vec_hist_.find(time);
-  to_ret = (*it).second;
+  if( time <= last_degraded_){
+    VecHist::iterator it = vec_hist_.find(time);
+    to_ret = (*it).second;
+  }else{
+    string msg = "The IsoVector History at time ";
+    msg += time;
+    msg +=" is unavailable."; 
+    LOG(LEV_ERROR,"GRDRNuc") << msg;;
+    throw CycRangeException(msg);
+  }
   return to_ret;
 }
 

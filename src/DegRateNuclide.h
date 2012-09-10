@@ -213,11 +213,20 @@ public:
   /**
      Updates the isotopic vector history at the time
 
-     @param time the time at which to update the vector history
-     @throws an exception if the time provided is less than the 
+     @param time the time at which to update the vector history, according to wastes_
      last_degraded_ time.
      */
   void update_vec_hist(int time);
+
+  /**
+     Updates the isotopic vector history at the time
+
+     @param time the time at which to update the vector history
+     @param mats the deque of materials to include in the history, usually wastes_
+     @throws an exception if the time provided is less than the 
+     last_degraded_ time.
+     */
+  void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
 
   /**
      Returns the map of isotopes to concentrations at the time profided
