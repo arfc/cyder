@@ -183,7 +183,15 @@ public:
   std::pair<IsoVector, double> sum_mats(std::deque<mat_rsrc_ptr> mats);
 
   /**
-     updates the total degradation and makes time the last degraded time.
+     updates the contained concentration according to contained wastes_
+    
+     @param time the time at which to update the degradation
+     @return the current isotopic concentration map at the outer border
+    */
+  IsoConcMap update_conc_hist(int time);
+
+  /**
+     updates the contained concentration with mats provided 
     
      @param time the time at which to update the degradation
      @param mats the vector of materials contained in the component
