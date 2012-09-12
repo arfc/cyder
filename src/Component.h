@@ -119,14 +119,14 @@ public:
   void absorb(mat_rsrc_ptr mat_to_add);
 
   /**
-     Extracts the contents of the given Material from this Component. Use this 
+     Extracts the contents of the given composition from this Component. Use this 
      function for decrementing a Component's mass balance after transferring 
      through a link. 
      
-     @param mat_to_rem the Material whose composition we want to decrement 
-     against this Component
+     @param comp_to_rem the composition to decrement against this Component
+     @param kg_to_rem the mass in kg to decrement against this Component
    */
-  void extract(mat_rsrc_ptr mat_to_rem);
+  void extract(CompMapPtr comp_to_rem, double kg_to_rem);
 
   /**
      Transports heat from the inner boundary to the outer boundary in this 

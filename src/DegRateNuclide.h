@@ -90,11 +90,11 @@ public:
      Extracts the contents of the given Material from this DegRateNuclide. Use this 
      function for decrementing a DegRateNuclide's mass balance after transferring 
      through a link. 
-     
-     @param matToRem the Material whose composition we want to decrement 
-     against this DegRateNuclide
+
+     @param comp_to_rem the composition to decrement against this DegRateNuclide
+     @param kg_to_rem the amount in kg to decrement against this DegRateNuclide
    */
-  virtual void extract(mat_rsrc_ptr matToRem) ;
+  virtual void extract(CompMapPtr comp_to_rem, double kg_to_rem );
 
   /**
      Transports nuclides from the inner to the outer boundary 

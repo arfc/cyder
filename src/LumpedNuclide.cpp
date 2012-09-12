@@ -72,13 +72,13 @@ void LumpedNuclide::absorb(mat_rsrc_ptr matToAdd)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void LumpedNuclide::extract(mat_rsrc_ptr matToRem)
+void LumpedNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
 {
   // Get the given LumpedNuclide's contaminant material.
   // add the material to it with the material extract function.
   // each nuclide model should override this function
-  LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide" << "is extracting material: ";
-  matToRem->print() ;
+  LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide" << "is extracting composition: ";
+  comp_to_rem->print() ;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

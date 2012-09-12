@@ -167,9 +167,9 @@ void Component::absorb(mat_rsrc_ptr mat_to_add){
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::extract(mat_rsrc_ptr mat_to_rem){
+void Component::extract(CompMapPtr comp_to_rem, double kg_to_rem){
   try{
-    nuclide_model_->extract(mat_to_rem);
+    nuclide_model_->extract(comp_to_rem, kg_to_rem);
   } catch ( exception& e ) {
     LOG(LEV_ERROR, "GRComp") << "Error occured in component extract function." << e.what();
   }
