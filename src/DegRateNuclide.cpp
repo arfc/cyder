@@ -30,7 +30,7 @@ DegRateNuclide::DegRateNuclide(){
   conc_hist_ = ConcHist();
   update_degradation(0, deg_rate_);
   update_vec_hist(0);
-  update_conc_hist(0);
+  //update_conc_hist(0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -96,7 +96,8 @@ void DegRateNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
+  mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material(comp_to_rem));
+  left_over->setQuantity(0);
   while (!wastes_.empty()){
     left_over->absorb(wastes_.back());
     wastes_.pop_back();
@@ -263,7 +264,7 @@ IsoVector DegRateNuclide::contained_vec(int the_time){
 pair<IsoVector, double> DegRateNuclide::vec_hist(int the_time){
   pair<IsoVector, double> to_ret;
   VecHist::const_iterator it;
-  if( vec_hist_.size() != 0 ) {
+  if( !vec_hist_.empty() ) {
     it = vec_hist_.find(the_time);
     if( it != vec_hist_.end() ){
       to_ret = (*it).second;

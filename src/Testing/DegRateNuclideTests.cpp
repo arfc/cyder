@@ -398,5 +398,9 @@ TEST_F(DegRateNuclideTest, updateDegradation){
   time_++;
   EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
   EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
   time_++;
 }
