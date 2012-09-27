@@ -59,6 +59,7 @@ NuclideModel* DegRateNuclide::copy(NuclideModel* src){
   last_degraded_ = TI->time();
   wastes_ = deque<mat_rsrc_ptr>();
 
+  // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
   geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid());
 
@@ -99,7 +100,7 @@ void DegRateNuclide::extract(mat_rsrc_ptr matToRem)
     left_over->absorb(wastes_.back());
     wastes_.pop_back();
   }
-  left_over->extract(matToRem);
+  left_over->extract(matToRem->isoVector().comp(), matToRem->quantity());
   wastes_.push_back(left_over);
 }
 
@@ -184,7 +185,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
     double scale = sum_pair.second/geom_->volume();
     CompMapPtr curr_comp = sum_pair.first.comp();
     for(it = (*curr_comp).begin(); it != (*curr_comp).end(); ++it) {
-      to_ret.insert(make_pair((*it).first, ((*it).second)*scale));
+      to_ret[(*it).first] = ((*it).second)*scale;
     }
   } else {
     to_ret.insert(make_pair( 92235, 0)); 
@@ -198,6 +199,7 @@ pair<IsoVector, double> DegRateNuclide::sum_mats(deque<mat_rsrc_ptr> mats){
   IsoVector vec;
   CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
   double kg = 0;
+  double mass_to_add;
 
   if( mats.size() != 0 ){ 
     CompMapPtr comp_to_add;
@@ -206,14 +208,14 @@ pair<IsoVector, double> DegRateNuclide::sum_mats(deque<mat_rsrc_ptr> mats){
     CompMap::iterator comp;
 
     for(mat = mats.begin(); mat != mats.end(); ++mat){ 
-      comp_to_add = (*mat)->unnormalizeComp(MASS);
+      comp_to_add = (*mat)->isoVector().comp();
       kg += (*mat)->mass(KG);
       for(comp = (*comp_to_add).begin(); comp != (*comp_to_add).end(); ++comp) {
         iso = comp->first;
         if(sum_comp->count(iso)!=0) {
-          (*sum_comp)[iso] = (*sum_comp)[iso] + comp->second;
+          (*sum_comp)[iso] = (*sum_comp)[iso] + (*mat)->mass(iso);
         } else { 
-          (*sum_comp)[iso] = comp->second;
+          (*sum_comp)[iso] = (*mat)->mass(iso);
         }
       }
     }
@@ -259,7 +261,6 @@ pair<IsoVector, double> DegRateNuclide::vec_hist(int the_time){
   if(vec_hist_.size() != 0) {it = vec_hist_.find(the_time);}
   if(the_time == last_degraded_ || it != vec_hist_.end() ){
     to_ret = (*it).second;
-    assert(to_ret.second < 1000 );
   } else { 
     CompMapPtr zero_comp = CompMapPtr(new CompMap(MASS));
     (*zero_comp)[92235] = 0;
