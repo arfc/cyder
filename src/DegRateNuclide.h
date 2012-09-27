@@ -34,12 +34,21 @@
    not well represented by the DegRateNuclide model.
  */
 class DegRateNuclide : public NuclideModel {
+  /*----------------------------*/
+  /* All NuclideModel classes   */
+  /* have the following members */
+  /*----------------------------*/
 public:
   
   /**
      Default constructor for the nuclide model class. Creates an empty nuclide model.
    */
   DegRateNuclide(); 
+
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~DegRateNuclide();
 
   /**
      primary constructor reads input from XML node
@@ -49,23 +58,11 @@ public:
   DegRateNuclide(xmlNodePtr cur){};
 
   /**
-     Virtual destructor deletes datamembers that are object pointers.
-    */
-  virtual ~DegRateNuclide();
-
-  /**
      initializes the model parameters from an xmlNodePtr
      
      @param cur is the current xmlNodePtr
    */
   virtual void init(xmlNodePtr cur); 
-
-  /**
-     initializes the model parameters from an xmlNodePtr
-     
-     @param deg_rate the degradation rate, fraction per yr (a fraction 0-1)
-   */
-  virtual void init(double deg_rate); 
 
   /**
      copies a nuclide model and its parameters from another
@@ -113,36 +110,6 @@ public:
    */
   virtual std::string name(){return "DEGRATE_NUCLIDE";};
 
-  /** 
-     returns the degradation rate that characterizes this model
-   *
-     @return deg_rate_ fraction per year
-   */
-  double deg_rate() {return deg_rate_;};
-
-  /** 
-     returns the degradation rate that characterizes this model
-   *
-     @param deg_rate fraction per timestep, between 0 and 1
-     @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
-   */
-  void set_deg_rate(double deg_rate);
-
-  /** 
-     returns the current contained contaminant mass, in kg
-   *
-     @return contained_mass_[now] throughout the component volume, in kg
-   */
-  double contained_mass();
-
-  /** 
-     returns the current contained contaminant mass, in kg, at time
-   *
-     @param time the time to query the contained contaminant mass
-     @return contained_mass_ throughout the component volume, in kg, at time
-   */
-  double contained_mass(int time);
-
   /**
      returns the available material source term at the outer boundary of the 
      component
@@ -172,6 +139,51 @@ public:
      @return qC the solute flux at the boundary in kg/m^2/s
    */
   virtual IsoConcMap cauchy_bc();
+
+  /*----------------------------*/
+  /* This NuclideModel class    */
+  /* has the following members  */
+  /*----------------------------*/
+public:
+  /**
+     initializes the model parameters from an xmlNodePtr
+     
+     @param deg_rate the degradation rate, fraction per yr (a fraction 0-1)
+   */
+  virtual void init(double deg_rate); 
+
+
+  /** 
+     returns the degradation rate that characterizes this model
+   *
+     @return deg_rate_ fraction per year
+   */
+  double deg_rate() {return deg_rate_;};
+
+  /** 
+     returns the degradation rate that characterizes this model
+   *
+     @param deg_rate fraction per timestep, between 0 and 1
+     @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
+   */
+  void set_deg_rate(double deg_rate);
+
+  /** 
+     returns the current contained contaminant mass, in kg
+     @TODO should put this in the NuclideModel class or something. 
+
+     @return contained_mass_[now] throughout the component volume, in kg
+   */
+  double contained_mass();
+
+  /** 
+     returns the current contained contaminant mass, in kg, at time
+     @TODO should put this in the NuclideModel class or something. 
+
+     @param time the time to query the contained contaminant mass
+     @return contained_mass_ throughout the component volume, in kg, at time
+   */
+  double contained_mass(int time);
 
   /**
      sums the materials in the vector, filling the vec and kg with 
