@@ -199,39 +199,6 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-pair<IsoVector, double> DegRateNuclide::sum_mats(deque<mat_rsrc_ptr> mats){
-  IsoVector vec;
-  CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
-  double kg = 0;
-  double mass_to_add;
-
-  if( mats.size() != 0 ){ 
-    CompMapPtr comp_to_add;
-    deque<mat_rsrc_ptr>::iterator mat;
-    int iso;
-    CompMap::const_iterator comp;
-
-    for(mat = mats.begin(); mat != mats.end(); ++mat){ 
-      kg += (*mat)->mass(MassUnit(KG));
-      comp_to_add = (*mat)->isoVector().comp();
-      comp_to_add->massify();
-      for(comp = (*comp_to_add).begin(); comp != (*comp_to_add).end(); ++comp) {
-        iso = comp->first;
-        if(sum_comp->count(iso)!=0) {
-          (*sum_comp)[iso] = (*sum_comp)[iso] + (comp->second)*kg;
-        } else { 
-          (*sum_comp)[iso] = (comp->second)*kg;
-        }
-      }
-    }
-  } else {
-    (*sum_comp)[92235] = 0;
-  }
-  vec = IsoVector(sum_comp);
-  return make_pair(vec, kg);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::update_degradation(int the_time, double deg_rate){
   assert(last_degraded_ <= the_time);
   assert(deg_rate<=1.0 && deg_rate >= 0.0);
@@ -253,7 +220,7 @@ void DegRateNuclide::update_vec_hist(int the_time){
   // CompMapPtr one_comp = CompMapPtr(new CompMap(MASS));
   // (*one_comp)[92235] = 1;
   // vec_hist_[ the_time ] = make_pair(IsoVector(one_comp), 10*(1-tot_deg()));
-  vec_hist_[ the_time ] = sum_mats(wastes_) ;
+  vec_hist_[ the_time ] = MatTools::sum_mats(wastes_) ;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

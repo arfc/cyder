@@ -188,21 +188,6 @@ TEST_F(DegRateNuclideTest, total_degradation){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(DegRateNuclideTest, sum_mats){
-  mat_rsrc_ptr new_test_mat = mat_rsrc_ptr(new Material(test_comp_));
-  new_test_mat->setQuantity(2*test_size_);
-
-  deque<mat_rsrc_ptr> mats;
-  mats.push_back(test_mat_);
-  mats.push_back(new_test_mat);
-  
-  pair<IsoVector, double> the_sum;
-  the_sum = deg_rate_ptr_->sum_mats(mats);
-  EXPECT_FLOAT_EQ(3*test_size_, the_sum.second);
-  EXPECT_FLOAT_EQ(1, the_sum.first.comp()->atomFraction(u235_));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, transportNuclidesDR0){ 
   // if the degradation rate is zero, nothing should be released
   // set the degradation rate

@@ -12,6 +12,7 @@
 
 #include "Material.h"
 #include "Geometry.h"
+#include "MatTools.h"
 
 /**
    enumerated list of types of nuclide transport model

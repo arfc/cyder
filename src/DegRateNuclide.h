@@ -186,15 +186,6 @@ public:
   double contained_mass(int time);
 
   /**
-     sums the materials in the vector, filling the vec and kg with 
-     the cumulative IsoVector and total mass, in kg.
-     @TODO should put this in a toolkit or something. Doesn't belong here.
-
-     @param mats the vector of materials to be summed (not mixed)
-    */
-  std::pair<IsoVector, double> sum_mats(std::deque<mat_rsrc_ptr> mats);
-
-  /**
      updates the contained concentration according to contained wastes_
     
      @param time the time at which to update the degradation
