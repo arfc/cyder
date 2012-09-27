@@ -106,7 +106,7 @@ IsoConcMap LumpedNuclide::dirichlet_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap  LumpedNuclide::neumann_bc(){
+ConcGradMap  LumpedNuclide::neumann_bc(ConcGrad c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

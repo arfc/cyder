@@ -90,7 +90,7 @@ IsoConcMap MixedCellNuclide::dirichlet_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap MixedCellNuclide::neumann_bc(){
+ConcGradMap MixedCellNuclide::neumann_bc(ConcGrad c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

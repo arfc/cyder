@@ -159,7 +159,7 @@ IsoConcMap DegRateNuclide::dirichlet_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap DegRateNuclide::neumann_bc(){
+ConcGradMap DegRateNuclide::neumann_bc(ConcGrad c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist(last_degraded_); 
 }

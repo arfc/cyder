@@ -101,7 +101,7 @@ IsoConcMap OneDimPPMNuclide::dirichlet_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap OneDimPPMNuclide::neumann_bc(){
+ConcGradMap OneDimPPMNuclide::neumann_bc(ConcGrad c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

@@ -32,6 +32,18 @@ enum NuclideModelType {
 typedef double Tox;
 
 /**
+   type definition for Concentration Gradients in kg/m^o4
+ */
+typedef double ConcGrad;
+
+/**
+   type definition for a map from isotopes to concentrations
+   The keys are the isotope identifiers Z*1000 + A
+   The values are the Concentration Gradients for each isotope
+  */
+typedef std::map<int, ConcGrad> ConcGradMap;
+
+/**
    type definition for Concentrations in kg/m^3
  */
 typedef double Concentration;
@@ -143,6 +155,13 @@ public:
      @return C the concentration at the boundary in kg/m^3
    */
   virtual IsoConcMap dirichlet_bc() = 0;
+
+  /**
+     returns the prescribed concentration at the boundary, the dirichlet bc
+     in kg/m^3
+    
+     @return C the concentration at the boundary in kg/m^3
+   */
   Concentration dirichlet_bc(Iso tope) { 
     IsoConcMap::iterator found = this->dirichlet_bc().find(tope);
     return(found != this->dirichlet_bc().end() ? (*found).second : 0);
@@ -151,12 +170,23 @@ public:
   /**
      returns the concentration gradient at the boundary, the Neumann bc
     
+     @param c_ext the external concentration in the parent component
+     @param r_ext the radius in the parent component corresponding to c_ext
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  virtual IsoConcMap neumann_bc() = 0;
-  Concentration neumann_bc(Iso tope) {
-    IsoConcMap::iterator found = this->neumann_bc().find(tope);
-    return(found != this->neumann_bc().end() ? (*found).second : 0);
+  virtual ConcGradMap neumann_bc(Concentration c_ext, Radius r_ext) = 0;
+
+  /**
+     returns the concentration gradient at the boundary, the Neumann bc
+    
+     @param c_ext the external concentration in the parent component
+     @param r_ext the radius in the parent component corresponding to c_ext
+     @param tope
+     @return dCdx the concentration gradient at the boundary in kg/m^3
+   */
+  ConcGrad neumann_bc(Concentration c_ext, Radius r_ext, Iso tope) {
+    IsoConcMap::iterator found = this->neumann_bc(c_ext, r_ext).find(tope);
+    return(found != this->neumann_bc(c_ext, r_ext).end() ? (*found).second : 0);
   };
 
   /**

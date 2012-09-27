@@ -195,6 +195,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
+  double outer_radius nuc_model_ptr_->geom()->outer_radius();
 
   ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(deg_rate_, deg_rate_ptr_->deg_rate());
@@ -210,8 +211,8 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR0){
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
   // check the boundary flux
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(u235_));
-  // check the neumann
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(u235_));
+  // check the neumann bc
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(outer_radius*2,0,u235_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -221,6 +222,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
+  double outer_radius = nuc_model_ptr_->outer_radius();
 
   // set the degradation rate
   ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
@@ -242,7 +244,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Cauchy
   EXPECT_FLOAT_EQ(theta_*adv_vel_*expected_conc, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(u235_));
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(outer_radius*2,0,u235_));
 
   // remove the source term offered
   CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
