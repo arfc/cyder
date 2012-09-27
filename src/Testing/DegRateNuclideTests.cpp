@@ -117,37 +117,22 @@ TEST_F(DegRateNuclideTest, extract){
   // it should be able to extract all of the material it absorbed
   double frac = 0.2;
   
-  //ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //EXPECT_NO_THROW(nuc_model_ptr_->extract(test_mat_));
   // if you extract a material, the conc_map should reflect that
   // you shouldn't extract more material than you have how much is that?
-  mat_rsrc_ptr to_extract1;
-  mat_rsrc_ptr to_extract2;
-  mat_rsrc_ptr to_extract3;
-  to_extract1 = mat_rsrc_ptr(new Material(test_mat_->isoVector()));
-  to_extract2 = mat_rsrc_ptr(new Material(test_mat_->isoVector()));
-  to_extract3 = mat_rsrc_ptr(new Material(test_mat_->isoVector()));
-  to_extract1->setQuantity(frac*test_size_);
-  to_extract2->setQuantity(frac*test_size_);
-  to_extract3->setQuantity(frac*test_size_);
 
-  ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   ASSERT_EQ(0,time_);
-  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
+  ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  EXPECT_NO_THROW(deg_rate_ptr_->transportNuclides(time_));
   EXPECT_FLOAT_EQ(test_mat_->quantity(), deg_rate_ptr_->contained_mass(time_));
   EXPECT_FLOAT_EQ(test_size_, deg_rate_ptr_->contained_mass(time_));
 
-  time_++;
-  ASSERT_EQ(1,time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract1));
-  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
-  EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, deg_rate_ptr_->contained_mass(time_));
-
-  time_++;
-  ASSERT_EQ(2,time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract2));
-  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
-  EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, deg_rate_ptr_->contained_mass(time_));
+  for(int i=1; i<4; i++){
+    time_++;
+    ASSERT_EQ(i,time_);
+    EXPECT_NO_THROW(nuc_model_ptr_->extract(test_comp_, frac*test_size_));
+    EXPECT_NO_THROW(deg_rate_ptr_->transportNuclides(time_));
+    EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, deg_rate_ptr_->contained_mass(time_));
+  }
 
 }
 
@@ -275,10 +260,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  mat_rsrc_ptr to_extract;
-  to_extract = mat_rsrc_ptr(new Material(nuc_model_ptr_->source_term_bc().first));
-  to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
+  CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
+  double extract_mass = nuc_model_ptr_->source_term_bc().second;
+  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
   // TRANSPORT NUCLIDES 
   time_++;
   ASSERT_EQ(2, time_);
@@ -295,9 +279,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  to_extract = mat_rsrc_ptr(new Material(nuc_model_ptr_->source_term_bc().first));
-  to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
+  extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
+  extract_mass = nuc_model_ptr_->source_term_bc().second;
+  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
   // TRANSPORT NUCLIDES 
   time_++;
   ASSERT_EQ(3, time_);
@@ -345,10 +329,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(u235_));
 
   // remove the source term offered
-  mat_rsrc_ptr to_extract;
-  to_extract = mat_rsrc_ptr(new Material(nuc_model_ptr_->source_term_bc().first));
-  to_extract->setQuantity(nuc_model_ptr_->source_term_bc().second);
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(to_extract));
+  CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
+  double extract_mass = nuc_model_ptr_->source_term_bc().second;
+  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
   // TRANSPORT NUCLIDES
   time_++;
   ASSERT_EQ(2, time_);
@@ -392,6 +375,10 @@ TEST_F(DegRateNuclideTest, updateDegradation){
   EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
   EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
   time_++;
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
   EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
   EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
   time_++;

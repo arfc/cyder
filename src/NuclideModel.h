@@ -100,14 +100,14 @@ public:
   virtual void absorb(mat_rsrc_ptr matToAdd) = 0;
 
   /**
-     Extracts the contents of the given Material from this NuclideModel. Use this 
+     Extracts the contents of the given composition from this NuclideModel. Use this 
      function for decrementing a NuclideModel's mass balance after transferring 
      through a link. 
      
-     @param matToRem the Material whose composition we want to decrement 
-     against this NuclideModel
+     @param comp_to_rem the composition to decrement against this NuclideModel
+     @param comp_to_rem the mass in kg to decrement against this NuclideModel
    */
-  virtual void extract(mat_rsrc_ptr matToRem) = 0 ;
+  virtual void extract(CompMapPtr comp_to_rem, double kg_to_rem) = 0 ;
 
   /**
      Transports nuclides from the inner boundary to the outer boundary in this 

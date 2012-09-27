@@ -67,13 +67,13 @@ void OneDimPPMNuclide::absorb(mat_rsrc_ptr matToAdd)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void OneDimPPMNuclide::extract(mat_rsrc_ptr matToRem)
+void OneDimPPMNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
 {
   // Get the given OneDimPPMNuclide's contaminant material.
   // add the material to it with the material extract function.
   // each nuclide model should override this function
-  LOG(LEV_DEBUG2,"GR1DNuc") << "OneDimPPMNuclide" << "is extracting material: ";
-  matToRem->print() ;
+  LOG(LEV_DEBUG2,"GR1DNuc") << "OneDimPPMNuclide" << "is extracting composition: ";
+  comp_to_rem->print() ;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
