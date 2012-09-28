@@ -121,7 +121,7 @@ public:
    *
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  virtual ConcGradMap neumann_bc(ConcGrad c_ext, Radius r_ext);
+  virtual ConcGradMap neumann_bc(IsoConcMap c_ext, Radius r_ext);
 
   /**
      returns the flux at the boundary, the Neumann bc

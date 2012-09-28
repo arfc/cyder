@@ -85,7 +85,7 @@ IsoConcMap StubNuclide::dirichlet_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ConcGradMap StubNuclide::neumann_bc(ConcGrad c_ext, Radius r_ext){
+ConcGradMap StubNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

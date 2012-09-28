@@ -131,7 +131,7 @@ public:
    *
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  virtual ConcGradMap neumann_bc(ConcGrad c_ext, Radius r_ext);
+  virtual ConcGradMap neumann_bc(IsoConcMap c_ext, Radius r_ext);
 
   /**
      returns the flux at the boundary, the Neumann bc
@@ -267,6 +267,14 @@ public:
 
   /// returns the total degradation of the component
   double tot_deg();
+
+  /// returns the radius at the midpoint between outer_radius and inner_radius
+  // @TODO should probably be in a toolkit
+  ConcGrad calc_conc_grad(Concentration c_ext, Concentration c_int, Radius r_ext, Radius r_int);
+
+  /// returns the radius at the midpoint between outer_radius and inner_radius
+  // @TODO should probably be in a toolkit
+  Radius radial_midpoint();
 
 
 protected:

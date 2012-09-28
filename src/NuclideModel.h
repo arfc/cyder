@@ -174,7 +174,7 @@ public:
      @param r_ext the radius in the parent component corresponding to c_ext
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  virtual ConcGradMap neumann_bc(Concentration c_ext, Radius r_ext) = 0;
+  virtual ConcGradMap neumann_bc(IsoConcMap c_ext, Radius r_ext) = 0;
 
   /**
      returns the concentration gradient at the boundary, the Neumann bc
@@ -184,7 +184,7 @@ public:
      @param tope
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  ConcGrad neumann_bc(Concentration c_ext, Radius r_ext, Iso tope) {
+  ConcGrad neumann_bc(IsoConcMap c_ext, Radius r_ext, Iso tope) {
     IsoConcMap::iterator found = this->neumann_bc(c_ext, r_ext).find(tope);
     return(found != this->neumann_bc(c_ext, r_ext).end() ? (*found).second : 0);
   };

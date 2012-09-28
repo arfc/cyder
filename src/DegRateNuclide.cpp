@@ -159,9 +159,45 @@ IsoConcMap DegRateNuclide::dirichlet_bc(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ConcGradMap DegRateNuclide::neumann_bc(ConcGrad c_ext, Radius r_ext){
-  /// @TODO This is just a placeholder
-  return conc_hist(last_degraded_); 
+ConcGradMap DegRateNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
+  ConcGradMap to_ret;
+
+  IsoConcMap c_int = conc_hist(last_degraded_);
+  Radius r_int = this->radial_midpoint();
+  
+  int iso;
+  IsoConcMap::iterator it;
+  for( it=c_int.begin(); it != c_int.end(); ++it){
+    if( c_ext.count(iso) != 0) {  
+      // in both
+      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
+    } else {  
+      // in c_int_only
+      to_ret[iso] = calc_conc_grad(0, c_int[iso], r_ext, r_int);
+    }
+  }
+  for( it=c_ext.begin(); it != c_ext.end(); ++it){
+    if( c_int.count(iso) == 0) { 
+      // in c_ext only
+      to_ret[iso] = calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
+    }
+  }
+
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+ConcGrad DegRateNuclide::calc_conc_grad(Concentration c_ext, Concentration 
+    c_int, Radius r_ext, Radius r_int){
+  ConcGrad to_ret;
+  assert(r_ext > r_int);
+  to_ret = (c_ext - c_int) / (r_ext - r_int) ;
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+Radius DegRateNuclide::radial_midpoint(){
+  return geom_->outer_radius() - (geom_->outer_radius() - geom_->inner_radius())/2;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
