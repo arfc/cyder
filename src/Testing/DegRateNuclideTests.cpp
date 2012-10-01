@@ -229,7 +229,6 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-  double radial_midpoint = outer_radius + (outer_radius - nuc_model_ptr_->geom()->inner_radius())/2;
 
   // set the degradation rate
   ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
@@ -252,7 +251,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   double expected_cauchy = 900; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann
-  double expected_neumann= -expected_conc/(outer_radius*2 - radial_midpoint);
+  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
 
   // remove the source term offered
@@ -272,7 +271,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Cauchy
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  expected_neumann= -expected_conc/(outer_radius*2 - radial_midpoint);
+  expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -306,7 +305,6 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-  double radial_midpoint = outer_radius + (outer_radius - nuc_model_ptr_->geom()->inner_radius())/2;
 
   // set the degradation rate
   ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
@@ -329,7 +327,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   double expected_cauchy = 900; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  double expected_neumann= -expected_conc/(outer_radius*2 - radial_midpoint);
+  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
