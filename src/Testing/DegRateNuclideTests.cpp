@@ -409,3 +409,18 @@ TEST_F(DegRateNuclideTest, getVolume) {
   EXPECT_NO_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()));
   EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), nuc_model_ptr_->geom()->volume());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, calc_conc_grad) {  
+  Concentration c_out, c_in;
+  Radius r_out, r_in;
+  c_out = 0;
+  c_in = 2;
+  r_out = 5;
+  r_in = 4;
+
+  EXPECT_FLOAT_EQ( (c_out-c_in)/(r_out-r_in), deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_out, r_in)); 
+  EXPECT_THROW( deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_in, r_out), CycRangeException); 
+  EXPECT_THROW( deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_in, r_in), CycRangeException); 
+
+}
