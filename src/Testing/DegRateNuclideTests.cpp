@@ -272,7 +272,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Cauchy
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  expected_neumann=expected_conc/(outer_radius*2 - radial_midpoint);
+  expected_neumann= -expected_conc/(outer_radius*2 - radial_midpoint);
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -329,7 +329,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   double expected_cauchy = 900; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  double expected_neumann=expected_conc/(outer_radius*2 - radial_midpoint);
+  double expected_neumann= -expected_conc/(outer_radius*2 - radial_midpoint);
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
