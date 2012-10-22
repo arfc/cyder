@@ -76,9 +76,7 @@ GenericRepository::GenericRepository() {
   mapVars("startOperMonth", "INTEGER", &start_op_mo_);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::init(xmlNodePtr cur) { 
-  FacilityModel::init(cur);
-  
+void GenericRepository::initModuleMembers(QueryEngine* qe) { 
   // move XML pointer to current model
   cur = XMLinput->get_xpath_element(cur, "model/GenericRepository");
 
