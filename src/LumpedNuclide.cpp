@@ -28,9 +28,10 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   eta_ratio_=NULL;
   P_D_=NULL;
 
-  formulation_ = qe->getElementName("formulation/*");
+  QueryEngine* formulation_qe = qe->queryElement("formulation");
+  formulation_ = formulation_qe->getElementName();
   string nodepath = "formulation/"+formulation_;
-  QueryEngine* ptr = qe->getElement(nodepath.c_str());
+  QueryEngine* ptr = qe->queryElement(nodepath.c_str());
   if(formulation_=="EM"){
   } else if(formulation_=="PFM") {
   } else if(formulation_=="EPM") {

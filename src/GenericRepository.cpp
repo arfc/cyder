@@ -50,6 +50,8 @@
  *
  */
 
+using boost::lexical_cast;
+
 table_ptr GenericRepository::gr_params_table = new Table(
     "GenericRepositoryParams");
 
@@ -100,16 +102,16 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
   // This will be a list
   int n_incommodities = input->nElementsMatchingQuery("incommodity");
   for (int i = 0; i < n_incommodities; i++) {
-    in_commods_.push_back(commodities->getElementContent("incommodity",i));
+    in_commods_.push_back(input->getElementContent("incommodity",i));
   }
 
   // get components
-  
   int n_components = input->nElementsMatchingQuery("component");
   QueryEngine* component_input;
   for (int i = 0; i < n_components; i++) {
     component_input = input->queryElement("component",i);
     initComponent(component_input);
+  }
 }
 
 
@@ -117,7 +119,7 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
 Component* GenericRepository::initComponent(QueryEngine* qe){
   Component* toRet = new Component();
   // the component class initialization function will pass down the queryengine pointer
-  toRet->init(qe);
+  toRet->initModuleMembers(qe);
 
   // all components have a name and a type
   std::string comp_type = qe->getElementContent("componenttype");
@@ -142,7 +144,7 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
       // get allowed waste commodities
       n_sub_components = qe->nElementsMatchingQuery("allowedcommod");
       for (int i=0; i<n_sub_components; i++) {
-        allowed_commod = queryElement("allowedcommod",i);
+        allowed_commod = qe->queryElement("allowedcommod",i);
         allowed_commod_name= allowed_commod->getElementName();
         commod_wf_map_.insert(std::make_pair(allowed_commod_name, toRet));
       }
@@ -153,7 +155,7 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
       // // get allowed waste forms
       n_sub_components = qe->nElementsMatchingQuery("allowedwf");
       for (int i=0; i<n_sub_components; i++) {
-        allowed_wf = queryElement("allowedwf",i);
+        allowed_wf = qe->queryElement("allowedwf",i);
         allowed_wf_name = allowed_wf->getElementName();
         //iterate through wf_templates_
         //for each wf_template

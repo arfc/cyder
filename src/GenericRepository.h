@@ -7,6 +7,7 @@
 #include "Logger.h"
 #include <queue>
 #include <string>
+#include <boost/lexical_cast.hpp>
 
 #include "FacilityModel.h"
 #include "Component.h"
@@ -372,15 +373,6 @@ protected:
        @return comp the component once it has been placed
      */
     Component* setPlacement(Component* comp);
-
-    /**
-       Initializes each requested component in the expected order
-       
-       @param qe is the QueryEngine object containing intialization info
-       
-       @return the set of initialized components
-     */
-    void initComponents(QueryEngine* qe) ;
 
     /**
        Initializes the name and model type of the component
