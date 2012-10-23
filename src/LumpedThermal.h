@@ -9,9 +9,6 @@
 #include "Logger.h"
 #include <string>
 
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 
 #include "ThermalModel.h"
 
@@ -46,7 +43,7 @@ public:
   ~LumpedThermal() {};
 
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from an QueryEngine object
      
      @param qe is the QueryEngine object containing intialization info
    */

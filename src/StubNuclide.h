@@ -11,9 +11,6 @@
 #include <map>
 #include <string>
 
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 #include "NuclideModel.h"
 
 
@@ -36,7 +33,7 @@ public:
   StubNuclide(); 
 
   /**
-     primary constructor reads input from XML node
+     primary constructor reads input from QueryEngine
      
      @param qe is the QueryEngine object containing intialization info
    */

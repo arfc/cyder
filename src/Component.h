@@ -8,9 +8,6 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 
 #include "Material.h"
 #include "ThermalModel.h"
@@ -68,7 +65,7 @@ public:
   ~Component();
 
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from an QueryEngine object
      and calls the explicit init(ID, name, ...) function. 
      
      @param qe is the QueryEngine object containing intialization info
@@ -76,7 +73,7 @@ public:
   void initModuleMembers(QueryEngine* qe); 
 
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from an QueryEngine object
      
      @param name  the name_ data member, a string
      @param type the type_ data member, a ComponentType enum value
@@ -88,7 +85,7 @@ public:
   void init(std::string name, ComponentType type, Radius inner_radius,
       Radius outer_radius, ThermalModel* thermal_model, NuclideModel* nuclide_model); 
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from an QueryEngine object
      
      @param name  the name_ data member, a string
      @param type the type_ data member, a ComponentType enum value
@@ -190,7 +187,7 @@ public:
   NuclideModelType nuclideEnum(std::string type);
 
   /** 
-     Returns a new thermal model of the string type xml node pointer
+     Returns a new thermal model of the string type QueryEngine object
      
      @param qe is the QueryEngine object containing intialization info
      @return thermal_model_ a pointer to the ThermalModel that was created
@@ -198,7 +195,7 @@ public:
   ThermalModel* thermal_model(QueryEngine* qe);
 
   /** 
-     Returns a new nuclide model of the string type and xml node pointer
+     Returns a new nuclide model of the string type and QueryEngine object
      
      @param qe is the QueryEngine object containing intialization info
      @return nuclide_model_ a pointer to the NuclideModel that was created

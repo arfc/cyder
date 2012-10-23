@@ -6,9 +6,6 @@
 #define _THERMALMODEL_H
 
 #include <map>
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 
 #include "Material.h"
 #include "Geometry.h"

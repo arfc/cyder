@@ -11,9 +11,6 @@
 #include <map>
 #include <string>
 
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 #include "NuclideModel.h"
 
 
@@ -55,7 +52,7 @@ public:
   LumpedNuclide(); 
 
   /**
-     primary constructor reads input from XML node
+     primary constructor reads input from QueryEngine
      
      @param qe is the QueryEngine object containing intialization info
    */
@@ -67,7 +64,7 @@ public:
   virtual ~LumpedNuclide();
 
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from an QueryEngine object
      
      @param qe is the QueryEngine object containing intialization info
    */

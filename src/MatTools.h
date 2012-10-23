@@ -12,10 +12,6 @@
 #include <map>
 #include <string>
 
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
-
 #include "IsoVector.h"
 #include "Material.h"
 

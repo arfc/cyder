@@ -85,7 +85,7 @@ public:
   /// Destructor for the GenericRepository class. 
   ~GenericRepository() {};
   
-  /// initialize an object from XML input
+  /// initialize an object from QueryEngine input
   virtual void initModuleMembers(QueryEngine* qe);
 
   /// initialize an object by copying another

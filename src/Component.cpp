@@ -73,7 +73,7 @@ void Component::initModuleMembers(QueryEngine* qe){
   Radius inner_radius = lexical_cast<double>(qe->getElementContent("innerradius"));
   Radius outer_radius = lexical_cast<double>(qe->getElementContent("outerradius"));
 
-  LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(cur) function has been called.";;
+  LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
 
   init(name, type, inner_radius, outer_radius, thermal_model(qe->queryElement("ThermalModel")), nuclide_model(qe->queryElement("NuclideModel")));
 }
@@ -276,15 +276,16 @@ NuclideModelType Component::nuclideEnum(std::string type_name) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModel* Component::thermal_model(QueryEngine* qe){
   ThermalModel* toRet;
-  string model_name = XMLinput->get_xpath_name(cur,"thermalmodel/*");
+
+  string model_name = qe->getElementName();;
   
   switch(thermalEnum(model_name))
   {
     case LUMPED_THERMAL:
-      toRet = new LumpedThermal(cur);
+      toRet = new LumpedThermal(qe);
       break;
     case STUB_THERMAL:
-      toRet = new StubThermal(cur);
+      toRet = new StubThermal(qe);
       break;
     default:
       throw CycException("Unknown thermal model enum value encountered."); 
@@ -295,27 +296,27 @@ ThermalModel* Component::thermal_model(QueryEngine* qe){
 NuclideModel* Component::nuclide_model(QueryEngine* qe){
   NuclideModel* toRet;
 
-  string model_name = XMLinput->get_xpath_name(cur,"nuclidemodel/*");
+  string model_name = qe->getElementName();;
 
   switch(nuclideEnum(model_name))
   {
     case DEGRATE_NUCLIDE:
-      toRet = new DegRateNuclide(cur);
+      toRet = new DegRateNuclide(qe);
       break;
     case LUMPED_NUCLIDE:
-      toRet = new LumpedNuclide(cur);
+      toRet = new LumpedNuclide(qe);
       break;
     case MIXEDCELL_NUCLIDE:
-      toRet = new MixedCellNuclide(cur);
+      toRet = new MixedCellNuclide(qe);
       break;
     case ONEDIMPPM_NUCLIDE:
-      toRet = new OneDimPPMNuclide(cur);
+      toRet = new OneDimPPMNuclide(qe);
       break;
     case STUB_NUCLIDE:
-      toRet = new StubNuclide(cur);
+      toRet = new StubNuclide(qe);
       break;
     case TWODIMPPM_NUCLIDE:
-      toRet = new TwoDimPPMNuclide(cur);
+      toRet = new TwoDimPPMNuclide(qe);
       break;
     default:
       throw CycException("Unknown nuclide model enum value encountered."); 

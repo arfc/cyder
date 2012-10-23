@@ -12,9 +12,6 @@
 #include <map>
 #include <string>
 
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 #include "NuclideModel.h"
 
 
@@ -51,14 +48,14 @@ public:
   virtual ~DegRateNuclide();
 
   /**
-     primary constructor reads input from XML node
+     primary constructor reads input from the QueryEngine
      
      @param qe is the QueryEngine object containing intialization info
    */
   DegRateNuclide(QueryEngine* qe){};
 
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from a QueryEngine object
      
      @param qe is the QueryEngine object containing intialization info
    */
@@ -146,7 +143,7 @@ public:
   /*----------------------------*/
 public:
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from the QueryEngine object
      
      @param deg_rate the degradation rate, fraction per yr (a fraction 0-1)
    */

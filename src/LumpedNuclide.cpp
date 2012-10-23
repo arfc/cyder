@@ -6,6 +6,7 @@
 #include <fstream>
 #include <deque>
 #include <time.h>
+#include <boost/lexical_cast.hpp>
 
 #include "CycException.h"
 #include "Logger.h"
@@ -13,6 +14,7 @@
 #include "LumpedNuclide.h"
 
 using namespace std;
+using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(){ }
 
@@ -22,22 +24,19 @@ LumpedNuclide::~LumpedNuclide(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
-  // move the xml pointer to the current model
-  cur = XMLinput->get_xpath_element(cur,"model/LumpedNuclide");
-
-  t_t_ = strtod(qe->getElementContent(cur,"transit_time"),NULL);
+  t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
   eta_ratio_=NULL;
   P_D_=NULL;
 
-  formulation_ = XMLinput->get_xpath_name(cur,"formulation/*");
+  formulation_ = qe->getElementName("formulation/*");
   string nodepath = "formulation/"+formulation_;
-  xmlNodePtr ptr = XMLinput->get_xpath_element(cur,nodepath.c_str());
+  QueryEngine* ptr = qe->getElement(nodepath.c_str());
   if(formulation_=="EM"){
   } else if(formulation_=="PFM") {
   } else if(formulation_=="EPM") {
-    eta_ratio_ = strtod(qe->getElementContent(ptr,"eta_ratio"), NULL);
+    eta_ratio_ = lexical_cast<double>(ptr->getElementContent("eta_ratio"));
   } else if(formulation_=="DM") {
-    P_D_ = strtod(qe->getElementContent(ptr,"dispersion_coeff"),NULL);
+    P_D_ = lexical_cast<double>(ptr->getElementContent("dispersion_coeff"));
   } else {
     string err = "The formulation type '"; 
     err += formulation_;

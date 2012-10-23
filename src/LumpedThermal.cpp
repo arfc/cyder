@@ -15,9 +15,6 @@ using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void LumpedThermal::initModuleMembers(QueryEngine* qe){
-  // move the xml pointer to the current model
-  QueryEngine* lumped_thermal = qe->queryElement("LumpedThermal");
-  // for now, just say you've done it... 
   LOG(LEV_DEBUG2,"GRSThm") << "The LumpedThermal Class init(cur) function has been called";;
 }
 

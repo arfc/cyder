@@ -82,9 +82,9 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
   std::map<std::string, std::string>::iterator item;
   for (item = member_types_.begin(); item != member_types_.end(); item++) {
     if (item->second =="INTEGER"){
-      *(static_cast<int*>(member_refs_[item->first])) = input->getElementContent(item->first.c_str());
+      *(static_cast<int*>(member_refs_[item->first])) = lexical_cast<int>(qe->getElementContent(item->first.c_str()));
     } else if (item->second == "FLOAT") {
-      *(static_cast<double*>(member_refs_[item->first])) = input->getElementContent(item->first.c_str());
+      *(static_cast<double*>(member_refs_[item->first])) = lexical_cast<double>(qe->getElementContent(item->first.c_str()));
     } else {
       std::string err = "The ";
       err += item->second;
@@ -114,17 +114,20 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* GenericRepository::initComponent(QueryEngine* input){
+Component* GenericRepository::initComponent(QueryEngine* qe){
   Component* toRet = new Component();
-  // the component class initialization function will pass down the xml pointer
-  toRet->init(cur);
+  // the component class initialization function will pass down the queryengine pointer
+  toRet->init(qe);
 
   // all components have a name and a type
-  std::string comp_type = input->getElementContent("componenttype");
+  std::string comp_type = qe->getElementContent("componenttype");
 
   // they will have allowed subcomponents (think russian doll)
-  xmlNodeSetPtr allowed_sub_nodes;
-  std::string allowed_commod;
+  int n_sub_components;
+  QueryEngine* allowed_commod;
+  QueryEngine* allowed_wf;
+  std::string allowed_commod_name;
+  std::string allowed_wf_name; 
 
   switch(toRet->componentEnum(comp_type)) {
     case BUFFER:
@@ -137,22 +140,23 @@ Component* GenericRepository::initComponent(QueryEngine* input){
       break;
     case WF:
       // get allowed waste commodities
-      allowed_sub_nodes = XMLinput->get_xpath_elements(cur,"allowedcommod");
-      for (int i=0;i<allowed_sub_nodes->nodeNr;i++) {
-        allowed_commod = (const char*)(allowed_sub_nodes->nodeTab[i]->children->content);
-        commod_wf_map_.insert(std::make_pair(allowed_commod, toRet));
+      n_sub_components = qe->nElementsMatchingQuery("allowedcommod");
+      for (int i=0; i<n_sub_components; i++) {
+        allowed_commod = queryElement("allowedcommod",i);
+        allowed_commod_name= allowed_commod->getElementName();
+        commod_wf_map_.insert(std::make_pair(allowed_commod_name, toRet));
       }
       wf_templates_.push_back(toRet);
       break;
     case WP:
       wp_templates_.push_back(toRet);
       // // get allowed waste forms
-      allowed_sub_nodes = XMLinput->get_xpath_elements(cur,"allowedwf");
-      for (int i=0;i<allowed_sub_nodes->nodeNr;i++) {
-        std::string allowed_wf_name = (const 
-            char*)(allowed_sub_nodes->nodeTab[i]->children->content);
+      n_sub_components = qe->nElementsMatchingQuery("allowedwf");
+      for (int i=0; i<n_sub_components; i++) {
+        allowed_wf = queryElement("allowedwf",i);
+        allowed_wf_name = allowed_wf->getElementName();
         //iterate through wf_templates_
-        //for each wf_template_
+        //for each wf_template
         for (std::deque< Component* >::iterator iter = wf_templates_.begin(); iter != 
             wf_templates_.end(); iter ++){
           if ((*iter)->name() == allowed_wf_name){
