@@ -86,7 +86,7 @@ public:
   ~GenericRepository() {};
   
   /// initialize an object from XML input
-  virtual void init(xmlNodePtr cur);
+  virtual void initModuleMembers(QueryEngine* qe);
 
   /// initialize an object by copying another
   virtual void copy(GenericRepository* src);
@@ -376,20 +376,20 @@ protected:
     /**
        Initializes each requested component in the expected order
        
-       @param cur the current xml pointer
+       @param qe is the QueryEngine object containing intialization info
        
        @return the set of initialized components
      */
-    void initComponents(xmlNodePtr cur) ;
+    void initComponents(QueryEngine* qe) ;
 
     /**
        Initializes the name and model type of the component
        
-       @param cur the current xml pointer
+       @param qe is the QueryEngine object containing intialization info
        
        @return the initialized component
      */
-    Component* initComponent(xmlNodePtr cur) ;
+    Component* initComponent(QueryEngine* qe) ;
 
     /**
        Do heat transport calculations. 

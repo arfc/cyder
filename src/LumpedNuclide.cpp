@@ -8,7 +8,6 @@
 #include <time.h>
 
 #include "CycException.h"
-#include "InputXML.h"
 #include "Logger.h"
 #include "Timer.h"
 #include "LumpedNuclide.h"
@@ -22,11 +21,11 @@ LumpedNuclide::~LumpedNuclide(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void LumpedNuclide::init(xmlNodePtr cur){
+void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   // move the xml pointer to the current model
   cur = XMLinput->get_xpath_element(cur,"model/LumpedNuclide");
 
-  t_t_ = strtod(XMLinput->get_xpath_content(cur,"transit_time"),NULL);
+  t_t_ = strtod(qe->getElementContent(cur,"transit_time"),NULL);
   eta_ratio_=NULL;
   P_D_=NULL;
 
@@ -36,9 +35,9 @@ void LumpedNuclide::init(xmlNodePtr cur){
   if(formulation_=="EM"){
   } else if(formulation_=="PFM") {
   } else if(formulation_=="EPM") {
-    eta_ratio_ = strtod(XMLinput->get_xpath_content(ptr,"eta_ratio"), NULL);
+    eta_ratio_ = strtod(qe->getElementContent(ptr,"eta_ratio"), NULL);
   } else if(formulation_=="DM") {
-    P_D_ = strtod(XMLinput->get_xpath_content(ptr,"dispersion_coeff"),NULL);
+    P_D_ = strtod(qe->getElementContent(ptr,"dispersion_coeff"),NULL);
   } else {
     string err = "The formulation type '"; 
     err += formulation_;

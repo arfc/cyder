@@ -6,14 +6,15 @@
 #include <fstream>
 #include <deque>
 #include <time.h>
+#include <boost/lexical_cast.hpp>
 
 #include "CycException.h"
-#include "InputXML.h"
 #include "Logger.h"
 #include "Timer.h"
 #include "MixedCellNuclide.h"
 
 using namespace std;
+using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MixedCellNuclide::MixedCellNuclide(){ }
@@ -22,11 +23,10 @@ MixedCellNuclide::MixedCellNuclide(){ }
 MixedCellNuclide::~MixedCellNuclide(){ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void MixedCellNuclide::init(xmlNodePtr cur){
+void MixedCellNuclide::initModuleMembers(QueryEngine* qe){
   // move the xml pointer to the current model
-  cur = XMLinput->get_xpath_element(cur,"model/MixedCellNuclide");
-  porosity_ = strtod(XMLinput->get_xpath_content(cur,"porosity"),NULL);
-  deg_rate_ = strtod(XMLinput->get_xpath_content(cur,"degradation"),NULL);
+  porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
+  deg_rate_ = lexical_cast<double>(qe->getElementContent("degradation"));
 
   LOG(LEV_DEBUG2,"GRMCNuc") << "The MixedCellNuclide Class init(cur) function has been called";;
 }

@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 #include <time.h>
+#include <boost/lexical_cast.hpp>
 
 #include "CycException.h"
 #include "Component.h"
@@ -19,10 +20,10 @@
 #include "StubNuclide.h"
 #include "TwoDimPPMNuclide.h"
 #include "BookKeeper.h"
-#include "InputXML.h"
 #include "Logger.h"
 
 using namespace std;
+using boost::lexical_cast;
 
 // Static variables to be initialized.
 int Component::nextID_ = 0;
@@ -65,16 +66,16 @@ Component::~Component(){ // @TODO is there anything to delete? Make this virtual
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::init(xmlNodePtr cur){
+void Component::initModuleMembers(QueryEngine* qe){
 
-  string name = XMLinput->get_xpath_content(cur,"name");
-  ComponentType type = componentEnum(XMLinput->get_xpath_content(cur,"componenttype"));
-  Radius inner_radius = strtod(XMLinput->get_xpath_content(cur,"innerradius"),NULL);
-  Radius outer_radius = strtod(XMLinput->get_xpath_content(cur,"outerradius"),NULL);
+  string name = qe->getElementContent("name");
+  ComponentType type = componentEnum(qe->getElementContent("componenttype"));
+  Radius inner_radius = lexical_cast<double>(qe->getElementContent("innerradius"));
+  Radius outer_radius = lexical_cast<double>(qe->getElementContent("outerradius"));
 
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(cur) function has been called.";;
 
-  init(name, type, inner_radius, outer_radius, thermal_model(cur), nuclide_model(cur));
+  init(name, type, inner_radius, outer_radius, thermal_model(qe->queryElement("ThermalModel")), nuclide_model(qe->queryElement("NuclideModel")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -273,7 +274,7 @@ NuclideModelType Component::nuclideEnum(std::string type_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ThermalModel* Component::thermal_model(xmlNodePtr cur){
+ThermalModel* Component::thermal_model(QueryEngine* qe){
   ThermalModel* toRet;
   string model_name = XMLinput->get_xpath_name(cur,"thermalmodel/*");
   
@@ -291,7 +292,7 @@ ThermalModel* Component::thermal_model(xmlNodePtr cur){
   return toRet;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* Component::nuclide_model(xmlNodePtr cur){
+NuclideModel* Component::nuclide_model(QueryEngine* qe){
   NuclideModel* toRet;
 
   string model_name = XMLinput->get_xpath_name(cur,"nuclidemodel/*");

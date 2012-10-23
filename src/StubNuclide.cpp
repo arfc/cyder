@@ -8,7 +8,6 @@
 #include <time.h>
 
 #include "CycException.h"
-#include "InputXML.h"
 #include "Logger.h"
 #include "Timer.h"
 #include "StubNuclide.h"
@@ -22,11 +21,9 @@ StubNuclide::StubNuclide(){};
 StubNuclide::~StubNuclide(){};
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void StubNuclide::init(xmlNodePtr cur){
-  // move the xml pointer to the current model
-  cur = XMLinput->get_xpath_element(cur,"model/StubNuclide");
+void StubNuclide::initModuleMembers(QueryEngine* qe){
   // for now, just say you've done it... 
-  LOG(LEV_DEBUG2,"GRSNuc") << "The StubNuclide Class init(cur) function has been called";;
+  LOG(LEV_DEBUG2,"GRSNuc") << "The StubNuclide Class initModuleMembers(qe) function has been called";;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

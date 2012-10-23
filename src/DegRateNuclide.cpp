@@ -7,15 +7,16 @@
 #include <deque>
 #include <time.h>
 #include <assert.h>
+#include <boost/lexical_cast.hpp>
 
 #include "CycException.h"
-#include "InputXML.h"
 #include "Logger.h"
 #include "Timer.h"
 #include "DegRateNuclide.h"
 #include "Material.h"
 
 using namespace std;
+using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(){
@@ -38,12 +39,10 @@ DegRateNuclide::~DegRateNuclide(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void DegRateNuclide::init(xmlNodePtr cur){
-  // move the xml pointer to the current model
-  cur = XMLinput->get_xpath_element(cur,"model/DegRateNuclide");
-  double deg_rate = strtod(XMLinput->get_xpath_content(cur, "degradation"), NULL);
+void DegRateNuclide::initModuleMembers(QueryEngine* qe){
+  double deg_rate = lexical_cast<double>(qe->getElementContent("degradation"));
   init(deg_rate);
-  LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class init(cur) function has been called";;
+  LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class initModuleMembers(qe) function has been called";;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

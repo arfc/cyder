@@ -10,17 +10,14 @@
 #include <time.h>
 
 #include "CycException.h"
-#include "InputXML.h"
 #include "StubThermal.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void StubThermal::init(xmlNodePtr cur){
-  // move the xml pointer to the current model
-  cur = XMLinput->get_xpath_element(cur,"model/StubThermal");
+void StubThermal::initModuleMembers(QueryEngine* qe){
   // for now, just say you've done it... 
-  LOG(LEV_DEBUG2,"GRSThm") << "The StubThermal Class init(cur) function has been called";;
+  LOG(LEV_DEBUG2,"GRSThm") << "The StubThermal Class initModuleMembers(qe) function has been called";;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

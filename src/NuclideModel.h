@@ -89,9 +89,9 @@ public:
   /**
      initializes the model parameters from an xmlNodePtr
      
-     @param cur is the current xmlNodePtr
+     @param qe is the QueryEngine object containing intialization info
    */
-  virtual void init(xmlNodePtr cur)=0; 
+  virtual void initModuleMembers(QueryEngine* qe)=0; 
 
   /**
      copies a component and its parameters from another

@@ -9,7 +9,6 @@
 
 #include "GenericResource.h"
 #include "CycException.h"
-#include "InputXML.h"
 #include "Timer.h"
 #include "Logger.h"
 #include "GenericRepository.h"
@@ -77,16 +76,15 @@ GenericRepository::GenericRepository() {
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::initModuleMembers(QueryEngine* qe) { 
-  // move XML pointer to current model
-  cur = XMLinput->get_xpath_element(cur, "model/GenericRepository");
-
+  QueryEngine* input = qe->queryElement("input");
+  
   // initialize ordinary objects
   std::map<std::string, std::string>::iterator item;
   for (item = member_types_.begin(); item != member_types_.end(); item++) {
     if (item->second =="INTEGER"){
-      *(static_cast<int*>(member_refs_[item->first])) = strtol(XMLinput->get_xpath_content(cur,item->first.c_str()), NULL, 10);
+      *(static_cast<int*>(member_refs_[item->first])) = input->getElementContent(item->first.c_str());
     } else if (item->second == "FLOAT") {
-      *(static_cast<double*>(member_refs_[item->first])) = strtod(XMLinput->get_xpath_content(cur,item->first.c_str()), NULL);
+      *(static_cast<double*>(member_refs_[item->first])) = input->getElementContent(item->first.c_str());
     } else {
       std::string err = "The ";
       err += item->second;
@@ -100,48 +98,29 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
 
   // The repository accepts any commodities designated waste.
   // This will be a list
-  std::string commod;
-  xmlNodeSetPtr nodes = XMLinput->get_xpath_elements(cur,"incommodity");
-
-  for (int i=0;i<nodes->nodeNr;i++) {
-    commod = (const char*)(nodes->nodeTab[i]->children->content);
-    in_commods_.push_back(commod);
+  int n_incommodities = input->nElementsMatchingQuery("incommodity");
+  for (int i = 0; i < n_incommodities; i++) {
+    in_commods_.push_back(commodities->getElementContent("incommodity",i));
   }
 
   // get components
-  initComponents(cur);
+  
+  int n_components = input->nElementsMatchingQuery("component");
+  QueryEngine* component_input;
+  for (int i = 0; i < n_components; i++) {
+    component_input = input->queryElement("component",i);
+    initComponent(component_input);
 }
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::initComponents(xmlNodePtr cur) {
-  Component* new_comp;
-  xmlNodeSetPtr nodes = XMLinput->get_xpath_elements(cur,"component");
-  // first, initialize the waste forms.
-  for (int i=0;i<nodes->nodeNr;i++) {
-    xmlNodePtr comp_node = nodes->nodeTab[i];
-    if (new_comp->componentEnum(XMLinput->get_xpath_content(comp_node,"componenttype")) == WF){
-      this->initComponent(comp_node);
-    }
-  }
-  // now, initialize the rest 
-  for (int i=0;i<nodes->nodeNr;i++) {
-    xmlNodePtr comp_node = nodes->nodeTab[i];
-    if (new_comp->componentEnum(XMLinput->get_xpath_content(comp_node,"componenttype")) 
-       != WF){
-      this->initComponent(comp_node);
-    }
-  }
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* GenericRepository::initComponent(xmlNodePtr cur){
+Component* GenericRepository::initComponent(QueryEngine* input){
   Component* toRet = new Component();
   // the component class initialization function will pass down the xml pointer
   toRet->init(cur);
 
   // all components have a name and a type
-  std::string comp_type = XMLinput->get_xpath_content(cur,"componenttype");
+  std::string comp_type = input->getElementContent("componenttype");
 
   // they will have allowed subcomponents (think russian doll)
   xmlNodeSetPtr allowed_sub_nodes;

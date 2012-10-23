@@ -9,7 +9,6 @@
 #include <assert.h>
 
 #include "CycException.h"
-#include "InputXML.h"
 #include "Logger.h"
 #include "Timer.h"
 #include "MatTools.h"

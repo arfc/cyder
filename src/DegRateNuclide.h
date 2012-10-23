@@ -53,16 +53,16 @@ public:
   /**
      primary constructor reads input from XML node
      
-     @param cur input XML node
+     @param qe is the QueryEngine object containing intialization info
    */
-  DegRateNuclide(xmlNodePtr cur){};
+  DegRateNuclide(QueryEngine* qe){};
 
   /**
      initializes the model parameters from an xmlNodePtr
      
-     @param cur is the current xmlNodePtr
+     @param qe is the QueryEngine object containing intialization info
    */
-  virtual void init(xmlNodePtr cur); 
+  virtual void initModuleMembers(QueryEngine* qe); 
 
   /**
      copies a nuclide model and its parameters from another

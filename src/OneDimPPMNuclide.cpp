@@ -6,14 +6,15 @@
 #include <fstream>
 #include <deque>
 #include <time.h>
+#include <boost/lexical_cast.hpp>
 
 #include "CycException.h"
-#include "InputXML.h"
 #include "Logger.h"
 #include "Timer.h"
 #include "OneDimPPMNuclide.h"
 
 using namespace std;
+using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::OneDimPPMNuclide(){ }
@@ -22,22 +23,19 @@ OneDimPPMNuclide::OneDimPPMNuclide(){ }
 OneDimPPMNuclide::~OneDimPPMNuclide(){ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void OneDimPPMNuclide::init(xmlNodePtr cur){
-  // move the xml pointer to the current model
-  cur = XMLinput->get_xpath_element(cur,"model/OneDimPPMNuclide");
-
+void OneDimPPMNuclide::initModuleMembers(QueryEngine* qe){
   // v_ is the advective velocity of water through the packages
-  v_ = strtod(XMLinput->get_xpath_content(cur,"advective_velocity"), NULL);
+  v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   // C(x,0)=C_i
-  Ci_ = strtod(XMLinput->get_xpath_content(cur,"initial_concentration"), NULL); 
+  Ci_ = lexical_cast<double>(qe->getElementContent("initial_concentration"));
   // -D{\frac{\partial C}{\partial x}}|_{x=0} + vC = vC_0, for t<t_0
-  Co_ = strtod(XMLinput->get_xpath_content(cur,"source_concentration"), NULL); 
+  Co_ = lexical_cast<double>(qe->getElementContent("source_concentration"));
 
   // rock parameters
-  D_ = strtod(XMLinput->get_xpath_content(cur,"diffusion_coeff"), NULL);
-  n_ = strtod(XMLinput->get_xpath_content(cur,"porosity"), NULL);
-  rho_ = strtod(XMLinput->get_xpath_content(cur,"bulk_density"), NULL);
-  Kd_ = strtod(XMLinput->get_xpath_content(cur,"partition_coeff"), NULL);
+  D_ = lexical_cast<double>(qe->getElementContent("diffusion_coeff"));
+  n_ = lexical_cast<double>(qe->getElementContent("porosity"));
+  rho_ = lexical_cast<double>(qe->getElementContent("bulk_density"));
+  Kd_ = lexical_cast<double>(qe->getElementContent("partition_coeff"));
 
   // retardation
   R_= 1 + (rho_*Kd_)/n_;

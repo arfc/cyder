@@ -71,9 +71,9 @@ public:
      initializes the model parameters from an xmlNodePtr
      and calls the explicit init(ID, name, ...) function. 
      
-     @param cur is the current xmlNodePtr
+     @param qe is the QueryEngine object containing intialization info
    */
-  void init(xmlNodePtr cur); 
+  void initModuleMembers(QueryEngine* qe); 
 
   /**
      initializes the model parameters from an xmlNodePtr
@@ -192,18 +192,18 @@ public:
   /** 
      Returns a new thermal model of the string type xml node pointer
      
-     @param cur the xml node pointer defining the thermal model
+     @param qe is the QueryEngine object containing intialization info
      @return thermal_model_ a pointer to the ThermalModel that was created
    */
-  ThermalModel* thermal_model(xmlNodePtr cur);
+  ThermalModel* thermal_model(QueryEngine* qe);
 
   /** 
      Returns a new nuclide model of the string type and xml node pointer
      
-     @param cur the xml node pointer defining the nuclide model
+     @param qe is the QueryEngine object containing intialization info
      @return nuclide_model_ a pointer to the NuclideModel that was created
    */
-  NuclideModel* nuclide_model(xmlNodePtr cur);
+  NuclideModel* nuclide_model(QueryEngine* qe);
 
   /** 
      Returns a new thermal model that is a copy of the src model
