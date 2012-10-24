@@ -139,16 +139,30 @@ public:
 
   /**
      returns the available material source term at the outer boundary of the 
-     component
+     component in kg
     
      @return a pair, the available isovector and mass at the outer boundary 
    */
   virtual std::pair<IsoVector, double> source_term_bc()=0;
 
   /**
+     returns the prescribed concentration at the boundary, the source term bc
+     in kg
+    
+     @param tope the isotope to query
+     @return C the concentration at the boundary in kg/m^3
+   */
+  double source_term_bc(Iso tope) { 
+    IsoVector st=this->source_term_bc().first;
+    double massfrac = st.massFraction(tope);
+    return( (massfrac == 0) ? massfrac*this->source_term_bc().second : 0);
+  };
+
+  /**
      returns the prescribed concentration at the boundary, the dirichlet bc
      in kg/m^3
     
+     @param tope the isotope to query
      @return C the concentration at the boundary in kg/m^3
    */
   virtual IsoConcMap dirichlet_bc() = 0;
@@ -157,6 +171,7 @@ public:
      returns the prescribed concentration at the boundary, the dirichlet bc
      in kg/m^3
     
+     @param tope the isotope to query
      @return C the concentration at the boundary in kg/m^3
    */
   Concentration dirichlet_bc(Iso tope) { 
@@ -169,6 +184,7 @@ public:
     
      @param c_ext the external concentration in the parent component
      @param r_ext the radius in the parent component corresponding to c_ext
+     @param tope the isotope to query
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
   virtual ConcGradMap neumann_bc(IsoConcMap c_ext, Radius r_ext) = 0;
@@ -178,12 +194,13 @@ public:
     
      @param c_ext the external concentration in the parent component
      @param r_ext the radius in the parent component corresponding to c_ext
-     @param tope
+     @param tope the isotope to query
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
   ConcGrad neumann_bc(IsoConcMap c_ext, Radius r_ext, Iso tope) {
     IsoConcMap::iterator found = this->neumann_bc(c_ext, r_ext).find(tope);
-    return(found != this->neumann_bc(c_ext, r_ext).end() ? (*found).second : 0);
+    return((found != this->neumann_bc(c_ext, r_ext).end()) ? (*found).second : 0);
+    //return( (massfrac == 0) ? massfrac*this->source_term_bc().second : 0);
   };
 
   /**

@@ -42,27 +42,35 @@ TEST_P(NuclideModelTests, type){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, set_geom){
-  // create geometry
   // set it
+  EXPECT_NO_THROW(nuclide_model_->set_geom(geom_));
   // check
+  EXPECT_EQ(geom_->x(), nuclide_model_->geom()->x());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, crude_source_term){
   // check that the source term bc doesn't throw
-  // and is >=0
+  // before any contaminants, it had best be 0
+  EXPECT_FLOAT_EQ(0, nuclide_model_->source_term_bc(u235_));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, crude_dirichlet){
   // check that the source term bc doesn't throw
-  // and is >=0
-}
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-TEST_P(NuclideModelTests, crude_neumann){
-  // check that the source term bc doesn't throw
-  // and is >=0
+  // before any contaminants, it had best be 0
+  EXPECT_FLOAT_EQ(0, nuclide_model_->dirichlet_bc(u235_));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, crude_cauchy){
   // check that the source term bc doesn't throw
-  // and is >= 0
+  // before any contaminants, it had best be 0
+  EXPECT_FLOAT_EQ(0, nuclide_model_->cauchy_bc(u235_));
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+TEST_P(NuclideModelTests, crude_neumann){
+  // check that the source term bc doesn't throw
+  // before any contaminants, it had best be 0
+  IsoConcMap zeromap;
+  zeromap.insert(std::make_pair(92235,0));
+  EXPECT_NO_THROW(nuclide_model_->set_geom(geom_));
+  EXPECT_FLOAT_EQ(0, nuclide_model_->neumann_bc(zeromap,r_five_+10,u235_));
 }
