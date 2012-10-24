@@ -9,25 +9,23 @@ TEST_P(NuclideModelTests, transportNuclides){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, copy){
+  //copy one model to another, shouldn't throw 
   NuclideModel* new_nuclide_model = (*GetParam())();
   EXPECT_NO_THROW(new_nuclide_model->copy(nuclide_model_));
-  EXPECT_EQ(nuclide_model_->name(), new_nuclide_model->name());
-  //copy one model to another, shouldn't throw 
   //check that the name matches. 
+  EXPECT_EQ(nuclide_model_->name(), new_nuclide_model->name());
+  delete new_nuclide_model;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, absorb){
-  //check contained mat 
-  //create material
   //nuclide_model_->absorb() doesn't throw
-  //check contained mat, it should have increased by amount absorbed 
+  EXPECT_NO_THROW(nuclide_model_->absorb(test_mat_));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, extract){
-  //check contained mat 
-  //create material
   //nuclide_model_->extract() doesn't throw
-  //check contained mat, it should have decreased by amount extracted 
+  EXPECT_NO_THROW(nuclide_model_->absorb(test_mat_));
+  EXPECT_NO_THROW(nuclide_model_->extract(test_comp_, test_size_));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, print){
