@@ -12,7 +12,7 @@ Model* GenericRepositoryModelConstructor(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-FacilityModel* GenericRepositoryConstructor(){
+FacilityModel* GenericRepositoryFacilityConstructor(){
   return dynamic_cast<FacilityModel*>(new GenericRepository());
 }
 

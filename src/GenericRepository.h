@@ -317,20 +317,6 @@ protected:
     std::map<std::string, Component*> wf_wp_map_;
 
     /**
-       get the total mass of the stuff in the inventory
-       
-       @return the total mass of the processed materials in storage
-     */
-    double checkInventory();
-
-    /**
-       get the total mass of the stuff in the stocks
-       
-       @return the total mass of the raw materials in storage
-     */
-    double checkStocks();
-
-    /**
        Make requests based on capacity
        
        @param time the time at which to make the requests. 
@@ -398,13 +384,6 @@ protected:
     void transportNuclides(int time) ;
 
     /**
-       get the commodity-specific capacity of the GenericRepository
-       
-       @param commod the commodity
-     */
-    double getCapacity(std::string commod) ;
-
-    /**
        places the known variable names and types into member_types_ and member_refs_
        maps
 
@@ -437,6 +416,29 @@ protected:
        repository model.
      */
     static table_ptr gr_params_table;
+
+public:
+    /**
+       get the commodity-specific capacity of the GenericRepository
+       
+       @param commod the commodity
+     */
+    double getCapacity(std::string commod) ;
+
+    /**
+       get the total mass of the stuff in the inventory
+       
+       @return the total mass of the processed materials in storage
+     */
+    double checkInventory();
+
+    /**
+       get the total mass of the stuff in the stocks
+       
+       @return the total mass of the raw materials in storage
+     */
+    double checkStocks();
+
 
 /* ------------------- */ 
 

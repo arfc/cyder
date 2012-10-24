@@ -80,21 +80,20 @@ void GenericRepositoryTest::initSrcFacility(){
 
       XMLParser parser(ss);
       XMLQueryEngine* engine = new XMLQueryEngine(parser);
-      test_repo = new GenericRepository();
-      test_repo->initModuleMembers(engine);
+      src_facility = new GenericRepository();
+      src_facility->initModuleMembers(engine);
       delete engine;
     }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void GenericRepositoryTest::initWorld(){
   incommod_market = new TestMarket();
   incommod_market->setCommodity(in_commod);
-  MarketModel::registerMarket(outcommod_market);
+  MarketModel::registerMarket(incommod_market);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(GenericRepositoryTest, initial_state) {
-  EXPECT_EQ(capacity_,src_facility->getCapacity());
-  EXPECT_EQ(x_,src_facility->x_);
+  EXPECT_EQ(capacity_, src_facility->getCapacity("in_commod"));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
