@@ -200,7 +200,6 @@ public:
   ConcGrad neumann_bc(IsoConcMap c_ext, Radius r_ext, Iso tope) {
     IsoConcMap::iterator found = this->neumann_bc(c_ext, r_ext).find(tope);
     return((found != this->neumann_bc(c_ext, r_ext).end()) ? (*found).second : 0);
-    //return( (massfrac == 0) ? massfrac*this->source_term_bc().second : 0);
   };
 
   /**
