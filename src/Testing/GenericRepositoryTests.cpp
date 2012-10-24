@@ -19,7 +19,7 @@ void GenericRepositoryTest::SetUp(){
   dy_ = 1;
   dz_ = 1;
   capacity_ = 100;
-  in_commod = "in_commod";
+  in_commod_ = "in_commod";
   inventory_size_ = 70000;
   lifetime_ = 3000000;
   start_op_yr_ = 1; 
@@ -87,13 +87,13 @@ void GenericRepositoryTest::initSrcFacility(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void GenericRepositoryTest::initWorld(){
   incommod_market = new TestMarket();
-  incommod_market->setCommodity(in_commod);
+  incommod_market->setCommodity(in_commod_);
   MarketModel::registerMarket(incommod_market);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(GenericRepositoryTest, initial_state) {
-  EXPECT_EQ(capacity_, src_facility->getCapacity("in_commod"));
+  EXPECT_EQ(capacity_, src_facility->getCapacity(in_commod_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

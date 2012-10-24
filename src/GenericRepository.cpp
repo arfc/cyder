@@ -58,6 +58,7 @@ table_ptr GenericRepository::gr_params_table = new Table(
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GenericRepository::GenericRepository() {
   // initialize things that don't depend on the input
+  in_commods_ = std::deque< std::string >();
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
   waste_packages_ = std::deque< Component* >();
@@ -78,8 +79,6 @@ GenericRepository::GenericRepository() {
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::initModuleMembers(QueryEngine* qe) { 
-  QueryEngine* input = qe->queryElement("input");
-  
   // initialize ordinary objects
   std::map<std::string, std::string>::iterator item;
   for (item = member_types_.begin(); item != member_types_.end(); item++) {
@@ -100,16 +99,16 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
 
   // The repository accepts any commodities designated waste.
   // This will be a list
-  int n_incommodities = input->nElementsMatchingQuery("incommodity");
+  int n_incommodities = qe->nElementsMatchingQuery("incommodity");
   for (int i = 0; i < n_incommodities; i++) {
-    in_commods_.push_back(input->getElementContent("incommodity",i));
+    in_commods_.push_back(qe->getElementContent("incommodity",i));
   }
 
   // get components
-  int n_components = input->nElementsMatchingQuery("component");
+  int n_components = qe->nElementsMatchingQuery("component");
   QueryEngine* component_input;
   for (int i = 0; i < n_components; i++) {
-    component_input = input->queryElement("component",i);
+    component_input = qe->queryElement("component",i);
     initComponent(component_input);
   }
 }
