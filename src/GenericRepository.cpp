@@ -58,12 +58,12 @@ table_ptr GenericRepository::gr_params_table = new Table(
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GenericRepository::GenericRepository() {
   // initialize things that don't depend on the input
-  in_commods_ = std::deque< std::string >();
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
   waste_packages_ = std::deque< Component* >();
   waste_forms_ = std::deque< Component* >();
   far_field_ = new Component();
+
   is_full_ = false;
   mapVars("x", "FLOAT", &x_);
   mapVars("y", "FLOAT", &y_);
@@ -316,41 +316,43 @@ void GenericRepository::makeRequests(int time){
   // right now it picks one commodity per month and asks for that.
   // It chooses the next incommodity in the preference lineup
   std::string in_commod;
-  in_commod = in_commods_.front();
+  if(!in_commods_.empty()) {
+    in_commod = in_commods_.front();
 
-  // It then moves that commodity from the front to the back of the preference 
-  // lineup
-  in_commods_.push_back(in_commod);
-  in_commods_.pop_front();
-
-  // It can accept amounts however small
-  double minAmt = 0;
-  // this will be a request for free stuff
-  double commod_price = 0;
-  // It will need to figure out its capacity
-  double requestAmt;
-  // Perform the task of figuring out the capacity for this commod
-  requestAmt = getCapacity(in_commod);
+    // It then moves that commodity from the front to the back of the preference 
+    // lineup
+    in_commods_.push_back(in_commod);
+    in_commods_.pop_front();
   
-  // make requests
-  if (requestAmt == 0){
-    // don't request anything
-  } else {
-    MarketModel* market = MarketModel::marketForCommod(in_commod);
-    Communicator* recipient = dynamic_cast<Communicator*>(market);
-
-    // create a generic resource
-    GenericResource* request_res = new GenericResource(in_commod,"kg",requestAmt);
-
-    // build the transaction and message
-    Transaction trans(this, REQUEST);
-    trans.setCommod(in_commod);
-    trans.setMinFrac(minAmt/requestAmt);
-    trans.setPrice(commod_price);
-    trans.setResource(request_res); 
-
-    Message* request = new Message(this, recipient, trans); 
-    request->sendOn();
+    // It can accept amounts however small
+    double minAmt = 0;
+    // this will be a request for free stuff
+    double commod_price = 0;
+    // It will need to figure out its capacity
+    double requestAmt;
+    // Perform the task of figuring out the capacity for this commod
+    requestAmt = getCapacity(in_commod);
+    
+    // make requests
+    if (requestAmt == 0){
+      // don't request anything
+    } else {
+      MarketModel* market = MarketModel::marketForCommod(in_commod);
+      Communicator* recipient = dynamic_cast<Communicator*>(market);
+  
+      // create a generic resource
+      GenericResource* request_res = new GenericResource(in_commod,"kg",requestAmt);
+  
+      // build the transaction and message
+      Transaction trans(this, REQUEST);
+      trans.setCommod(in_commod);
+      trans.setMinFrac(minAmt/requestAmt);
+      trans.setPrice(commod_price);
+      trans.setResource(request_res); 
+  
+      Message* request = new Message(this, recipient, trans); 
+      request->sendOn();
+    }
   }
 }
 

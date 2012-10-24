@@ -7,16 +7,6 @@
 #include <string>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Model* GenericRepositoryModelConstructor(){
-  return dynamic_cast<Model*>(new GenericRepository());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-FacilityModel* GenericRepositoryFacilityConstructor(){
-  return dynamic_cast<FacilityModel*>(new GenericRepository());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class GenericRepositoryTest : public ::testing::Test {
 protected:
   
@@ -28,6 +18,19 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  void initSrcFacility();
+  GenericRepository* initSrcFacility();
   void initWorld();
+
+public:
 };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Model* GenericRepositoryModelConstructor(){
+  return dynamic_cast<Model*>(new GenericRepository());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+FacilityModel* GenericRepositoryFacilityConstructor(){
+  return dynamic_cast<FacilityModel*>(new GenericRepository());
+}
+

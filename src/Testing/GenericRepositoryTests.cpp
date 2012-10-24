@@ -28,7 +28,7 @@ void GenericRepositoryTest::SetUp(){
   innerradius_ = 0;
   outerradius_ = 100;
   componenttype_ = "FF";
-  initSrcFacility();
+  src_facility = initSrcFacility();
   initWorld();
 }
 
@@ -39,7 +39,7 @@ void GenericRepositoryTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void GenericRepositoryTest::initSrcFacility(){
+GenericRepository* GenericRepositoryTest::initSrcFacility(){
 
       stringstream st("");
       st << "    <thermalmodel>" 
@@ -83,6 +83,7 @@ void GenericRepositoryTest::initSrcFacility(){
       src_facility = new GenericRepository();
       src_facility->initModuleMembers(engine);
       delete engine;
+      return src_facility;
     }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void GenericRepositoryTest::initWorld(){
