@@ -3,94 +3,98 @@
 #include <dlfcn.h>
 
 #include "GenericRepository.h"
+#include "GenericRepositoryTests.h"
+#include "XMLQueryEngine.h"
 #include "Timer.h"
-#include "ModelTests.h"
-#include "FacilityModelTests.h"
 
 using namespace std;
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class FakeGenericRepository : public GenericRepository {
-  public:
-    FakeGenericRepository() : GenericRepository() {
-
-      // initialize ordinary objects
-      x_ = 10;
-      y_ = 10;
-      z_ = 10;
-      dx_ = 1;
-      dy_ = 1;
-      dz_ = 1;
-      capacity_ = 100;
-      inventory_size_ = 70000;
-      lifetime_ = 3000000;
-      start_op_yr_ = 1; 
-      start_op_mo_ = 1;
-
-      // The repository accepts any commodities designated waste.
-      // This will be a list
-
-      /// all facilities require commodities - possibly many
-      in_commods_.push_back("in-commod");
-
-      // get components
-      Component* new_comp;
-
-      // initialize things that don't depend on the input
-      stocks_ = deque< WasteStream >();
-      inventory_ = deque< WasteStream >();
-      waste_packages_ = deque< Component* >();
-      waste_forms_ = deque< Component* >();
-      is_full_ = false;
-    }
-
-    virtual ~FakeGenericRepository() {
-    }
-};
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-class GenericRepositoryTest : public ::testing::Test {
-  protected:
-    string model_name, model_type;
-    Model* test_model_1;
-    Model* test_model_2;
-    void* model;
-    mdl_ctor* new_model;
-    FakeGenericRepository* src_facility;
-
-    virtual void SetUp(){
-      src_facility = new FakeGenericRepository();
-      src_facility->setParent(new TestInst());
-      model_name = "GenericRepository";
-      model_type = "Facility";
-      new_model = Model::loadConstructor(model_type, model_name);
-      test_model_1 = new_model();
-      test_model_2 = new_model();
-      test_model_1->setModelType("Facility");
-      test_model_2->setModelType("Facility");
-    };
-    virtual void TearDown() {
-    }
-};
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Model* GenericRepositoryModelConstructor(){
-  return dynamic_cast<Model*>(new FakeGenericRepository());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-FacilityModel* GenericRepositoryFacilityConstructor(){
-  return dynamic_cast<FacilityModel*>(new FakeGenericRepository());
+void GenericRepositoryTest::SetUp(){
+  // initialize ordinary objects
+  x_ = 10;
+  y_ = 10;
+  z_ = 10;
+  dx_ = 1;
+  dy_ = 1;
+  dz_ = 1;
+  capacity_ = 100;
+  in_commod = "in_commod";
+  inventory_size_ = 70000;
+  lifetime_ = 3000000;
+  start_op_yr_ = 1; 
+  start_op_mo_ = 1;
+  cname_ = "component";
+  innerradius_ = 0;
+  outerradius_ = 100;
+  componenttype_ = "FF";
+  initSrcFacility();
+  initWorld();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(GenericRepositoryTest, loadModel) {
-  EXPECT_NE(test_model_1->ID(), NULL);
-  EXPECT_NE(test_model_2->ID(), NULL);
-  EXPECT_GT(test_model_1->ID(),0);
-  EXPECT_GT(test_model_2->ID(), test_model_1->ID());   
-  // This sort of thing  will fail until we have a non xml model init funciton
-  // EXPECT_EQ(test_model_1->getModelImpl(), "GenericRepository"); 
+void GenericRepositoryTest::TearDown() { 
+  delete src_facility;
+  delete incommod_market;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void GenericRepositoryTest::initSrcFacility(){
+
+      stringstream st("");
+      st << "    <thermalmodel>" 
+         << "      <StubThermal/>"
+         << "    </thermalmodel>";
+
+      stringstream sn("");
+      sn << "    <nuclidemodel>" 
+         << "      <StubNuclide/>"
+         << "    </nuclidemodel>";
+      
+      stringstream cs("");
+      cs << "  <component>"
+         << "    <name>" << cname_ << "</name>" 
+         << "    <innerradius>" << innerradius_ << "</innerradius>" 
+         << "    <outerradius>" << outerradius_ << "</outerradius>" 
+         << "    <componenttype>" << componenttype_ << "</componenttype>" 
+         << st
+         << sn
+         << "  </component>";
+    
+      stringstream ss("");
+      ss << "<start>"
+         << "  <x>" << x_ << "</x>"
+         << "  <y>" << y_ << "</y>"
+         << "  <z>" << z_ << "</z>"
+         << "  <dx>" << dx_ << "</dx>"
+         << "  <dy>" << dy_ << "</dy>"
+         << "  <dz>" << dz_ << "</dz>"
+         << "  <capacity>" << capacity_ << "</capacity>"
+         << "  <incommodity>" << in_commod_ << "</incommodity>"
+         << "  <inventorysize>" << inventory_size_ << "</inventorysize>"
+         << "  <lifetime>" << lifetime_ << "</lifetime>"
+         << "  <startOperMonth>" << start_op_mo_ << "</startOperMonth>"
+         << "  <startOperYear>" << start_op_yr_ << "</startOperYear>"
+         << cs  
+         << "</start>";
+
+      XMLParser parser(ss);
+      XMLQueryEngine* engine = new XMLQueryEngine(parser);
+      test_repo = new GenericRepository();
+      test_repo->initModuleMembers(engine);
+      delete engine;
+    }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void GenericRepositoryTest::initWorld(){
+  incommod_market = new TestMarket();
+  incommod_market->setCommodity(in_commod);
+  MarketModel::registerMarket(outcommod_market);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(GenericRepositoryTest, initial_state) {
+  EXPECT_EQ(capacity_,src_facility->getCapacity());
+  EXPECT_EQ(x_,src_facility->x_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
