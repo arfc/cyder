@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "DegRateNuclide.h"
+#include "NuclideModelTests.h"
 #include "NuclideModel.h"
 #include "CycException.h"
 #include "Material.h"
@@ -62,6 +63,12 @@ class DegRateNuclideTest : public ::testing::Test {
       delete deg_rate_ptr_;
     }
 };
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+NuclideModel* DegRateNuclideModelConstructor(){
+  return dynamic_cast<NuclideModel*>(new DegRateNuclide());
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, defaultConstructor) {
@@ -430,3 +437,7 @@ TEST_F(DegRateNuclideTest, radial_midpoint ) {
   Radius expected = r_four_ + (r_five_ - r_four_)/2.0;
   EXPECT_FLOAT_EQ( expected, deg_rate_ptr_->radial_midpoint() ); 
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+INSTANTIATE_TEST_CASE_P(DegRateNuclideModel, NuclideModelTests, Values(&DegRateNuclideModelConstructor));
+
