@@ -99,7 +99,19 @@ const Volume Geometry::volume(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const Radius Geometry::radial_midpoint(){
+  Radius to_ret;
+  if(outer_radius_ == numeric_limits<double>::infinity()) { 
+    to_ret = numeric_limits<double>::infinity();
+  } else { 
+    to_ret = outer_radius_ - (outer_radius_ - inner_radius_)/2;
+  }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Volume Geometry::solid_volume(Radius radius, Length length){
   const Volume pi = boost::math::constants::pi<double>();
   return pi*radius*radius*length;
 }
+

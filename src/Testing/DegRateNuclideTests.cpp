@@ -258,7 +258,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   double expected_cauchy = 900; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann
-  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->radial_midpoint());
+  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
 
   // remove the source term offered
@@ -278,7 +278,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Cauchy
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->radial_midpoint());
+  expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -334,7 +334,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   double expected_cauchy = 900; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->radial_midpoint());
+  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -428,14 +428,6 @@ TEST_F(DegRateNuclideTest, calc_conc_grad) {
   EXPECT_THROW( deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_in, r_out), CycRangeException); 
   EXPECT_THROW( deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_in, r_in), CycRangeException); 
   EXPECT_THROW( deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_in, numeric_limits<double>::infinity()), CycRangeException); 
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(DegRateNuclideTest, radial_midpoint ) {  
-  EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), deg_rate_ptr_->radial_midpoint());
-  deg_rate_ptr_->set_geom(geom_);
-  Radius expected = r_four_ + (r_five_ - r_four_)/2.0;
-  EXPECT_FLOAT_EQ( expected, deg_rate_ptr_->radial_midpoint() ); 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

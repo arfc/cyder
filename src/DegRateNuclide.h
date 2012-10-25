@@ -269,11 +269,6 @@ public:
   // @TODO should probably be in a toolkit
   ConcGrad calc_conc_grad(Concentration c_ext, Concentration c_int, Radius r_ext, Radius r_int);
 
-  /// returns the radius at the midpoint between outer_radius and inner_radius
-  // @TODO should probably be in a toolkit
-  Radius radial_midpoint();
-
-
 protected:
   /**
     The degradation rate that defines this model, fraction per year.

@@ -131,6 +131,12 @@ public:
      */
   const Volume volume();
 
+  /** 
+     get the radial midpoint of the component 
+
+     @return numeric_limits<double>::infinity() if the radius is infinite
+    **/
+  const Radius radial_midpoint();
 
 protected:
   /**

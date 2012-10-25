@@ -52,3 +52,7 @@ TEST_F(MatToolsTest, sum_mats){
   EXPECT_FLOAT_EQ(3*test_size_, the_sum.second);
   EXPECT_FLOAT_EQ(1, the_sum.first.comp()->atomFraction(u235_));
 }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, extract){
+  //@TODO this is just a placeholder, to remind you to write a test.
+}

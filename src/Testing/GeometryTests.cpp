@@ -63,3 +63,11 @@ TEST_F(GeometryTest, fullConstructor) {
   EXPECT_FLOAT_EQ(0,         test_geom_->y());
   EXPECT_FLOAT_EQ(0,         test_geom_->z());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(GeometryTest, radial_midpoint ) {  
+  EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), default_geom_->radial_midpoint());
+  Radius expected = r_four_ + (r_five_ - r_four_)/2.0;
+  EXPECT_FLOAT_EQ( expected, test_geom_->radial_midpoint() ); 
+}
+
