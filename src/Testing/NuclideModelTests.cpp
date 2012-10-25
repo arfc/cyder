@@ -56,7 +56,7 @@ TEST_P(NuclideModelTests, set_geom){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(NuclideModelTests, getVolume) {  
+TEST_P(NuclideModelTests, getVolume) {  
   EXPECT_NO_THROW(nuclide_model_->set_geom(geom_));
   double vol = len_five_*3.14159*(r_five_*r_five_ - r_four_*r_four_);
   EXPECT_NEAR( vol , nuclide_model_->geom()->volume(), 0.1);

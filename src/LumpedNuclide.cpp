@@ -16,7 +16,17 @@
 using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LumpedNuclide::LumpedNuclide(){ }
+LumpedNuclide::LumpedNuclide(){ 
+  //set_t_t(0);
+  //set_eta_ratio(0);
+  //set_P_D(0);
+  //set_formulation("");
+
+  set_geom(GeometryPtr(new Geometry()));
+
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::~LumpedNuclide(){
@@ -68,6 +78,7 @@ void LumpedNuclide::absorb(mat_rsrc_ptr matToAdd)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide is absorbing material: ";
   matToAdd->print();
+  wastes_.push_back(matToAdd);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -78,6 +89,7 @@ void LumpedNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

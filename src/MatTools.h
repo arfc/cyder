@@ -28,5 +28,16 @@ public:
      @param mats the vector of materials to be summed (not mixed)
     */
   static std::pair<IsoVector, double> sum_mats(std::deque<mat_rsrc_ptr> mats);
+
+  /**
+     removes the specified amount of the specified composition from a 
+     deque of materials provided to the function by reference. 
+
+     @param
+     @param
+     @param
+    **/
+  static void extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
+      std::deque<mat_rsrc_ptr>& mat_list);
 };
 #endif

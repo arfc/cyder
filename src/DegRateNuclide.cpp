@@ -96,14 +96,7 @@ void DegRateNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material(comp_to_rem));
-  left_over->setQuantity(0);
-  while (!wastes_.empty()){
-    left_over->absorb(wastes_.back());
-    wastes_.pop_back();
-  }
-  left_over->extract(comp_to_rem, kg_to_rem);
-  wastes_.push_back(left_over);
+  MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
