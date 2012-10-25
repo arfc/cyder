@@ -1,9 +1,9 @@
-// LumpedNuclideTests.cpp
+// StubNuclideTests.cpp
 #include <deque>
 #include <map>
 #include <gtest/gtest.h>
 
-#include "LumpedNuclide.h"
+#include "StubNuclide.h"
 #include "NuclideModelTests.h"
 #include "NuclideModel.h"
 #include "CycException.h"
@@ -12,9 +12,9 @@
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-class LumpedNuclideTest : public ::testing::Test {
+class StubNuclideTest : public ::testing::Test {
   protected:
-    LumpedNuclide* lumped_ptr_;
+    StubNuclide* stub_ptr_;
     NuclideModel* nuc_model_ptr_;
     CompMapPtr test_comp_;
     mat_rsrc_ptr test_mat_;
@@ -31,9 +31,9 @@ class LumpedNuclideTest : public ::testing::Test {
     int some_param_;
 
     virtual void SetUp(){
-      // test_lumped_nuclide model setup
-      lumped_ptr_ = new LumpedNuclide();
-      nuc_model_ptr_ = dynamic_cast<NuclideModel*>(lumped_ptr_);
+      // test_stub_nuclide model setup
+      stub_ptr_ = new StubNuclide();
+      nuc_model_ptr_ = dynamic_cast<NuclideModel*>(stub_ptr_);
 
       // set up geometry. this usually happens in the component init
       r_four_ = 4;
@@ -46,6 +46,7 @@ class LumpedNuclideTest : public ::testing::Test {
       theta_ = 0.3; // percent porosity
       adv_vel_ = 1; // m/yr
       time_ = 0;
+      some_param_ = 0;
 
       // composition set up
       u235_=92235;
@@ -59,60 +60,52 @@ class LumpedNuclideTest : public ::testing::Test {
       test_mat_->setQuantity(test_size_);
     }
     virtual void TearDown() {
-      delete lumped_ptr_;
+      delete stub_ptr_;
     }
 };
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* LumpedNuclideModelConstructor(){
-  return dynamic_cast<NuclideModel*>(new LumpedNuclide());
+NuclideModel* StubNuclideModelConstructor(){
+  return dynamic_cast<NuclideModel*>(new StubNuclide());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, defaultConstructor) {
-  ASSERT_EQ("LUMPED_NUCLIDE", nuc_model_ptr_->name());
-  ASSERT_EQ(LUMPED_NUCLIDE, nuc_model_ptr_->type());
-  ASSERT_FLOAT_EQ(0, lumped_ptr_->geom()->length());
+TEST_F(StubNuclideTest, defaultConstructor) {
+  ASSERT_EQ("STUB_NUCLIDE", nuc_model_ptr_->name());
+  ASSERT_EQ(STUB_NUCLIDE, nuc_model_ptr_->type());
+  ASSERT_FLOAT_EQ(0, stub_ptr_->geom()->length());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, initFunctionNoXML) { 
-  //EXPECT_NO_THROW(lumped_ptr_->init(some_param_));
+TEST_F(StubNuclideTest, initFunctionNoXML) { 
+  //EXPECT_NO_THROW(stub_ptr_->init(some_param_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, copy) {
-  //ASSERT_NO_THROW(lumped_ptr_->init(some_param_));
-  LumpedNuclide* test_copy = new LumpedNuclide();
-  EXPECT_NO_THROW(test_copy->copy(lumped_ptr_));
+TEST_F(StubNuclideTest, copy) {
+  //ASSERT_NO_THROW(stub_ptr_->init(some_param_));
+  StubNuclide* test_copy = new StubNuclide();
+  EXPECT_NO_THROW(test_copy->copy(stub_ptr_));
   EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
   //EXPECT_FLOAT_EQ(some_param_, test_copy->some_param());
   delete test_copy;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, absorb){
+TEST_F(StubNuclideTest, absorb){
   // if you absorb a material, the conc_map should reflect that
   // you shouldn't absorb more material than you can handle. how much is that?
-  ASSERT_EQ(0,time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
-  //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
-  time_++;
-  ASSERT_EQ(1,time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
-  //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
-  time_++;
-  ASSERT_EQ(2,time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
-  //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
+  for(int time_=0; time_<4; time_++){
+    ASSERT_EQ(0,time_);
+    EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+    //EXPECT_NO_THROW(stub_ptr_->update_vec_hist(time_));
+    //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), stub_ptr_->contained_mass(time_));
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, extract){ 
+TEST_F(StubNuclideTest, extract){ 
   // it should be able to extract all of the material it absorbed
   double frac = 0.2;
   
@@ -121,59 +114,47 @@ TEST_F(LumpedNuclideTest, extract){
 
   ASSERT_EQ(0,time_);
   ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  EXPECT_NO_THROW(lumped_ptr_->transportNuclides(time_));
-  //EXPECT_FLOAT_EQ(test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
-  //EXPECT_FLOAT_EQ(test_size_, lumped_ptr_->contained_mass(time_));
+  EXPECT_NO_THROW(stub_ptr_->transportNuclides(time_));
+  //EXPECT_FLOAT_EQ(test_mat_->quantity(), stub_ptr_->contained_mass(time_));
+  //EXPECT_FLOAT_EQ(test_size_, stub_ptr_->contained_mass(time_));
 
   for(int i=1; i<4; i++){
     time_++;
     ASSERT_EQ(i,time_);
     EXPECT_NO_THROW(nuc_model_ptr_->extract(test_comp_, frac*test_size_));
-    EXPECT_NO_THROW(lumped_ptr_->transportNuclides(time_));
-    //EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, lumped_ptr_->contained_mass(time_));
+    EXPECT_NO_THROW(stub_ptr_->transportNuclides(time_));
+    //EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, stub_ptr_->contained_mass(time_));
   }
 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, set_some_param){ 
+TEST_F(StubNuclideTest, set_some_param){ 
   // the deg rate must be between 0 and 1, inclusive
   some_param_=0;
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
+  //ASSERT_NO_THROW(stub_ptr_->set_some_param(some_param_));
+  //EXPECT_FLOAT_EQ(stub_ptr_->some_param(), some_param_);
   some_param_=1;
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
+  //ASSERT_NO_THROW(stub_ptr_->set_some_param(some_param_));
+  //EXPECT_FLOAT_EQ(stub_ptr_->some_param(), some_param_);
   // it should accept floats
   some_param_= 0.1;
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
+  //ASSERT_NO_THROW(stub_ptr_->set_some_param(some_param_));
+  //EXPECT_FLOAT_EQ(stub_ptr_->some_param(), some_param_);
   // an exception should be thrown if it's set outside the bounds
   some_param_= -1;
-  //EXPECT_THROW(lumped_ptr_->set_some_param(some_param_), CycRangeException);
-  //EXPECT_NE(lumped_ptr_->some_param(), some_param_);
+  //EXPECT_THROW(stub_ptr_->set_some_param(some_param_), CycRangeException);
+  //EXPECT_NE(stub_ptr_->some_param(), some_param_);
   some_param_= 2;
-  //EXPECT_THROW(lumped_ptr_->set_some_param(some_param_), CycRangeException);
-  //EXPECT_NE(lumped_ptr_->some_param(), some_param_);
-}
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, total_degradation){
-  some_param_=0.3;
-  int max_degs = 1.0/some_param_;
-  // Check deg rate
-  for(int i=0; i<10; i++){
-    ASSERT_EQ(i, time_);
-    //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-    //ASSERT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
-  }
+  //EXPECT_THROW(stub_ptr_->set_some_param(some_param_), CycRangeException);
+  //EXPECT_NE(stub_ptr_->some_param(), some_param_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, transportNuclidesPFM){ 
-  // if the degradation rate is zero, nothing should be released
-  // set the degradation rate
+TEST_F(StubNuclideTest, transportNuclidesZero){ 
+  // for some setting, nothing should be released
   some_param_=0;
-  EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
+  EXPECT_NO_THROW(stub_ptr_->set_geom(geom_));
   double expected_src = some_param_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
   IsoConcMap zero_conc_map;
@@ -181,14 +162,14 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
   double radial_midpoint = outer_radius + (outer_radius - nuc_model_ptr_->geom()->inner_radius())/2;
 
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(some_param_, lumped_ptr_->some_param());
+  //ASSERT_NO_THROW(stub_ptr_->set_some_param(some_param_));
+  //EXPECT_FLOAT_EQ(some_param_, stub_ptr_->some_param());
   // get the initial mass
-  //double initial_mass = lumped_ptr_->contained_mass();
+  //double initial_mass = stub_ptr_->contained_mass();
   // transport the nuclides
   //EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
   // check that the contained mass matches the initial mass
-  //EXPECT_FLOAT_EQ(initial_mass, lumped_ptr_->contained_mass()); 
+  //EXPECT_FLOAT_EQ(initial_mass, stub_ptr_->contained_mass()); 
   // check the source term 
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
   // check the boundary concentration ?
@@ -200,10 +181,10 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, transportNuclidesDRhalf){ 
+TEST_F(StubNuclideTest, transportNuclidesOther){ 
   // if the degradation rate is .5, everything should be released in two years
   some_param_= 0.5;
-  EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
+  EXPECT_NO_THROW(stub_ptr_->set_geom(geom_));
   double expected_src = some_param_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
   double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
@@ -212,8 +193,8 @@ TEST_F(LumpedNuclideTest, transportNuclidesDRhalf){
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
 
   // set the degradation rate
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
+  //ASSERT_NO_THROW(stub_ptr_->set_some_param(some_param_));
+  //EXPECT_FLOAT_EQ(stub_ptr_->some_param(), some_param_);
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
 
@@ -232,7 +213,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesDRhalf){
   double expected_cauchy = 900; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann
-  //double expected_neumann= -expected_conc/(outer_radius*2 - lumped_ptr_->radial_midpoint());
+  //double expected_neumann= -expected_conc/(outer_radius*2 - stub_ptr_->radial_midpoint());
   //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
 
   // remove the source term offered
@@ -252,7 +233,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesDRhalf){
   // Cauchy
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
   // Neumann 
-  //expected_neumann= -expected_conc/(outer_radius*2 - lumped_ptr_->radial_midpoint());
+  //expected_neumann= -expected_conc/(outer_radius*2 - stub_ptr_->radial_midpoint());
   //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -276,72 +257,12 @@ TEST_F(LumpedNuclideTest, transportNuclidesDRhalf){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, transportNuclidesDR1){ 
-  // if the degradation rate is one, everything should be released in a timestep
-  some_param_= 1;
-  EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
-  double expected_src = some_param_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
-  IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
-  double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-
-  // set the degradation rate
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
-  // fill it with some material
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-
-  // check that half that material is offered as the source term in one timestep
-  // TRANSPORT NUCLIDES
-  ASSERT_EQ(0, time_);
+TEST_F(StubNuclideTest, contained_mass){ 
   time_++;
-  ASSERT_EQ(1, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
-  // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Cauchy
-  double expected_cauchy = 900; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
-  // Neumann 
-  //double expected_neumann= -expected_conc/(outer_radius*2 - lumped_ptr_->radial_midpoint());
-  //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
-
-  // remove the source term offered
-  CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
-  double extract_mass = nuc_model_ptr_->source_term_bc().second;
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
-  // TRANSPORT NUCLIDES
-  time_++;
-  ASSERT_EQ(2, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // check that nothing more is offered in time step 2
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, transportNuclidesDRsmall){ 
-  // if the degradation rate is very very small, see if the model behaves well 
-  // in the long term. 
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, updateVecHist){ 
-  time_++;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, contained_mass){ 
-  time_++;
-  //EXPECT_FLOAT_EQ(0, lumped_ptr_->contained_mass());
+  //EXPECT_FLOAT_EQ(0, stub_ptr_->contained_mass());
 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-INSTANTIATE_TEST_CASE_P(LumpedNuclideModel, NuclideModelTests, Values(&LumpedNuclideModelConstructor));
+INSTANTIATE_TEST_CASE_P(StubNuclideModel, NuclideModelTests, Values(&StubNuclideModelConstructor));
 

@@ -10,6 +10,9 @@ set ( CYDER_TEST_CORE
   ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepositoryTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/GeometryTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/LumpedNuclideTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/MixedCellNuclideTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/OneDimPPMNuclideTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/StubNuclideTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MatToolsTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/NuclideModelTests.cpp
   ${CYCLUS_CORE_INCLUDE_DIR}/FacilityModelTests.cpp
