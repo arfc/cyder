@@ -89,7 +89,7 @@ void LumpedNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-
+  MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
