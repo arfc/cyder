@@ -16,7 +16,7 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclideTest::SetUp(){
   // test_lumped_nuclide model setup
-  lumped_ptr_ = initNuclideModel();
+  initNuclideModel();
   default_lumped_ptr_ = new LumpedNuclide();
   nuc_model_ptr_ = dynamic_cast<NuclideModel*>(lumped_ptr_);
   default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_lumped_ptr_);
@@ -69,7 +69,7 @@ LumpedNuclide* LumpedNuclideTest::initNuclideModel(){
   lumped_ptr_ = new LumpedNuclide();
   lumped_ptr_->initModuleMembers(engine);
   delete engine;
-  return lumped_ptr_;  
+  return lumped_ptr_;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, initial_state){

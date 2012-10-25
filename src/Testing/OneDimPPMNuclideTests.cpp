@@ -15,8 +15,10 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclideTest::SetUp(){
   // test_one_dim_ppm_nuclide model setup
-  one_dim_ppm_ptr_ = new OneDimPPMNuclide();
+  initNuclideModel();
+  default_one_dim_ppm_ptr_ = new OneDimPPMNuclide();
   nuc_model_ptr_ = dynamic_cast<NuclideModel*>(one_dim_ppm_ptr_);
+  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(one_dim_ppm_ptr_);
 
   // set up geometry. this usually happens in the component init
   r_four_ = 4;
