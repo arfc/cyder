@@ -45,7 +45,25 @@ TEST_P(NuclideModelTests, set_geom){
   // set it
   EXPECT_NO_THROW(nuclide_model_->set_geom(geom_));
   // check
+  EXPECT_FLOAT_EQ(len_five_ , nuclide_model_->geom()->length());
+  EXPECT_FLOAT_EQ(r_four_ , nuclide_model_->geom()->inner_radius());
+  EXPECT_FLOAT_EQ(r_five_ , nuclide_model_->geom()->outer_radius());
+  double vol = len_five_*3.14159*(r_five_*r_five_ - r_four_*r_four_);
+  EXPECT_NEAR( vol , nuclide_model_->geom()->volume(), 0.1);
   EXPECT_EQ(geom_->x(), nuclide_model_->geom()->x());
+  EXPECT_EQ(geom_->y(), nuclide_model_->geom()->y());
+  EXPECT_EQ(geom_->z(), nuclide_model_->geom()->z());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(NuclideModelTests, getVolume) {  
+  EXPECT_NO_THROW(nuclide_model_->set_geom(geom_));
+  double vol = len_five_*3.14159*(r_five_*r_five_ - r_four_*r_four_);
+  EXPECT_NEAR( vol , nuclide_model_->geom()->volume(), 0.1);
+  EXPECT_NO_THROW(nuclide_model_->geom()->set_radius(OUTER, r_four_));
+  EXPECT_FLOAT_EQ( 0 , nuclide_model_->geom()->volume());
+  EXPECT_NO_THROW(nuclide_model_->geom()->set_radius(OUTER, std::numeric_limits<double>::infinity()));
+  EXPECT_FLOAT_EQ( std::numeric_limits<double>::infinity(), nuclide_model_->geom()->volume());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, crude_source_term){
