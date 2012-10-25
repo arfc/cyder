@@ -17,7 +17,12 @@ using namespace std;
 using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-OneDimPPMNuclide::OneDimPPMNuclide(){ }
+OneDimPPMNuclide::OneDimPPMNuclide(){
+  wastes_ = deque<mat_rsrc_ptr>();
+  set_geom(GeometryPtr(new Geometry()));
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::~OneDimPPMNuclide(){ }
