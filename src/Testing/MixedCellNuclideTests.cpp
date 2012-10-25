@@ -3,73 +3,77 @@
 #include <map>
 #include <gtest/gtest.h>
 
-#include "MixedCellNuclide.h"
+#include "MixedCellNuclideTests.h"
 #include "NuclideModelTests.h"
 #include "NuclideModel.h"
 #include "CycException.h"
 #include "Material.h"
+#include "XMLQueryEngine.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-class MixedCellNuclideTest : public ::testing::Test {
-  protected:
-    MixedCellNuclide* mixed_cell_ptr_;
-    NuclideModel* nuc_model_ptr_;
-    CompMapPtr test_comp_;
-    mat_rsrc_ptr test_mat_;
-    int one_mol_;
-    int u235_, am241_;
-    double test_size_;
-    double theta_;
-    double adv_vel_;
-    GeometryPtr geom_;
-    Radius r_four_, r_five_;
-    Length len_five_;
-    point_t origin_;
-    int time_;
-    int some_param_;
+void MixedCellNuclideTest::SetUp(){
+  // test_mixed_cell_nuclide model setup
+  mixed_cell_ptr_ = new MixedCellNuclide();
+  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);
 
-    virtual void SetUp(){
-      // test_mixed_cell_nuclide model setup
-      mixed_cell_ptr_ = new MixedCellNuclide();
-      nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);
+  // set up geometry. this usually happens in the component init
+  r_four_ = 4;
+  r_five_ = 5;
+  point_t origin_ = {0,0,0}; 
+  len_five_ = 5;
+  geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
 
-      // set up geometry. this usually happens in the component init
-      r_four_ = 4;
-      r_five_ = 5;
-      point_t origin_ = {0,0,0}; 
-      len_five_ = 5;
-      geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
+  // other vars
+  theta_ = 0.3; // percent porosity
+  adv_vel_ = 1; // m/yr
+  time_ = 0;
+  porosity_ = 0;
+  deg_rate_ = 0;
 
-      // other vars
-      theta_ = 0.3; // percent porosity
-      adv_vel_ = 1; // m/yr
-      time_ = 0;
-      some_param_ = 0;
+  // composition set up
+  u235_=92235;
+  one_mol_=1.0;
+  test_comp_= CompMapPtr(new CompMap(MASS));
+  (*test_comp_)[u235_] = one_mol_;
+  test_size_=10.0;
 
-      // composition set up
-      u235_=92235;
-      one_mol_=1.0;
-      test_comp_= CompMapPtr(new CompMap(MASS));
-      (*test_comp_)[u235_] = one_mol_;
-      test_size_=10.0;
+  // material creation
+  test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
+  test_mat_->setQuantity(test_size_);
+}
 
-      // material creation
-      test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
-      test_mat_->setQuantity(test_size_);
-    }
-    virtual void TearDown() {
-      delete mixed_cell_ptr_;
-    }
-};
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclideTest::TearDown() {
+  delete mixed_cell_ptr_;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* MixedCellNuclideModelConstructor(){
   return dynamic_cast<NuclideModel*>(new MixedCellNuclide());
 }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+MixedCellNuclide* MixedCellNuclideTest::initNuclideModel(){
+  stringstream ss("");
+  ss << "<start>"
+     << "  <degradation>" << deg_rate_ << "</degradation>"
+     << "  <porosity>" << porosity_ << "</porosity>"
+     << "</start>";
 
+  XMLParser parser(ss);
+  XMLQueryEngine* engine = new XMLQueryEngine(parser);
+  mixed_cell_ptr_ = new MixedCellNuclide();
+  mixed_cell_ptr_->initModuleMembers(engine);
+  delete engine;
+  return mixed_cell_ptr_;  
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MixedCellNuclideTest, initial_state) {
+  EXPECT_EQ(deg_rate_, mixed_cell_ptr_->deg_rate());
+  EXPECT_EQ(porosity_, mixed_cell_ptr_->porosity());
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, defaultConstructor) {
   ASSERT_EQ("MIXEDCELL_NUCLIDE", nuc_model_ptr_->name());
@@ -79,16 +83,16 @@ TEST_F(MixedCellNuclideTest, defaultConstructor) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, initFunctionNoXML) { 
-  //EXPECT_NO_THROW(mixed_cell_ptr_->init(some_param_));
+  //EXPECT_NO_THROW(mixed_cell_ptr_->init(porosity_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, copy) {
-  //ASSERT_NO_THROW(mixed_cell_ptr_->init(some_param_));
+  //ASSERT_NO_THROW(mixed_cell_ptr_->init(porosity_));
   MixedCellNuclide* test_copy = new MixedCellNuclide();
   EXPECT_NO_THROW(test_copy->copy(mixed_cell_ptr_));
   EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
-  //EXPECT_FLOAT_EQ(some_param_, test_copy->some_param());
+  //EXPECT_FLOAT_EQ(porosity_, test_copy->porosity());
   delete test_copy;
 }
 
@@ -130,41 +134,41 @@ TEST_F(MixedCellNuclideTest, extract){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MixedCellNuclideTest, set_some_param){ 
+TEST_F(MixedCellNuclideTest, set_porosity){ 
   // the deg rate must be between 0 and 1, inclusive
-  some_param_=0;
-  //ASSERT_NO_THROW(mixed_cell_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(mixed_cell_ptr_->some_param(), some_param_);
-  some_param_=1;
-  //ASSERT_NO_THROW(mixed_cell_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(mixed_cell_ptr_->some_param(), some_param_);
+  porosity_=0;
+  //ASSERT_NO_THROW(mixed_cell_ptr_->set_porosity(porosity_));
+  //EXPECT_FLOAT_EQ(mixed_cell_ptr_->porosity(), porosity_);
+  porosity_=1;
+  //ASSERT_NO_THROW(mixed_cell_ptr_->set_porosity(porosity_));
+  //EXPECT_FLOAT_EQ(mixed_cell_ptr_->porosity(), porosity_);
   // it should accept floats
-  some_param_= 0.1;
-  //ASSERT_NO_THROW(mixed_cell_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(mixed_cell_ptr_->some_param(), some_param_);
+  porosity_= 0.1;
+  //ASSERT_NO_THROW(mixed_cell_ptr_->set_porosity(porosity_));
+  //EXPECT_FLOAT_EQ(mixed_cell_ptr_->porosity(), porosity_);
   // an exception should be thrown if it's set outside the bounds
-  some_param_= -1;
-  //EXPECT_THROW(mixed_cell_ptr_->set_some_param(some_param_), CycRangeException);
-  //EXPECT_NE(mixed_cell_ptr_->some_param(), some_param_);
-  some_param_= 2;
-  //EXPECT_THROW(mixed_cell_ptr_->set_some_param(some_param_), CycRangeException);
-  //EXPECT_NE(mixed_cell_ptr_->some_param(), some_param_);
+  porosity_= -1;
+  //EXPECT_THROW(mixed_cell_ptr_->set_porosity(porosity_), CycRangeException);
+  //EXPECT_NE(mixed_cell_ptr_->porosity(), porosity_);
+  porosity_= 2;
+  //EXPECT_THROW(mixed_cell_ptr_->set_porosity(porosity_), CycRangeException);
+  //EXPECT_NE(mixed_cell_ptr_->porosity(), porosity_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, transportNuclidesZero){ 
   // for some setting, nothing should be released
-  some_param_=0;
+  porosity_=0;
   EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
-  double expected_src = some_param_*test_size_;
+  double expected_src = porosity_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
   double radial_midpoint = outer_radius + (outer_radius - nuc_model_ptr_->geom()->inner_radius())/2;
 
-  //ASSERT_NO_THROW(mixed_cell_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(some_param_, mixed_cell_ptr_->some_param());
+  //ASSERT_NO_THROW(mixed_cell_ptr_->set_porosity(porosity_));
+  //EXPECT_FLOAT_EQ(porosity_, mixed_cell_ptr_->porosity());
   // get the initial mass
   //double initial_mass = mixed_cell_ptr_->contained_mass();
   // transport the nuclides
@@ -184,9 +188,9 @@ TEST_F(MixedCellNuclideTest, transportNuclidesZero){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, transportNuclidesOther){ 
   // if the degradation rate is .5, everything should be released in two years
-  some_param_= 0.5;
+  porosity_= 0.5;
   EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
-  double expected_src = some_param_*test_size_;
+  double expected_src = porosity_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
   double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
   IsoConcMap zero_conc_map;
@@ -194,8 +198,8 @@ TEST_F(MixedCellNuclideTest, transportNuclidesOther){
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
 
   // set the degradation rate
-  //ASSERT_NO_THROW(mixed_cell_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(mixed_cell_ptr_->some_param(), some_param_);
+  //ASSERT_NO_THROW(mixed_cell_ptr_->set_porosity(porosity_));
+  //EXPECT_FLOAT_EQ(mixed_cell_ptr_->porosity(), porosity_);
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
 

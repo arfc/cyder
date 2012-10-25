@@ -32,6 +32,7 @@ void LumpedNuclideTest::SetUp(){
   theta_ = 0.3; // percent porosity
   adv_vel_ = 1; // m/yr
   time_ = 0;
+  t_t_ = 1;
 
   // composition set up
   u235_=92235;
@@ -58,7 +59,9 @@ LumpedNuclide* LumpedNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <transit_time>" << t_t_ << "</transit_time>"
-     << "  <EM/>"
+     << "  <formulation>"
+     << "    <EM/>"
+     << "  </formulation>"
      << "</start>";
 
   XMLParser parser(ss);
