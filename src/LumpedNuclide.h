@@ -147,6 +147,9 @@ public:
    */
   virtual IsoConcMap cauchy_bc();
 
+  /// Returns the transit time of the radioactive tracer through the cell
+  double transit_time(){return t_t_;};
+  
 private:
   /**
    * The name of the lumped parameter model formulation. This can be 
