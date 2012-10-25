@@ -203,6 +203,10 @@ protected:
      */
     double dx_,dy_,dz_;
 
+    /// The advective velocity (@TODO decide direction? +x or +z?) [m/yr] 
+    // NOTE!!! NOT SI!! [m/yr]
+    double adv_vel_;
+
     /**
        The stocks of pre-emplacement waste materials.
      */
@@ -239,7 +243,7 @@ protected:
     int start_op_mo_;
 
     /**
-       Reports true if the repository has reached capacity, false otherwiset
+       Reports true if the repository has reached capacity, false otherwise
      */
     bool is_full_;
 
@@ -439,6 +443,10 @@ public:
      */
     double checkStocks();
 
+    /**
+      get the advective velocity [m/s] of water movement in the repository
+     */
+    double adv_vel(){return adv_vel_;};
 
 /* ------------------- */ 
 

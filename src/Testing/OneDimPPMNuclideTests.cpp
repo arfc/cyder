@@ -96,11 +96,12 @@ TEST_F(OneDimPPMNuclideTest, copy) {
 TEST_F(OneDimPPMNuclideTest, absorb){
   // if you absorb a material, the conc_map should reflect that
   // you shouldn't absorb more material than you can handle. how much is that?
-  for(int time_=0; time_<4; time_++){
-    ASSERT_EQ(0,time_);
+  for(int i=0; i<4; i++){
+    ASSERT_EQ(i,time_);
     EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
     //EXPECT_NO_THROW(one_dim_ppm_ptr_->update_vec_hist(time_));
     //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), one_dim_ppm_ptr_->contained_mass(time_));
+    time_++;
   }
 }
 

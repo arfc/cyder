@@ -18,6 +18,7 @@ void GenericRepositoryTest::SetUp(){
   dx_ = 1;
   dy_ = 1;
   dz_ = 1;
+  adv_vel_ = .000631;
   capacity_ = 100;
   in_commod_ = "in_commod";
   inventory_size_ = 70000;
@@ -69,6 +70,7 @@ GenericRepository* GenericRepositoryTest::initSrcFacility(){
          << "  <dx>" << dx_ << "</dx>"
          << "  <dy>" << dy_ << "</dy>"
          << "  <dz>" << dz_ << "</dz>"
+         << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
          << "  <capacity>" << capacity_ << "</capacity>"
          << "  <incommodity>" << in_commod_ << "</incommodity>"
          << "  <inventorysize>" << inventory_size_ << "</inventorysize>"

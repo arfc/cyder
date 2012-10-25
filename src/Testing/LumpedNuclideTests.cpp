@@ -165,114 +165,19 @@ TEST_F(LumpedNuclideTest, total_degradation){
     ASSERT_EQ(i, time_);
     //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
     //ASSERT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
+    time_++;
   }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, transportNuclidesPFM){ 
-  // if the degradation rate is zero, nothing should be released
-  // set the degradation rate
-  some_param_=0;
-  EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
-  double expected_src = some_param_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
-  double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-  double radial_midpoint = outer_radius + (outer_radius - nuc_model_ptr_->geom()->inner_radius())/2;
-
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(some_param_, lumped_ptr_->some_param());
-  // get the initial mass
-  //double initial_mass = lumped_ptr_->contained_mass();
-  // transport the nuclides
-  //EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
-  // check that the contained mass matches the initial mass
-  //EXPECT_FLOAT_EQ(initial_mass, lumped_ptr_->contained_mass()); 
-  // check the source term 
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
-  // check the boundary concentration ?
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
-  // check the boundary flux
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(u235_));
-  // check the neumann bc
-  EXPECT_FLOAT_EQ(0 , nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, transportNuclidesDRhalf){ 
-  // if the degradation rate is .5, everything should be released in two years
-  some_param_= 0.5;
-  EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
-  double expected_src = some_param_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
-  IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
-  double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-
-  // set the degradation rate
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
-  // fill it with some material
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-
-  // TRANSPORT NUCLIDES 
-  ASSERT_EQ(0, time_);
-  time_++;
-  ASSERT_EQ(1, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // check that half that material is offered as the source term in one year
-  // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
-  // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Cauchy
-  double expected_cauchy = 900; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
-  // Neumann
-  //double expected_neumann= -expected_conc/(outer_radius*2 - lumped_ptr_->radial_midpoint());
-  //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
-
-  // remove the source term offered
-  CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
-  double extract_mass = nuc_model_ptr_->source_term_bc().second;
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
-  // TRANSPORT NUCLIDES 
-  time_++;
-  ASSERT_EQ(2, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // check that the remaining half is offered as the source term in year two
-  // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
-  // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Cauchy
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
-  // Neumann 
-  //expected_neumann= -expected_conc/(outer_radius*2 - lumped_ptr_->radial_midpoint());
-  //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
-
-  // remove the source term offered
-  extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
-  extract_mass = nuc_model_ptr_->source_term_bc().second;
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
-  // TRANSPORT NUCLIDES 
-  time_++;
-  ASSERT_EQ(3, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // check that timestep 3 doesn't crash or offer material it doesn't have
-  // Source Term
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
-  // Dirichlet
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Cauchy
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(u235_));
-  // Neumann
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
+TEST_F(LumpedNuclideTest, transportNuclidesDM){ 
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(LumpedNuclideTest, transportNuclidesEM){ 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

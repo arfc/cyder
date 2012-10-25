@@ -71,6 +71,7 @@ GenericRepository::GenericRepository() {
   mapVars("dx", "FLOAT", &dx_);
   mapVars("dy", "FLOAT", &dy_);
   mapVars("dz", "FLOAT", &dz_);
+  mapVars("advective_velocity", "FLOAT", &adv_vel_);
   mapVars("capacity", "FLOAT", &capacity_);
   mapVars("inventorysize", "FLOAT", &inventory_size_);
   mapVars("lifetime", "FLOAT", &lifetime_);
@@ -180,13 +181,14 @@ void GenericRepository::copy(GenericRepository* src)
   FacilityModel::copy(src);
 
   // copy variables specific to this model
-  capacity_ = src->capacity_;
   x_= src->x_;
   y_= src->y_;
   z_= src->z_;
   dx_= src->dx_;
   dy_= src->dy_;
   dz_= src->dz_;
+  adv_vel_ = src->adv_vel_;
+  capacity_ = src->capacity_;
   inventory_size_ = src->inventory_size_;
   start_op_yr_ = src->start_op_yr_;
   start_op_mo_ = src->start_op_mo_;
