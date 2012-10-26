@@ -262,7 +262,59 @@ public:
     }
     return to_ret;
   }
-  
+
+  /** 
+     The IsoVector representing the summed, normalized material in 
+     the component.
+     @TODO should put this in a toolkit or something. Doesn't belong here.
+
+     @param time the time at which to retrieve the IsoVector
+
+     @return vec_hist(time).first
+   */
+  IsoVector contained_vec(int the_time){
+    IsoVector to_ret = vec_hist(the_time).first;
+    return to_ret;
+  }
+
+  /**
+     Returns the map of isotopes to concentrations at the time profided
+
+     @param time the time at which to query the concentration history
+     @return conc_hist_.at(time). If not found an empty IsoConcMap is return
+    */
+  IsoConcMap conc_hist(int the_time){
+    IsoConcMap to_ret;
+    ConcHist::iterator it;
+    it = conc_hist_.find(the_time);
+    if( it != conc_hist_.end() ){
+      to_ret = (*it).second;
+    } else {
+      to_ret[92235] = 0 ; // zero
+    }
+    return to_ret;
+  }
+
+  /**
+     Returns the concetration of a certain isotope at a certain time
+
+     @param time the time to query the concentration history
+     @param tope the isotope to query
+     @return conc_hist(time)[iso].second, or zero if not found
+    */
+  Concentration conc_hist(int the_time, Iso tope){
+    Concentration to_ret;
+    IsoConcMap conc_map = conc_hist(the_time);
+    IsoConcMap::iterator it;
+    it = conc_map.find(tope);
+    if(it != conc_map.end()){
+      to_ret = (*it).second;
+    }else{
+      to_ret = 0;
+    }
+    return to_ret;
+  }
+ 
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};

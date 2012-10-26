@@ -190,17 +190,6 @@ public:
     */
   double update_degradation(int time, double deg_rate);
 
-  /** 
-     The IsoVector representing the summed, normalized material in 
-     the component.
-     @TODO should put this in a toolkit or something. Doesn't belong here.
-
-     @param time the time at which to retrieve the IsoVector
-
-     @return vec_hist(time).first
-    */
-  IsoVector contained_vec(int time);
-
   /**
      Updates the isotopic vector history at the time
 
@@ -218,24 +207,6 @@ public:
      last_degraded_ time.
      */
   void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
-
-  /**
-     Returns the map of isotopes to concentrations at the time profided
-     @TODO should put this in a toolkit or something. Doesn't belong here.
-
-     @param time the time at which to query the concentration history
-     @return conc_hist_.at(time). If not found an empty IsoConcMap is return
-    */
-  IsoConcMap conc_hist(int time);
-
-  /**
-     Returns the concetration of a certain isotope at a certain time
-
-     @param time the time to query the concentration history
-     @param tope the isotope to query
-     @return conc_hist(time)[iso].second, or zero if not found
-     */
-  Concentration conc_hist(int time, Iso tope);
 
   /// returns the total degradation of the component
   double tot_deg();
