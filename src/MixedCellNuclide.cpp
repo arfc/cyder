@@ -22,6 +22,8 @@ MixedCellNuclide::MixedCellNuclide(){
   set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+  deg_rate_ = 0;
+  v_ = 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -32,6 +34,7 @@ void MixedCellNuclide::initModuleMembers(QueryEngine* qe){
   // move the xml pointer to the current model
   porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
   deg_rate_ = lexical_cast<double>(qe->getElementContent("degradation"));
+  v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
 
   LOG(LEV_DEBUG2,"GRMCNuc") << "The MixedCellNuclide Class init(cur) function has been called";;
 }
@@ -101,7 +104,7 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap MixedCellNuclide::cauchy_bc(){
+IsoFluxMap MixedCellNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

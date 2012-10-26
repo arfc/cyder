@@ -21,7 +21,7 @@ protected:
   int u235_, am241_;
   double test_size_;
   double theta_;
-  double adv_vel_;
+  double adv_vel_, D_;
   GeometryPtr geom_;
   Radius r_four_, r_five_;
   Length len_five_;

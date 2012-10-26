@@ -59,6 +59,7 @@ NuclideModel* LumpedNuclideModelConstructor(){
 LumpedNuclide* LumpedNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
+     << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <transit_time>" << t_t_ << "</transit_time>"
      << "  <formulation>"
      << "    <EM/>"
@@ -218,10 +219,10 @@ TEST_F(LumpedNuclideTest, transportNuclidesDR1){
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
   double expected_cauchy = 900; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // Neumann 
-  //double expected_neumann= -expected_conc/(outer_radius*2 - lumped_ptr_->radial_midpoint());
-  //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
+  double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
+  EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
   CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();

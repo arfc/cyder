@@ -22,6 +22,7 @@ OneDimPPMNuclide::OneDimPPMNuclide(){
   set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+  v_ = 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,6 +34,9 @@ void OneDimPPMNuclide::initModuleMembers(QueryEngine* qe){
   Ci_ = lexical_cast<double>(qe->getElementContent("initial_concentration"));
   // -D{\frac{\partial C}{\partial x}}|_{x=0} + vC = vC_0, for t<t_0
   Co_ = lexical_cast<double>(qe->getElementContent("source_concentration"));
+
+  // adv_vel.
+  v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
 
   // rock parameters
   n_ = lexical_cast<double>(qe->getElementContent("porosity"));
@@ -108,7 +112,7 @@ ConcGradMap OneDimPPMNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap OneDimPPMNuclide::cauchy_bc(){
+IsoFluxMap OneDimPPMNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

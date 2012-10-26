@@ -59,6 +59,7 @@ NuclideModel* MixedCellNuclideModelConstructor(){
 MixedCellNuclide* MixedCellNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
+     << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <degradation>" << deg_rate_ << "</degradation>"
      << "  <porosity>" << porosity_ << "</porosity>"
      << "</start>";
@@ -182,7 +183,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesZero){
   // check the boundary concentration ?
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
   // check the boundary flux
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // check the neumann bc
   EXPECT_FLOAT_EQ(0 , nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
 }
@@ -218,10 +219,10 @@ TEST_F(MixedCellNuclideTest, transportNuclidesOther){
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
   double expected_cauchy = 900; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2,u235_));
   // Neumann
-  //double expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->radial_midpoint());
-  //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
+  double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
+  EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
 
   // remove the source term offered
   CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
@@ -238,10 +239,10 @@ TEST_F(MixedCellNuclideTest, transportNuclidesOther){
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // Neumann 
-  //expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->radial_midpoint());
-  //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
+  expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
+  EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
   extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
@@ -258,7 +259,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesOther){
   // Dirichlet
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // Neumann
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 }

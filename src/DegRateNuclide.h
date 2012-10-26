@@ -135,21 +135,13 @@ public:
    *
      @return qC the solute flux at the boundary in kg/m^2/s
    */
-  virtual IsoConcMap cauchy_bc();
+  virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /*----------------------------*/
   /* This NuclideModel class    */
   /* has the following members  */
   /*----------------------------*/
 public:
-  /**
-     initializes the model parameters from the QueryEngine object
-     
-     @param deg_rate the degradation rate, fraction per yr (a fraction 0-1)
-   */
-  virtual void init(double deg_rate); 
-
-
   /** 
      returns the degradation rate that characterizes this model
    *
@@ -269,7 +261,27 @@ public:
   // @TODO should probably be in a toolkit
   ConcGrad calc_conc_grad(Concentration c_ext, Concentration c_int, Radius r_ext, Radius r_int);
 
+  /**
+    The hydrodynamic dispersion coefficient. [m^2/s] 
+   */
+  double D(){return D_;};
+
+  /**
+    The advective velocity through this component. [m/s] 
+   */
+  double v(){return v_;};
+
 protected:
+  /**
+    The advective velocity through this component [m/s]
+   */
+  double v_;
+
+  /**
+    The hydrodynamic dispersion coefficient. [m^2/s] 
+   */
+  double D_;
+
   /**
     The degradation rate that defines this model, fraction per year.
    */

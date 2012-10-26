@@ -81,7 +81,10 @@ TEST_P(NuclideModelTests, crude_dirichlet){
 TEST_P(NuclideModelTests, crude_cauchy){
   // check that the source term bc doesn't throw
   // before any contaminants, it had best be 0
-  EXPECT_FLOAT_EQ(0, nuclide_model_->cauchy_bc(u235_));
+  IsoConcMap zeromap;
+  zeromap.insert(std::make_pair(92235,0));
+  EXPECT_NO_THROW(nuclide_model_->set_geom(geom_));
+  EXPECT_FLOAT_EQ(0, nuclide_model_->cauchy_bc(zeromap,r_five_+10,u235_));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, crude_neumann){

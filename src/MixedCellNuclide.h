@@ -135,7 +135,7 @@ public:
    *
      @return qC the solute flux at the boundary in kg/m^2/s
    */
-  virtual IsoConcMap cauchy_bc();
+  virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /**
      Returns the degradation rate, a fraction
@@ -147,8 +147,17 @@ public:
     */
   double porosity(){return porosity_;}
 
+  /**
+    The advective velocity through this component. [m/s] 
+   */
+  double v(){return v_;};
 
-private:
+protected:
+  /**
+    The advective velocity through this component [m/s]
+   */
+  double v_;
+
   /**
      mixes the cell's contents to populate the concentration map
    */

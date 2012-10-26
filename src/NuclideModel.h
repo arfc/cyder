@@ -48,9 +48,21 @@ typedef double Concentration;
 /**
    type definition for a map from isotopes to concentrations
    The keys are the isotope identifiers Z*1000 + A
-   The values are the Concentrations of each isotope
+   The values are the Concentrations of each isotope [kg/m^3]
   */
 typedef std::map<int, Concentration> IsoConcMap;
+
+/**
+   type definition for Fluxes in kg/m^2s
+ */
+typedef double Flux;
+
+/**
+   type definition for a map from isotopes to concentrations
+   The keys are the isotope identifiers Z*1000 + A
+   The values are the Fluxes of each isotope [kg/m^2s]
+  */
+typedef std::map<int, Flux> IsoFluxMap;
 
 /** 
    type definition for a map from times to IsoConcMap
@@ -197,7 +209,7 @@ public:
      @param tope the isotope to query
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  ConcGrad neumann_bc(IsoConcMap c_ext, Radius r_ext, Iso tope) {
+  ConcGrad neumann_bc( IsoConcMap c_ext, Radius r_ext, Iso tope) {
     IsoConcMap::iterator found = this->neumann_bc(c_ext, r_ext).find(tope);
     return((found != this->neumann_bc(c_ext, r_ext).end()) ? (*found).second : 0);
   };
@@ -207,10 +219,10 @@ public:
     
      @return qC the solute flux at the boundary in kg/m^2/s
    */
-  virtual IsoConcMap cauchy_bc() = 0;
-  Concentration cauchy_bc(Iso tope) {
-    IsoConcMap::iterator found = this->cauchy_bc().find(tope);
-    return(found != this->cauchy_bc().end() ? (*found).second : 0);
+  virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext) = 0;
+  Flux cauchy_bc(IsoConcMap c_ext, Radius r_ext, Iso tope) {
+    IsoConcMap::iterator found = this->cauchy_bc(c_ext,r_ext).find(tope);
+    return(found != this->cauchy_bc(c_ext, r_ext).end() ? (*found).second : 0);
   };
     
 

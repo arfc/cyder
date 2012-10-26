@@ -25,6 +25,7 @@ LumpedNuclide::LumpedNuclide(){
   set_geom(GeometryPtr(new Geometry()));
 
   t_t_ = 0;
+  v_ = 0;
   eta_ratio_ = NULL;
   P_D_ = NULL;
   vec_hist_ = VecHist();
@@ -38,6 +39,8 @@ LumpedNuclide::~LumpedNuclide(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
+  v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
+
   eta_ratio_=NULL;
   P_D_=NULL;
 
@@ -132,7 +135,7 @@ ConcGradMap  LumpedNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap LumpedNuclide::cauchy_bc(){
+IsoFluxMap LumpedNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

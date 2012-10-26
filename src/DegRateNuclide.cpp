@@ -20,7 +20,9 @@ using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(){
-  set_deg_rate(0);
+  deg_rate_ = 0;
+  v_ = 0;
+  D_ = 0;
   tot_deg_ = 0;
   last_degraded_ = 0;
   wastes_ = deque<mat_rsrc_ptr>();
@@ -40,21 +42,18 @@ DegRateNuclide::~DegRateNuclide(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::initModuleMembers(QueryEngine* qe){
-  double deg_rate = lexical_cast<double>(qe->getElementContent("degradation"));
-  init(deg_rate);
+  D_ = lexical_cast<double>(qe->getElementContent("diffusion_coeff"));
+  deg_rate_ = lexical_cast<double>(qe->getElementContent("degradation"));
+  v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class initModuleMembers(qe) function has been called";;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void DegRateNuclide::init(double deg_rate) {
-  set_deg_rate(deg_rate);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModel* DegRateNuclide::copy(NuclideModel* src){
   DegRateNuclide* src_ptr = dynamic_cast<DegRateNuclide*>(src);
 
-  set_deg_rate(src_ptr->deg_rate_);
+  deg_rate_ = src_ptr->deg_rate_;
+  v_ = src_ptr->v_;
   tot_deg_ = 0;
   last_degraded_ = TI->time();
   wastes_ = deque<mat_rsrc_ptr>();
@@ -202,9 +201,17 @@ ConcGrad DegRateNuclide::calc_conc_grad(Concentration c_ext, Concentration
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap DegRateNuclide::cauchy_bc(){
-  /// @TODO This is just a placeholder
-  return conc_hist(last_degraded_); 
+IsoFluxMap DegRateNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
+  // -D dC/dx + v_xC = v_x C
+  IsoFluxMap to_ret;
+  ConcGradMap neumann = neumann_bc(c_ext, r_ext);
+  ConcGradMap::iterator it;
+  Iso iso;
+  for( it = neumann.begin(); it != neumann.end(); ++it){
+    iso = (*it).first;
+    to_ret.insert(make_pair(iso, -D()*(*it).second + v()*dynamic_cast<NuclideModel*>(this)->dirichlet_bc(iso)));
+  }
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

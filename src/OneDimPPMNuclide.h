@@ -137,7 +137,7 @@ public:
    *
      @return qC the solute flux at the boundary in kg/m^2/s
    */
-  virtual IsoConcMap cauchy_bc();
+  virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /**
      return diffusion coefficient
@@ -174,7 +174,12 @@ public:
     */
   double R(){return R_;};
 
-private:
+  /**
+    The advective velocity through this component. [m/s] 
+   */
+  double v(){return v_;};
+
+protected:
   /**
     The advective velocity through the waste packages in units of m/s.
   */
