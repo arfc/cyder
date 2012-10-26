@@ -165,15 +165,6 @@ public:
    */
   double contained_mass();
 
-  /** 
-     returns the current contained contaminant mass, in kg, at time
-     @TODO should put this in the NuclideModel class or something. 
-
-     @param time the time to query the contained contaminant mass
-     @return contained_mass_ throughout the component volume, in kg, at time
-   */
-  double contained_mass(int time);
-
   /**
      updates the contained concentration according to contained wastes_
     
@@ -245,14 +236,6 @@ public:
      @return conc_hist(time)[iso].second, or zero if not found
      */
   Concentration conc_hist(int time, Iso tope);
-
-  /**
-     Returns the IsoVector mass pair for a certain time
-
-     @param time the time to query the isotopic history
-     @return vec_hist_.at(time). If not found an empty pair is returned.
-     */
-  std::pair<IsoVector, double> vec_hist(int time);
 
   /// returns the total degradation of the component
   double tot_deg();

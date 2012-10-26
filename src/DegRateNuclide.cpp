@@ -123,19 +123,19 @@ void DegRateNuclide::set_deg_rate(double deg_rate){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double DegRateNuclide::contained_mass(int the_time){ 
-  return vec_hist(the_time).second;
-}
+//double DegRateNuclide::contained_mass(int the_time){ 
+//  return vec_hist(the_time).second;
+//}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::contained_mass(){
-  return contained_mass(last_degraded_);
+  return dynamic_cast<NuclideModel*>(this)->contained_mass(last_degraded_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::source_term_bc(){
   return make_pair(contained_vec(last_degraded_), 
-      tot_deg()*contained_mass(last_degraded_));
+      tot_deg()*dynamic_cast<NuclideModel*>(this)->contained_mass(last_degraded_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -226,7 +226,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist(the_time);
+  sum_pair = dynamic_cast<NuclideModel*>(this)->vec_hist(the_time);
 
   if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
     double scale = sum_pair.second/geom_->volume();
@@ -269,28 +269,28 @@ void DegRateNuclide::update_vec_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoVector DegRateNuclide::contained_vec(int the_time){
-  IsoVector to_ret = vec_hist(the_time).first;
+  IsoVector to_ret = dynamic_cast<NuclideModel*>(this)->vec_hist(the_time).first;
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-pair<IsoVector, double> DegRateNuclide::vec_hist(int the_time){
-  pair<IsoVector, double> to_ret;
-  VecHist::const_iterator it;
-  if( !vec_hist_.empty() ) {
-    it = vec_hist_.find(the_time);
-    if( it != vec_hist_.end() ){
-      to_ret = (*it).second;
-      assert(to_ret.second < 1000 );
-    } 
-  } else { 
-    CompMapPtr zero_comp = CompMapPtr(new CompMap(MASS));
-    (*zero_comp)[92235] = 0;
-    to_ret = make_pair(IsoVector(zero_comp),0);
-  }
-  return to_ret;
-}
-
+//pair<IsoVector, double> DegRateNuclide::vec_hist(int the_time){
+//  pair<IsoVector, double> to_ret;
+//  VecHist::const_iterator it;
+//  if( !vec_hist_.empty() ) {
+//    it = vec_hist_.find(the_time);
+//    if( it != vec_hist_.end() ){
+//      to_ret = (*it).second;
+//      assert(to_ret.second < 1000 );
+//    } 
+//  } else { 
+//    CompMapPtr zero_comp = CompMapPtr(new CompMap(MASS));
+//    (*zero_comp)[92235] = 0;
+//    to_ret = make_pair(IsoVector(zero_comp),0);
+//  }
+//  return to_ret;
+//}
+//
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::conc_hist(int the_time){
   IsoConcMap to_ret;

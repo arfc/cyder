@@ -232,6 +232,37 @@ public:
   /// Returns the geom_ data member
   GeometryPtr geom() {return geom_;};
 
+  /** 
+     returns the current contained contaminant mass, in kg, at time
+
+     @param time the time to query the contained contaminant mass
+     @return contained_mass_ throughout the component volume, in kg, at time
+   */
+  double contained_mass(int the_time){return this->vec_hist(the_time).second;}
+
+  /**
+     Returns the IsoVector mass pair for a certain time
+
+     @param time the time to query the isotopic history
+     @return vec_hist_.at(time). If not found an empty pair is returned.
+     */
+  std::pair<IsoVector, double> vec_hist(int the_time){
+    std::pair<IsoVector, double> to_ret;
+    VecHist::const_iterator it;
+    if( !vec_hist_.empty() ) {
+      it = vec_hist_.find(the_time);
+      if( it != vec_hist_.end() ){
+        to_ret = (*it).second;
+        assert(to_ret.second < 1000 );
+      } 
+    } else { 
+      CompMapPtr zero_comp = CompMapPtr(new CompMap(MASS));
+      (*zero_comp)[92235] = 0;
+      to_ret = std::make_pair(IsoVector(zero_comp),0);
+    }
+    return to_ret;
+  }
+  
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};
