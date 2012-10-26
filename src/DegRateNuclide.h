@@ -142,14 +142,6 @@ public:
   /* has the following members  */
   /*----------------------------*/
 public:
-  /**
-     initializes the model parameters from the QueryEngine object
-     
-     @param deg_rate the degradation rate, fraction per yr (a fraction 0-1)
-   */
-  virtual void init(double deg_rate); 
-
-
   /** 
      returns the degradation rate that characterizes this model
    *
@@ -274,8 +266,17 @@ public:
    */
   double D(){return D_;};
 
+  /**
+    The advective velocity through this component. [m/s] 
+   */
+  double v(){return v_;};
 
 protected:
+  /**
+    The advective velocity through this component [m/s]
+   */
+  double v_;
+
   /**
     The hydrodynamic dispersion coefficient. [m^2/s] 
    */

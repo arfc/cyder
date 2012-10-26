@@ -164,7 +164,16 @@ public:
   /// Retardation coefficient, R = 1 + rho_*Kd_/n 
   double R(){return R_;};
 
-private:
+  /**
+    The advective velocity through this component. [m/s] 
+   */
+  double v(){return v_;};
+
+protected:
+  /**
+    The advective velocity through this component [m/s]
+   */
+  double v_;
   /// The initial contaminant concentration, C(x,0), in g/cm^3
   // @TODO make this an isovector, maybe with a recipe
   double Ci_;

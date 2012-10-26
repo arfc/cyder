@@ -174,7 +174,12 @@ public:
     */
   double R(){return R_;};
 
-private:
+  /**
+    The advective velocity through this component. [m/s] 
+   */
+  double v(){return v_;};
+
+protected:
   /**
     The advective velocity through the waste packages in units of m/s.
   */

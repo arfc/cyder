@@ -147,8 +147,17 @@ public:
     */
   double porosity(){return porosity_;}
 
+  /**
+    The advective velocity through this component. [m/s] 
+   */
+  double v(){return v_;};
 
-private:
+protected:
+  /**
+    The advective velocity through this component [m/s]
+   */
+  double v_;
+
   /**
      mixes the cell's contents to populate the concentration map
    */

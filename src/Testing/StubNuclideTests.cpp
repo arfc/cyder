@@ -179,7 +179,7 @@ TEST_F(StubNuclideTest, transportNuclidesZero){
   // check the boundary concentration ?
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
   // check the boundary flux
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // check the neumann bc
   EXPECT_FLOAT_EQ(0 , nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
 }
@@ -215,7 +215,7 @@ TEST_F(StubNuclideTest, transportNuclidesOther){
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
   double expected_cauchy = 900; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // Neumann
   //double expected_neumann= -expected_conc/(outer_radius*2 - stub_ptr_->radial_midpoint());
   //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
@@ -235,7 +235,7 @@ TEST_F(StubNuclideTest, transportNuclidesOther){
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // Neumann 
   //expected_neumann= -expected_conc/(outer_radius*2 - stub_ptr_->radial_midpoint());
   //EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
@@ -255,7 +255,7 @@ TEST_F(StubNuclideTest, transportNuclidesOther){
   // Dirichlet
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
   // Cauchy
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(u235_));
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // Neumann
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 }
