@@ -314,7 +314,36 @@ public:
     }
     return to_ret;
   }
- 
+
+  /**
+     Returns the concentration gradient based on a simple finite difference 
+     between two datapoints.
+
+     @param c_ext external concentration, at r_ext
+     @param c_int internal concentration, at r_int
+     @param r_ext external radial midpoint
+     @param r_int interal radil midpoint
+    */
+  ConcGrad calc_conc_grad(Concentration c_ext, Concentration 
+      c_int, Radius r_ext, Radius r_int){
+  
+    ConcGrad to_ret;
+    if(r_ext <= r_int){ 
+      std::stringstream msg_ss;
+      msg_ss << "The outer radius must be greater than the inner radius.";
+      LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
+      throw CycRangeException(msg_ss.str());
+    } else if( r_ext == std::numeric_limits<double>::infinity() ){
+      std::stringstream msg_ss;
+      msg_ss << "The outer radius cannot be infinite.";
+      LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
+      throw CycRangeException(msg_ss.str());
+    } else {
+      to_ret = (c_ext - c_int) / (r_ext - r_int) ;
+    }
+    return to_ret;
+  }
+
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};

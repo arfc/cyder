@@ -211,10 +211,6 @@ public:
   /// returns the total degradation of the component
   double tot_deg();
 
-  /// returns the radius at the midpoint between outer_radius and inner_radius
-  // @TODO should probably be in a toolkit
-  ConcGrad calc_conc_grad(Concentration c_ext, Concentration c_int, Radius r_ext, Radius r_int);
-
   /**
     The hydrodynamic dispersion coefficient. [m^2/s] 
    */

@@ -180,27 +180,6 @@ ConcGradMap DegRateNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ConcGrad DegRateNuclide::calc_conc_grad(Concentration c_ext, Concentration 
-    c_int, Radius r_ext, Radius r_int){
-
-  ConcGrad to_ret;
-  if(r_ext <= r_int){ 
-    stringstream msg_ss;
-    msg_ss << "The outer radius must be greater than the inner radius.";
-    LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
-    throw CycRangeException(msg_ss.str());
-  } else if( r_ext == numeric_limits<double>::infinity() ){
-    stringstream msg_ss;
-    msg_ss << "The outer radius cannot be infinite.";
-    LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
-    throw CycRangeException(msg_ss.str());
-  } else {
-    to_ret = (c_ext - c_int) / (r_ext - r_int) ;
-  }
-  return to_ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoFluxMap DegRateNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   // -D dC/dx + v_xC = v_x C
   IsoFluxMap to_ret;
