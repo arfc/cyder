@@ -4,71 +4,78 @@
 #include <gtest/gtest.h>
 
 #include "LumpedNuclide.h"
+#include "LumpedNuclideTests.h"
 #include "NuclideModelTests.h"
 #include "NuclideModel.h"
 #include "CycException.h"
 #include "Material.h"
+#include "XMLQueryEngine.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-class LumpedNuclideTest : public ::testing::Test {
-  protected:
-    LumpedNuclide* lumped_ptr_;
-    NuclideModel* nuc_model_ptr_;
-    CompMapPtr test_comp_;
-    mat_rsrc_ptr test_mat_;
-    int one_mol_;
-    int u235_, am241_;
-    double test_size_;
-    double theta_;
-    double adv_vel_;
-    GeometryPtr geom_;
-    Radius r_four_, r_five_;
-    Length len_five_;
-    point_t origin_;
-    int time_;
-    int some_param_;
+void LumpedNuclideTest::SetUp(){
 
-    virtual void SetUp(){
-      // test_lumped_nuclide model setup
-      lumped_ptr_ = new LumpedNuclide();
-      nuc_model_ptr_ = dynamic_cast<NuclideModel*>(lumped_ptr_);
+  // set up geometry. this usually happens in the component init
+  r_four_ = 4;
+  r_five_ = 5;
+  point_t origin_ = {0,0,0}; 
+  len_five_ = 5;
+  geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
 
-      // set up geometry. this usually happens in the component init
-      r_four_ = 4;
-      r_five_ = 5;
-      point_t origin_ = {0,0,0}; 
-      len_five_ = 5;
-      geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
+  // other vars
+  theta_ = 0.3; // percent porosity
+  adv_vel_ = 1; // m/yr
+  time_ = 0;
+  t_t_ = 1;
 
-      // other vars
-      theta_ = 0.3; // percent porosity
-      adv_vel_ = 1; // m/yr
-      time_ = 0;
+  // composition set up
+  u235_=92235;
+  one_mol_=1.0;
+  test_comp_= CompMapPtr(new CompMap(MASS));
+  (*test_comp_)[u235_] = one_mol_;
+  test_size_=10.0;
 
-      // composition set up
-      u235_=92235;
-      one_mol_=1.0;
-      test_comp_= CompMapPtr(new CompMap(MASS));
-      (*test_comp_)[u235_] = one_mol_;
-      test_size_=10.0;
+  // material creation
+  test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
+  test_mat_->setQuantity(test_size_);
 
-      // material creation
-      test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
-      test_mat_->setQuantity(test_size_);
-    }
-    virtual void TearDown() {
-      delete lumped_ptr_;
-    }
-};
-
+  // test_lumped_nuclide model setup
+  lumped_ptr_=initNuclideModel();
+  default_lumped_ptr_ = new LumpedNuclide();
+  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(lumped_ptr_);
+  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_lumped_ptr_);
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclideTest::TearDown() {  
+  delete lumped_ptr_;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* LumpedNuclideModelConstructor(){
   return dynamic_cast<NuclideModel*>(new LumpedNuclide());
 }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+LumpedNuclide* LumpedNuclideTest::initNuclideModel(){
+  stringstream ss("");
+  ss << "<start>"
+     << "  <transit_time>" << t_t_ << "</transit_time>"
+     << "  <formulation>"
+     << "    <EM/>"
+     << "  </formulation>"
+     << "</start>";
 
+  XMLParser parser(ss);
+  XMLQueryEngine* engine = new XMLQueryEngine(parser);
+  lumped_ptr_ = new LumpedNuclide();
+  lumped_ptr_->initModuleMembers(engine);
+  delete engine;
+  return lumped_ptr_;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(LumpedNuclideTest, initial_state){
+  EXPECT_EQ(t_t_, lumped_ptr_->transit_time());
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, defaultConstructor) {
   ASSERT_EQ("LUMPED_NUCLIDE", nuc_model_ptr_->name());

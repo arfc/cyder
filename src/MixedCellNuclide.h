@@ -137,6 +137,17 @@ public:
    */
   virtual IsoConcMap cauchy_bc();
 
+  /**
+     Returns the degradation rate, a fraction
+    */
+  double deg_rate(){return deg_rate_;}
+
+  /**
+     Returns the porosity, a fraction
+    */
+  double porosity(){return porosity_;}
+
+
 private:
   /**
      mixes the cell's contents to populate the concentration map

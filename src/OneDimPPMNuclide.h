@@ -139,6 +139,41 @@ public:
    */
   virtual IsoConcMap cauchy_bc();
 
+  /**
+     return diffusion coefficient
+    */
+  double D(){return D_;};
+
+  /**
+     return porosity
+    */
+  double n(){return n_;};
+
+  /**
+     return initial concentration
+    */
+  double Ci(){return Ci_;};
+
+  /**
+     return Co
+    */
+  double Co(){return Co_;};
+
+  /**
+     return bulk density
+    */
+  double rho(){return rho_;};
+
+  /**
+     return partitioning coefficient
+    */
+  double Kd(){return Kd_;};
+
+  /**
+     return retardation coefficient
+    */
+  double R(){return R_;};
+
 private:
   /**
     The advective velocity through the waste packages in units of m/s.

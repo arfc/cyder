@@ -120,10 +120,11 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="OneDimPPMNuclide">
       <ref name="initial_concentration"/>
       <ref name="source_concentration"/>
-      <ref name="diffusion_coeff"/>
       <ref name="porosity"/>
+      <ref name="diffusion_coeff"/>
       <ref name="bulk_density"/>
       <ref name="partition_coeff"/>
+      <ref name="retardation_coeff"/>
     </element>
   </define>
 

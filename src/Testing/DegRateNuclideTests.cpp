@@ -4,85 +4,90 @@
 #include <gtest/gtest.h>
 
 #include "DegRateNuclide.h"
+#include "DegRateNuclideTests.h"
 #include "NuclideModelTests.h"
 #include "NuclideModel.h"
 #include "CycException.h"
 #include "Material.h"
+#include "XMLQueryEngine.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-class DegRateNuclideTest : public ::testing::Test {
-  protected:
-    DegRateNuclide* deg_rate_ptr_;
-    NuclideModel* nuc_model_ptr_;
-    double deg_rate_;
-    CompMapPtr test_comp_;
-    mat_rsrc_ptr test_mat_;
-    int one_mol_;
-    int u235_, am241_;
-    double test_size_;
-    double theta_;
-    double adv_vel_;
-    GeometryPtr geom_;
-    Radius r_four_, r_five_;
-    Length len_five_;
-    point_t origin_;
-    int time_;
+void DegRateNuclideTest::SetUp(){
+  // set up geometry. this usually happens in the component init
+  r_four_ = 4;
+  r_five_ = 5;
+  point_t origin_ = {0,0,0}; 
+  len_five_ = 5;
+  geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
 
-    virtual void SetUp(){
-      // test_deg_rate_nuclide model setup
-      deg_rate_ptr_ = new DegRateNuclide();
-      deg_rate_ = 0.1;
-      nuc_model_ptr_ = dynamic_cast<NuclideModel*>(deg_rate_ptr_);
+  // other vars
+  theta_ = 0.3; // percent porosity
+  adv_vel_ = 1; // m/yr
+  time_ = 0;
 
-      // set up geometry. this usually happens in the component init
-      r_four_ = 4;
-      r_five_ = 5;
-      point_t origin_ = {0,0,0}; 
-      len_five_ = 5;
-      geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
+  // composition set up
+  u235_=92235;
+  one_mol_=1.0;
+  test_comp_= CompMapPtr(new CompMap(MASS));
+  (*test_comp_)[u235_] = one_mol_;
+  test_size_=10.0;
 
-      // other vars
-      theta_ = 0.3; // percent porosity
-      adv_vel_ = 1; // m/yr
-      time_ = 0;
+  // material creation
+  test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
+  test_mat_->setQuantity(test_size_);
 
-      // composition set up
-      u235_=92235;
-      one_mol_=1.0;
-      test_comp_= CompMapPtr(new CompMap(MASS));
-      (*test_comp_)[u235_] = one_mol_;
-      test_size_=10.0;
+  // test_deg_rate_nuclide model setup
+  deg_rate_ = 0.1;
+  initNuclideModel(); //initializes deg_rate_ptr_
+  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(deg_rate_ptr_);
+  default_deg_rate_ptr_ = new DegRateNuclide();
+  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_deg_rate_ptr_);
 
-      // material creation
-      test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
-      test_mat_->setQuantity(test_size_);
-    }
-    virtual void TearDown() {
-      delete deg_rate_ptr_;
-    }
-};
-
-
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclideTest::TearDown() {
+  delete deg_rate_ptr_;
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* DegRateNuclideModelConstructor(){
   return dynamic_cast<NuclideModel*>(new DegRateNuclide());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(DegRateNuclideTest, defaultConstructor) {
-  ASSERT_EQ("DEGRATE_NUCLIDE", nuc_model_ptr_->name());
-  ASSERT_EQ(DEGRATE_NUCLIDE, nuc_model_ptr_->type());
-  ASSERT_FLOAT_EQ(0, deg_rate_ptr_->deg_rate());
-  ASSERT_FLOAT_EQ(0, deg_rate_ptr_->geom()->length());
-  EXPECT_FLOAT_EQ(0, deg_rate_ptr_->contained_mass(time_));
-  EXPECT_FLOAT_EQ(deg_rate_ptr_->contained_mass(0), deg_rate_ptr_->contained_mass());
+DegRateNuclide* DegRateNuclideTest::initNuclideModel(){
+  stringstream ss("");
+  ss << "<start>"
+     << "  <degradation>" << deg_rate_ << "</degradation>"
+     << "</start>";
 
+  XMLParser parser(ss);
+  XMLQueryEngine* engine = new XMLQueryEngine(parser);
+  deg_rate_ptr_ = new DegRateNuclide();
+  deg_rate_ptr_->initModuleMembers(engine);
+  delete engine;
+  return deg_rate_ptr_;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, initial_state){
+  EXPECT_EQ(deg_rate_, deg_rate_ptr_->deg_rate());
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(DegRateNuclideTest, defaultConstructor) {
+  ASSERT_EQ("DEGRATE_NUCLIDE", default_nuc_model_ptr_->name());
+  ASSERT_EQ(DEGRATE_NUCLIDE, default_nuc_model_ptr_->type());
+  ASSERT_FLOAT_EQ(0, default_deg_rate_ptr_->deg_rate());
+  ASSERT_FLOAT_EQ(0, default_deg_rate_ptr_->geom()->length());
+  EXPECT_FLOAT_EQ(0, default_deg_rate_ptr_->contained_mass(time_));
+  EXPECT_FLOAT_EQ(default_deg_rate_ptr_->contained_mass(0), default_deg_rate_ptr_->contained_mass());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, initFunctionNoXML) { 
+  EXPECT_NO_THROW(deg_rate_ptr_->init(0));
+  ASSERT_EQ(0, deg_rate_ptr_->deg_rate());
   EXPECT_NO_THROW(deg_rate_ptr_->init(deg_rate_));
   ASSERT_EQ(deg_rate_, deg_rate_ptr_->deg_rate());
 }

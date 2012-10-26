@@ -138,12 +138,33 @@ public:
    */
   virtual IsoConcMap cauchy_bc();
 
-private:
-  /**
-    The advective velocity through the waste packages in units of m/s.
-  */
-  double v_;
+  /// The initial contaminant concentration, C(x,0), in g/cm^3
+  // @TODO make this an isovector, maybe with a recipe
+  double Ci(){return Ci_;};
 
+  /// The contaminant concentration constantly at the source until t_0, in g/cm^3
+  // @TODO make this an isovector, maybe with a recipe
+  double Co(){return Co_;};
+
+  /// Porosity of the component matrix, a fraction between 0 and 1, inclusive.
+  double n(){return n_;};
+
+  /// Diffusion coefficient (which kind?) (what units?)
+  double D(){return D_;};
+
+  /// The bulk (dry) density of the component matrix, in g/cm^3.
+  double rho(){return rho_;};
+
+  /**
+    Partition coefficient, the ratio of absorbed adsorbate per mass 
+    of solid to the amount of the adsorbate remaining in solution at equilibrium. 
+   */
+  double Kd(){return Kd_;};
+
+  /// Retardation coefficient, R = 1 + rho_*Kd_/n 
+  double R(){return R_;};
+
+private:
   /// The initial contaminant concentration, C(x,0), in g/cm^3
   // @TODO make this an isovector, maybe with a recipe
   double Ci_;

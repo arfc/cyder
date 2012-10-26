@@ -24,6 +24,9 @@ LumpedNuclide::LumpedNuclide(){
 
   set_geom(GeometryPtr(new Geometry()));
 
+  t_t_ = 0;
+  eta_ratio_ = NULL;
+  P_D_ = NULL;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
@@ -38,17 +41,25 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   eta_ratio_=NULL;
   P_D_=NULL;
 
+  list<string> choices;
+  list<string>::iterator it;
+  choices.push_back ("EM");
+  choices.push_back ("PFM");
+  choices.push_back ("EPM");
+  choices.push_back ("DM");
+
   QueryEngine* formulation_qe = qe->queryElement("formulation");
-  formulation_ = formulation_qe->getElementName();
-  string nodepath = "formulation/"+formulation_;
-  QueryEngine* ptr = qe->queryElement(nodepath.c_str());
-  if(formulation_=="EM"){
-  } else if(formulation_=="PFM") {
-  } else if(formulation_=="EPM") {
+  for( it=choices.begin(); it!=choices.end(); it++){
+    if (formulation_qe->nElementsMatchingQuery(*it) > 0){
+      formulation_=(*it);
+    }
+  }
+  QueryEngine* ptr = formulation_qe->queryElement(formulation_);
+  if(formulation_=="EPM") {
     eta_ratio_ = lexical_cast<double>(ptr->getElementContent("eta_ratio"));
   } else if(formulation_=="DM") {
     P_D_ = lexical_cast<double>(ptr->getElementContent("dispersion_coeff"));
-  } else {
+  } else if( formulation_ != "EM" && formulation_ != "PFM"){
     string err = "The formulation type '"; 
     err += formulation_;
     err += "' is not supported.";
