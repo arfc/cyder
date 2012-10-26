@@ -108,7 +108,7 @@ ConcGradMap OneDimPPMNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap OneDimPPMNuclide::cauchy_bc(){
+IsoFluxMap OneDimPPMNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

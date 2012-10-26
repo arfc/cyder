@@ -145,7 +145,7 @@ public:
    *
      @return qC the solute flux at the boundary in kg/m^2/s
    */
-  virtual IsoConcMap cauchy_bc();
+  virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /// Returns the transit time of the radioactive tracer through the cell
   double transit_time(){return t_t_;};

@@ -135,7 +135,7 @@ public:
    *
      @return qC the solute flux at the boundary in kg/m^2/s
    */
-  virtual IsoConcMap cauchy_bc();
+  virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /*----------------------------*/
   /* This NuclideModel class    */
@@ -269,7 +269,18 @@ public:
   // @TODO should probably be in a toolkit
   ConcGrad calc_conc_grad(Concentration c_ext, Concentration c_int, Radius r_ext, Radius r_int);
 
+  /**
+    The hydrodynamic dispersion coefficient. [m^2/s] 
+   */
+  double D(){return D_;};
+
+
 protected:
+  /**
+    The hydrodynamic dispersion coefficient. [m^2/s] 
+   */
+  double D_;
+
   /**
     The degradation rate that defines this model, fraction per year.
    */

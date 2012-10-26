@@ -93,7 +93,7 @@ ConcGradMap StubNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap StubNuclide::cauchy_bc(){
+IsoFluxMap StubNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }

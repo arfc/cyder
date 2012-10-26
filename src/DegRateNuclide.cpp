@@ -202,9 +202,11 @@ ConcGrad DegRateNuclide::calc_conc_grad(Concentration c_ext, Concentration
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap DegRateNuclide::cauchy_bc(){
-  /// @TODO This is just a placeholder
-  return conc_hist(last_degraded_); 
+IsoFluxMap DegRateNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
+  // -D dC/dx + v_xC = v_x C
+  IsoFluxMap to_ret;
+  to_ret = -D()*neumann_bc(c_ext, r_ext) + repo->v()*c_int;
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
