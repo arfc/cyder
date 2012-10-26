@@ -15,13 +15,6 @@ using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclideTest::SetUp(){
-  // test_deg_rate_nuclide model setup
-  deg_rate_ = 0.1;
-  initNuclideModel(); //initializes deg_rate_ptr_
-  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(deg_rate_ptr_);
-  default_deg_rate_ptr_ = new DegRateNuclide();
-  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_deg_rate_ptr_);
-
   // set up geometry. this usually happens in the component init
   r_four_ = 4;
   r_five_ = 5;
@@ -44,6 +37,14 @@ void DegRateNuclideTest::SetUp(){
   // material creation
   test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
   test_mat_->setQuantity(test_size_);
+
+  // test_deg_rate_nuclide model setup
+  deg_rate_ = 0.1;
+  initNuclideModel(); //initializes deg_rate_ptr_
+  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(deg_rate_ptr_);
+  default_deg_rate_ptr_ = new DegRateNuclide();
+  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_deg_rate_ptr_);
+
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclideTest::TearDown() {

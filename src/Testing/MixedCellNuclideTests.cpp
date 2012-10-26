@@ -14,10 +14,6 @@ using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MixedCellNuclideTest::SetUp(){
-  // test_mixed_cell_nuclide model setup
-  mixed_cell_ptr_ = new MixedCellNuclide();
-  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);
-
   // set up geometry. this usually happens in the component init
   r_four_ = 4;
   r_five_ = 5;
@@ -42,6 +38,12 @@ void MixedCellNuclideTest::SetUp(){
   // material creation
   test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
   test_mat_->setQuantity(test_size_);
+
+  // test_mixed_cell_nuclide model setup
+  mixed_cell_ptr_ = new MixedCellNuclide();
+  default_mixed_cell_ptr_ = new MixedCellNuclide();
+  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);
+  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

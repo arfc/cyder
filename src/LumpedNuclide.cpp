@@ -24,6 +24,9 @@ LumpedNuclide::LumpedNuclide(){
 
   set_geom(GeometryPtr(new Geometry()));
 
+  t_t_ = 0;
+  eta_ratio_ = NULL;
+  P_D_ = NULL;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
