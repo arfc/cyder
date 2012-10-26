@@ -47,7 +47,7 @@ void OneDimPPMNuclideTest::SetUp(){
   initNuclideModel();
   default_one_dim_ppm_ptr_ = new OneDimPPMNuclide();
   nuc_model_ptr_ = dynamic_cast<NuclideModel*>(one_dim_ppm_ptr_);
-  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(one_dim_ppm_ptr_);
+  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_one_dim_ppm_ptr_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -86,8 +86,8 @@ TEST_F(OneDimPPMNuclideTest, initial_state) {
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, defaultConstructor) {
-  ASSERT_EQ("MIXEDCELL_NUCLIDE", nuc_model_ptr_->name());
-  ASSERT_EQ(MIXEDCELL_NUCLIDE, nuc_model_ptr_->type());
+  ASSERT_EQ("ONEDIMPPM_NUCLIDE", nuc_model_ptr_->name());
+  ASSERT_EQ(ONEDIMPPM_NUCLIDE, nuc_model_ptr_->type());
   ASSERT_FLOAT_EQ(0, one_dim_ppm_ptr_->geom()->length());
 }
 

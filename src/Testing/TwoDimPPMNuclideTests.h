@@ -26,7 +26,8 @@ protected:
   Radius r_four_, r_five_;
   Length len_five_;
   point_t origin_;
-  int time_;
+  int time_, some_param_;
+  double Ci_,Co_,n_, D_, rho_, Kd_; 
   
   virtual void SetUp();
   virtual void TearDown();

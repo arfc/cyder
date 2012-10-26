@@ -29,13 +29,10 @@ TwoDimPPMNuclide::~TwoDimPPMNuclide(){ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void TwoDimPPMNuclide::initModuleMembers(QueryEngine* qe){
-  // v_ is the advective velocity of water through the packages
-  v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   // C(x,0)=C_i
   Ci_ = lexical_cast<double>(qe->getElementContent("initial_concentration"));
   // -D{\frac{\partial C}{\partial x}}|_{x=0} + vC = vC_0, for t<t_0
   Co_ = lexical_cast<double>(qe->getElementContent("source_concentration"));
-
   // rock parameters
   D_ = lexical_cast<double>(qe->getElementContent("diffusion_coeff"));
   n_ = lexical_cast<double>(qe->getElementContent("porosity"));

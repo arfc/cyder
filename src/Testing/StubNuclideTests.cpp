@@ -3,71 +3,74 @@
 #include <map>
 #include <gtest/gtest.h>
 
-#include "StubNuclide.h"
+#include "StubNuclideTests.h"
 #include "NuclideModelTests.h"
 #include "NuclideModel.h"
 #include "CycException.h"
+#include "XMLQueryEngine.h"
 #include "Material.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-class StubNuclideTest : public ::testing::Test {
-  protected:
-    StubNuclide* stub_ptr_;
-    NuclideModel* nuc_model_ptr_;
-    CompMapPtr test_comp_;
-    mat_rsrc_ptr test_mat_;
-    int one_mol_;
-    int u235_, am241_;
-    double test_size_;
-    double theta_;
-    double adv_vel_;
-    GeometryPtr geom_;
-    Radius r_four_, r_five_;
-    Length len_five_;
-    point_t origin_;
-    int time_;
-    int some_param_;
+void StubNuclideTest::SetUp(){
+  // set up geometry. this usually happens in the component init
+  r_four_ = 4;
+  r_five_ = 5;
+  point_t origin_ = {0,0,0}; 
+  len_five_ = 5;
+  geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
 
-    virtual void SetUp(){
-      // test_stub_nuclide model setup
-      stub_ptr_ = new StubNuclide();
-      nuc_model_ptr_ = dynamic_cast<NuclideModel*>(stub_ptr_);
+  // other vars
+  theta_ = 0.3; // percent porosity
+  adv_vel_ = 1; // m/yr
+  time_ = 0;
+  some_param_ = 0;
 
-      // set up geometry. this usually happens in the component init
-      r_four_ = 4;
-      r_five_ = 5;
-      point_t origin_ = {0,0,0}; 
-      len_five_ = 5;
-      geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
+  // composition set up
+  u235_=92235;
+  one_mol_=1.0;
+  test_comp_= CompMapPtr(new CompMap(MASS));
+  (*test_comp_)[u235_] = one_mol_;
+  test_size_=10.0;
 
-      // other vars
-      theta_ = 0.3; // percent porosity
-      adv_vel_ = 1; // m/yr
-      time_ = 0;
-      some_param_ = 0;
+  // material creation
+  test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
+  test_mat_->setQuantity(test_size_);
 
-      // composition set up
-      u235_=92235;
-      one_mol_=1.0;
-      test_comp_= CompMapPtr(new CompMap(MASS));
-      (*test_comp_)[u235_] = one_mol_;
-      test_size_=10.0;
-
-      // material creation
-      test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
-      test_mat_->setQuantity(test_size_);
-    }
-    virtual void TearDown() {
-      delete stub_ptr_;
-    }
-};
-
+  // test_stub_nuclide model setup
+  stub_ptr_ = new StubNuclide();
+  default_stub_ptr_ = new StubNuclide();
+  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(stub_ptr_);
+  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(stub_ptr_);
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void StubNuclideTest::TearDown() {
+  delete stub_ptr_;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* StubNuclideModelConstructor(){
   return dynamic_cast<NuclideModel*>(new StubNuclide());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+StubNuclide* StubNuclideTest::initNuclideModel(){
+  stringstream ss("");
+  ss << "<start>"
+     << "</start>";
+
+  XMLParser parser(ss);
+  XMLQueryEngine* engine = new XMLQueryEngine(parser);
+  stub_ptr_ = new StubNuclide();
+  stub_ptr_->initModuleMembers(engine);
+  delete engine;
+  return stub_ptr_;  
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(StubNuclideTest, initial_state){ 
+  //EXPECT_EQ(some_param_, stub_ptr_->some_param());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

@@ -40,7 +40,7 @@ void MixedCellNuclideTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_mixed_cell_nuclide model setup
-  mixed_cell_ptr_ = new MixedCellNuclide();
+  mixed_cell_ptr_ = initNuclideModel();
   default_mixed_cell_ptr_ = new MixedCellNuclide();
   nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);
   default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);

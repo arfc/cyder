@@ -27,6 +27,7 @@ protected:
   Length len_five_;
   point_t origin_;
   int time_;
+  int some_param_;
   
   virtual void SetUp();
   virtual void TearDown();

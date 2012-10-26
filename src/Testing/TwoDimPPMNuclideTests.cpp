@@ -3,71 +3,92 @@
 #include <map>
 #include <gtest/gtest.h>
 
-#include "TwoDimPPMNuclide.h"
+#include "TwoDimPPMNuclideTests.h"
 #include "NuclideModelTests.h"
 #include "NuclideModel.h"
 #include "CycException.h"
+#include "XMLQueryEngine.h"
 #include "Material.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-class TwoDimPPMNuclideTest : public ::testing::Test {
-  protected:
-    TwoDimPPMNuclide* two_dim_ppm_ptr_;
-    NuclideModel* nuc_model_ptr_;
-    CompMapPtr test_comp_;
-    mat_rsrc_ptr test_mat_;
-    int one_mol_;
-    int u235_, am241_;
-    double test_size_;
-    double theta_;
-    double adv_vel_;
-    GeometryPtr geom_;
-    Radius r_four_, r_five_;
-    Length len_five_;
-    point_t origin_;
-    int time_;
-    int some_param_;
+void TwoDimPPMNuclideTest::SetUp(){
+  // set up geometry. this usually happens in the component init
+  r_four_ = 4;
+  r_five_ = 5;
+  point_t origin_ = {0,0,0}; 
+  len_five_ = 5;
+  geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
 
-    virtual void SetUp(){
-      // test_two_dim_ppm_nuclide model setup
-      two_dim_ppm_ptr_ = new TwoDimPPMNuclide();
-      nuc_model_ptr_ = dynamic_cast<NuclideModel*>(two_dim_ppm_ptr_);
+  // other vars
+  theta_ = 0.3; // percent porosity
+  adv_vel_ = 1; // m/yr
+  time_ = 0;
+  time_ = 0;
+  Ci_ = 1;
+  Co_ = 2;
+  n_ = 3;
+  D_ = 4;
+  rho_ = 5;
+  Kd_ = 6;
 
-      // set up geometry. this usually happens in the component init
-      r_four_ = 4;
-      r_five_ = 5;
-      point_t origin_ = {0,0,0}; 
-      len_five_ = 5;
-      geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
+  // composition set up
+  u235_=92235;
+  one_mol_=1.0;
+  test_comp_= CompMapPtr(new CompMap(MASS));
+  (*test_comp_)[u235_] = one_mol_;
+  test_size_=10.0;
 
-      // other vars
-      theta_ = 0.3; // percent porosity
-      adv_vel_ = 1; // m/yr
-      time_ = 0;
-      some_param_ = 0;
+  // material creation
+  test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
+  test_mat_->setQuantity(test_size_);
 
-      // composition set up
-      u235_=92235;
-      one_mol_=1.0;
-      test_comp_= CompMapPtr(new CompMap(MASS));
-      (*test_comp_)[u235_] = one_mol_;
-      test_size_=10.0;
+  // test_two_dim_ppm_nuclide model setup
+  two_dim_ppm_ptr_ = initNuclideModel();
+  default_two_dim_ppm_ptr_ = new TwoDimPPMNuclide();
+  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(two_dim_ppm_ptr_);
+  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_two_dim_ppm_ptr_);
+}
 
-      // material creation
-      test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
-      test_mat_->setQuantity(test_size_);
-    }
-    virtual void TearDown() {
-      delete two_dim_ppm_ptr_;
-    }
-};
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void TwoDimPPMNuclideTest::TearDown() {
+  delete two_dim_ppm_ptr_;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* TwoDimPPMNuclideModelConstructor(){
   return dynamic_cast<NuclideModel*>(new TwoDimPPMNuclide());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TwoDimPPMNuclide* TwoDimPPMNuclideTest::initNuclideModel(){
+  stringstream ss("");
+  ss << "<start>"
+     << "  <initial_concentration>" << Ci_ << "</initial_concentration>"
+     << "  <source_concentration>" << Co_ << "</source_concentration>"
+     << "  <porosity>" << n_ << "</porosity>"
+     << "  <diffusion_coeff>" << D_ << "</diffusion_coeff>"
+     << "  <bulk_density>" << rho_ << "</bulk_density>"
+     << "  <partition_coeff>" << Kd_ << "</partition_coeff>"
+     << "</start>";
+
+  XMLParser parser(ss);
+  XMLQueryEngine* engine = new XMLQueryEngine(parser);
+  two_dim_ppm_ptr_ = new TwoDimPPMNuclide();
+  two_dim_ppm_ptr_->initModuleMembers(engine);
+  delete engine;
+  return two_dim_ppm_ptr_;  
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(TwoDimPPMNuclideTest, initial_state){
+  EXPECT_EQ(D_, two_dim_ppm_ptr_->D());
+  EXPECT_EQ(Ci_, two_dim_ppm_ptr_->Ci());
+  EXPECT_EQ(Co_, two_dim_ppm_ptr_->Co());
+  EXPECT_EQ(n_, two_dim_ppm_ptr_->n());
+  EXPECT_EQ(rho_, two_dim_ppm_ptr_->rho());
+  EXPECT_EQ(Kd_, two_dim_ppm_ptr_->Kd());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
