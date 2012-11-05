@@ -11,12 +11,12 @@
   </control>
 
   <commodity>
-    <name>commodity</name>
+    <name>waste</name>
   </commodity>
 
   <market>
-    <name>commodity_market</name>
-    <mktcommodity>commodity</mktcommodity>
+    <name>waste_market</name>
+    <mktcommodity>waste</mktcommodity>
     <model>
       <NullMarket/>
     </model>
