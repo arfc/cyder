@@ -62,7 +62,7 @@ GenericRepository::GenericRepository() {
   inventory_ = std::deque< WasteStream >();
   waste_packages_ = std::deque< Component* >();
   waste_forms_ = std::deque< Component* >();
-  far_field_ = new Component();
+  //far_field_ = new Component();
 
   is_full_ = false;
   mapVars("x", "FLOAT", &x_);
@@ -192,7 +192,6 @@ void GenericRepository::copy(GenericRepository* src)
   start_op_yr_ = src->start_op_yr_;
   start_op_mo_ = src->start_op_mo_;
   in_commods_ = src->in_commods_;
-  far_field_ = new Component();
   far_field_->copy(src->far_field_);
   buffer_template_ = src->buffer_template_;
   wp_templates_ = src->wp_templates_;
