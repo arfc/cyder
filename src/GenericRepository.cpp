@@ -120,9 +120,8 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
   Component* toRet = new Component();
   // the component class initialization function will pass down the queryengine pointer
   toRet->initModuleMembers(qe);
-
   // all components have a name and a type
-  std::string comp_type = qe->getElementContent("componenttype");
+  ComponentType comp_type = toRet->type();
 
   // they will have allowed subcomponents (think russian doll)
   int n_sub_components;
@@ -131,7 +130,7 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
   std::string allowed_commod_name;
   std::string allowed_wf_name; 
 
-  switch(toRet->componentEnum(comp_type)) {
+  switch(comp_type) {
     case BUFFER:
       buffer_template_ = toRet;
       // do the buffers have allowed waste package types?
