@@ -209,6 +209,15 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
+  <define name="retardation_coeff">
+    <element name="retardation_coeff">
+      <data type="double">
+        <param name="minInclusive">0</param>
+        <param name="maxInclusive">1</param>
+      </data>
+    </element>
+  </define>
+
   <define name="partition_coeff">
     <element name="partition_coeff">
       <data type="double">
