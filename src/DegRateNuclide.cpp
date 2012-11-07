@@ -52,8 +52,9 @@ void DegRateNuclide::initModuleMembers(QueryEngine* qe){
 NuclideModel* DegRateNuclide::copy(NuclideModel* src){
   DegRateNuclide* src_ptr = dynamic_cast<DegRateNuclide*>(src);
 
-  deg_rate_ = src_ptr->deg_rate_;
-  v_ = src_ptr->v_;
+  v_ = src_ptr->v();
+  deg_rate_ = src_ptr->deg_rate();
+  D_ = src_ptr->D();
   tot_deg_ = 0;
   last_degraded_ = TI->time();
   wastes_ = deque<mat_rsrc_ptr>();

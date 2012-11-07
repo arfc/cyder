@@ -228,6 +228,11 @@ protected:
   double v_;
 
   /**
+    The hydrodynamic dispersion coefficient. [m^2/s] 
+   */
+  double D_;
+   
+  /**
     The degradation rate that defines this model, fraction per year.
    */
   double deg_rate_;
