@@ -19,12 +19,13 @@ using namespace std;
 using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DegRateNuclide::DegRateNuclide(){
-  set_deg_rate(0);
-  set_v(0);
-  set_D(0);
-  set_tot_deg(0);
-  last_degraded_ = 0;
+DegRateNuclide::DegRateNuclide():
+  deg_rate_(0),
+  v_(0),
+  D_(0),
+  tot_deg_(0),
+  last_degraded_(0)
+{
   wastes_ = deque<mat_rsrc_ptr>();
 
   set_geom(GeometryPtr(new Geometry()));
@@ -212,7 +213,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
     while(it != (*curr_comp).end() ) {
       iso = (*it).first;
       conc = (*it).second;
-      to_ret.insert(iso, conc*scale);
+      to_ret.insert(make_pair(iso, conc*scale));
       ++it;
     }
   } else {

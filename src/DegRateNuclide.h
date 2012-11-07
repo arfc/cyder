@@ -250,9 +250,6 @@ protected:
    */
   double deg_rate_;
 
-  /// the time this nuclide model was initialized, the beginning of degradation
-  double init_time_;
-
   /// the total fraction that this component has degraded
   double tot_deg_;
 
