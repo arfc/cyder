@@ -278,6 +278,7 @@ void GenericRepository::addResource(Transaction trans, std::vector<rsrc_ptr> man
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::handleTick(int time)
 {
+  LOG(LEV_INFO3, "GenRepoFac") << facName() << " is ticking {";
   // if this is the first timestep, register the far field
   if (time==0){
     setPlacement(far_field_);
@@ -286,6 +287,7 @@ void GenericRepository::handleTick(int time)
 
   // make requests
   makeRequests(time);
+  LOG(LEV_INFO3, "GenRepoFac") << "}";
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -344,8 +346,9 @@ void GenericRepository::makeRequests(int time){
       trans.setPrice(commod_price);
       trans.setResource(request_res); 
   
-      Message* request = new Message(this, recipient, trans); 
+      msg_ptr request = new Message(this, recipient, trans); 
       request->sendOn();
+      LOG(LEV_INFO3, "GenRepoFac") << " requests " << requestAmt << " kg of " << in_commod << ".";
     }
   }
 }
