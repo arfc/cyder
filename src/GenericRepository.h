@@ -89,8 +89,8 @@ public:
   /// initialize an object from QueryEngine input
   virtual void initModuleMembers(QueryEngine* qe);
 
-  /// initialize an object by copying another
-  virtual void copy(GenericRepository* src);
+  /// initialize an object by cloning module members from another
+  virtual void cloneModuleMembersFrom(FacilityModel* src);
 
   /**
      @brief deep copy method 

@@ -123,11 +123,6 @@ void DegRateNuclide::set_deg_rate(double deg_rate){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-//double DegRateNuclide::contained_mass(int the_time){ 
-//  return vec_hist(the_time).second;
-//}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::contained_mass(){
   return dynamic_cast<NuclideModel*>(this)->contained_mass(last_degraded_);
 }

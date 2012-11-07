@@ -120,9 +120,8 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
   Component* toRet = new Component();
   // the component class initialization function will pass down the queryengine pointer
   toRet->initModuleMembers(qe);
-
   // all components have a name and a type
-  std::string comp_type = qe->getElementContent("componenttype");
+  ComponentType comp_type = toRet->type();
 
   // they will have allowed subcomponents (think russian doll)
   int n_sub_components;
@@ -131,7 +130,7 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
   std::string allowed_commod_name;
   std::string allowed_wf_name; 
 
-  switch(toRet->componentEnum(comp_type)) {
+  switch(comp_type) {
     case BUFFER:
       buffer_template_ = toRet;
       // do the buffers have allowed waste package types?
@@ -174,12 +173,10 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::copy(GenericRepository* src)
+void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
 {
 
-  // copy facility level stuff
-  FacilityModel::copy(src);
-
+  GenericRepository* src = dynamic_cast<GenericRepository*>(source);
   // copy variables specific to this model
   x_= src->x_;
   y_= src->y_;
@@ -193,7 +190,6 @@ void GenericRepository::copy(GenericRepository* src)
   start_op_yr_ = src->start_op_yr_;
   start_op_mo_ = src->start_op_mo_;
   in_commods_ = src->in_commods_;
-  far_field_ = new Component();
   far_field_->copy(src->far_field_);
   buffer_template_ = src->buffer_template_;
   wp_templates_ = src->wp_templates_;
@@ -303,10 +299,6 @@ void GenericRepository::handleTock(int time) {
   
   // calculate the nuclide transport
   transportNuclides(time);
-  
-  // call the facility model's handle tock last 
-  // to check for decommissioning
-  FacilityModel::handleTock(time);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -11,12 +11,12 @@
   </control>
 
   <commodity>
-    <name>commodity</name>
+    <name>waste</name>
   </commodity>
 
   <market>
-    <name>commodity_market</name>
-    <mktcommodity>commodity</mktcommodity>
+    <name>waste_market</name>
+    <mktcommodity>waste</mktcommodity>
     <model>
       <NullMarket/>
     </model>
@@ -55,8 +55,50 @@
         <startOperMonth>1</startOperMonth>
         <startOperYear>2000</startOperYear>
         <component>
-          <name>FF</name>
+          <name>WF</name>
           <innerradius>0</innerradius>
+          <outerradius>1</outerradius>
+          <componenttype>WF</componenttype>
+          <thermalmodel>
+            <StubThermal/>
+          </thermalmodel>
+          <nuclidemodel>
+            <DegRateNuclide>
+              <degradation>0.1</degradation>
+            </DegRateNuclide>
+          </nuclidemodel>
+        </component>
+        <component>
+          <name>WP</name>
+          <innerradius>1</innerradius>
+          <outerradius>2</outerradius>
+          <componenttype>WP</componenttype>
+          <thermalmodel>
+            <StubThermal/>
+          </thermalmodel>
+          <nuclidemodel>
+            <DegRateNuclide>
+              <degradation>0.1</degradation>
+            </DegRateNuclide>
+          </nuclidemodel>
+        </component>
+        <component>
+          <name>BUFFER</name>
+          <innerradius>2</innerradius>
+          <outerradius>3</outerradius>
+          <componenttype>BUFFER</componenttype>
+          <thermalmodel>
+            <StubThermal/>
+          </thermalmodel>
+          <nuclidemodel>
+            <DegRateNuclide>
+              <degradation>0.1</degradation>
+            </DegRateNuclide>
+          </nuclidemodel>
+        </component>
+        <component>
+          <name>FF</name>
+          <innerradius>3</innerradius>
           <outerradius>100</outerradius>
           <componenttype>FF</componenttype>
           <thermalmodel>
