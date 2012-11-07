@@ -62,7 +62,7 @@ GenericRepository::GenericRepository() {
   inventory_ = std::deque< WasteStream >();
   waste_packages_ = std::deque< Component* >();
   waste_forms_ = std::deque< Component* >();
-  //far_field_ = new Component();
+  far_field_ = new Component();
 
   is_full_ = false;
   mapVars("x", "FLOAT", &x_);
@@ -173,12 +173,10 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::copy(GenericRepository* src)
+void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
 {
 
-  // copy facility level stuff
-  FacilityModel::copy(src);
-
+  GenericRepository* src = dynamic_cast<GenericRepository*>(source);
   // copy variables specific to this model
   x_= src->x_;
   y_= src->y_;
@@ -301,10 +299,6 @@ void GenericRepository::handleTock(int time) {
   
   // calculate the nuclide transport
   transportNuclides(time);
-  
-  // call the facility model's handle tock last 
-  // to check for decommissioning
-  FacilityModel::handleTock(time);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
