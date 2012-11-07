@@ -129,7 +129,7 @@ void Component::copy(Component* src){
   } else { 
     thermal_model_ = copyThermalModel(src->thermal_model_);
   }
-  if ( !(src->nuclide_model_) ) {
+  if ( !(src->nuclide_model_)) {
     string err = "The " ;
     err += name_;
     err += " model with ID: ";

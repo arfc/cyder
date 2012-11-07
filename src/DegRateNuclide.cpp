@@ -42,9 +42,9 @@ DegRateNuclide::~DegRateNuclide(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void DegRateNuclide::initModuleMembers(QueryEngine* qe){
-  D_ = lexical_cast<double>(qe->getElementContent("diffusion_coeff"));
-  deg_rate_ = lexical_cast<double>(qe->getElementContent("degradation"));
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
+  deg_rate_ = lexical_cast<double>(qe->getElementContent("degradation"));
+  D_ = lexical_cast<double>(qe->getElementContent("diffusion_coeff"));
   LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class initModuleMembers(qe) function has been called";;
 }
 
