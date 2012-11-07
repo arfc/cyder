@@ -96,7 +96,7 @@ public:
   virtual ~NuclideModel() {};
 
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from a Query Engine
      
      @param qe is the QueryEngine object containing intialization info
    */

@@ -196,12 +196,16 @@ protected:
     /**
        The x, y, and z dimensional extents of the repository in kilometers.
      */
-    double x_,y_,z_;
+    double x_;
+    double y_;
+    double z_;
 
     /**
        The x, y, and z dimensional spacing of the source centers in kilometers.
      */
-    double dx_,dy_,dz_;
+    double dx_;
+    double dy_;
+    double dz_;
 
     /// The advective velocity (@TODO decide direction? +x or +z?) [m/yr] 
     // NOTE!!! NOT SI!! [m/yr]
@@ -246,11 +250,6 @@ protected:
        Reports true if the repository has reached capacity, false otherwise
      */
     bool is_full_;
-
-    /**
-       The Environment component
-     */
-    Component* env_;
 
     /**
        The Far Field component

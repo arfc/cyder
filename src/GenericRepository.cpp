@@ -355,7 +355,7 @@ void GenericRepository::makeRequests(int time){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double GenericRepository::getCapacity(std::string commod){
-  double toRet;
+  double toRet=0;
   // if the overall repo has a legislative limit, report it
   // eventually, this will report the commodity dependent capacity
   // The GenericRepository should ask for material unless it's full
@@ -371,7 +371,8 @@ double GenericRepository::getCapacity(std::string commod){
   } else if (space >= capacity_){
     // the upper bound is the monthly acceptance capacity
     toRet = capacity_;
-  } return toRet;
+  } 
+  return toRet;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -97,8 +97,8 @@ void Component::init(string name, ComponentType type,
     thermal_model->set_geom(geom_);
     nuclide_model->set_geom(geom_);
 
-    thermal_model_ = thermal_model;
-    nuclide_model_ = nuclide_model;
+    set_thermal_model(thermal_model);
+    set_nuclide_model(nuclide_model);
   }
 
   parent_ = NULL;
@@ -112,12 +112,12 @@ void Component::init(string name, ComponentType type,
 void Component::copy(Component* src){
   ID_=nextID_++;
 
-  name_ = src->name_;
-  type_ = src->type_;
+  set_name(src->name());
+  set_type(src->type());
 
   // warning, you are currently copying the centroid as well. 
   // does this object lay on top of the one being copied?
-  geom_ = src->geom()->copy(src->geom(),src->centroid());
+  set_geom(src->geom()->copy(src->geom(),src->centroid()));
 
   if ( !(src->thermal_model_) ){
     string err = "The " ;
@@ -137,7 +137,7 @@ void Component::copy(Component* src){
     err += " does not have a nuclide model";
     throw CycException(err);
   }else { 
-    nuclide_model_ = copyNuclideModel(src->nuclide_model_);
+    set_nuclide_model(copyNuclideModel(src->nuclide_model()));
   }
   parent_ = NULL;
 

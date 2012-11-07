@@ -152,10 +152,10 @@ public:
   /** 
      returns the degradation rate that characterizes this model
    *
-     @param deg_rate fraction per timestep, between 0 and 1
+     @param cur_rate the current degradation rate, a fraction per timestep, between 0 and 1
      @throws CycRangeException if deg_rate not between 0 and 1 inclusive 
    */
-  void set_deg_rate(double deg_rate);
+  void set_deg_rate(double cur_rate);
 
   /** 
      returns the current contained contaminant mass, in kg
@@ -186,9 +186,9 @@ public:
      updates the total degradation and makes time the last degraded time.
     
      @param time the time at which to update the degradation
-     @param deg_rate is the degradation rate since the last degradation, fraction. 
+     @param cur_rate is the degradation rate since the last degradation, fraction. 
     */
-  double update_degradation(int time, double deg_rate);
+  double update_degradation(int time, double cur_rate);
 
   /**
      Updates the isotopic vector history at the time
@@ -211,10 +211,23 @@ public:
   /// returns the total degradation of the component
   double tot_deg();
 
+  /// sets the total degradation of the component
+  void set_tot_deg(double tot_deg){tot_deg_=tot_deg;};
+
   /**
-    The hydrodynamic dispersion coefficient. [m^2/s] 
+    Sets the hydrodynamic dispersion coefficient D_. [m^2/s] 
+   */
+  void set_D(double D){D_ = D;};
+
+  /**
+    The hydrodynamic dispersion coefficient D_. [m^2/s] 
    */
   double D(){return D_;};
+
+  /**
+    Set the advective velocity v_ through this component. [m/s] 
+   */
+  void set_v(double v){v_ = v;};
 
   /**
     The advective velocity through this component. [m/s] 
