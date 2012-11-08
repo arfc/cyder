@@ -52,7 +52,7 @@ public:
      
      @param qe is the QueryEngine object containing intialization info
    */
-  DegRateNuclide(QueryEngine* qe){};
+  DegRateNuclide(QueryEngine* qe);
 
   /**
      initializes the model parameters from a QueryEngine object
@@ -147,7 +147,7 @@ public:
    *
      @return deg_rate_ fraction per year
    */
-  double deg_rate() {return deg_rate_;};
+  const double deg_rate() {return deg_rate_;};
 
   /** 
      returns the degradation rate that characterizes this model
@@ -209,7 +209,7 @@ public:
   void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
 
   /// returns the total degradation of the component
-  double tot_deg();
+  const double tot_deg();
 
   /// sets the total degradation of the component
   void set_tot_deg(double tot_deg){tot_deg_=tot_deg;};
@@ -222,7 +222,7 @@ public:
   /**
     The hydrodynamic dispersion coefficient D_. [m^2/s] 
    */
-  double D(){return D_;};
+  const double D(){return D_;};
 
   /**
     Set the advective velocity v_ through this component. [m/s] 
@@ -232,7 +232,7 @@ public:
   /**
     The advective velocity through this component. [m/s] 
    */
-  double v(){return v_;};
+  const double v(){return v_;};
 
 protected:
   /**

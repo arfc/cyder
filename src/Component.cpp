@@ -297,26 +297,27 @@ NuclideModel* Component::nuclide_model(QueryEngine* qe){
   NuclideModel* toRet;
 
   string model_name = qe->getElementName();;
+  QueryEngine* input = qe->queryElement(model_name);
 
   switch(nuclideEnum(model_name))
   {
     case DEGRATE_NUCLIDE:
-      toRet = new DegRateNuclide(qe);
+      toRet = new DegRateNuclide(input);
       break;
     case LUMPED_NUCLIDE:
-      toRet = new LumpedNuclide(qe);
+      toRet = new LumpedNuclide(input);
       break;
     case MIXEDCELL_NUCLIDE:
-      toRet = new MixedCellNuclide(qe);
+      toRet = new MixedCellNuclide(input);
       break;
     case ONEDIMPPM_NUCLIDE:
-      toRet = new OneDimPPMNuclide(qe);
+      toRet = new OneDimPPMNuclide(input);
       break;
     case STUB_NUCLIDE:
-      toRet = new StubNuclide(qe);
+      toRet = new StubNuclide(input);
       break;
     case TWODIMPPM_NUCLIDE:
-      toRet = new TwoDimPPMNuclide(qe);
+      toRet = new TwoDimPPMNuclide(input);
       break;
     default:
       throw CycException("Unknown nuclide model enum value encountered."); 

@@ -37,6 +37,24 @@ DegRateNuclide::DegRateNuclide():
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DegRateNuclide::DegRateNuclide(QueryEngine* qe):
+  deg_rate_(0),
+  v_(0),
+  D_(0),
+  tot_deg_(0),
+  last_degraded_(0)
+{
+  wastes_ = deque<mat_rsrc_ptr>();
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+
+  set_geom(GeometryPtr(new Geometry()));
+
+  this->initModuleMembers(qe);
+  update_vec_hist(0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::~DegRateNuclide(){
 }
 
@@ -237,7 +255,7 @@ double DegRateNuclide::update_degradation(int the_time, double cur_rate){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double DegRateNuclide::tot_deg(){
+const double DegRateNuclide::tot_deg(){
   return tot_deg_;
 }
 
