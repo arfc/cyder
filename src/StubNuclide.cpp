@@ -23,6 +23,15 @@ StubNuclide::StubNuclide(){
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+StubNuclide::StubNuclide(QueryEngine* qe){
+  wastes_ = deque<mat_rsrc_ptr>();
+  set_geom(GeometryPtr(new Geometry()));
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+  this->initModuleMembers(qe);
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 StubNuclide::~StubNuclide(){};
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

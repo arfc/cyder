@@ -48,7 +48,7 @@ public:
      
      @param qe is the QueryEngine object containing intialization info
    */
-  OneDimPPMNuclide(QueryEngine* qe){};
+  OneDimPPMNuclide(QueryEngine* qe);
 
   /**
      Virtual destructor deletes datamembers that are object pointers.

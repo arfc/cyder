@@ -43,16 +43,16 @@ public:
   DegRateNuclide(); 
 
   /**
-     Virtual destructor deletes datamembers that are object pointers.
-    */
-  virtual ~DegRateNuclide();
-
-  /**
      primary constructor reads input from the QueryEngine
      
      @param qe is the QueryEngine object containing intialization info
    */
   DegRateNuclide(QueryEngine* qe);
+
+  /**
+     Virtual destructor deletes datamembers that are object pointers.
+    */
+  virtual ~DegRateNuclide();
 
   /**
      initializes the model parameters from a QueryEngine object

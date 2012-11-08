@@ -17,13 +17,26 @@ using namespace std;
 using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MixedCellNuclide::MixedCellNuclide(){ 
+MixedCellNuclide::MixedCellNuclide():
+  deg_rate_(0),
+  v_(0)
+{ 
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  deg_rate_ = 0;
-  v_ = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MixedCellNuclide::MixedCellNuclide(QueryEngine* qe):
+  deg_rate_(0),
+  v_(0)
+{ 
+  wastes_ = deque<mat_rsrc_ptr>();
+  set_geom(GeometryPtr(new Geometry()));
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+  this->initModuleMembers(qe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
