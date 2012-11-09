@@ -113,6 +113,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   
   <define name="MixedCellNuclide">
     <element name="MixedCellNuclide">
+      <ref name="advective_velocity"/>
       <ref name="degradation"/>
       <ref name="porosity"/>
     </element>

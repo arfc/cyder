@@ -141,16 +141,19 @@ public:
      Returns the degradation rate, a fraction
     */
   double deg_rate(){return deg_rate_;}
+  void set_deg_rate(double deg_rate){deg_rate_ = deg_rate;} ///@TODO check for range
 
   /**
      Returns the porosity, a fraction
     */
   double porosity(){return porosity_;}
+  void set_porosity(double porosity){porosity_ = porosity;}
 
   /**
     The advective velocity through this component. [m/s] 
    */
   double v(){return v_;};
+  set_v(double v){v_ = v;}; ///@TODO check range, throw if outside. 
 
 protected:
   /**

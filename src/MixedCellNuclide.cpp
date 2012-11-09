@@ -45,9 +45,9 @@ MixedCellNuclide::~MixedCellNuclide(){ }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void MixedCellNuclide::initModuleMembers(QueryEngine* qe){
   // move the xml pointer to the current model
-  porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
-  deg_rate_ = lexical_cast<double>(qe->getElementContent("degradation"));
-  v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
+  set_porosity(lexical_cast<double>(qe->getElementContent("porosity")));
+  set_deg_rate(lexical_cast<double>(qe->getElementContent("degradation")));
+  set_v(lexical_cast<double>(qe->getElementContent("advective_velocity")));
 
   LOG(LEV_DEBUG2,"GRMCNuc") << "The MixedCellNuclide Class init(cur) function has been called";;
 }
