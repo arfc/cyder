@@ -164,6 +164,11 @@ public:
   ComponentType type();
 
   /**
+     set the ComponentType
+   */
+  void set_type(ComponentType type){type_=type;};
+
+  /**
      Enumerates a string if it is one of the named ComponentTypes
      
      @param type the name of the ComponentType (i.e. FF)
@@ -221,6 +226,11 @@ public:
      @return ID_
    */
   const int ID();
+
+  /**
+     set the Name
+   */
+  void set_name(std::string name){name_=name;};
 
   /**
      get the Name
@@ -306,6 +316,9 @@ public:
   /// get the z component of the centroid position vector of the object
   const double z();
 
+  /// set the pointer to the geometry object
+  void set_geom(GeometryPtr geom) {geom_ = geom;};
+
   /// get the pointer to the geometry object
   const GeometryPtr geom() {return geom_;};
 
@@ -317,11 +330,21 @@ public:
   NuclideModel* nuclide_model();
 
   /**
+     sets the nuclide model to the src nuclide model
+   */
+  void set_nuclide_model(NuclideModel* src){nuclide_model_=src;};
+
+  /**
      gets the pointer to the thermal model being used in this component
      
      @return thermal_model_
    */
   ThermalModel* thermal_model();
+
+  /**
+     sets the thermal model to the src thermal model
+   */
+  void set_thermal_model(ThermalModel* src){thermal_model_=src;};
 
   /**
      set the parent component 

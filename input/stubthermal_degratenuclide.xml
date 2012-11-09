@@ -64,7 +64,9 @@
           </thermalmodel>
           <nuclidemodel>
             <DegRateNuclide>
+              <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
+              <diffusion_coeff>0.00001</diffusion_coeff>
             </DegRateNuclide>
           </nuclidemodel>
         </component>
@@ -78,7 +80,9 @@
           </thermalmodel>
           <nuclidemodel>
             <DegRateNuclide>
+              <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
+              <diffusion_coeff>0.00001</diffusion_coeff>
             </DegRateNuclide>
           </nuclidemodel>
         </component>
@@ -92,7 +96,9 @@
           </thermalmodel>
           <nuclidemodel>
             <DegRateNuclide>
+              <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
+              <diffusion_coeff>0.00001</diffusion_coeff>
             </DegRateNuclide>
           </nuclidemodel>
         </component>
@@ -106,7 +112,9 @@
           </thermalmodel>
           <nuclidemodel>
             <DegRateNuclide>
+              <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
+              <diffusion_coeff>0.00001</diffusion_coeff>
             </DegRateNuclide>
           </nuclidemodel>
         </component>

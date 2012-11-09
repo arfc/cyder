@@ -17,12 +17,38 @@ using namespace std;
 using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-TwoDimPPMNuclide::TwoDimPPMNuclide(){ 
+TwoDimPPMNuclide::TwoDimPPMNuclide():
+  Ci_(0),
+  Co_(0),
+  v_(0),
+  D_(0),
+  n_(0),
+  rho_(0),
+  Kd_(0),
+  R_(0)
+{ 
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  v_ = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+TwoDimPPMNuclide::TwoDimPPMNuclide(QueryEngine* qe):
+  Ci_(0),
+  Co_(0),
+  v_(0),
+  D_(0),
+  n_(0),
+  rho_(0),
+  Kd_(0),
+  R_(0)
+{ 
+  wastes_ = deque<mat_rsrc_ptr>();
+  set_geom(GeometryPtr(new Geometry()));
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+  this->initModuleMembers(qe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

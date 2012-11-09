@@ -61,8 +61,8 @@ DegRateNuclide* DegRateNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
-     << "  <diffusion_coeff>" << D_ << "</diffusion_coeff>"
      << "  <degradation>" << deg_rate_ << "</degradation>"
+     << "  <diffusion_coeff>" << D_ << "</diffusion_coeff>"
      << "</start>";
 
   XMLParser parser(ss);

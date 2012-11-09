@@ -85,7 +85,9 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   
   <define name="DegRateNuclide">
     <element name="DegRateNuclide">
+      <ref name="advective_velocity"/>
       <ref name="degradation"/>
+      <ref name="diffusion_coeff"/>
     </element>
   </define>
 

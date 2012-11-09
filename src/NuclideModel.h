@@ -96,7 +96,7 @@ public:
   virtual ~NuclideModel() {};
 
   /**
-     initializes the model parameters from an xmlNodePtr
+     initializes the model parameters from a Query Engine
      
      @param qe is the QueryEngine object containing intialization info
    */
@@ -230,7 +230,7 @@ public:
   void set_geom(GeometryPtr geom){ geom_=geom; };
 
   /// Returns the geom_ data member
-  GeometryPtr geom() {return geom_;};
+  const GeometryPtr geom() {return geom_;};
 
   /** 
      returns the current contained contaminant mass, in kg, at time

@@ -16,12 +16,12 @@
 using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LumpedNuclide::LumpedNuclide(){ 
-  //set_t_t(0);
-  //set_eta_ratio(0);
-  //set_P_D(0);
-  //set_formulation("");
-
+LumpedNuclide::LumpedNuclide() : 
+  t_t_(0),
+  eta_ratio_(0),
+  P_D_(NULL),
+  formulation_("")
+{ 
   set_geom(GeometryPtr(new Geometry()));
 
   t_t_ = 0;
@@ -30,6 +30,21 @@ LumpedNuclide::LumpedNuclide(){
   P_D_ = NULL;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LumpedNuclide::LumpedNuclide(QueryEngine* qe):
+  t_t_(0),
+  eta_ratio_(0),
+  P_D_(NULL),
+  formulation_("")
+{ 
+
+  set_geom(GeometryPtr(new Geometry()));
+
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+  this->initModuleMembers(qe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

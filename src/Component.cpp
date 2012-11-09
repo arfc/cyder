@@ -97,8 +97,8 @@ void Component::init(string name, ComponentType type,
     thermal_model->set_geom(geom_);
     nuclide_model->set_geom(geom_);
 
-    thermal_model_ = thermal_model;
-    nuclide_model_ = nuclide_model;
+    set_thermal_model(thermal_model);
+    set_nuclide_model(nuclide_model);
   }
 
   parent_ = NULL;
@@ -112,12 +112,12 @@ void Component::init(string name, ComponentType type,
 void Component::copy(Component* src){
   ID_=nextID_++;
 
-  name_ = src->name_;
-  type_ = src->type_;
+  set_name(src->name());
+  set_type(src->type());
 
   // warning, you are currently copying the centroid as well. 
   // does this object lay on top of the one being copied?
-  geom_ = src->geom()->copy(src->geom(),src->centroid());
+  set_geom(src->geom()->copy(src->geom(),src->centroid()));
 
   if ( !(src->thermal_model_) ){
     string err = "The " ;
@@ -129,7 +129,7 @@ void Component::copy(Component* src){
   } else { 
     thermal_model_ = copyThermalModel(src->thermal_model_);
   }
-  if ( !(src->nuclide_model_) ) {
+  if ( !(src->nuclide_model_)) {
     string err = "The " ;
     err += name_;
     err += " model with ID: ";
@@ -137,7 +137,7 @@ void Component::copy(Component* src){
     err += " does not have a nuclide model";
     throw CycException(err);
   }else { 
-    nuclide_model_ = copyNuclideModel(src->nuclide_model_);
+    set_nuclide_model(copyNuclideModel(src->nuclide_model()));
   }
   parent_ = NULL;
 
@@ -297,26 +297,27 @@ NuclideModel* Component::nuclide_model(QueryEngine* qe){
   NuclideModel* toRet;
 
   string model_name = qe->getElementName();;
+  QueryEngine* input = qe->queryElement(model_name);
 
   switch(nuclideEnum(model_name))
   {
     case DEGRATE_NUCLIDE:
-      toRet = new DegRateNuclide(qe);
+      toRet = new DegRateNuclide(input);
       break;
     case LUMPED_NUCLIDE:
-      toRet = new LumpedNuclide(qe);
+      toRet = new LumpedNuclide(input);
       break;
     case MIXEDCELL_NUCLIDE:
-      toRet = new MixedCellNuclide(qe);
+      toRet = new MixedCellNuclide(input);
       break;
     case ONEDIMPPM_NUCLIDE:
-      toRet = new OneDimPPMNuclide(qe);
+      toRet = new OneDimPPMNuclide(input);
       break;
     case STUB_NUCLIDE:
-      toRet = new StubNuclide(qe);
+      toRet = new StubNuclide(input);
       break;
     case TWODIMPPM_NUCLIDE:
-      toRet = new TwoDimPPMNuclide(qe);
+      toRet = new TwoDimPPMNuclide(input);
       break;
     default:
       throw CycException("Unknown nuclide model enum value encountered."); 

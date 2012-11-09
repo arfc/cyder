@@ -56,7 +56,7 @@ public:
      
      @param qe is the QueryEngine object containing intialization info
    */
-  LumpedNuclide(QueryEngine* qe){};
+  LumpedNuclide(QueryEngine* qe);
 
   /**
      Virtual destructor deletes datamembers that are object pointers.
