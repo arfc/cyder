@@ -153,7 +153,7 @@ public:
     The advective velocity through this component. [m/s] 
    */
   double v(){return v_;};
-  set_v(double v){v_ = v;}; ///@TODO check range, throw if outside. 
+  void set_v(double v){v_ = v;}; ///@TODO check range, throw if outside. 
 
 protected:
   /**
