@@ -166,7 +166,7 @@ IsoFluxMap LumpedNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-FormulationType enumerateFormulation(string type_name) {
+FormulationType LumpedNuclide::enumerateFormulation(string type_name) {
   FormulationType toRet = LAST_FORMULATION_TYPE;
   string formulation_type_names[] = {"DM", "EM", "EPM", "PFM", "LAST_FORMULATION_TYPE"};
   for(int type = 0; type < LAST_FORMULATION_TYPE; type++){
