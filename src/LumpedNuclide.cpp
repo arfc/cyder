@@ -19,15 +19,15 @@ using boost::lexical_cast;
 LumpedNuclide::LumpedNuclide() : 
   t_t_(0),
   eta_ratio_(0),
-  P_D_(NULL),
+  P_D_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
   set_geom(GeometryPtr(new Geometry()));
 
   t_t_ = 0;
   v_ = 0;
-  eta_ratio_ = NULL;
-  P_D_ = NULL;
+  eta_ratio_ = 0;
+  P_D_ = 0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
@@ -36,7 +36,7 @@ LumpedNuclide::LumpedNuclide() :
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   t_t_(0),
   eta_ratio_(0),
-  P_D_(NULL),
+  P_D_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -80,9 +80,9 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
       P_D_ = lexical_cast<double>(ptr->getElementContent("dispersion_coeff"));
       break;
     case EM :
-      eta_ratio_ = lexical_cast<double>(ptr->getElementContent("eta_ratio"));
       break;
     case EPM :
+      eta_ratio_ = lexical_cast<double>(ptr->getElementContent("eta_ratio"));
       break;
     case PFM :
       break;

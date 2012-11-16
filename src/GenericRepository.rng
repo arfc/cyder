@@ -96,7 +96,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="transit_time"/>
       <choice>
         <element name="EM">
-          <text/>
         </element>
         <element name="PFM">
           <text/>
