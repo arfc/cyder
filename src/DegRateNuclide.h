@@ -209,7 +209,7 @@ public:
   void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
 
   /// returns the total degradation of the component
-  const double tot_deg();
+  const double tot_deg(){return tot_deg_;};
 
   /// sets the total degradation of the component
   void set_tot_deg(double tot_deg){tot_deg_=tot_deg;};
@@ -234,6 +234,16 @@ public:
    */
   const double v(){return v_;};
 
+  /**
+    Set the last_degraded_ time [integer timestamp]
+   */
+  void set_last_degraded(int last_degraded){last_degraded_ = last_degraded;};
+
+  /**
+    Returns the last timestamp at which this component was last degraded [integer timestamp]
+   */
+  const int last_degraded(){return last_degraded_;};
+
 protected:
   /**
     The advective velocity through this component [m/s]
@@ -253,6 +263,7 @@ protected:
   /// the total fraction that this component has degraded
   double tot_deg_;
 
+  /// the last timestamp at which this component was last degraded [integer timestamp]
   int last_degraded_;
 
 
