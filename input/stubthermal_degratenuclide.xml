@@ -69,6 +69,7 @@
               <diffusion_coeff>0.00001</diffusion_coeff>
             </DegRateNuclide>
           </nuclidemodel>
+          <allowedcommod>waste</allowedcommod>
         </component>
         <component>
           <name>WP</name>
@@ -85,6 +86,7 @@
               <diffusion_coeff>0.00001</diffusion_coeff>
             </DegRateNuclide>
           </nuclidemodel>
+          <allowedwf>WF</allowedwf>
         </component>
         <component>
           <name>BUFFER</name>

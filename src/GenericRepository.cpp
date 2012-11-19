@@ -143,8 +143,7 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
       // get allowed waste commodities
       n_sub_components = qe->nElementsMatchingQuery("allowedcommod");
       for (int i=0; i<n_sub_components; i++) {
-        allowed_commod = qe->queryElement("allowedcommod",i);
-        allowed_commod_name= allowed_commod->getElementName();
+        allowed_commod_name = qe->getElementContent("allowedcommod",i);
         commod_wf_map_.insert(std::make_pair(allowed_commod_name, toRet));
       }
       wf_templates_.push_back(toRet);
@@ -154,8 +153,7 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
       // // get allowed waste forms
       n_sub_components = qe->nElementsMatchingQuery("allowedwf");
       for (int i=0; i<n_sub_components; i++) {
-        allowed_wf = qe->queryElement("allowedwf",i);
-        allowed_wf_name = allowed_wf->getElementName();
+        allowed_wf_name = qe->getElementContent("allowedwf",i);
         //iterate through wf_templates_
         //for each wf_template
         for (std::deque< Component* >::iterator iter = wf_templates_.begin(); iter != 
