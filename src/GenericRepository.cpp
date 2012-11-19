@@ -337,7 +337,7 @@ void GenericRepository::makeRequests(int time){
       Communicator* recipient = dynamic_cast<Communicator*>(market);
   
       // create a generic resource
-      GenericResource* request_res = new GenericResource(in_commod,"kg",requestAmt);
+      gen_rsrc_ptr request_res = gen_rsrc_ptr(new GenericResource("kg",in_commod,requestAmt));
   
       // build the transaction and message
       Transaction trans(this, REQUEST);
