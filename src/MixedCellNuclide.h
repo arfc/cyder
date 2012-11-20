@@ -137,17 +137,86 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
+  /** 
+     returns the current contained contaminant mass, in kg
+     @TODO should put this in the NuclideModel class or something. 
+
+     @return contained_mass_[now] throughout the component volume, in kg
+   */
+  double contained_mass();
+
+  /**
+     updates the contained concentration according to contained wastes_
+    
+     @param time the time at which to update the degradation
+     @return the current isotopic concentration map at the outer border
+    */
+  IsoConcMap update_conc_hist(int time);
+
+  /**
+     updates the contained concentration with mats provided 
+    
+     @param time the time at which to update the degradation
+     @param mats the vector of materials contained in the component
+     @return the current isotopic concentration map at the outer border
+    */
+  IsoConcMap update_conc_hist(int time, std::deque<mat_rsrc_ptr> mats);
+
+  /**
+     updates the total degradation and makes time the last degraded time.
+    
+     @param time the time at which to update the degradation
+     @param cur_rate is the degradation rate since the last degradation, fraction. 
+    */
+  double update_degradation(int time, double cur_rate);
+
+  /**
+     Updates the isotopic vector history at the time
+
+     @param time the time at which to update the vector history, according to wastes_
+     last_degraded_ time.
+     */
+  void update_vec_hist(int time);
+
+  /**
+     Updates the isotopic vector history at the time
+
+     @param time the time at which to update the vector history
+     @param mats the deque of materials to include in the history, usually wastes_
+     @throws an exception if the time provided is less than the 
+     last_degraded_ time.
+     */
+  void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
+
+  /**
+     Returns the last degradation time, an integer timestamp
+    */
+  const int last_degraded(){return last_degraded_;}
+  void set_last_degraded(double last_degraded){last_degraded_ = last_degraded;} ///@TODO check for range
+
+  /**
+     Returns the total degradation rate, a fraction
+    */
+  double tot_deg(){return tot_deg_;}
+  void set_tot_deg(double tot_deg){tot_deg_ = tot_deg;} ///@TODO check for range
+
   /**
      Returns the degradation rate, a fraction
     */
   double deg_rate(){return deg_rate_;}
-  void set_deg_rate(double deg_rate){deg_rate_ = deg_rate;} ///@TODO check for range
+  void set_deg_rate(double deg_rate);
 
   /**
      Returns the porosity, a fraction
     */
   double porosity(){return porosity_;}
   void set_porosity(double porosity){porosity_ = porosity;}
+
+  /**
+    The default dispersion coefficient through this compdvective velocity through this component. [m/s] 
+   */
+  double D(){return D_;};
+  void set_D(double d){D_ = d;}; ///@TODO check range, throw if outside. 
 
   /**
     The advective velocity through this component. [m/s] 
@@ -176,6 +245,14 @@ protected:
    */
   double deg_rate_;
 
+  /// the total fraction of this component that has degraded [fraction]
+  double tot_deg_;
+  
+  /// default dispersion coefficient [m^2/s]
+  double D_ ;
+
+  /// the last timestamp at which this component was degraded [timestamp]
+  int last_degraded_;
 };
 
 

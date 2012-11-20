@@ -205,6 +205,23 @@ IsoFluxMap MixedCellNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::update_degradation(int the_time, double cur_rate){
+  assert(last_degraded() <= the_time);
+  if(cur_rate != this->deg_rate()){
+    set_deg_rate(cur_rate);
+  };
+  double total = this->tot_deg() + this->deg_rate()*(the_time - last_degraded());
+  set_tot_deg(min(1.0, total));
+  set_last_degraded(the_time);
+
+  return tot_deg_;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclide::update_vec_hist(int the_time){
+  vec_hist_[ the_time ] = MatTools::sum_mats(wastes_) ;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MixedCellNuclide::update_conc_hist(int the_time){
   return update_conc_hist(the_time, wastes_);
 }
@@ -236,23 +253,5 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
   }
   conc_hist_[the_time] = to_ret ;
   return to_ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double MixedCellNuclide::update_degradation(int the_time, double cur_rate){
-  assert(last_degraded() <= the_time);
-  if(cur_rate != this->deg_rate()){
-    set_deg_rate(cur_rate);
-  };
-  double total = this->tot_deg() + this->deg_rate()*(the_time - last_degraded());
-  set_tot_deg(min(1.0, total));
-  set_last_degraded(the_time);
-
-  return tot_deg_;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void MixedCellNuclide::update_vec_hist(int the_time){
-  vec_hist_[ the_time ] = MatTools::sum_mats(wastes_) ;
 }
 
