@@ -25,6 +25,7 @@ void MixedCellNuclideTest::SetUp(){
   theta_ = 0.3; // percent porosity
   adv_vel_ = 1; // m/yr
   time_ = 0;
+  diffusion_coeff_ = 0.000631;
   porosity_ = 0;
   deg_rate_ = 0;
 
@@ -61,6 +62,7 @@ MixedCellNuclide* MixedCellNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <degradation>" << deg_rate_ << "</degradation>"
+     << "  <diffusion_coeff>" << diffusion_coeff_ << "</diffusion_coeff>"
      << "  <porosity>" << porosity_ << "</porosity>"
      << "</start>";
 
