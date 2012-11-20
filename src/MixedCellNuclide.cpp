@@ -142,6 +142,22 @@ void MixedCellNuclide::set_deg_rate(double cur_rate){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclide::set_porosity(double porosity){
+  if( porosity < 0 || porosity > 1 ) {
+    stringstream msg_ss;
+    msg_ss << "The MixedCellNuclide porosity range is 0 to 1, inclusive.";
+    msg_ss << " The value provided was ";
+    msg_ss << porosity;
+    msg_ss <<  ".";
+    LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
+    throw CycRangeException(msg_ss.str());
+  } else {
+    this->porosity_ = porosity;
+  }
+  assert((porosity >=0) && (porosity <= 1));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::contained_mass(){
   return dynamic_cast<NuclideModel*>(this)->contained_mass(last_degraded());
 }

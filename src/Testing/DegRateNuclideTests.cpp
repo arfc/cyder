@@ -101,20 +101,13 @@ TEST_F(DegRateNuclideTest, absorb){
   //@TODO tests like this should be interface tests for the NuclideModel class concrete instances.
   // if you absorb a material, the conc_map should reflect that
   // you shouldn't absorb more material than you can handle. how much is that?
-  ASSERT_EQ(0,time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
-  EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), nuc_model_ptr_->contained_mass(time_));
-  time_++;
-  ASSERT_EQ(1,time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
-  EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), nuc_model_ptr_->contained_mass(time_));
-  time_++;
-  ASSERT_EQ(2,time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
-  EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), nuc_model_ptr_->contained_mass(time_));
+  for(int i=0; i<4; i++){
+    ASSERT_EQ(i,time_);
+    EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+    EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
+    EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), nuc_model_ptr_->contained_mass(time_));
+    time_++;
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -171,21 +164,11 @@ TEST_F(DegRateNuclideTest, total_degradation){
   ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
   ASSERT_FLOAT_EQ(deg_rate_ptr_->deg_rate(), deg_rate_);
 
-  ASSERT_EQ(0, time_);
-  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
-
-  ASSERT_EQ(1, time_);
-  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
-
-  ASSERT_EQ(2, time_);
-  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
-
-  ASSERT_EQ(3, time_);
-  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
+  for(int i=0; i<4; i++){
+    ASSERT_EQ(i, time_);
+    ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+    EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
+  }
 
   ASSERT_EQ(4, time_);
   ASSERT_TRUE(time_ > max_degs);
@@ -370,20 +353,13 @@ TEST_F(DegRateNuclideTest, contained_mass){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, updateDegradation){ 
-  time_++;
   double deg_rate=0.1;
-  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
-  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
-  time_++;
-  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
-  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
-  time_++;
-  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
-  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
-  time_++;
-  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
-  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
-  time_++;
+   
+  for(int i=0; i<5; i++){
+    time_++;
+    EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
+    EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+  }
   EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
   EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
   EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));

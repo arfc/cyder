@@ -227,7 +227,7 @@ public:
   /**
     Set the porosity (a fraction) of the material of this component. [%] 
    */
-  void set_porosity(double n){assert(n<=1); assert(n>=0); porosity_ = n;};
+  void set_porosity(double porosity);
 
   /**
     The porosity (a fraction) of the material of this component. [%] 
