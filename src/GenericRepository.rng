@@ -96,7 +96,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="transit_time"/>
       <choice>
         <element name="EM">
-          <text/>
         </element>
         <element name="PFM">
           <text/>
@@ -113,7 +112,9 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   
   <define name="MixedCellNuclide">
     <element name="MixedCellNuclide">
+      <ref name="advective_velocity"/>
       <ref name="degradation"/>
+      <ref name="diffusion_coeff"/>
       <ref name="porosity"/>
     </element>
   </define>

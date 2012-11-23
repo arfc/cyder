@@ -27,7 +27,7 @@ protected:
   Length len_five_;
   point_t origin_;
   int time_;
-  double porosity_;
+  double porosity_, D_;
   double deg_rate_;
   
   virtual void SetUp();

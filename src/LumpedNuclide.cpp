@@ -19,15 +19,15 @@ using boost::lexical_cast;
 LumpedNuclide::LumpedNuclide() : 
   t_t_(0),
   eta_ratio_(0),
-  P_D_(NULL),
-  formulation_("")
+  P_D_(0),
+  formulation_(LAST_FORMULATION_TYPE)
 { 
   set_geom(GeometryPtr(new Geometry()));
 
   t_t_ = 0;
   v_ = 0;
-  eta_ratio_ = NULL;
-  P_D_ = NULL;
+  eta_ratio_ = 0;
+  P_D_ = 0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
@@ -36,8 +36,8 @@ LumpedNuclide::LumpedNuclide() :
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   t_t_(0),
   eta_ratio_(0),
-  P_D_(NULL),
-  formulation_("")
+  P_D_(0),
+  formulation_(LAST_FORMULATION_TYPE)
 { 
 
   set_geom(GeometryPtr(new Geometry()));
@@ -61,28 +61,38 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 
   list<string> choices;
   list<string>::iterator it;
-  choices.push_back ("EM");
-  choices.push_back ("PFM");
-  choices.push_back ("EPM");
   choices.push_back ("DM");
+  choices.push_back ("EM");
+  choices.push_back ("EPM");
+  choices.push_back ("PFM");
 
   QueryEngine* formulation_qe = qe->queryElement("formulation");
+  string formulation_string;
   for( it=choices.begin(); it!=choices.end(); it++){
-    if (formulation_qe->nElementsMatchingQuery(*it) > 0){
-      formulation_=(*it);
+    if (formulation_qe->nElementsMatchingQuery(*it) == 1){
+      formulation_=enumerateFormulation(*it);
+      formulation_string=(*it);
     }
   }
-  QueryEngine* ptr = formulation_qe->queryElement(formulation_);
-  if(formulation_=="EPM") {
-    eta_ratio_ = lexical_cast<double>(ptr->getElementContent("eta_ratio"));
-  } else if(formulation_=="DM") {
-    P_D_ = lexical_cast<double>(ptr->getElementContent("dispersion_coeff"));
-  } else if( formulation_ != "EM" && formulation_ != "PFM"){
-    string err = "The formulation type '"; 
-    err += formulation_;
-    err += "' is not supported.";
-    throw CycException(err);
-    LOG(LEV_ERROR,"GRLNuc") << err;
+  QueryEngine* ptr = formulation_qe->queryElement(formulation_string);
+  switch(formulation_){
+    case DM :
+      P_D_ = lexical_cast<double>(ptr->getElementContent("dispersion_coeff"));
+      break;
+    case EM :
+      break;
+    case EPM :
+      eta_ratio_ = lexical_cast<double>(ptr->getElementContent("eta_ratio"));
+      break;
+    case PFM :
+      break;
+    default:
+      string err = "The formulation type '"; 
+      err += formulation_;
+      err += "' is not supported.";
+      throw CycException(err);
+      LOG(LEV_ERROR,"GRLNuc") << err;
+      break;
   }
 
   LOG(LEV_DEBUG2,"GRLNuc") << "The LumpedNuclide Class init(cur) function has been called";;
@@ -154,3 +164,29 @@ IsoFluxMap LumpedNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+FormulationType LumpedNuclide::enumerateFormulation(string type_name) {
+  FormulationType toRet = LAST_FORMULATION_TYPE;
+  string formulation_type_names[] = {"DM", "EM", "EPM", "PFM", "LAST_FORMULATION_TYPE"};
+  for(int type = 0; type < LAST_FORMULATION_TYPE; type++){
+    if(formulation_type_names[type] == type_name){
+      toRet = (FormulationType)type;
+    } 
+  }
+  if (toRet == LAST_FORMULATION_TYPE){
+    string err_msg ="'";
+    err_msg += type_name;
+    err_msg += "' does not name a valid FormulationType.\n";
+    err_msg += "Options are:\n";
+    for(int name=0; name < LAST_FORMULATION_TYPE; name++){
+      err_msg += formulation_type_names[name];
+      err_msg += "\n";
+    }
+    throw CycException(err_msg);
+  }
+  return toRet;
+
+}
+
+

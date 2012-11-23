@@ -13,6 +13,12 @@
 
 #include "NuclideModel.h"
 
+enum FormulationType{
+  DM, 
+  EM, 
+  EPM, 
+  PFM, 
+  LAST_FORMULATION_TYPE};
 
 /** 
    @brief LumpedNuclide is a nuclide transport model that treats the volume 
@@ -141,11 +147,27 @@ public:
   virtual ConcGradMap neumann_bc(IsoConcMap c_ext, Radius r_ext);
 
   /**
-     returns the flux at the boundary, the Neumann bc
+   * returns the flux at the boundary, the Neumann bc
    *
-     @return qC the solute flux at the boundary in kg/m^2/s
+   * @return qC the solute flux at the boundary in kg/m^2/s
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
+
+  /// Returns the formulation of the concentration relationship
+  FormulationType formulation(){return formulation_;};
+
+  /** Returns the FormulationType corresponding to the string
+   * 
+   * @param the name of the formulation type (EM, PFM, DM, etc.)
+   * @return the formulation type corresponding to the string
+   */
+  FormulationType enumerateFormulation(std::string formulation);
+
+  /// Sets the formulation of the concentration relationship
+  void set_formulation(std::string formulation){formulation_ = enumerateFormulation(formulation);};
+
+  /// Sets the formulation of the concentration relationship
+  void set_formulation(FormulationType formulation){formulation_ = formulation;};
 
   /// Returns the transit time of the radioactive tracer through the cell
   double transit_time(){return t_t_;};
@@ -165,7 +187,7 @@ protected:
    * the Exponential Model (EM), Piston Flow Model (PFM), Combined Exponential and 
    * Piston Flow Model (EPM), or the Dispersion Model(DM).
    */
-  std::string formulation_;
+  FormulationType formulation_;
 
   /// The transit time of a radioactive tracer through the cell
   double t_t_;

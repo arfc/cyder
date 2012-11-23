@@ -32,8 +32,6 @@ DegRateNuclide::DegRateNuclide():
 
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update_vec_hist(0);
-  //update_conc_hist(0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -51,7 +49,6 @@ DegRateNuclide::DegRateNuclide(QueryEngine* qe):
   set_geom(GeometryPtr(new Geometry()));
 
   this->initModuleMembers(qe);
-  update_vec_hist(0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -74,7 +71,7 @@ NuclideModel* DegRateNuclide::copy(NuclideModel* src){
   set_deg_rate(src_ptr->deg_rate());
   set_D(src_ptr->D());
   set_tot_deg(0);
-  last_degraded_ = TI->time();
+  set_last_degraded(TI->time());
 
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
@@ -143,19 +140,19 @@ void DegRateNuclide::set_deg_rate(double cur_rate){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::contained_mass(){
-  return dynamic_cast<NuclideModel*>(this)->contained_mass(last_degraded_);
+  return dynamic_cast<NuclideModel*>(this)->contained_mass(last_degraded());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::source_term_bc(){
-  return make_pair(contained_vec(last_degraded_), 
-      tot_deg()*dynamic_cast<NuclideModel*>(this)->contained_mass(last_degraded_));
+  return make_pair(contained_vec(last_degraded()), 
+      tot_deg()*dynamic_cast<NuclideModel*>(this)->contained_mass(last_degraded()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
   IsoConcMap dirichlet, whole_vol;
-  whole_vol = conc_hist(last_degraded_);
+  whole_vol = conc_hist(last_degraded());
   IsoConcMap::const_iterator it;
   for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
     dirichlet[(*it).first] = tot_deg()*(*it).second ;
@@ -167,7 +164,7 @@ IsoConcMap DegRateNuclide::dirichlet_bc(){
 ConcGradMap DegRateNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   ConcGradMap to_ret;
 
-  IsoConcMap c_int = conc_hist(last_degraded_);
+  IsoConcMap c_int = conc_hist(last_degraded());
   Radius r_int = geom_->radial_midpoint();
   
   int iso;
@@ -214,7 +211,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
-  assert(last_degraded_ <= the_time);
+  assert(last_degraded() <= the_time);
 
   IsoConcMap to_ret;
 
@@ -243,27 +240,19 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::update_degradation(int the_time, double cur_rate){
-  assert(last_degraded_ <= the_time);
+  assert(last_degraded() <= the_time);
   if(cur_rate != this->deg_rate()){
     set_deg_rate(cur_rate);
   };
-  double total = this->tot_deg() + this->deg_rate()*(the_time - last_degraded_);
+  double total = this->tot_deg() + this->deg_rate()*(the_time - last_degraded());
   set_tot_deg(min(1.0, total));
-  last_degraded_ = the_time;
+  set_last_degraded(the_time);
 
-  return tot_deg_;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const double DegRateNuclide::tot_deg(){
   return tot_deg_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::update_vec_hist(int the_time){
-  // CompMapPtr one_comp = CompMapPtr(new CompMap(MASS));
-  // (*one_comp)[92235] = 1;
-  // vec_hist_[ the_time ] = make_pair(IsoVector(one_comp), 10*(1-tot_deg()));
   vec_hist_[ the_time ] = MatTools::sum_mats(wastes_) ;
 }
 

@@ -63,13 +63,12 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-              <diffusion_coeff>0.00001</diffusion_coeff>
-            </DegRateNuclide>
+              <porosity>0.00001</porosity>
+            </MixedCellNuclide>
           </nuclidemodel>
-          <allowedcommod>waste</allowedcommod>
         </component>
         <component>
           <name>WP</name>
@@ -80,13 +79,12 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-              <diffusion_coeff>0.00001</diffusion_coeff>
-            </DegRateNuclide>
+              <porosity>0.00001</porosity>
+            </MixedCellNuclide>
           </nuclidemodel>
-          <allowedwf>WF</allowedwf>
         </component>
         <component>
           <name>BUFFER</name>
@@ -97,11 +95,11 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-              <diffusion_coeff>0.00001</diffusion_coeff>
-            </DegRateNuclide>
+              <porosity>0.00001</porosity>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -113,11 +111,11 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-              <diffusion_coeff>0.00001</diffusion_coeff>
-            </DegRateNuclide>
+              <porosity>0.00001</porosity>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
       </GenericRepository>
