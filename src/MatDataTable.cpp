@@ -1,9 +1,9 @@
-// DiffCoeffTable class
+// MatDataTable class
 
 #include <iostream>
 #include <stdlib.h>
 
-#include "DiffCoeffTable.h"
+#include "MatDataTable.h"
 
 #include "Env.h"
 #include "Database.h"
@@ -11,21 +11,21 @@
 
 using namespace std;
 
-DiffCoeffTable* DiffCoeffTable::instance_ = 0;
+MatDataTable* MatDataTable::instance_ = 0;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DiffCoeffTable* DiffCoeffTable::Instance() {
-  // If we haven't created a DiffCoeffTable yet, create it, and then and return it
+MatDataTable* MatDataTable::Instance() {
+  // If we haven't created a MatDataTable yet, create it, and then and return it
   // either way.
   if (0 == instance_) {
-    instance_ = new DiffCoeffTable();
+    instance_ = new MatDataTable();
   }
   return instance_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DiffCoeffTable::DiffCoeffTable():
-  file_name_("diffcoeff.sqlite"),
+MatDataTable::MatDataTable():
+  file_name_("repo_data.sqlite"),
 {
   initializeSQL();
 }
@@ -33,22 +33,22 @@ DiffCoeffTable::DiffCoeffTable():
 void initializeTableMembers(QueryEngine* qe){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DiffCoeffTable::~DiffCoeffTable() {
+MatDataTable::~MatDataTable() {
   //Should close the 'diffcoeff.sqlite' file
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double DiffCoeffTable::diff(int index) {
+double MatDataTable::diff(int index) {
   double toRet = elem_vec_[elt_matrix_index_[tope]].diff;
   return toRet;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void DiffCoeffTable::initializeSQL() {
+void MatDataTable::initializeSQL() {
   Database* db = open_db()
-  query_result mnums = db->query("SELECT matrix FROM diffcoeffs");
-  query_result znums = db->query("SELECT Z FROM diffcoeffs");
-  query_result dnums = db->query("SELECT diff FROM diffcoeffs");
+  query_result mnums = db->query("SELECT matrix FROM data_name");
+  query_result znums = db->query("SELECT Z FROM data_name");
+  query_result dnums = db->query("SELECT diff FROM data_name");
   
   for (int i = 0; i < znums.size(); i++){
     string mStr = mnums.at(i).at(0);
@@ -83,6 +83,5 @@ Database* open_db() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double DiffCoeffTable::diff(int elt, string matrix) {
-  switch case
+double MatDataTable::diff(int elt, string matrix) {
 }

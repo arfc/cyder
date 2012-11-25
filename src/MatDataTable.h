@@ -1,45 +1,39 @@
-// DiffCoeffTable.h
-#if !defined(_DIFFCOEFFTABLE)
-#define _DIFFCOEFFTABLE
+// MatDataTable.h
+#if !defined(_MATDATATABLE)
+#define _MATDATATABLE
 
 #include <string>
 #include <vector>
 #include <map>
 
-#define DT DiffCoeffTable::Instance()
-
 /**
-   @class DiffCoeffTable 
-   The DiffCoeffTable class provides an interface to the mass.sqlite 
+   @class MatDataTable 
+   The MatDataTable class provides an interface to the mat_data.sqlite 
    database, providing a robust and correct mass lookup by isotope 
  */
-class DiffCoeffTable {
+class MatDataTable {
 private:
   /**
-     A pointer to this DiffCoeffTable once it has been initialized. 
-   */
-  static DiffCoeffTable* instance_;
+     The name of the data file. Typically repo_data.sqlite
+    */
+  static std::string file_name_;
 
 public:
   /**
-     Gives all simulation objects global access to the Env by 
-     returning a pointer to it. 
-      
-     @return a pointer to the DiffCoeffTable 
-   */
-  static DiffCoeffTable* Instance();
+     Default constructor for the MatDataTable class. 
+     Initializes the data from the provided mat_data.sqlite file. 
 
-  /**
-     Default constructor for the DiffCoeffTable class. 
-     Initializes the data from the provided mass.h5 file. 
+     @param mat the name of the material represented by this data table
+
+     @return a MatDataTable object representing mat
    */
-  DiffCoeffTable();
+  MatDataTable(std::string mat);
 
   /**
      Destructor for the NullFacility class. 
      Makes certain to delete all appropriate data on the stack. 
    */
-  ~DiffCoeffTable();
+  ~MatDataTable();
 
   /**
      get the Atomic Number of an isotope according to its 
