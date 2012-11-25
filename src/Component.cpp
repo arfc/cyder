@@ -109,7 +109,7 @@ void Component::init(string name, ComponentType type,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::copy(Component* src){
+void Component::copy(ComponentPtr src){
   ID_=nextID_++;
 
   set_name(src->name());
@@ -192,7 +192,7 @@ void Component::transportNuclides(int time){
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* Component::load(ComponentType type, Component* to_load) {
+ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
   to_load->setParent(this);
   daughters_.push_back(to_load);
   return this;
@@ -382,10 +382,10 @@ const int Component::ID(){return ID_;}
 const std::string Component::name(){return name_;} 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const std::vector<Component*> Component::daughters(){return daughters_;}
+const std::vector<ComponentPtr> Component::daughters(){return daughters_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Component* Component::parent(){return parent_;}
+ComponentPtr Component::parent(){return parent_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const vector<mat_rsrc_ptr> Component::wastes(){return wastes_;}

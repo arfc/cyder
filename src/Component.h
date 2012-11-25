@@ -43,6 +43,10 @@ typedef double Power;
 /// Enum for type of engineered barrier component.
 enum ComponentType {BUFFER, ENV, FF, NF, WF, WP, LAST_EBS};
 
+/// A shared pointer for the component object
+class Component;
+typedef boost::shared_ptr<Component> ComponentPtr;
+
 /** 
    @brief Defines interface for subcomponents of the GenericRepository
    
@@ -101,7 +105,7 @@ public:
      
      @param src is the component being copied
    */
-  void copy(Component* src); 
+  void copy(ComponentPtr src); 
 
   /**
      standard verbose printer includes current temp and concentrations
@@ -147,7 +151,7 @@ public:
      @param type the ComponentType of this component
      @param to_load the Component to load into this component
    */
-  Component* load(ComponentType type, Component* to_load);
+  ComponentPtr load(ComponentType type, ComponentPtr to_load);
 
   /**
      Reports true if the component is full of whatever goes inside it.
@@ -244,14 +248,14 @@ public:
      
      @return components
    */
-  const std::vector<Component*> daughters();
+  const std::vector<ComponentPtr> daughters();
 
   /**
      get the parent component 
      
      @return component
    */
-  Component* parent();
+  ComponentPtr parent();
 
   /**
      get the list of waste objects 
@@ -351,7 +355,7 @@ public:
      
      @param parent is the component that should be set as the parent
    */
-  void setParent(Component* parent){parent_ = parent;};
+  void setParent(ComponentPtr parent){parent_ = parent;};
 
   /**
      set the placement of the object
@@ -409,12 +413,12 @@ protected:
   /**
      The immediate parent component of this component.
    */
-  Component* parent_;
+  ComponentPtr parent_;
 
   /**
      The immediate daughter components of this component.
    */
-  std::vector<Component*> daughters_;
+  std::vector<ComponentPtr> daughters_;
 
   /**
      The contained contaminants, a list of material objects..
