@@ -11,6 +11,10 @@
 
 #include "ThermalModel.h"
 
+/// A shared pointer for the StubThermal object
+class StubThermal;
+typedef boost::shared_ptr<StubThermal> StubThermalPtr;
+
 /** 
    @brief StubThermal is a skeleton component model that does nothing.
    
@@ -51,14 +55,14 @@ public:
   /**
      A function that copies deeply.
    */
-  StubThermal* deepCopy();
+  StubThermalPtr deepCopy();
 
   /**
      copies a component and its parameters from another
      
      @param src is the component being copied
    */
-  virtual void copy(ThermalModel* src); 
+  virtual void copy(ThermalModelPtr src); 
 
   /**
      standard verbose printer includes current temp and concentrations

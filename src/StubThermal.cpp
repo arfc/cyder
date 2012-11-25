@@ -21,14 +21,14 @@ void StubThermal::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-StubThermal* StubThermal::deepCopy(){
-  StubThermal* toRet = new StubThermal();
-  toRet->copy(this);
+StubThermalPtr StubThermal::deepCopy(){
+  StubThermalPtr toRet = StubThermalPtr(new StubThermal());
+  toRet->copy(StubThermalPtr(this));
   return toRet;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void StubThermal::copy(ThermalModel* src){
+void StubThermal::copy(ThermalModelPtr src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

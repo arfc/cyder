@@ -20,6 +20,10 @@ enum FormulationType{
   PFM, 
   LAST_FORMULATION_TYPE};
 
+/// A shared pointer for the LumpedNuclide object
+class LumpedNuclide;
+typedef boost::shared_ptr<LumpedNuclide> LumpedNuclidePtr;
+
 /** 
    @brief LumpedNuclide is a nuclide transport model that treats the volume 
    as a lumped parameter type nuclide transport model. This method is experimental, 
@@ -81,7 +85,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModel* copy(NuclideModel* src); 
+  virtual NuclideModelPtr copy(NuclideModelPtr src); 
 
   /**
      standard verbose printer includes current temp and concentrations

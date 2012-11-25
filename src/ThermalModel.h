@@ -33,6 +33,10 @@ enum ThermalModelType{
   STUB_THERMAL, 
   LAST_THERMAL};  
 
+/// A shared pointer for the abstract ThermalModel class
+class ThermalModel;
+typedef boost::shared_ptr<ThermalModel> ThermalModelPtr;
+
 /** 
    @brief Abstract interface for heat transport models to be used in the GenericRepository
    
@@ -61,7 +65,7 @@ public:
      
      @param src is the component being copied
    */
-  virtual void copy(ThermalModel* src)=0; 
+  virtual void copy(ThermalModelPtr src)=0; 
 
   /**
      standard verbose printer should include current temp and concentrations

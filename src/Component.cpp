@@ -50,9 +50,9 @@ Component::Component(){
   temp_lim_ = 373;
   tox_lim_ = 10 ;
 
-  thermal_model_ = NULL;
-  nuclide_model_ = NULL;
-  parent_ = NULL;
+  thermal_model_.reset();
+  nuclide_model_.reset();
+  parent_.reset();
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -61,9 +61,7 @@ Component::Component(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
-  delete nuclide_model_;
-  delete thermal_model_;
-};
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::initModuleMembers(QueryEngine* qe){
@@ -80,8 +78,8 @@ void Component::initModuleMembers(QueryEngine* qe){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::init(string name, ComponentType type, 
-    Radius inner_radius, Radius outer_radius, ThermalModel* thermal_model, 
-    NuclideModel* nuclide_model){
+    Radius inner_radius, Radius outer_radius, ThermalModelPtr thermal_model, 
+    NuclideModelPtr nuclide_model){
 
   ID_=nextID_++;
   
@@ -101,7 +99,7 @@ void Component::init(string name, ComponentType type,
     set_nuclide_model(nuclide_model);
   }
 
-  parent_ = NULL;
+  parent_.reset();
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -109,7 +107,7 @@ void Component::init(string name, ComponentType type,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::copy(Component* src){
+void Component::copy(ComponentPtr src){
   ID_=nextID_++;
 
   set_name(src->name());
@@ -139,7 +137,7 @@ void Component::copy(Component* src){
   }else { 
     set_nuclide_model(copyNuclideModel(src->nuclide_model()));
   }
-  parent_ = NULL;
+  parent_.reset();
 
   temp_ = src->temp_;
   temp_lim_ = src->temp_lim_ ;
@@ -177,7 +175,7 @@ void Component::extract(CompMapPtr comp_to_rem, double kg_to_rem){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportHeat(int time){
-  if ( NULL == thermal_model_ ) {
+  if ( thermal_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no thermal_model_ loaded before Component::transportHeat." ;
   } else {
     thermal_model_->transportHeat(time);
@@ -185,17 +183,17 @@ void Component::transportHeat(int time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportNuclides(int time){
-  if ( NULL == nuclide_model_ ) {
+  if ( nuclide_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
   } else { 
     nuclide_model_->transportNuclides(time);
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* Component::load(ComponentType type, Component* to_load) {
-  to_load->setParent(this);
+ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
+  to_load->setParent(ComponentPtr(this));
   daughters_.push_back(to_load);
-  return this;
+  return ComponentPtr(this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -274,18 +272,18 @@ NuclideModelType Component::nuclideEnum(std::string type_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ThermalModel* Component::thermal_model(QueryEngine* qe){
-  ThermalModel* toRet;
+ThermalModelPtr Component::thermal_model(QueryEngine* qe){
+  ThermalModelPtr toRet;
 
   string model_name = qe->getElementName();;
   
   switch(thermalEnum(model_name))
   {
     case LUMPED_THERMAL:
-      toRet = new LumpedThermal(qe);
+      toRet = ThermalModelPtr(new LumpedThermal(qe));
       break;
     case STUB_THERMAL:
-      toRet = new StubThermal(qe);
+      toRet = ThermalModelPtr(new StubThermal(qe));
       break;
     default:
       throw CycException("Unknown thermal model enum value encountered."); 
@@ -293,8 +291,8 @@ ThermalModel* Component::thermal_model(QueryEngine* qe){
   return toRet;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* Component::nuclide_model(QueryEngine* qe){
-  NuclideModel* toRet;
+NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
+  NuclideModelPtr toRet;
 
   string model_name = qe->getElementName();;
   QueryEngine* input = qe->queryElement(model_name);
@@ -302,22 +300,22 @@ NuclideModel* Component::nuclide_model(QueryEngine* qe){
   switch(nuclideEnum(model_name))
   {
     case DEGRATE_NUCLIDE:
-      toRet = new DegRateNuclide(input);
+      toRet = NuclideModelPtr(new DegRateNuclide(input));
       break;
     case LUMPED_NUCLIDE:
-      toRet = new LumpedNuclide(input);
+      toRet = NuclideModelPtr(new LumpedNuclide(input));
       break;
     case MIXEDCELL_NUCLIDE:
-      toRet = new MixedCellNuclide(input);
+      toRet = NuclideModelPtr(new MixedCellNuclide(input));
       break;
     case ONEDIMPPM_NUCLIDE:
-      toRet = new OneDimPPMNuclide(input);
+      toRet = NuclideModelPtr(new OneDimPPMNuclide(input));
       break;
     case STUB_NUCLIDE:
-      toRet = new StubNuclide(input);
+      toRet = NuclideModelPtr(new StubNuclide(input));
       break;
     case TWODIMPPM_NUCLIDE:
-      toRet = new TwoDimPPMNuclide(input);
+      toRet = NuclideModelPtr(new TwoDimPPMNuclide(input));
       break;
     default:
       throw CycException("Unknown nuclide model enum value encountered."); 
@@ -327,16 +325,16 @@ NuclideModel* Component::nuclide_model(QueryEngine* qe){
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ThermalModel* Component::copyThermalModel(ThermalModel* src){
-  ThermalModel* toRet;
+ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
+  ThermalModelPtr toRet;
   switch( src->type() )
   {
     case LUMPED_THERMAL:
-      toRet = new LumpedThermal();
+      toRet = ThermalModelPtr(new LumpedThermal());
       toRet->copy(src);
       break;
     case STUB_THERMAL:
-      toRet = new StubThermal();
+      toRet = ThermalModelPtr(new StubThermal());
       toRet->copy(src);
       break;
     default:
@@ -346,27 +344,27 @@ ThermalModel* Component::copyThermalModel(ThermalModel* src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* Component::copyNuclideModel(NuclideModel* src){
-  NuclideModel* toRet;
+NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
+  NuclideModelPtr toRet;
   switch(src->type())
   {
     case DEGRATE_NUCLIDE:
-      toRet = new DegRateNuclide();
+      toRet = NuclideModelPtr(new DegRateNuclide());
       break;
     case LUMPED_NUCLIDE:
-      toRet = new LumpedNuclide();
+      toRet = NuclideModelPtr(new LumpedNuclide());
       break;
     case MIXEDCELL_NUCLIDE:
-      toRet = new MixedCellNuclide();
+      toRet = NuclideModelPtr(new MixedCellNuclide());
       break;
     case ONEDIMPPM_NUCLIDE:
-      toRet = new OneDimPPMNuclide();
+      toRet = NuclideModelPtr(new OneDimPPMNuclide());
       break;
     case STUB_NUCLIDE:
-      toRet = new StubNuclide();
+      toRet = NuclideModelPtr(new StubNuclide());
       break;
     case TWODIMPPM_NUCLIDE:
-      toRet = new TwoDimPPMNuclide();
+      toRet = NuclideModelPtr(new TwoDimPPMNuclide());
       break;
     default:
       throw CycException("Unknown nuclide model enum value encountered when copying."); 
@@ -382,10 +380,10 @@ const int Component::ID(){return ID_;}
 const std::string Component::name(){return name_;} 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const std::vector<Component*> Component::daughters(){return daughters_;}
+const std::vector<ComponentPtr> Component::daughters(){return daughters_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Component* Component::parent(){return parent_;}
+ComponentPtr Component::parent(){return parent_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const vector<mat_rsrc_ptr> Component::wastes(){return wastes_;}
@@ -422,8 +420,8 @@ const double Component::y(){return geom_->y();}
 const double Component::z(){return geom_->z();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* Component::nuclide_model(){return nuclide_model_;}
+NuclideModelPtr Component::nuclide_model(){return nuclide_model_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ThermalModel* Component::thermal_model(){return thermal_model_;}
+ThermalModelPtr Component::thermal_model(){return thermal_model_;}
 

@@ -15,7 +15,7 @@ using ::testing::Values;
 // Inside the test body, fixture constructor, SetUp(), and TearDown() we
 // can refer to the test parameter by GetParam().  In this case, the test
 // parameter is a pointer to a concrete NuclideModel instance 
-typedef NuclideModel* NuclideModelConstructor();
+typedef NuclideModelPtr NuclideModelConstructor();
 
 class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
  public:
@@ -43,11 +43,10 @@ class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
       test_mat_->setQuantity(test_size_);
   }
   virtual void TearDown(){ 
-    delete nuclide_model_;
   }
     
  protected:
-  NuclideModel* nuclide_model_;
+  NuclideModelPtr nuclide_model_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
   int one_mol_;

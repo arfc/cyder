@@ -42,22 +42,21 @@ void DegRateNuclideTest::SetUp(){
   // test_deg_rate_nuclide model setup
   deg_rate_ = 0.1;
   initNuclideModel(); //initializes deg_rate_ptr_
-  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(deg_rate_ptr_);
-  default_deg_rate_ptr_ = new DegRateNuclide();
-  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_deg_rate_ptr_);
+  nuc_model_ptr_ = NuclideModelPtr(deg_rate_ptr_);
+  default_deg_rate_ptr_ = DegRateNuclidePtr(new DegRateNuclide());
+  default_nuc_model_ptr_ = NuclideModelPtr(default_deg_rate_ptr_);
 
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclideTest::TearDown() {
-  delete deg_rate_ptr_;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* DegRateNuclideModelConstructor(){
-  return dynamic_cast<NuclideModel*>(new DegRateNuclide());
+NuclideModelPtr DegRateNuclideModelConstructor(){
+  return NuclideModelPtr(new DegRateNuclide());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-DegRateNuclide* DegRateNuclideTest::initNuclideModel(){
+DegRateNuclidePtr DegRateNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
@@ -67,7 +66,7 @@ DegRateNuclide* DegRateNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  deg_rate_ptr_ = new DegRateNuclide();
+  deg_rate_ptr_ = DegRateNuclidePtr(new DegRateNuclide());
   deg_rate_ptr_->initModuleMembers(engine);
   delete engine;
   return deg_rate_ptr_;
@@ -89,11 +88,10 @@ TEST_F(DegRateNuclideTest, defaultConstructor) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, copy) {
-  DegRateNuclide* test_copy = new DegRateNuclide();
-  EXPECT_NO_THROW(test_copy->copy(deg_rate_ptr_));
+  DegRateNuclidePtr test_copy = DegRateNuclidePtr(new DegRateNuclide());
+  EXPECT_NO_THROW(test_copy->copy(DegRateNuclidePtr(deg_rate_ptr_)));
   EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
   EXPECT_FLOAT_EQ(deg_rate_, test_copy->deg_rate());
-  delete test_copy;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

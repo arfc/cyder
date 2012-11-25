@@ -10,10 +10,10 @@
 class MixedCellNuclideTest : public ::testing::Test {
 protected:
   
-  MixedCellNuclide* mixed_cell_ptr_;
-  MixedCellNuclide* default_mixed_cell_ptr_;
-  NuclideModel* nuc_model_ptr_;
-  NuclideModel* default_nuc_model_ptr_;
+  MixedCellNuclidePtr mixed_cell_ptr_;
+  MixedCellNuclidePtr default_mixed_cell_ptr_;
+  NuclideModelPtr nuc_model_ptr_;
+  NuclideModelPtr default_nuc_model_ptr_;
   double mixed_cell_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
@@ -32,6 +32,6 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  MixedCellNuclide* initNuclideModel();
+  MixedCellNuclidePtr initNuclideModel();
 };
 

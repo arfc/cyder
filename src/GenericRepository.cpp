@@ -60,9 +60,9 @@ GenericRepository::GenericRepository() {
   // initialize things that don't depend on the input
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
-  waste_packages_ = std::deque< Component* >();
-  waste_forms_ = std::deque< Component* >();
-  far_field_ = new Component();
+  waste_packages_ = std::deque< ComponentPtr >();
+  waste_forms_ = std::deque< ComponentPtr >();
+  far_field_ = ComponentPtr(new Component());
 
   is_full_ = false;
   mapVars("x", "FLOAT", &x_);
@@ -116,8 +116,8 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* GenericRepository::initComponent(QueryEngine* qe){
-  Component* toRet = new Component();
+ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
+  ComponentPtr toRet = ComponentPtr(new Component());
   // the component class initialization function will pass down the queryengine pointer
   toRet->initModuleMembers(qe);
   // all components have a name and a type
@@ -156,7 +156,7 @@ Component* GenericRepository::initComponent(QueryEngine* qe){
         allowed_wf_name = qe->getElementContent("allowedwf",i);
         //iterate through wf_templates_
         //for each wf_template
-        for (std::deque< Component* >::iterator iter = wf_templates_.begin(); iter != 
+        for (std::deque< ComponentPtr >::iterator iter = wf_templates_.begin(); iter != 
             wf_templates_.end(); iter ++){
           if ((*iter)->name() == allowed_wf_name){
             wf_wp_map_.insert(std::make_pair(allowed_wf_name, wp_templates_.back()));
@@ -194,7 +194,7 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   wf_templates_ = src->wf_templates_;
   wf_wp_map_ = src->wf_wp_map_;
   commod_wf_map_ = src->commod_wf_map_;
-  buffers_.push_front(new Component());
+  buffers_.push_front(ComponentPtr(new Component()));
   buffers_.front()->copy(buffer_template_);
   setPlacement(buffers_.front());
 
@@ -202,8 +202,8 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   // initialize empty structures instead
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
-  waste_packages_ = std::deque< Component* >();
-  waste_forms_ = std::deque< Component* >();
+  waste_packages_ = std::deque< ComponentPtr >();
+  waste_forms_ = std::deque< ComponentPtr >();
   is_full_ = false;
 }
 
@@ -223,19 +223,19 @@ std::string GenericRepository::str() {
   std::string gen_repo_msg;
 
   gen_repo_msg += "}, wf {";
-  for ( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       iter++){
     gen_repo_msg += (*iter)->name();
   }
   gen_repo_msg += "}, wp {";
-  for ( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
     gen_repo_msg += (*iter)->name();
   }
   gen_repo_msg += "}, buffer {";
-  for ( std::deque< Component* >::const_iterator iter = buffers_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
     gen_repo_msg += (*iter)->name();
@@ -413,7 +413,7 @@ void GenericRepository::emplaceWaste(){
       // -- associate the waste stream with the waste form
       conditionWaste((*iter));
     }
-    for (std::deque< Component* >::const_iterator iter = 
+    for (std::deque< ComponentPtr >::const_iterator iter = 
         current_waste_forms_.begin(); iter != current_waste_forms_.end(); iter 
         ++){
       // -- put the waste form in a waste package
@@ -427,9 +427,9 @@ void GenericRepository::emplaceWaste(){
     }
     int nwp = current_waste_packages_.size();
     for (int i=0; i < nwp; i++){
-      Component* iter = current_waste_packages_.front();
+      ComponentPtr iter = current_waste_packages_.front();
       // try to load each package in the current buffer 
-      Component* current_buffer = buffers_.front();
+      ComponentPtr current_buffer = buffers_.front();
       if (NULL == current_buffer) {
         std::string err_msg = "Buffers not yet loaded into Generic Repository.";
         throw CycException(err_msg);
@@ -469,11 +469,11 @@ void GenericRepository::emplaceWaste(){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* GenericRepository::conditionWaste(WasteStream waste_stream){
+ComponentPtr GenericRepository::conditionWaste(WasteStream waste_stream){
   // figure out what waste form to put the waste stream in
-  Component* chosen_wf_template = NULL;
+  ComponentPtr chosen_wf_template;
   chosen_wf_template = commod_wf_map_[waste_stream.second];
-  if (chosen_wf_template == NULL){
+  if (chosen_wf_template){
     std::string err_msg = "The commodity '";
     err_msg += waste_stream.second;
     err_msg +="' does not have a matching WF in the GenericRepository.";
@@ -482,7 +482,7 @@ Component* GenericRepository::conditionWaste(WasteStream waste_stream){
   // if there doesn't already exist a partially full one
   // @todo check for partially full wf's before creating new one (katyhuff)
   // create that waste form
-  current_waste_forms_.push_back( new Component() );
+  current_waste_forms_.push_back(ComponentPtr(new Component()));
   current_waste_forms_.back()->copy(chosen_wf_template);
   // and load in the waste stream
   current_waste_forms_.back()->absorb(waste_stream.first);
@@ -490,10 +490,10 @@ Component* GenericRepository::conditionWaste(WasteStream waste_stream){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* GenericRepository::packageWaste(Component* waste_form){
+ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
   // figure out what waste package to put the waste form in
   bool loaded = false;
-  Component* chosen_wp_template = NULL;
+  ComponentPtr chosen_wp_template;
   std::string name = waste_form->name();
   chosen_wp_template = wf_wp_map_[name];
   if (chosen_wp_template == NULL){
@@ -502,11 +502,11 @@ Component* GenericRepository::packageWaste(Component* waste_form){
     err_msg +="' does not have a matching WP in the GenericRepository.";
     throw CycException(err_msg);
   }
-  Component* toRet;
+  ComponentPtr toRet;
   // until the waste form has been loaded into a package
   while (!loaded){
     // look through the current waste packages 
-    for (std::deque<Component*>::const_iterator iter= 
+    for (std::deque<ComponentPtr>::const_iterator iter= 
         current_waste_packages_.begin();
         iter != current_waste_packages_.end();
         iter++){
@@ -519,7 +519,7 @@ Component* GenericRepository::packageWaste(Component* waste_form){
         loaded = true;
       } }
     // if no currently unfilled waste packages match, create a new waste package
-    current_waste_packages_.push_back( new Component() );
+    current_waste_packages_.push_back(ComponentPtr( new Component() ));
     current_waste_packages_.back()->copy(chosen_wp_template);
     // and load in the waste form
     toRet = current_waste_packages_.back()->load(WP, waste_form); 
@@ -529,9 +529,9 @@ Component* GenericRepository::packageWaste(Component* waste_form){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* GenericRepository::loadBuffer(Component* waste_package){
+ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   // figure out what buffer to put the waste package in
-  Component* chosen_buffer = buffers_.front();
+  ComponentPtr chosen_buffer = buffers_.front();
   // and load in the waste package
   buffers_.front()->load(BUFFER, waste_package);
   // put this on the stack of waste packages that have been emplaced
@@ -540,8 +540,8 @@ Component* GenericRepository::loadBuffer(Component* waste_package){
   setPlacement(waste_package);
   addComponentToTable(waste_package);
   // set the location of the waste forms within the waste package
-  std::vector<Component*> daughters = waste_package->daughters();
-  for (std::vector<Component*>::iterator iter = daughters.begin();  
+  std::vector<ComponentPtr> daughters = waste_package->daughters();
+  for (std::vector<ComponentPtr>::iterator iter = daughters.begin();  
       iter != daughters.end(); 
       iter ++){
     setPlacement(*iter);
@@ -551,7 +551,7 @@ Component* GenericRepository::loadBuffer(Component* waste_package){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component* GenericRepository::setPlacement(Component* comp){
+ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
   double x,y,z;
   // figure out what type of component it is
   switch(comp->type()) 
@@ -594,17 +594,17 @@ Component* GenericRepository::setPlacement(Component* comp){
 void GenericRepository::transportHeat(int time){
   // update the thermal BCs everywhere
   // pass the transport heat signal through the components, inner -> outer
-  for ( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       iter++){
     (*iter)->transportHeat(time);
   }
-  for ( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
     (*iter)->transportHeat(time);
   }
-  for ( std::deque< Component* >::const_iterator iter = buffers_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
     (*iter)->transportHeat(time);
@@ -618,17 +618,17 @@ void GenericRepository::transportHeat(int time){
 void GenericRepository::transportNuclides(int time){
   // update the nuclide transport BCs everywhere
   // pass the transport nuclides signal through the components, inner -> outer
-  for ( std::deque< Component* >::const_iterator iter = waste_forms_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       iter++){
     (*iter)->transportNuclides(time);
   }
-  for ( std::deque< Component* >::const_iterator iter = waste_packages_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
     (*iter)->transportNuclides(time);
   }
-  for ( std::deque< Component* >::const_iterator iter = buffers_.begin();
+  for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
     (*iter)->transportNuclides(time);
@@ -664,7 +664,7 @@ void GenericRepository::defineComponentsTable(){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::addComponentToTable(Component* comp){
+void GenericRepository::addComponentToTable(ComponentPtr comp){
 
 }
 

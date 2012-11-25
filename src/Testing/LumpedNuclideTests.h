@@ -10,10 +10,10 @@
 class LumpedNuclideTest : public ::testing::Test {
 protected:
   
-  LumpedNuclide* lumped_ptr_;
-  LumpedNuclide* default_lumped_ptr_;
-  NuclideModel* nuc_model_ptr_;
-  NuclideModel* default_nuc_model_ptr_;
+  LumpedNuclidePtr lumped_ptr_;
+  LumpedNuclidePtr default_lumped_ptr_;
+  NuclideModelPtr nuc_model_ptr_;
+  NuclideModelPtr default_nuc_model_ptr_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
   int one_mol_;
@@ -31,6 +31,6 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  LumpedNuclide* initNuclideModel();
+  LumpedNuclidePtr initNuclideModel();
 };
 

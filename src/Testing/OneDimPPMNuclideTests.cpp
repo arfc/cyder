@@ -45,22 +45,21 @@ void OneDimPPMNuclideTest::SetUp(){
 
   // test_one_dim_ppm_nuclide model setup
   initNuclideModel();
-  default_one_dim_ppm_ptr_ = new OneDimPPMNuclide();
-  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(one_dim_ppm_ptr_);
-  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_one_dim_ppm_ptr_);
+  default_one_dim_ppm_ptr_ = OneDimPPMNuclidePtr(new OneDimPPMNuclide());
+  nuc_model_ptr_ = NuclideModelPtr(one_dim_ppm_ptr_);
+  default_nuc_model_ptr_ = NuclideModelPtr(default_one_dim_ppm_ptr_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclideTest::TearDown() {
-  delete one_dim_ppm_ptr_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* OneDimPPMNuclideModelConstructor(){
-  return dynamic_cast<NuclideModel*>(new OneDimPPMNuclide());
+NuclideModelPtr OneDimPPMNuclideModelConstructor(){
+  return NuclideModelPtr(new OneDimPPMNuclide());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-OneDimPPMNuclide* OneDimPPMNuclideTest::initNuclideModel(){
+OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
@@ -74,7 +73,7 @@ OneDimPPMNuclide* OneDimPPMNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  one_dim_ppm_ptr_ = new OneDimPPMNuclide();
+  one_dim_ppm_ptr_ = OneDimPPMNuclidePtr(new OneDimPPMNuclide());
   one_dim_ppm_ptr_->initModuleMembers(engine);
   delete engine;
   return one_dim_ppm_ptr_;  
@@ -100,11 +99,10 @@ TEST_F(OneDimPPMNuclideTest, initFunctionNoXML) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, copy) {
   //ASSERT_NO_THROW(one_dim_ppm_ptr_->init(n_));
-  OneDimPPMNuclide* test_copy = new OneDimPPMNuclide();
+  OneDimPPMNuclidePtr test_copy = OneDimPPMNuclidePtr(new OneDimPPMNuclide());
   EXPECT_NO_THROW(test_copy->copy(one_dim_ppm_ptr_));
   EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
   //EXPECT_FLOAT_EQ(n_, test_copy->porosity());
-  delete test_copy;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
