@@ -52,7 +52,7 @@ Component::Component(){
 
   thermal_model_ = NULL;
   nuclide_model_ = NULL;
-  parent_ = NULL;
+  parent_.reset();
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -101,7 +101,7 @@ void Component::init(string name, ComponentType type,
     set_nuclide_model(nuclide_model);
   }
 
-  parent_ = NULL;
+  parent_.reset();
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -139,7 +139,7 @@ void Component::copy(ComponentPtr src){
   }else { 
     set_nuclide_model(copyNuclideModel(src->nuclide_model()));
   }
-  parent_ = NULL;
+  parent_.reset();
 
   temp_ = src->temp_;
   temp_lim_ = src->temp_lim_ ;
@@ -193,9 +193,9 @@ void Component::transportNuclides(int time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
-  to_load->setParent(this);
+  to_load->setParent(ComponentPtr(this));
   daughters_.push_back(to_load);
-  return this;
+  return ComponentPtr(this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

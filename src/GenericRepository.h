@@ -254,70 +254,70 @@ protected:
     /**
        The Far Field component
      */
-    Component* far_field_;
+    ComponentPtr far_field_;
 
     /**
        The Near Field component
      */
-    Component* near_field_;
+    ComponentPtr near_field_;
 
     /**
        The buffer template before initialization.
        This will be copied and initialized before use.
      */
-    Component* buffer_template_;
+    ComponentPtr buffer_template_;
 
     /**
        The waste package component templates before initialization.
        These will be copied and initialized before use.
      */
-    std::deque<Component*> wp_templates_;
+    std::deque<ComponentPtr> wp_templates_;
 
     /**
        The waste form templates before initialization.
        These will be copied and initialized before use.
      */
-    std::deque<Component*> wf_templates_;
+    std::deque<ComponentPtr> wf_templates_;
 
     /**
        The waste package components current being dealt with
      */
-    std::deque<Component*> current_waste_packages_;
+    std::deque<ComponentPtr> current_waste_packages_;
 
     /**
        The waste package components that have been emplaced
      */
-    std::deque<Component*> emplaced_waste_packages_;
+    std::deque<ComponentPtr> emplaced_waste_packages_;
 
     /**
        The waste form components
      */
-    std::deque<Component*> current_waste_forms_;
+    std::deque<ComponentPtr> current_waste_forms_;
 
     /**
        The buffer components
      */
-    std::deque<Component*> buffers_;
+    std::deque<ComponentPtr> buffers_;
 
     /**
        The waste package component
      */
-    std::deque<Component*> waste_packages_;
+    std::deque<ComponentPtr> waste_packages_;
 
     /**
        The waste form components
      */
-    std::deque<Component*> waste_forms_;
+    std::deque<ComponentPtr> waste_forms_;
 
     /**
        Each commodity is associated with a waste form.
      */
-    std::map<std::string, Component*> commod_wf_map_;
+    std::map<std::string, ComponentPtr> commod_wf_map_;
 
     /**
        Each waste form associated with a waste package.
      */
-    std::map<std::string, Component*> wf_wp_map_;
+    std::map<std::string, ComponentPtr> wf_wp_map_;
 
     /**
        Make requests based on capacity
@@ -337,7 +337,7 @@ protected:
        @param waste_stream is the WasteStream object to be conditioned
        @return the form that has been loaded with the waste stream
      */
-    Component* conditionWaste(WasteStream waste_stream) ;
+    ComponentPtr conditionWaste(WasteStream waste_stream) ;
 
     /**
        Package the waste
@@ -345,7 +345,7 @@ protected:
        @param waste_form is the loaded waste form to be packaged
        @return the package that has been loaded with the waste form
      */
-    Component* packageWaste(Component* waste_form) ;
+    ComponentPtr packageWaste(ComponentPtr waste_form) ;
 
     /**
        Load the buffer with the waste
@@ -353,7 +353,7 @@ protected:
        @param waste_package is the package to load into the buffer
        @return the buffer that has been loaded with the waste package
      */
-    Component* loadBuffer(Component* waste_package) ;
+    ComponentPtr loadBuffer(ComponentPtr waste_package) ;
 
     /**
        Set the placement for the component within the repository
@@ -361,7 +361,7 @@ protected:
        @param comp the component to be placed
        @return comp the component once it has been placed
      */
-    Component* setPlacement(Component* comp);
+    ComponentPtr setPlacement(ComponentPtr comp);
 
     /**
        Initializes the name and model type of the component
@@ -370,7 +370,7 @@ protected:
        
        @return the initialized component
      */
-    Component* initComponent(QueryEngine* qe) ;
+    ComponentPtr initComponent(QueryEngine* qe) ;
 
     /**
        Do heat transport calculations. 
@@ -412,7 +412,7 @@ protected:
     /**
        Adds a component to the components table.
      */
-    static void addComponentToTable(Component* comp);
+    static void addComponentToTable(ComponentPtr comp);
 
     /**
        This table will hold the parameters that uniquely define this generic
