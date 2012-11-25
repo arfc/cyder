@@ -39,30 +39,29 @@ void StubNuclideTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_stub_nuclide model setup
-  stub_ptr_ = new StubNuclide();
-  default_stub_ptr_ = new StubNuclide();
-  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(stub_ptr_);
-  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(stub_ptr_);
+  stub_ptr_ = StubNuclidePtr(new StubNuclide());
+  default_stub_ptr_ = StubNuclidePtr(new StubNuclide());
+  nuc_model_ptr_ = NuclideModelPtr(stub_ptr_);
+  default_nuc_model_ptr_ = NuclideModelPtr(stub_ptr_);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void StubNuclideTest::TearDown() {
-  delete stub_ptr_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* StubNuclideModelConstructor(){
-  return dynamic_cast<NuclideModel*>(new StubNuclide());
+NuclideModelPtr StubNuclideModelConstructor(){
+  return NuclideModelPtr(new StubNuclide());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-StubNuclide* StubNuclideTest::initNuclideModel(){
+StubNuclidePtr StubNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "</start>";
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  stub_ptr_ = new StubNuclide();
+  stub_ptr_ = StubNuclidePtr(new StubNuclide());
   stub_ptr_->initModuleMembers(engine);
   delete engine;
   return stub_ptr_;  
@@ -88,11 +87,10 @@ TEST_F(StubNuclideTest, initFunctionNoXML) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(StubNuclideTest, copy) {
   //ASSERT_NO_THROW(stub_ptr_->init(some_param_));
-  StubNuclide* test_copy = new StubNuclide();
+  StubNuclidePtr test_copy = StubNuclidePtr(new StubNuclide());
   EXPECT_NO_THROW(test_copy->copy(stub_ptr_));
   EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
   //EXPECT_FLOAT_EQ(some_param_, test_copy->some_param());
-  delete test_copy;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

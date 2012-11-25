@@ -14,6 +14,10 @@
 #include "NuclideModel.h"
 
 
+/// A shared pointer for the StubNuclide object
+class StubNuclide;
+typedef boost::shared_ptr<StubNuclide> StubNuclidePtr;
+
 /** 
    @brief StubNuclide is a skeleton nuclide model model that does nothing.
    
@@ -56,7 +60,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModel* copy(NuclideModel* src); 
+  virtual NuclideModelPtr copy(NuclideModelPtr src); 
 
   /**
      standard verbose printer includes current temp and concentrations

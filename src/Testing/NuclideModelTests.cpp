@@ -10,11 +10,10 @@ TEST_P(NuclideModelTests, transportNuclides){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, copy){
   //copy one model to another, shouldn't throw 
-  NuclideModel* new_nuclide_model = (*GetParam())();
+  NuclideModelPtr new_nuclide_model = (*GetParam())();
   EXPECT_NO_THROW(new_nuclide_model->copy(nuclide_model_));
   //check that the name matches. 
   EXPECT_EQ(nuclide_model_->name(), new_nuclide_model->name());
-  delete new_nuclide_model;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, absorb){

@@ -79,6 +79,10 @@ typedef std::map<int, IsoConcMap> ConcHist;
   */
 typedef std::map<int, std::pair<IsoVector, double> > VecHist;
 
+/// A shared pointer for the abstract NuclideModel class
+class NuclideModel;
+typedef boost::shared_ptr<NuclideModel> NuclideModelPtr;
+
 /** 
    @brief Abstract interface for GenericRepository nuclide transport 
    
@@ -107,7 +111,7 @@ public:
      
      @param src is the component being copied
    */
-  virtual NuclideModel* copy(NuclideModel* src)=0; 
+  virtual NuclideModelPtr copy(NuclideModelPtr src)=0; 
 
   /**
      standard verbose printer explains the model

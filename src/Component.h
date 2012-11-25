@@ -87,7 +87,7 @@ public:
      @param nuclide_model the nuclide_model_ data member, a pointer
    */
   void init(std::string name, ComponentType type, Radius inner_radius,
-      Radius outer_radius, ThermalModel* thermal_model, NuclideModel* nuclide_model); 
+      Radius outer_radius, ThermalModelPtr thermal_model, NuclideModelPtr nuclide_model); 
   /**
      initializes the model parameters from an QueryEngine object
      
@@ -98,7 +98,7 @@ public:
      @param nuclide_model the nuclide_model_ data member, a pointer
    */
   void init(std::string name, ComponentType type, GeometryPtr geom,
-     ThermalModel* thermal_model, NuclideModel* nuclide_model); 
+     ThermalModelPtr thermal_model, NuclideModelPtr nuclide_model); 
 
   /**
      copies a component and its parameters from another
@@ -201,7 +201,7 @@ public:
      @param qe is the QueryEngine object containing intialization info
      @return thermal_model_ a pointer to the ThermalModel that was created
    */
-  ThermalModel* thermal_model(QueryEngine* qe);
+  ThermalModelPtr thermal_model(QueryEngine* qe);
 
   /** 
      Returns a new nuclide model of the string type and QueryEngine object
@@ -209,7 +209,7 @@ public:
      @param qe is the QueryEngine object containing intialization info
      @return nuclide_model_ a pointer to the NuclideModel that was created
    */
-  NuclideModel* nuclide_model(QueryEngine* qe);
+  NuclideModelPtr nuclide_model(QueryEngine* qe);
 
   /** 
      Returns a new thermal model that is a copy of the src model
@@ -217,12 +217,12 @@ public:
      @param src a pointer to the thermal model to copy
      @return a pointer to the ThermalModel that was created
    */
-  ThermalModel* copyThermalModel(ThermalModel* src);
+  ThermalModelPtr copyThermalModel(ThermalModelPtr src);
 
   /** 
      Returns atd::s new nuclide model that is a copy of the src model
    */
-  NuclideModel* copyNuclideModel(NuclideModel* src);
+  NuclideModelPtr copyNuclideModel(NuclideModelPtr src);
 
   /**
      get the ID
@@ -331,24 +331,24 @@ public:
      
      @return nuclide_model_
    */
-  NuclideModel* nuclide_model();
+  NuclideModelPtr nuclide_model();
 
   /**
      sets the nuclide model to the src nuclide model
    */
-  void set_nuclide_model(NuclideModel* src){nuclide_model_=src;};
+  void set_nuclide_model(NuclideModelPtr src){nuclide_model_=src;};
 
   /**
      gets the pointer to the thermal model being used in this component
      
      @return thermal_model_
    */
-  ThermalModel* thermal_model();
+  ThermalModelPtr thermal_model();
 
   /**
      sets the thermal model to the src thermal model
    */
-  void set_thermal_model(ThermalModel* src){thermal_model_=src;};
+  void set_thermal_model(ThermalModelPtr src){thermal_model_=src;};
 
   /**
      set the parent component 
@@ -403,12 +403,12 @@ protected:
   /**
      The type of thermal model implemented by this component
    */
-  ThermalModel* thermal_model_;
+  ThermalModelPtr thermal_model_;
 
   /**
      The type of nuclide model implemented by this component
    */
-  NuclideModel* nuclide_model_;
+  NuclideModelPtr nuclide_model_;
 
   /**
      The immediate parent component of this component.

@@ -14,6 +14,9 @@
 
 #include "NuclideModel.h"
 
+/// A shared pointer for the MixedCellNuclide object
+class MixedCellNuclide;
+typedef boost::shared_ptr<MixedCellNuclide> MixedCellNuclidePtr;
 
 /** 
    @brief MixedCellNuclide is a nuclide model that releases material congruently
@@ -66,7 +69,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModel* copy(NuclideModel* src); 
+  virtual NuclideModelPtr copy(NuclideModelPtr src); 
 
   /**
      standard verbose printer includes current temp and concentrations

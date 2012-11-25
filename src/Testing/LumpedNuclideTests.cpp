@@ -42,21 +42,20 @@ void LumpedNuclideTest::SetUp(){
 
   // test_lumped_nuclide model setup
   lumped_ptr_=initNuclideModel();
-  default_lumped_ptr_ = new LumpedNuclide();
-  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(lumped_ptr_);
-  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(default_lumped_ptr_);
+  default_lumped_ptr_ = LumpedNuclidePtr(new LumpedNuclide());
+  nuc_model_ptr_ = NuclideModelPtr(lumped_ptr_);
+  default_nuc_model_ptr_ = NuclideModelPtr(default_lumped_ptr_);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclideTest::TearDown() {  
-  delete lumped_ptr_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* LumpedNuclideModelConstructor(){
-  return dynamic_cast<NuclideModel*>(new LumpedNuclide());
+NuclideModelPtr LumpedNuclideModelConstructor(){
+  return NuclideModelPtr(new LumpedNuclide());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-LumpedNuclide* LumpedNuclideTest::initNuclideModel(){
+LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
@@ -68,7 +67,7 @@ LumpedNuclide* LumpedNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  lumped_ptr_ = new LumpedNuclide();
+  lumped_ptr_ = LumpedNuclidePtr(new LumpedNuclide());
   lumped_ptr_->initModuleMembers(engine);
   delete engine;
   return lumped_ptr_;
@@ -92,11 +91,10 @@ TEST_F(LumpedNuclideTest, initFunctionNoXML) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, copy) {
   //ASSERT_NO_THROW(lumped_ptr_->init(some_param_));
-  LumpedNuclide* test_copy = new LumpedNuclide();
+  LumpedNuclidePtr test_copy = LumpedNuclidePtr(new LumpedNuclide());
   EXPECT_NO_THROW(test_copy->copy(lumped_ptr_));
   EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
   //EXPECT_FLOAT_EQ(some_param_, test_copy->some_param());
-  delete test_copy;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

@@ -10,10 +10,10 @@
 class DegRateNuclideTest : public ::testing::Test {
 protected:
   
-  DegRateNuclide* deg_rate_ptr_;
-  DegRateNuclide* default_deg_rate_ptr_;
-  NuclideModel* nuc_model_ptr_;
-  NuclideModel* default_nuc_model_ptr_;
+  DegRateNuclidePtr deg_rate_ptr_;
+  DegRateNuclidePtr default_deg_rate_ptr_;
+  NuclideModelPtr nuc_model_ptr_;
+  NuclideModelPtr default_nuc_model_ptr_;
   double deg_rate_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
@@ -30,6 +30,6 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  DegRateNuclide* initNuclideModel();
+  DegRateNuclidePtr initNuclideModel();
 };
 

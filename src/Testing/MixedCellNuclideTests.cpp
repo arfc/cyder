@@ -42,22 +42,21 @@ void MixedCellNuclideTest::SetUp(){
 
   // test_mixed_cell_nuclide model setup
   mixed_cell_ptr_ = initNuclideModel();
-  default_mixed_cell_ptr_ = new MixedCellNuclide();
-  nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);
-  default_nuc_model_ptr_ = dynamic_cast<NuclideModel*>(mixed_cell_ptr_);
+  default_mixed_cell_ptr_ = MixedCellNuclidePtr(new MixedCellNuclide());
+  nuc_model_ptr_ = NuclideModelPtr(mixed_cell_ptr_);
+  default_nuc_model_ptr_ = NuclideModelPtr(mixed_cell_ptr_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MixedCellNuclideTest::TearDown() {
-  delete mixed_cell_ptr_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* MixedCellNuclideModelConstructor(){
-  return dynamic_cast<NuclideModel*>(new MixedCellNuclide());
+NuclideModelPtr MixedCellNuclideModelConstructor(){
+  return NuclideModelPtr(new MixedCellNuclide());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-MixedCellNuclide* MixedCellNuclideTest::initNuclideModel(){
+MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
@@ -68,7 +67,7 @@ MixedCellNuclide* MixedCellNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  mixed_cell_ptr_ = new MixedCellNuclide();
+  mixed_cell_ptr_ = MixedCellNuclidePtr(new MixedCellNuclide());
   mixed_cell_ptr_->initModuleMembers(engine);
   delete engine;
   return mixed_cell_ptr_;  
@@ -91,11 +90,10 @@ TEST_F(MixedCellNuclideTest, defaultConstructor) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, copy) {
-  MixedCellNuclide* test_copy = new MixedCellNuclide();
+  MixedCellNuclidePtr test_copy = MixedCellNuclidePtr(new MixedCellNuclide());
   EXPECT_NO_THROW(test_copy->copy(mixed_cell_ptr_));
   EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
   EXPECT_FLOAT_EQ(porosity_, test_copy->porosity());
-  delete test_copy;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
