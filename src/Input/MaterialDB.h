@@ -1,40 +1,31 @@
-// MatDataTable.h
-#if !defined(_MATDATATABLE)
-#define _MATDATATABLE
+// MaterialDB.h
+#if !defined(_MATERIALDB)
+#define _MATERIALDB
 
 #include <string>
 #include <vector>
 #include <map>
-#include "Database.h"
 
 /**
-   @class MatDataTable 
-   The MatDataTable class provides an interface to the mat_data.sqlite 
+   @class MaterialDB 
+   The MaterialDB class provides an interface to the mat_data.sqlite 
    database, providing a robust and correct mass lookup by isotope 
  */
-class MatDataTable {
+class MaterialDB {
 private:
-  /**
-     The name of the data file. Typically repo_data.sqlite
-    */
-  static std::string file_name_;
 
 public:
   /**
-     Default constructor for the MatDataTable class. 
-     Initializes the data from the provided mat_data.sqlite file. 
-
-     @param mat the name of the material represented by this data table
-
-     @return a MatDataTable object representing mat
+     Default constructor for the MaterialDB class. 
+     Initializes the data from the provided mass.h5 file. 
    */
-  MatDataTable(std::string mat);
+  MaterialDB();
 
   /**
      Destructor for the NullFacility class. 
      Makes certain to delete all appropriate data on the stack. 
    */
-  ~MatDataTable();
+  ~MaterialDB();
 
   /**
      get the Atomic Number of an isotope according to its 
@@ -59,7 +50,7 @@ public:
 protected:
   /**
      Defines the structure of data associated with each row entry in the 
-     mass database. Right now, strings are a little funky, so the names 
+     database. Right now, strings are a little funky, so the names 
    */
   typedef struct nuclide_t
   {
