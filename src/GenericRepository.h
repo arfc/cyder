@@ -257,11 +257,6 @@ protected:
     ComponentPtr far_field_;
 
     /**
-       The Near Field component
-     */
-    ComponentPtr near_field_;
-
-    /**
        The buffer template before initialization.
        This will be copied and initialized before use.
      */

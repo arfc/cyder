@@ -118,6 +118,8 @@ SET(GenericRepository_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/MatTools.cpp
   )
 
+ADD_SUBDIRECTORY(Input)
+
 ADD_LIBRARY( GenericRepository ${GenericRepository_SRC})
 
 TARGET_LINK_LIBRARIES( GenericRepository dl ${CYDER_LIBRARIES} ${LIBS})
