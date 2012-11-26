@@ -12,6 +12,11 @@
 
 #include "ThermalModel.h"
 
+/// A shared pointer for the LumpedThermal object
+class LumpedThermal;
+typedef boost::shared_ptr<LumpedThermal> LumpedThermalPtr;
+
+
 /** 
    @brief LumpedThermal is a skeleton component model that does nothing.
    
@@ -52,14 +57,14 @@ public:
   /**
      A function that copies deeply.
    */
-  LumpedThermal* deepCopy();
+  LumpedThermalPtr deepCopy();
 
   /**
      copies a component and its parameters from another
      
      @param src is the component being copied
    */
-  virtual void copy(ThermalModel* src); 
+  virtual void copy(ThermalModelPtr src); 
 
   /**
      standard verbose printer includes current temp and concentrations

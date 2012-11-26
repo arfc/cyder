@@ -10,10 +10,10 @@
 class StubNuclideTest : public ::testing::Test {
 protected:
   
-  StubNuclide* stub_ptr_;
-  StubNuclide* default_stub_ptr_;
-  NuclideModel* nuc_model_ptr_;
-  NuclideModel* default_nuc_model_ptr_;
+  StubNuclidePtr stub_ptr_;
+  StubNuclidePtr default_stub_ptr_;
+  NuclideModelPtr nuc_model_ptr_;
+  NuclideModelPtr default_nuc_model_ptr_;
   double stub_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
@@ -31,6 +31,6 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  StubNuclide* initNuclideModel();
+  StubNuclidePtr initNuclideModel();
 };
 

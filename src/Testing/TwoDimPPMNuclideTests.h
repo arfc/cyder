@@ -10,10 +10,10 @@
 class TwoDimPPMNuclideTest : public ::testing::Test {
 protected:
   
-  TwoDimPPMNuclide* two_dim_ppm_ptr_;
-  TwoDimPPMNuclide* default_two_dim_ppm_ptr_;
-  NuclideModel* nuc_model_ptr_;
-  NuclideModel* default_nuc_model_ptr_;
+  TwoDimPPMNuclidePtr two_dim_ppm_ptr_;
+  TwoDimPPMNuclidePtr default_two_dim_ppm_ptr_;
+  NuclideModelPtr nuc_model_ptr_;
+  NuclideModelPtr default_nuc_model_ptr_;
   double two_dim_ppm_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
@@ -31,6 +31,6 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  TwoDimPPMNuclide* initNuclideModel();
+  TwoDimPPMNuclidePtr initNuclideModel();
 };
 

@@ -10,10 +10,10 @@
 class OneDimPPMNuclideTest : public ::testing::Test {
 protected:
   
-  OneDimPPMNuclide* one_dim_ppm_ptr_;
-  OneDimPPMNuclide* default_one_dim_ppm_ptr_;
-  NuclideModel* nuc_model_ptr_;
-  NuclideModel* default_nuc_model_ptr_;
+  OneDimPPMNuclidePtr one_dim_ppm_ptr_;
+  OneDimPPMNuclidePtr default_one_dim_ppm_ptr_;
+  NuclideModelPtr nuc_model_ptr_;
+  NuclideModelPtr default_nuc_model_ptr_;
   double one_dim_ppm_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
@@ -31,6 +31,6 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  OneDimPPMNuclide* initNuclideModel();
+  OneDimPPMNuclidePtr initNuclideModel();
 };
 

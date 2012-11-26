@@ -19,14 +19,14 @@ void LumpedThermal::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LumpedThermal* LumpedThermal::deepCopy(){
-  LumpedThermal* toRet = new LumpedThermal();
-  toRet->copy(this);
+LumpedThermalPtr LumpedThermal::deepCopy(){
+  LumpedThermalPtr toRet = LumpedThermalPtr(new LumpedThermal());
+  toRet->copy(LumpedThermalPtr(this));
   return toRet;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void LumpedThermal::copy(ThermalModel* src){
+void LumpedThermal::copy(ThermalModelPtr src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

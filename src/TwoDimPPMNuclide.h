@@ -13,6 +13,10 @@
 
 #include "NuclideModel.h"
 
+/// A shared pointer for the TwoDimPPMNuclide object
+class TwoDimPPMNuclide;
+typedef boost::shared_ptr<TwoDimPPMNuclide> TwoDimPPMNuclidePtr;
+
 
 /** 
    @brief TwoDimPPMNuclide is a nuclide transport model that treats the volume 
@@ -66,7 +70,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModel* copy(NuclideModel* src); 
+  virtual NuclideModelPtr copy(NuclideModelPtr src); 
 
   /**
      standard verbose printer includes current temp and concentrations
