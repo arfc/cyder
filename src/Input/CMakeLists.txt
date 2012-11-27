@@ -1,6 +1,12 @@
 SET(GenericRepository_SRC ${GenericRepository_SRC} 
   ${CMAKE_CURRENT_SOURCE_DIR}/MaterialDB.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/MatDataTable.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/SqliteDb.cpp
   PARENT_SCOPE 
+  )
+
+SET(CYDER_INCLUDE_DIR ${CYDER_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  PARENT_SCOPE
   )
   

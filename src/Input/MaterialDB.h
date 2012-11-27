@@ -3,8 +3,10 @@
 #define _MATERIALDB
 
 #include <string>
-#include <vector>
 #include <map>
+#include "SqliteDb.h"
+#include "MatDataTable.h"
+
 
 /// a type definition for elements
 typedef int Elem;
@@ -63,16 +65,15 @@ public:
      @param mat the name of the material table in the database
      @param ent an identifier of type Elem, which is an int 
 
-     @return K_d a double, the dispersion coefficient [kg/m^2/s] for the 
+     @return D a double, the dispersion coefficient [kg/m^2/s] for the 
      element ent in the material mat. 
     */
   double D(std::string mat, Elem ent);
 
-protected:
   /** 
      a map from the names of materials to table pointers
     */
-  map<std::string, MatDataTablePtr> tables_;
+  std::map<std::string, MatDataTablePtr> tables_;
 
   /**
      get a piece of data for some element in some material of interest
@@ -89,18 +90,36 @@ protected:
      get a piece of data for some element in some material of interest
       
      @param mat the name of the material table in the database
-     @param ent an identifier of type Elem, which is an int 
      @param data the name of the column in the materialDB table
 
      @return a double, the data sought for the element ent in the material mat. 
    */
-  map<Elem, double> data(std::string mat, Elem ent, std::string data);
+  std::map<Elem, double> data(std::string mat, std::string data);
+
+  /**
+     returns the table matching the mat string. 
+
+     @param mat a string indicating the name of the table (clay, salt, etc.)
+
+     @return a MatDataTablePtr holding the data associated with the mat
+     */
+  MatDataTablePtr table(std::string mat);
+
+protected:
+  /**
+     checks whether a table associated with a particular mat has been created
+
+     @param mat the string name of the table to check the existence of
+     */
+  bool initialized(std::string mat);
 
   /** 
      a function to initialize a large array of element_t structs via the 
      SQLite/C++ API 
+
+     @param mat the string indicatin the material this table should represent
    */
-  void initializeFromSQL(std::string mat);
+  MatDataTablePtr initializeFromSQL(std::string mat);
 
 };
 

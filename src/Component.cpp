@@ -45,6 +45,7 @@ string Component::nuclide_type_names_[] = {
 Component::Component(){
   name_ = "";
   type_=LAST_EBS;
+  mat_ = "";
   geom_ = GeometryPtr(new Geometry());
   temp_ = 0;
   temp_lim_ = 373;
@@ -68,16 +69,17 @@ void Component::initModuleMembers(QueryEngine* qe){
 
   string name = qe->getElementContent("name");
   ComponentType type = componentEnum(qe->getElementContent("componenttype"));
+  string mat = qe->getElementContent("material_data");
   Radius inner_radius = lexical_cast<double>(qe->getElementContent("innerradius"));
   Radius outer_radius = lexical_cast<double>(qe->getElementContent("outerradius"));
 
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
 
-  this->init(name, type, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
+  this->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::init(string name, ComponentType type, 
+void Component::init(string name, ComponentType type, string mat, 
     Radius inner_radius, Radius outer_radius, ThermalModelPtr thermal_model, 
     NuclideModelPtr nuclide_model){
 
@@ -85,6 +87,7 @@ void Component::init(string name, ComponentType type,
   
   name_ = name;
   type_ = type;
+  mat_ = mat;
   geom_->set_radius(INNER, inner_radius);
   geom_->set_radius(OUTER, outer_radius);
 
@@ -112,6 +115,7 @@ void Component::copy(ComponentPtr src){
 
   set_name(src->name());
   set_type(src->type());
+  set_mat(src->mat());
 
   // warning, you are currently copying the centroid as well. 
   // does this object lay on top of the one being copied?
@@ -378,6 +382,9 @@ const int Component::ID(){return ID_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const std::string Component::name(){return name_;} 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const std::string Component::mat(){return mat_;} 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const std::vector<ComponentPtr> Component::daughters(){return daughters_;}

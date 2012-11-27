@@ -82,12 +82,13 @@ public:
      
      @param name  the name_ data member, a string
      @param type the type_ data member, a ComponentType enum value
+     @param mat  the mat_ data member, a string
      @param inner_radius the inner_radius_ data member, in meters
      @param outer_radius the outer_radius_ data member, in meters 
      @param thermal_model the thermal_model_ data member, a pointer
      @param nuclide_model the nuclide_model_ data member, a pointer
    */
-  void init(std::string name, ComponentType type, Radius inner_radius,
+  void init(std::string name, ComponentType type, std::string mat, Radius inner_radius,
       Radius outer_radius, ThermalModelPtr thermal_model, NuclideModelPtr nuclide_model); 
   /**
      initializes the model parameters from an QueryEngine object
@@ -234,6 +235,8 @@ public:
 
   /**
      set the Name
+
+     @param the new name
    */
   void set_name(std::string name){name_=name;};
 
@@ -243,6 +246,21 @@ public:
      @return name_
    */
   const std::string name();
+
+  /**
+     set the material type that this component is made of (clay, salt, glass, etc.)
+
+     @param mat the name of the material type (clay, salt, glass, etc.)
+   */
+  void set_mat(std::string mat){mat_=mat;};
+
+
+  /**
+     get the material type that this component is made of (clay, salt, glass, etc.)
+     
+     @return mat_
+   */
+  const std::string mat();
  
   /**
      get the list of daughter components 
@@ -404,7 +422,7 @@ protected:
   /**
      The type of thermal model implemented by this component
    */
-  MaterialDataType mat_data_type_;
+  std::string mat_;
 
   /**
      The type of thermal model implemented by this component

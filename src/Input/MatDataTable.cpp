@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <sstream>
 
 #include "MatDataTable.h"
 #include "SqliteDb.h"
@@ -30,35 +31,38 @@ MatDataTable::~MatDataTable() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double MatDataTable::K_d(string mat, Elem ent){
+double MatDataTable::K_d(Elem ent){
   check_validity(ent);
-  return elem_vec[ent].K_d;
+  return elem_vec_[ent].K_d;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double MatDataTable::S(string mat, Elem ent){
+double MatDataTable::S(Elem ent){
   check_validity(ent);
-  return elem_vec[ent].S;
+  return elem_vec_[ent].S;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double MatDataTable::D(string mat, Elem ent){
+double MatDataTable::D(Elem ent){
   check_validity(ent);
-  return elem_vec[ent].D;
+  return elem_vec_[ent].D;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void MatDataTable::check_validity(Elem ent) { 
   map<Elem, int>::iterator it;
-  it=elem_vec_.find(ent);
-  if (it==elem_vec_.end()){
-    throw CycException("Element "+ent+" not valid");
+  it=elem_index_.find(ent);
+  if (it==elem_index_.end()){
+    stringstream err;
+    err << "Element " << ent << " not valid";
+    throw CycException(err.str());
   }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double MatDataTable::data(Elem ent, ChemDataType data) {
-  switch data {
+  double to_ret;
+  switch( data ){
     case DISP :
       to_ret = D(ent);
       break;
@@ -73,13 +77,4 @@ double MatDataTable::data(Elem ent, ChemDataType data) {
   }
   return to_ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-map<Elem, double> MatDataTable::data(string mat, string data) {
-  map<Elem, double> to_ret;
-
-  return to_ret;
-}
-
-
 

@@ -6,11 +6,13 @@
 #include <vector>
 #include <map>
 
-/// a type definition for elements
-typedef int Elem;
+#include <boost/shared_ptr.hpp>
 
 /// a type definition for chemical data types
-typedef enum ChemDataType{DISP, KD, SOL, LAST_CHEM_DATA_TYPE};
+enum ChemDataType{DISP, KD, SOL, LAST_CHEM_DATA_TYPE};
+
+/// a type definition for elements
+typedef int Elem;
 
 /**
    Defines the structure of data associated with each row entry in the 
@@ -25,6 +27,9 @@ typedef struct element_t
   //double  <++>; /**< a double indicating the <++> of an element >**/
 } element_t;
 
+class MatDataTable;
+typedef boost::shared_ptr<MatDataTable> MatDataTablePtr;
+
 /**
    @class MatDataTable 
    The MatDataTable class provides an interface to the mat_data.sqlite 
@@ -36,9 +41,19 @@ private:
 public:
   /**
      Default constructor for the MatDataTable class. 
-     Initializes the data from the provided mat_data.sqlite file. 
+     Default values are zeros and null strings
    */
   MatDataTable();
+
+  /**
+     Detailed constructor for the MatDataTable class
+     Fully initializes the object
+
+    @param mat the mat_ data member, a string
+    @param elem_vec the elem_vec_ data member, a vector of element structs, the data
+    @param elem_index the elem_index_ data member, mapping the element IDs to indices
+    */
+  MatDataTable(std::string mat, std::vector<element_t> elem_vec, std::map<Elem, int> elem_index);
 
   /**
      Destructor for the NullFacility class. 
@@ -46,7 +61,61 @@ public:
    */
   ~MatDataTable();
 
+  /**
+     get the distribution coefficient [kg/kg] for some element in this material
+      
+     @param ent an identifier of type Elem, which is an int 
+
+     @return K_d a double, the distribution coefficient [kg/kg] for the 
+     element ent in the material mat. 
+    */
+  double K_d(Elem ent);
+
+  /**
+     get the solubility limit for some element in this material 
+      
+     @param ent an identifier of type Elem, which is an int 
+
+     @return S a double, the solubility limit [kg/m^3] for the element 
+     ent in the material mat. 
+    */
+  double S(Elem ent);
+
+  /**
+     get the dispersion coefficient [kg/m^2/s] for some element in this material
+      
+     @param ent an identifier of type Elem, which is an int 
+
+     @return D a double, the dispersion coefficient [kg/m^2/s] for the 
+     element ent in the material mat. 
+    */
+  double D(Elem ent);
+
+
+  /** 
+     gets a specific data object for some element in this material. 
+
+     @param ent an identifier of type Elem, which is an int 
+     @param data is a ChemDataType enum (DISP, KD, SOL, ...) 
+
+     @return the data of type data for element elt in this material.
+    */
+
+  double data(Elem ent, ChemDataType data);
+
 protected:
+  /**
+     checks whether this element has a row entry in the table.
+     ideally all of them will... 
+     @throws CycException when theres some drama
+    */
+  void check_validity(Elem ent);
+  /**
+     The material that this table represents, 
+     specifically, the name of the table in the DB
+    */
+  std::string mat_;
+
   /**
      The integer length (number of rows) of the tables 
    */
