@@ -30,12 +30,12 @@ TEST_F(MatDataTableTest, get_mat_table){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MatDataTableTest, listAvailableIsos){
-  // the DB should include lots of isotopes for each mat
+TEST_F(MatDataTableTest, listAvailableElems){
+  // the DB should include all elements for each mat
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MatDataTableTest, get_iso_row){
+TEST_F(MatDataTableTest, get_elem_row){
   // from a table object,
   // the DB should return a row for any iso in the list of avail isos
 }

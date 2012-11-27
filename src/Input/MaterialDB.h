@@ -6,6 +6,9 @@
 #include <vector>
 #include <map>
 
+/// a type definition for elements
+typedef int Elem;
+
 /**
    @class MaterialDB 
    The MaterialDB class provides an interface to the mat_data.sqlite 
@@ -13,11 +16,15 @@
  */
 class MaterialDB {
 private:
+  /**
+    this database
+   */
+  SqliteDb* db_;
 
 public:
   /**
      Default constructor for the MaterialDB class. 
-     Initializes the data from the provided mass.h5 file. 
+     Initializes the data from the provided mat_data.sqlite file. 
    */
   MaterialDB();
 
@@ -28,57 +35,72 @@ public:
   ~MaterialDB();
 
   /**
-     get the Atomic Number of an isotope according to its 
-     identifier. 
+     get the distribution coefficient [kg/kg] for some element in some material of interest
       
-     @param tope is the isotope identifier of type Iso, which is an int 
-     typedef  
-     @return int the atomic number of the tope isotope. 
-   */
-  int getAtomicNum(int tope);
+     @param mat the name of the material table in the database
+     @param ent an identifier of type Elem, which is an int 
+
+     @return K_d a double, the distribution coefficient [kg/kg] for the 
+     element ent in the material mat. 
+    */
+  double K_d(std::string mat, Elem ent);
 
   /**
-     get the Mass, a double, of an isotope according to its 
-     identifier. 
+     get the solubility limit for some element in some material of interest
       
-     @param tope is the isotope identifier of type Iso, which is an int 
-     typedef  
-     @return the mass, a double, of the tope isotope. 
-   */
-   double gramsPerMol(int tope);
+     @param mat the name of the material table in the database
+     @param ent an identifier of type Elem, which is an int 
+
+     @return S a double, the solubility limit [kg/m^3] for the element 
+     ent in the material mat. 
+    */
+  double S(std::string mat, Elem ent);
+
+  /**
+     get the dispersion coefficient [kg/m^2/s] for some element
+     in some material of interest
+      
+     @param mat the name of the material table in the database
+     @param ent an identifier of type Elem, which is an int 
+
+     @return K_d a double, the dispersion coefficient [kg/m^2/s] for the 
+     element ent in the material mat. 
+    */
+  double D(std::string mat, Elem ent);
 
 protected:
-  /**
-     Defines the structure of data associated with each row entry in the 
-     database. Right now, strings are a little funky, so the names 
-   */
-  typedef struct nuclide_t
-  {
-    int  Z; /**< an integer indicating the atomic (proton) number of an atom >**/
-    int  A; /**< an integer indicating the A (mass A=N+Z) number of an atom.  >**/
-    double  mass; /**< a double indicating the mass of an atom >**/
-  } nuclide_t;
+  /** 
+     a map from the names of materials to table pointers
+    */
+  map<std::string, MatDataTablePtr> tables_;
 
   /**
-     The integer length (number of rows) of the mass.h5/ame03/nuclide/ 
+     get a piece of data for some element in some material of interest
+      
+     @param mat the name of the material table in the database
+     @param ent an identifier of type Elem, which is an int 
+     @param data the name of the column in the materialDB table
+
+     @return a double, the data sought for the element ent in the material mat. 
    */
-  int nuclide_len_;
+  double data(std::string mat, Elem ent, std::string data);
 
   /**
-     The vector of nuclide structs that holds the data in the mass table 
+     get a piece of data for some element in some material of interest
+      
+     @param mat the name of the material table in the database
+     @param ent an identifier of type Elem, which is an int 
+     @param data the name of the column in the materialDB table
+
+     @return a double, the data sought for the element ent in the material mat. 
    */
-  std::vector<nuclide_t> nuclide_vec_;
+  map<Elem, double> data(std::string mat, Elem ent, std::string data);
 
   /** 
-     a map for index lookup in the nuclide vector. 
-   */
-  std::map<int, int> isoIndex_;
-
-  /** 
-     a function to initialize a large array of nuclide_t structs via the 
+     a function to initialize a large array of element_t structs via the 
      SQLite/C++ API 
    */
-  void initializeSQL();
+  void initializeFromSQL(std::string mat);
 
 };
 

@@ -36,6 +36,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
             <ref name="innerradius"/>
             <ref name="outerradius"/>
             <ref name="componenttype"/>
+            <ref name="material_data"/>
             <element name="thermalmodel">
               <choice>
                 <ref name="StubThermal"/>
@@ -98,7 +99,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
         <element name="EM">
         </element>
         <element name="PFM">
-          <text/>
         </element>
         <element name="EPM">
           <ref name="eta_ratio"/>
@@ -245,6 +245,35 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       </data>
     </element>
   </define>
+
+
+  <define name="material_data">
+    <element name="material_data">
+      <choice>
+        <element name="clay">
+        </element>
+        <element name="granite">
+        </element>
+        <element name="salt">
+        </element>
+        <element name="deep_borehole">
+        </element>
+        <element name="steel">
+        </element>
+        <element name="copper">
+        </element>
+        <element name="bentonite">
+        </element>
+        <element name="borosilicate_glass">
+        </element>
+        <element name="oxide_fuel_form">
+        </element>
+        <element name="metal_fuel_form">
+        </element>
+      </choice>
+    </element>
+  </define>
+
 
 </grammar>
 

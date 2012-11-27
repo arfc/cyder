@@ -13,49 +13,86 @@ using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MaterialDB::MaterialDB() {
-  initializeSQL();
+  string file_path = Env::getBuildPath() + "/share/mat_data.sqlite";
+  SqliteDb* db_ = new SqliteDb(file_path);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MaterialDB::~MaterialDB() {
-  //Should close the 'mass.h5' file
+  delete db_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double MaterialDB::gramsPerMol(int tope) {
-  double toRet = nuclide_vec_[isoIndex_[tope]].mass;
-  return toRet;
+double MaterialDB::K_d(string mat, Elem ent){
+  table(mat)->data(ent, "K_d");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+double MaterialDB::S(string mat, Elem ent){
+  table(mat)->data(ent, "S");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+double MaterialDB::D(string mat, Elem ent){
+  table(mat)->data(ent, "D");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+double MaterialDB::data(string mat, Elem ent, string data) {
+  return table(mat)->data(ent, data);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+map<Elem, double> MaterialDB::data(string mat, string data) {
+  return table(mat)->data(data);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void MaterialDB::initializeSQL() {
-  // get the file location
-  string file_path = Env::getBuildPath() + "/share/mass.sqlite";
-  SqliteDb *db = new SqliteDb(file_path);
+bool MaterialDB::initialized(string mat){
+  map<string,MatDataTablePtr>::iterator it;
+  it=tables_.find(mat);
+  return it!=tables_.end()? true : false; 
+}
 
-  std::vector<StrList> znums = db->query("SELECT Z FROM isotopemasses");
-  std::vector<StrList> anums = db->query("SELECT A FROM isotopemasses");
-  std::vector<StrList> mnums = db->query("SELECT Mass FROM isotopemasses");
-  
-  for (int i = 0; i < znums.size(); i++){
-    // // obtain the database row and declare the appropriate members
-    string aStr = anums.at(i).at(0);
-    string zStr = znums.at(i).at(0);
-    string mStr = mnums.at(i).at(0);
-    int z = atoi( zStr.c_str() );
-    int a = atoi( aStr.c_str() );
-    double mass = atof( mStr.c_str() );
-    // create a nuclide member and add it to the nuclide vector
-    nuclide_t n = {z, a, mass};
-    nuclide_vec_.push_back(n);
-    // create an index and log it accordingly
-    int tope = z * 1000 + a;
-    isoIndex_.insert(make_pair(tope, i));
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MatDataTablePtr MaterialDB::table(string mat) {
+  MatDataTablePtr to_ret;
+  if initialized() {
+    to_ret=tables_.find(mat).second;
+  } else {
+    to_ret = initializeFromSQL(mat);
+    tables_.insert(make_pair(mat,to_ret));
   }
-  // set the total number of nuclides
-  nuclide_len_ = nuclide_vec_.size();
+  return to_ret;
+}
 
-  delete db;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MatDataTablePtr MaterialDB::initializeFromSQL(string mat) {
+    std::vector<StrList> znums = db->query("SELECT Z FROM "+mat);
+    std::vector<StrList> dnums = db->query("SELECT D FROM "+mat);
+    std::vector<StrList> knums = db->query("SELECT K_d FROM "+mat);
+    std::vector<StrList> snums = db->query("SELECT S FROM "+mat);
+   
+    vector<element_t> elem_vec;
+    map<Elem, int> elem_index;
+    for (int i = 0; i < znums.size(); i++){
+      // // obtain the database row and declare the appropriate members
+      string zStr = znums.at(i).at(0);
+      string dStr = mnums.at(i).at(0);
+      string kStr = mnums.at(i).at(0);
+      string sStr = mnums.at(i).at(0);
+      Elem z = atoi( zStr.c_str() );
+      double d = atof( dStr.c_str() );
+      double k = atof( kStr.c_str() );
+      double s = atof( sStr.c_str() );
+      // create a element member and add it to the element vector
+      element_t e = {z, d, k, s};
+      elem_vec.push_back(e);
+      // log it accordingly
+      elem_index.insert(make_pair(z, i));
+    }
+  MatDataTablePtr table = MatDataTablePtr(new MatDataTable(mat, elem_vec, elem_index)); 
+  return table;
 }
 
 

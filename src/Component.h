@@ -10,6 +10,7 @@
 #include <string>
 
 #include "Material.h"
+#include "MaterialDB.h"
 #include "ThermalModel.h"
 #include "NuclideModel.h"
 #include "Geometry.h"
@@ -399,6 +400,11 @@ protected:
      masses.
    */
   MassHistory mass_hist_;
+
+  /**
+     The type of thermal model implemented by this component
+   */
+  MaterialDataType mat_data_type_;
 
   /**
      The type of thermal model implemented by this component
