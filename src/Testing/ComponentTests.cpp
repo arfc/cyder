@@ -54,8 +54,8 @@ TEST_F(ComponentTest, defaultConstructor) {
 
   ASSERT_FLOAT_EQ(0, test_component_->temp());
   ASSERT_FLOAT_EQ(OneHundredCinK, test_component_->temp_lim());
-  ASSERT_EQ(LAST_THERMAL, test_component_->thermal_model()->type());
-  ASSERT_EQ(LAST_NUCLIDE, test_component_->nuclide_model()->type());
+  ASSERT_EQ(true, !test_component_->thermal_model());
+  ASSERT_EQ(true, !test_component_->nuclide_model());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
