@@ -65,7 +65,7 @@ void DegRateNuclide::initModuleMembers(QueryEngine* qe){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr DegRateNuclide::copy(NuclideModelPtr src){
-  DegRateNuclidePtr src_ptr = DegRateNuclidePtr( dynamic_cast<DegRateNuclide*>(src.get()));
+  DegRateNuclidePtr src_ptr = boost::dynamic_pointer_cast<DegRateNuclide>(src);
 
   set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());

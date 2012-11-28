@@ -41,10 +41,12 @@ void DegRateNuclideTest::SetUp(){
 
   // test_deg_rate_nuclide model setup
   deg_rate_ = 0.1;
-  initNuclideModel(); //initializes deg_rate_ptr_
-  nuc_model_ptr_ = NuclideModelPtr(deg_rate_ptr_);
+  deg_rate_ptr_ = initNuclideModel(); //initializes deg_rate_ptr_
+  //nuc_model_ptr_ = NuclideModelPtr(deg_rate_ptr_);
+  nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(deg_rate_ptr_);
   default_deg_rate_ptr_ = DegRateNuclidePtr(new DegRateNuclide());
-  default_nuc_model_ptr_ = NuclideModelPtr(default_deg_rate_ptr_);
+  //default_nuc_model_ptr_ = NuclideModelPtr(default_deg_rate_ptr_);
+  default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_deg_rate_ptr_);
 
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
