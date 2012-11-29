@@ -50,10 +50,6 @@ Component::Component(){
   temp_lim_ = 373;
   tox_lim_ = 10 ;
 
-  thermal_model_.reset();
-  nuclide_model_.reset();
-  parent_.reset();
-
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
 

@@ -336,7 +336,7 @@ public:
   /**
      sets the nuclide model to the src nuclide model
    */
-  void set_nuclide_model(NuclideModelPtr src){nuclide_model_=src;};
+  void set_nuclide_model(NuclideModelPtr src){nuclide_model_.reset(src);};
 
   /**
      gets the pointer to the thermal model being used in this component
@@ -348,7 +348,7 @@ public:
   /**
      sets the thermal model to the src thermal model
    */
-  void set_thermal_model(ThermalModelPtr src){thermal_model_=src;};
+  void set_thermal_model(ThermalModelPtr src){thermal_model_.reset(src);};
 
   /**
      set the parent component 
