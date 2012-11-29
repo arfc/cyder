@@ -10,8 +10,9 @@ TEST_P(NuclideModelTests, transportNuclides){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, copy){
   //copy one model to another, shouldn't throw 
-  NuclideModelPtr new_nuclide_model = (*GetParam())();
-  EXPECT_NO_THROW(new_nuclide_model->copy(nuclide_model_));
+  NuclideModelPtr new_nuclide_model = NuclideModelPtr((*GetParam())());
+  NuclideModelPtr nuclide_model_shared = NuclideModelPtr(nuclide_model_);
+  EXPECT_NO_THROW(new_nuclide_model->copy(*nuclide_model_shared));
   //check that the name matches. 
   EXPECT_EQ(nuclide_model_->name(), new_nuclide_model->name());
 }

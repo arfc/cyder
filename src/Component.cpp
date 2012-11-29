@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 #include <time.h>
+#include <typeinfo>
 #include <boost/lexical_cast.hpp>
 
 #include "CycException.h"
@@ -42,18 +43,17 @@ string Component::nuclide_type_names_[] = {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component::Component(){
-  name_ = "";
-  type_=LAST_EBS;
-  geom_ = GeometryPtr(new Geometry());
-  temp_ = 0;
-  temp_lim_ = 373;
-  tox_lim_ = 10 ;
+Component::Component() :
+  name_(""),
+  type_(LAST_EBS),
+  thermal_model_(StubThermal::create()),
+  nuclide_model_(StubNuclide::create()),
+  parent_(),
+  temp_(0),
+  temp_lim_(373),
+  tox_lim_(10) {
 
-  thermal_model_.reset();
-  nuclide_model_.reset();
-  parent_.reset();
-
+  set_geom(GeometryPtr(new Geometry()));
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
 
@@ -99,15 +99,13 @@ void Component::init(string name, ComponentType type,
     set_nuclide_model(nuclide_model);
   }
 
-  parent_.reset();
-
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::copy(ComponentPtr src){
+void Component::copy(const ComponentPtr& src){
   ID_=nextID_++;
 
   set_name(src->name());
@@ -117,7 +115,7 @@ void Component::copy(ComponentPtr src){
   // does this object lay on top of the one being copied?
   set_geom(src->geom()->copy(src->geom(),src->centroid()));
 
-  if ( !(src->thermal_model_) ){
+  if ( !(src->thermal_model()) ){
     string err = "The " ;
     err += name_;
     err += " model with ID: ";
@@ -125,9 +123,9 @@ void Component::copy(ComponentPtr src){
     err += " does not have a thermal model";
     throw CycException(err);
   } else { 
-    thermal_model_ = copyThermalModel(src->thermal_model_);
+    set_thermal_model(copyThermalModel(src->thermal_model_));
   }
-  if ( !(src->nuclide_model_)) {
+  if ( !(src->nuclide_model())) {
     string err = "The " ;
     err += name_;
     err += " model with ID: ";
@@ -137,7 +135,6 @@ void Component::copy(ComponentPtr src){
   }else { 
     set_nuclide_model(copyNuclideModel(src->nuclide_model()));
   }
-  parent_.reset();
 
   temp_ = src->temp_;
   temp_lim_ = src->temp_lim_ ;
@@ -193,7 +190,7 @@ void Component::transportNuclides(int time){
 ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
   to_load->setParent(ComponentPtr(this));
   daughters_.push_back(to_load);
-  return ComponentPtr(this);
+  return shared_from_this();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -280,10 +277,10 @@ ThermalModelPtr Component::thermal_model(QueryEngine* qe){
   switch(thermalEnum(model_name))
   {
     case LUMPED_THERMAL:
-      toRet = ThermalModelPtr(new LumpedThermal(qe));
+      toRet = ThermalModelPtr(LumpedThermal::create(qe));
       break;
     case STUB_THERMAL:
-      toRet = ThermalModelPtr(new StubThermal(qe));
+      toRet = ThermalModelPtr(StubThermal::create(qe));
       break;
     default:
       throw CycException("Unknown thermal model enum value encountered."); 
@@ -300,22 +297,22 @@ NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
   switch(nuclideEnum(model_name))
   {
     case DEGRATE_NUCLIDE:
-      toRet = NuclideModelPtr(new DegRateNuclide(input));
+      toRet = NuclideModelPtr(DegRateNuclide::create(input));
       break;
     case LUMPED_NUCLIDE:
-      toRet = NuclideModelPtr(new LumpedNuclide(input));
+      toRet = NuclideModelPtr(LumpedNuclide::create(input));
       break;
     case MIXEDCELL_NUCLIDE:
-      toRet = NuclideModelPtr(new MixedCellNuclide(input));
+      toRet = NuclideModelPtr(MixedCellNuclide::create(input));
       break;
     case ONEDIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(new OneDimPPMNuclide(input));
+      toRet = NuclideModelPtr(OneDimPPMNuclide::create(input));
       break;
     case STUB_NUCLIDE:
-      toRet = NuclideModelPtr(new StubNuclide(input));
+      toRet = NuclideModelPtr(StubNuclide::create(input));
       break;
     case TWODIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(new TwoDimPPMNuclide(input));
+      toRet = NuclideModelPtr(TwoDimPPMNuclide::create(input));
       break;
     default:
       throw CycException("Unknown nuclide model enum value encountered."); 
@@ -330,11 +327,11 @@ ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
   switch( src->type() )
   {
     case LUMPED_THERMAL:
-      toRet = ThermalModelPtr(new LumpedThermal());
+      toRet = ThermalModelPtr(LumpedThermal::create());
       toRet->copy(src);
       break;
     case STUB_THERMAL:
-      toRet = ThermalModelPtr(new StubThermal());
+      toRet = ThermalModelPtr(StubThermal::create());
       toRet->copy(src);
       break;
     default:
@@ -349,27 +346,27 @@ NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
   switch(src->type())
   {
     case DEGRATE_NUCLIDE:
-      toRet = NuclideModelPtr(new DegRateNuclide());
+      toRet = NuclideModelPtr(DegRateNuclide::create());
       break;
     case LUMPED_NUCLIDE:
-      toRet = NuclideModelPtr(new LumpedNuclide());
+      toRet = NuclideModelPtr(LumpedNuclide::create());
       break;
     case MIXEDCELL_NUCLIDE:
-      toRet = NuclideModelPtr(new MixedCellNuclide());
+      toRet = NuclideModelPtr(MixedCellNuclide::create());
       break;
     case ONEDIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(new OneDimPPMNuclide());
+      toRet = NuclideModelPtr(OneDimPPMNuclide::create());
       break;
     case STUB_NUCLIDE:
-      toRet = NuclideModelPtr(new StubNuclide());
+      toRet = NuclideModelPtr(StubNuclide::create());
       break;
     case TWODIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(new TwoDimPPMNuclide());
+      toRet = NuclideModelPtr(TwoDimPPMNuclide::create());
       break;
     default:
       throw CycException("Unknown nuclide model enum value encountered when copying."); 
   }      
-  toRet->copy(src);
+  toRet->copy(*src);
   return toRet;
 }
 

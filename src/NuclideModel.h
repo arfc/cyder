@@ -91,7 +91,7 @@ typedef boost::shared_ptr<NuclideModel> NuclideModelPtr;
    hydrogeologic nuclide transport fluxes and other boundary conditions 
    can be conducted between components within the repository.
  */
-class NuclideModel {
+class NuclideModel : public boost::enable_shared_from_this<NuclideModel> {
 
 public:
   /**
@@ -111,7 +111,7 @@ public:
      
      @param src is the component being copied
    */
-  virtual NuclideModelPtr copy(NuclideModelPtr src)=0; 
+  virtual NuclideModelPtr copy(const NuclideModel& src)=0; 
 
   /**
      standard verbose printer explains the model
@@ -234,7 +234,7 @@ public:
   void set_geom(GeometryPtr geom){ geom_=geom; };
 
   /// Returns the geom_ data member
-  const GeometryPtr geom() {return geom_;};
+  const GeometryPtr geom() const {return geom_;};
 
   /** 
      returns the current contained contaminant mass, in kg, at time

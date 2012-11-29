@@ -29,7 +29,7 @@ typedef boost::shared_ptr<StubNuclide> StubNuclidePtr;
    Far Field, and Envrionment.
  */
 class StubNuclide : public NuclideModel {
-public:
+private:
   
   /**
      Default constructor for the nuclide model class. Creates an empty nuclide model.
@@ -43,10 +43,23 @@ public:
    */
   StubNuclide(QueryEngine* qe);
 
+public:
   /**
      Virtual destructor deletes datamembers that are object pointers.
     */
   virtual ~StubNuclide();
+
+  /**
+     A constructor for the Stub Nuclide Model that returns a shared pointer.
+    */
+  static StubNuclidePtr create (){ return StubNuclidePtr(new StubNuclide()); };
+
+  /**
+     A constructor for the Stub Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static StubNuclidePtr create (QueryEngine* qe){ return StubNuclidePtr(new StubNuclide(qe)); };
 
   /**
      initializes the model parameters from an xmlNodePtr
@@ -60,7 +73,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModelPtr copy(NuclideModelPtr src); 
+  virtual NuclideModelPtr copy(const NuclideModel& src); 
 
   /**
      standard verbose printer includes current temp and concentrations

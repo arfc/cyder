@@ -37,7 +37,7 @@ typedef boost::shared_ptr<TwoDimPPMNuclide> TwoDimPPMNuclidePtr;
    Far Field, and Envrionment.
  */
 class TwoDimPPMNuclide : public NuclideModel {
-public:
+private:
   
   /**
      Default constructor for the mixed cell nuclide model class.
@@ -52,6 +52,19 @@ public:
      @param qe is the QueryEngine object containing intialization info
    */
   TwoDimPPMNuclide(QueryEngine* qe);
+
+public:
+  /**
+     A constructor for the TwoDimPPM Nuclide Model that returns a shared pointer.
+    */
+  static TwoDimPPMNuclidePtr create (){ return TwoDimPPMNuclidePtr(new TwoDimPPMNuclide()); };
+
+  /**
+     A constructor for the TwoDimPPM Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static TwoDimPPMNuclidePtr create (QueryEngine* qe){ return TwoDimPPMNuclidePtr(new TwoDimPPMNuclide(qe)); };
 
   /**
      Virtual destructor deletes datamembers that are object pointers.
@@ -70,7 +83,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModelPtr copy(NuclideModelPtr src); 
+  virtual NuclideModelPtr copy(const NuclideModel& src); 
 
   /**
      standard verbose printer includes current temp and concentrations

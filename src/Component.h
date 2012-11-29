@@ -55,7 +55,7 @@ typedef boost::shared_ptr<Component> ComponentPtr;
    information passing concerning fluxes and other boundary conditions 
    can be passed in and out of them.
  */
-class Component {
+class Component : public boost::enable_shared_from_this<Component> {
 
 public:
   /**
@@ -105,7 +105,7 @@ public:
      
      @param src is the component being copied
    */
-  void copy(ComponentPtr src); 
+  void copy(const ComponentPtr& src); 
 
   /**
      standard verbose printer includes current temp and concentrations
@@ -336,7 +336,7 @@ public:
   /**
      sets the nuclide model to the src nuclide model
    */
-  void set_nuclide_model(NuclideModelPtr src){nuclide_model_=src;};
+  void set_nuclide_model(const NuclideModelPtr& src){ nuclide_model_ = NuclideModelPtr(src);};
 
   /**
      gets the pointer to the thermal model being used in this component
@@ -348,7 +348,7 @@ public:
   /**
      sets the thermal model to the src thermal model
    */
-  void set_thermal_model(ThermalModelPtr src){thermal_model_=src;};
+  void set_thermal_model(const ThermalModelPtr& src){ thermal_model_ = ThermalModelPtr(src);};
 
   /**
      set the parent component 
