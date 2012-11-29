@@ -55,7 +55,7 @@ typedef boost::shared_ptr<Component> ComponentPtr;
    information passing concerning fluxes and other boundary conditions 
    can be passed in and out of them.
  */
-class Component {
+class Component : public boost::enable_shared_from_this<Component> {
 
 public:
   /**

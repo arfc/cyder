@@ -91,7 +91,7 @@ typedef boost::shared_ptr<NuclideModel> NuclideModelPtr;
    hydrogeologic nuclide transport fluxes and other boundary conditions 
    can be conducted between components within the repository.
  */
-class NuclideModel {
+class NuclideModel : public boost::enable_shared_from_this<NuclideModel> {
 
 public:
   /**
