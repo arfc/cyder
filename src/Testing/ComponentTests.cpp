@@ -5,6 +5,7 @@
 #include "CycException.h"
 #include "StubThermal.h"
 #include "StubNuclide.h"
+#include "DegRateNuclide.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ class ComponentTest : public ::testing::Test {
       inner_radius_ = 2;
       outer_radius_ = 10;
       thermal_model_ = StubThermalPtr(new StubThermal());
-      nuclide_model_ = StubNuclidePtr(new StubNuclide());
+      nuclide_model_ = DegRateNuclidePtr(new DegRateNuclide());
     }
     virtual void TearDown() {
     }
@@ -52,8 +53,8 @@ TEST_F(ComponentTest, defaultConstructor) {
 
   ASSERT_FLOAT_EQ(0, test_component_->temp());
   ASSERT_FLOAT_EQ(OneHundredCinK, test_component_->temp_lim());
-  ASSERT_EQ(true, !test_component_->thermal_model());
-  ASSERT_EQ(true, !test_component_->nuclide_model());
+  ASSERT_EQ(false, !test_component_->thermal_model());
+  ASSERT_EQ(false, !test_component_->nuclide_model());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -71,7 +72,9 @@ TEST_F(ComponentTest, initFunctionNoXML) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, copy) {
   ComponentPtr test_copy = ComponentPtr(new Component());
-  ASSERT_THROW(test_copy->copy(test_copy), CycException);
+  ASSERT_NO_THROW(test_copy->copy(test_copy));
+  EXPECT_EQ("STUB_THERMAL", test_copy->thermal_model()->name());
+  EXPECT_EQ("STUB_NUCLIDE", test_copy->nuclide_model()->name());
 
   EXPECT_NO_THROW(test_component_->init(name_, type_, inner_radius_, outer_radius_, 
         thermal_model_, nuclide_model_));
@@ -80,5 +83,5 @@ TEST_F(ComponentTest, copy) {
   EXPECT_EQ(inner_radius_, test_copy->inner_radius());
   EXPECT_EQ(outer_radius_, test_copy->outer_radius());
   EXPECT_EQ("STUB_THERMAL", test_copy->thermal_model()->name());
-  EXPECT_EQ("STUB_NUCLIDE", test_copy->nuclide_model()->name());
+  EXPECT_EQ("DEGRATE_NUCLIDE", test_copy->nuclide_model()->name());
 }

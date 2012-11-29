@@ -46,8 +46,8 @@ string Component::nuclide_type_names_[] = {
 Component::Component() :
   name_(""),
   type_(LAST_EBS),
-  thermal_model_(),
-  nuclide_model_(),
+  thermal_model_(new StubThermal()),
+  nuclide_model_(new StubNuclide()),
   parent_(),
   temp_(0),
   temp_lim_(373),
@@ -105,7 +105,7 @@ void Component::init(string name, ComponentType type,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::copy(ComponentPtr src){
+void Component::copy(const ComponentPtr& src){
   ID_=nextID_++;
 
   set_name(src->name());
@@ -115,7 +115,7 @@ void Component::copy(ComponentPtr src){
   // does this object lay on top of the one being copied?
   set_geom(src->geom()->copy(src->geom(),src->centroid()));
 
-  if ( !(src->thermal_model_) ){
+  if ( !(src->thermal_model()) ){
     string err = "The " ;
     err += name_;
     err += " model with ID: ";
@@ -123,9 +123,9 @@ void Component::copy(ComponentPtr src){
     err += " does not have a thermal model";
     throw CycException(err);
   } else { 
-    thermal_model_ = copyThermalModel(src->thermal_model_);
+    set_thermal_model(copyThermalModel(src->thermal_model_));
   }
-  if ( !(src->nuclide_model_)) {
+  if ( !(src->nuclide_model())) {
     string err = "The " ;
     err += name_;
     err += " model with ID: ";
