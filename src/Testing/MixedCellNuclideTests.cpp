@@ -52,8 +52,8 @@ void MixedCellNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModelPtr MixedCellNuclideModelConstructor(){
-  return NuclideModelPtr(new MixedCellNuclide());
+NuclideModel* MixedCellNuclideModelConstructor (){
+  return dynamic_cast<NuclideModel*>(new MixedCellNuclide());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){
@@ -91,8 +91,10 @@ TEST_F(MixedCellNuclideTest, defaultConstructor) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, copy) {
   MixedCellNuclidePtr test_copy = MixedCellNuclidePtr(new MixedCellNuclide());
-  EXPECT_NO_THROW(test_copy->copy(mixed_cell_ptr_));
-  EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
+  MixedCellNuclidePtr mixed_cell_shared_ptr = MixedCellNuclidePtr(mixed_cell_ptr_);
+  NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
+  EXPECT_NO_THROW(test_copy->copy(*mixed_cell_shared_ptr));
+  EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
   EXPECT_FLOAT_EQ(porosity_, test_copy->porosity());
 }
 

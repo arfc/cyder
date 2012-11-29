@@ -60,7 +60,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModelPtr copy(NuclideModelPtr src); 
+  virtual NuclideModelPtr copy(const NuclideModel& src); 
 
   /**
      standard verbose printer includes current temp and concentrations

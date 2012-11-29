@@ -64,8 +64,8 @@ void DegRateNuclide::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelPtr DegRateNuclide::copy(NuclideModelPtr src){
-  DegRateNuclidePtr src_ptr = DegRateNuclidePtr( dynamic_cast<DegRateNuclide*>(src.get()));
+NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
+  const DegRateNuclide* src_ptr = dynamic_cast<const DegRateNuclide*>(&src);
 
   set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());

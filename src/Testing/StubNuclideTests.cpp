@@ -49,8 +49,8 @@ void StubNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModelPtr StubNuclideModelConstructor(){
-  return NuclideModelPtr(new StubNuclide());
+NuclideModel* StubNuclideModelConstructor (){
+  return dynamic_cast<NuclideModel*>(new StubNuclide());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -86,11 +86,13 @@ TEST_F(StubNuclideTest, initFunctionNoXML) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(StubNuclideTest, copy) {
-  //ASSERT_NO_THROW(stub_ptr_->init(some_param_));
+  //ASSERT_NO_THROW(stub_ptr_->init(n_));
   StubNuclidePtr test_copy = StubNuclidePtr(new StubNuclide());
-  EXPECT_NO_THROW(test_copy->copy(stub_ptr_));
-  EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
-  //EXPECT_FLOAT_EQ(some_param_, test_copy->some_param());
+  StubNuclidePtr stub_shared_ptr = StubNuclidePtr(stub_ptr_);
+  NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
+  EXPECT_NO_THROW(test_copy->copy(*stub_shared_ptr));
+  EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
+  //EXPECT_FLOAT_EQ(n_, test_copy->porosity());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

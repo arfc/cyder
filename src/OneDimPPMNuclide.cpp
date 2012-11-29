@@ -77,7 +77,7 @@ void OneDimPPMNuclide::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelPtr OneDimPPMNuclide::copy(NuclideModelPtr src){
+NuclideModelPtr OneDimPPMNuclide::copy(const NuclideModel& src){
   OneDimPPMNuclidePtr toRet = OneDimPPMNuclidePtr(new OneDimPPMNuclide());
   return (NuclideModelPtr)toRet;
 }

@@ -99,7 +99,7 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelPtr LumpedNuclide::copy(NuclideModelPtr src){
+NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   LumpedNuclidePtr toRet = LumpedNuclidePtr( new LumpedNuclide() );
   return (NuclideModelPtr)toRet;
 }

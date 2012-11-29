@@ -369,7 +369,7 @@ NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
     default:
       throw CycException("Unknown nuclide model enum value encountered when copying."); 
   }      
-  toRet->copy(src);
+  toRet->copy(*src);
   return toRet;
 }
 

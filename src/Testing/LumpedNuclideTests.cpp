@@ -51,8 +51,8 @@ void LumpedNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModelPtr LumpedNuclideModelConstructor(){
-  return NuclideModelPtr(new LumpedNuclide());
+NuclideModel* LumpedNuclideModelConstructor (){
+  return dynamic_cast<NuclideModel*>(new LumpedNuclide());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
@@ -92,8 +92,10 @@ TEST_F(LumpedNuclideTest, initFunctionNoXML) {
 TEST_F(LumpedNuclideTest, copy) {
   //ASSERT_NO_THROW(lumped_ptr_->init(some_param_));
   LumpedNuclidePtr test_copy = LumpedNuclidePtr(new LumpedNuclide());
-  EXPECT_NO_THROW(test_copy->copy(lumped_ptr_));
-  EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
+  LumpedNuclidePtr lumped_shared_ptr = LumpedNuclidePtr(lumped_ptr_);
+  NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
+  EXPECT_NO_THROW(test_copy->copy(*lumped_shared_ptr));
+  EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
   //EXPECT_FLOAT_EQ(some_param_, test_copy->some_param());
 }
 

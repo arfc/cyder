@@ -67,8 +67,8 @@ void MixedCellNuclide::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelPtr MixedCellNuclide::copy(NuclideModelPtr src){
-  MixedCellNuclidePtr src_ptr = MixedCellNuclidePtr( dynamic_cast<MixedCellNuclide*>(src.get()));
+NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
+  const MixedCellNuclide* src_ptr = dynamic_cast<const MixedCellNuclide*>(&src);
 
   set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());
