@@ -51,8 +51,8 @@ void LumpedNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* LumpedNuclideModelConstructor (){
-  return dynamic_cast<NuclideModel*>(LumpedNuclide::create().get());
+NuclideModelPtr LumpedNuclideModelConstructor (){
+  return boost::dynamic_pointer_cast<NuclideModel>(LumpedNuclide::create());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){

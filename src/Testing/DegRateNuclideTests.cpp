@@ -51,8 +51,8 @@ void DegRateNuclideTest::SetUp(){
 void DegRateNuclideTest::TearDown() {
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* DegRateNuclideModelConstructor(){
-  return dynamic_cast<NuclideModel*>(DegRateNuclide::create().get());
+NuclideModelPtr DegRateNuclideModelConstructor(){
+  return boost::dynamic_pointer_cast<NuclideModel>(DegRateNuclide::create());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

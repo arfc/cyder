@@ -56,8 +56,8 @@ void TwoDimPPMNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* TwoDimPPMNuclideModelConstructor (){
-  return dynamic_cast<NuclideModel*>(TwoDimPPMNuclide::create().get());
+NuclideModelPtr TwoDimPPMNuclideModelConstructor (){
+  return boost::dynamic_pointer_cast<NuclideModel>(TwoDimPPMNuclide::create());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

@@ -52,8 +52,8 @@ void MixedCellNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* MixedCellNuclideModelConstructor (){
-  return dynamic_cast<NuclideModel*>(MixedCellNuclide::create().get());
+NuclideModelPtr MixedCellNuclideModelConstructor (){
+  return boost::dynamic_pointer_cast<NuclideModel>(MixedCellNuclide::create());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){

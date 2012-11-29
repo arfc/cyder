@@ -55,8 +55,8 @@ void OneDimPPMNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* OneDimPPMNuclideModelConstructor (){
-  return dynamic_cast<NuclideModel*>(OneDimPPMNuclide::create().get());
+NuclideModelPtr OneDimPPMNuclideModelConstructor (){
+  return boost::dynamic_pointer_cast<NuclideModel>(OneDimPPMNuclide::create());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){

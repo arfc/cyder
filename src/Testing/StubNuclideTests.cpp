@@ -49,8 +49,8 @@ void StubNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModel* StubNuclideModelConstructor (){
-  return dynamic_cast<NuclideModel*>(StubNuclide::create().get());
+NuclideModelPtr StubNuclideModelConstructor (){
+  return boost::dynamic_pointer_cast<NuclideModel>(StubNuclide::create());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
