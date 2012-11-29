@@ -52,7 +52,7 @@ typedef boost::shared_ptr<LumpedNuclide> LumpedNuclidePtr;
    Far Field, and Envrionment.
  */
 class LumpedNuclide : public NuclideModel {
-public:
+private: 
   
   /**
      Default constructor for the lumped parameter nuclide model class.
@@ -67,6 +67,19 @@ public:
      @param qe is the QueryEngine object containing intialization info
    */
   LumpedNuclide(QueryEngine* qe);
+
+public:
+  /**
+     A constructor for the Lumped Nuclide Model that returns a shared pointer.
+    */
+  static LumpedNuclidePtr create (){ return LumpedNuclidePtr(new LumpedNuclide()); };
+
+  /**
+     A constructor for the Lumped Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static LumpedNuclidePtr create (QueryEngine* qe){ return LumpedNuclidePtr(new LumpedNuclide(qe)); };
 
   /**
      Virtual destructor deletes datamembers that are object pointers.
@@ -85,7 +98,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModelPtr copy(NuclideModelPtr src); 
+  virtual NuclideModelPtr copy(const NuclideModel& src); 
 
   /**
      standard verbose printer includes current temp and concentrations

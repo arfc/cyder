@@ -41,7 +41,7 @@ void StubNuclide::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelPtr StubNuclide::copy(NuclideModelPtr src){
+NuclideModelPtr StubNuclide::copy(const NuclideModel& src){
   StubNuclidePtr toRet = StubNuclidePtr(new StubNuclide());
   return (NuclideModelPtr)toRet;
 }

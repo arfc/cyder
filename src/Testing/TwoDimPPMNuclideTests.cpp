@@ -46,9 +46,9 @@ void TwoDimPPMNuclideTest::SetUp(){
 
   // test_two_dim_ppm_nuclide model setup
   two_dim_ppm_ptr_ = initNuclideModel();
-  default_two_dim_ppm_ptr_ = TwoDimPPMNuclidePtr(new TwoDimPPMNuclide());
-  nuc_model_ptr_ = NuclideModelPtr(two_dim_ppm_ptr_);
-  default_nuc_model_ptr_ = NuclideModelPtr(default_two_dim_ppm_ptr_);
+  default_two_dim_ppm_ptr_ = TwoDimPPMNuclidePtr(TwoDimPPMNuclide::create());
+  nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(two_dim_ppm_ptr_);
+  default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_two_dim_ppm_ptr_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -56,8 +56,8 @@ void TwoDimPPMNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-NuclideModelPtr TwoDimPPMNuclideModelConstructor(){
-  return NuclideModelPtr(new TwoDimPPMNuclide());
+NuclideModelPtr TwoDimPPMNuclideModelConstructor (){
+  return boost::dynamic_pointer_cast<NuclideModel>(TwoDimPPMNuclide::create());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -75,10 +75,10 @@ TwoDimPPMNuclidePtr TwoDimPPMNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  two_dim_ppm_ptr_ = TwoDimPPMNuclidePtr(new TwoDimPPMNuclide());
-  two_dim_ppm_ptr_->initModuleMembers(engine);
+  TwoDimPPMNuclidePtr two_dim_ppm_ptr = TwoDimPPMNuclidePtr(TwoDimPPMNuclide::create());
+  two_dim_ppm_ptr->initModuleMembers(engine);
   delete engine;
-  return two_dim_ppm_ptr_;  
+  return two_dim_ppm_ptr;  
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -106,9 +106,11 @@ TEST_F(TwoDimPPMNuclideTest, initFunctionNoXML) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(TwoDimPPMNuclideTest, copy) {
   //ASSERT_NO_THROW(two_dim_ppm_ptr_->init(some_param_));
-  TwoDimPPMNuclidePtr test_copy = TwoDimPPMNuclidePtr(new TwoDimPPMNuclide());
-  EXPECT_NO_THROW(test_copy->copy(two_dim_ppm_ptr_));
-  EXPECT_NO_THROW(test_copy->copy(nuc_model_ptr_));
+  TwoDimPPMNuclidePtr test_copy = TwoDimPPMNuclidePtr(TwoDimPPMNuclide::create());
+  TwoDimPPMNuclidePtr two_dim_ppm_shared_ptr = TwoDimPPMNuclidePtr(two_dim_ppm_ptr_);
+  NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
+  EXPECT_NO_THROW(test_copy->copy(*two_dim_ppm_shared_ptr));
+  EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
   //EXPECT_FLOAT_EQ(some_param_, test_copy->some_param());
 }
 

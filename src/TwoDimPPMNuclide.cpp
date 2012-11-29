@@ -75,7 +75,7 @@ void TwoDimPPMNuclide::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelPtr TwoDimPPMNuclide::copy(NuclideModelPtr src){
+NuclideModelPtr TwoDimPPMNuclide::copy(const NuclideModel& src){
   TwoDimPPMNuclidePtr toRet = TwoDimPPMNuclidePtr(new TwoDimPPMNuclide());
   return (NuclideModelPtr)toRet;
 }

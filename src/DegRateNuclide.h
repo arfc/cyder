@@ -38,8 +38,7 @@ class DegRateNuclide : public NuclideModel {
   /* All NuclideModel classes   */
   /* have the following members */
   /*----------------------------*/
-public:
-  
+private: 
   /**
      Default constructor for the nuclide model class. Creates an empty nuclide model.
    */
@@ -51,6 +50,20 @@ public:
      @param qe is the QueryEngine object containing intialization info
    */
   DegRateNuclide(QueryEngine* qe);
+
+public:
+
+  /**
+     A constructor for the DegRate Nuclide Model that returns a shared pointer.
+    */
+  static DegRateNuclidePtr create(){ return DegRateNuclidePtr(new DegRateNuclide()); };
+
+  /**
+     A constructor for the DegRate Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static DegRateNuclidePtr create(QueryEngine* qe){ return DegRateNuclidePtr(new DegRateNuclide(qe)); };
 
   /**
      Virtual destructor deletes datamembers that are object pointers.
@@ -69,7 +82,7 @@ public:
      
      @param src is the nuclide model being copied
    */
-  virtual NuclideModelPtr copy(NuclideModelPtr src); 
+  virtual NuclideModelPtr copy(const NuclideModel& src); 
 
   /**
      standard verbose printer includes current temp and concentrations
@@ -150,7 +163,7 @@ public:
    *
      @return deg_rate_ fraction per year
    */
-  const double deg_rate() {return deg_rate_;};
+  const double deg_rate() const {return deg_rate_;};
 
   /** 
      returns the degradation rate that characterizes this model
@@ -212,40 +225,40 @@ public:
   void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
 
   /// returns the total degradation of the component
-  const double tot_deg(){return tot_deg_;};
+  const double tot_deg() const {return tot_deg_;};
 
   /// sets the total degradation of the component
-  void set_tot_deg(double tot_deg){tot_deg_=tot_deg;};
+  void set_tot_deg(const double tot_deg){tot_deg_=tot_deg;};
 
   /**
     Sets the hydrodynamic dispersion coefficient D_. [m^2/s] 
    */
-  void set_D(double D){D_ = D;};
+  void set_D(const double D){D_ = D;};
 
   /**
     The hydrodynamic dispersion coefficient D_. [m^2/s] 
    */
-  const double D(){return D_;};
+  const double D() const {return D_;};
 
   /**
     Set the advective velocity v_ through this component. [m/s] 
    */
-  void set_v(double v){v_ = v;};
+  void set_v(const double v){v_ = v;};
 
   /**
     The advective velocity through this component. [m/s] 
    */
-  const double v(){return v_;};
+  const double v() const {return v_;};
 
   /**
     Set the last_degraded_ time [integer timestamp]
    */
-  void set_last_degraded(int last_degraded){last_degraded_ = last_degraded;};
+  void set_last_degraded(const int last_degraded){last_degraded_ = last_degraded;};
 
   /**
     Returns the last timestamp at which this component was last degraded [integer timestamp]
    */
-  const int last_degraded(){return last_degraded_;};
+  const int last_degraded() const {return last_degraded_;};
 
 protected:
   /**

@@ -28,8 +28,7 @@ typedef boost::shared_ptr<LumpedThermal> LumpedThermalPtr;
    Far Field, and Envrionment.
  */
 class LumpedThermal : public ThermalModel {
-public:
-  
+private:
   /**
      Default constructor for the component class. Creates an empty component.
    */
@@ -41,6 +40,20 @@ public:
      @param qe is the QueryEngine object containing intialization info
    */
   LumpedThermal(QueryEngine* qe){};
+
+public:
+
+  /**
+     A constructor for the Lumped Nuclide Model that returns a shared pointer.
+    */
+  static ThermalModelPtr create(){ return ThermalModelPtr(new LumpedThermal()); };
+
+  /**
+     A constructor for the Lumped Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static ThermalModelPtr create(QueryEngine* qe){ return ThermalModelPtr(new LumpedThermal(qe)); };
 
   /** 
      Default destructor does nothing.

@@ -67,8 +67,8 @@ void MixedCellNuclide::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelPtr MixedCellNuclide::copy(NuclideModelPtr src){
-  MixedCellNuclidePtr src_ptr = boost::dynamic_pointer_cast<MixedCellNuclide>(src);
+NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
+  const MixedCellNuclide* src_ptr = dynamic_cast<const MixedCellNuclide*>(&src);
 
   set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());
@@ -86,7 +86,7 @@ NuclideModelPtr MixedCellNuclide::copy(NuclideModelPtr src){
   update_vec_hist(TI->time());
   update_conc_hist(TI->time());
 
-  return (NuclideModelPtr)this;
+  return shared_from_this();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -159,13 +159,13 @@ void MixedCellNuclide::set_porosity(double porosity){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::contained_mass(){
-  return NuclideModelPtr(this)->contained_mass(last_degraded());
+  return shared_from_this()->contained_mass(last_degraded());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
   return make_pair(contained_vec(last_degraded()), 
-      tot_deg()*NuclideModelPtr(this)->contained_mass(last_degraded()));
+      tot_deg()*shared_from_this()->contained_mass(last_degraded()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -218,7 +218,7 @@ IsoFluxMap MixedCellNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   Iso iso;
   for( it = neumann.begin(); it != neumann.end(); ++it){
     iso = (*it).first;
-    to_ret.insert(make_pair(iso, -D()*(*it).second + v()*NuclideModelPtr(this)->dirichlet_bc(iso)));
+    to_ret.insert(make_pair(iso, -D()*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
   }
   return to_ret;
 }
@@ -235,7 +235,7 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = NuclideModelPtr(this)->vec_hist(the_time);
+  sum_pair = shared_from_this()->vec_hist(the_time);
 
   int iso;
   double conc;
