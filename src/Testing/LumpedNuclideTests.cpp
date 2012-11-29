@@ -41,10 +41,10 @@ void LumpedNuclideTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_lumped_nuclide model setup
-  lumped_ptr_=initNuclideModel();
-  default_lumped_ptr_ = LumpedNuclidePtr(new LumpedNuclide());
-  nuc_model_ptr_ = NuclideModelPtr(lumped_ptr_);
-  default_nuc_model_ptr_ = NuclideModelPtr(default_lumped_ptr_);
+  lumped_ptr_=LumpedNuclidePtr(initNuclideModel());
+  nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(lumped_ptr_);
+  default_lumped_ptr_ = LumpedNuclidePtr(LumpedNuclide::create());
+  default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_lumped_ptr_);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclideTest::TearDown() {  
@@ -52,7 +52,7 @@ void LumpedNuclideTest::TearDown() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* LumpedNuclideModelConstructor (){
-  return dynamic_cast<NuclideModel*>(new LumpedNuclide());
+  return dynamic_cast<NuclideModel*>(LumpedNuclide::create().get());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
@@ -67,7 +67,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  lumped_ptr_ = LumpedNuclidePtr(new LumpedNuclide());
+  lumped_ptr_ = LumpedNuclidePtr(LumpedNuclide::create());
   lumped_ptr_->initModuleMembers(engine);
   delete engine;
   return lumped_ptr_;
@@ -91,7 +91,7 @@ TEST_F(LumpedNuclideTest, initFunctionNoXML) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, copy) {
   //ASSERT_NO_THROW(lumped_ptr_->init(some_param_));
-  LumpedNuclidePtr test_copy = LumpedNuclidePtr(new LumpedNuclide());
+  LumpedNuclidePtr test_copy = LumpedNuclidePtr(LumpedNuclide::create());
   LumpedNuclidePtr lumped_shared_ptr = LumpedNuclidePtr(lumped_ptr_);
   NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
   EXPECT_NO_THROW(test_copy->copy(*lumped_shared_ptr));

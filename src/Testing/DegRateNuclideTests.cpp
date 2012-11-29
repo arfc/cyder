@@ -41,10 +41,10 @@ void DegRateNuclideTest::SetUp(){
 
   // test_deg_rate_nuclide model setup
   deg_rate_ = 0.1;
-  deg_rate_ptr_ = initNuclideModel(); //initializes deg_rate_ptr_
-  nuc_model_ptr_ = NuclideModelPtr(initNuclideModel());
-  default_deg_rate_ptr_ = DegRateNuclidePtr(new DegRateNuclide());
-  default_nuc_model_ptr_ = NuclideModelPtr(new DegRateNuclide());
+  deg_rate_ptr_ = DegRateNuclidePtr(initNuclideModel()); //initializes deg_rate_ptr_
+  nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(deg_rate_ptr_);
+  default_deg_rate_ptr_ = DegRateNuclidePtr(DegRateNuclide::create());
+  default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_deg_rate_ptr_);
 
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -52,7 +52,7 @@ void DegRateNuclideTest::TearDown() {
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModel* DegRateNuclideModelConstructor(){
-  return dynamic_cast<NuclideModel*>(new DegRateNuclide());
+  return dynamic_cast<NuclideModel*>(DegRateNuclide::create().get());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -66,7 +66,7 @@ DegRateNuclidePtr DegRateNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  DegRateNuclidePtr to_ret = DegRateNuclidePtr(new DegRateNuclide());
+  DegRateNuclidePtr to_ret = DegRateNuclidePtr(DegRateNuclide::create());
   to_ret->initModuleMembers(engine);
   delete engine;
   return to_ret;
@@ -88,7 +88,7 @@ TEST_F(DegRateNuclideTest, defaultConstructor) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(DegRateNuclideTest, copy) {
-  DegRateNuclidePtr test_copy = DegRateNuclidePtr(new DegRateNuclide());
+  DegRateNuclidePtr test_copy = DegRateNuclidePtr(DegRateNuclide::create());
   DegRateNuclidePtr deg_rate_shared_ptr = DegRateNuclidePtr(deg_rate_ptr_);
   NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
   EXPECT_NO_THROW(test_copy->copy(*deg_rate_shared_ptr));

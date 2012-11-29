@@ -29,8 +29,8 @@ class ComponentTest : public ::testing::Test {
       type_ = BUFFER;
       inner_radius_ = 2;
       outer_radius_ = 10;
-      thermal_model_ = StubThermalPtr(new StubThermal());
-      nuclide_model_ = DegRateNuclidePtr(new DegRateNuclide());
+      thermal_model_ = StubThermal::create();
+      nuclide_model_ = DegRateNuclide::create();
     }
     virtual void TearDown() {
     }

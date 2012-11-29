@@ -38,7 +38,7 @@ class MixedCellNuclide : public NuclideModel {
   /* All NuclideModel classes   */
   /* have the following members */
   /*----------------------------*/
-public:
+private:
   
   /**
      Default constructor for the nuclide model class. Creates an empty nuclide model.
@@ -52,17 +52,19 @@ public:
    */
   MixedCellNuclide(QueryEngine* qe);
 
+public:
+
   /**
      A constructor for the Mixed Cell Nuclide Model that returns a shared pointer.
     */
-  static NuclideModelPtr create (){ return NuclideModelPtr(new MixedCellNuclide()); };
+  static MixedCellNuclidePtr create (){ return MixedCellNuclidePtr(new MixedCellNuclide()); };
 
   /**
      A constructor for the Mixed Cell Nuclide Model that returns a shared pointer.
 
      @param qe is the QueryEngine object containing intialization info
     */
-  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new MixedCellNuclide(qe)); };
+  static MixedCellNuclidePtr create (QueryEngine* qe){ return MixedCellNuclidePtr(new MixedCellNuclide(qe)); };
 
   /**
      Virtual destructor deletes datamembers that are object pointers.

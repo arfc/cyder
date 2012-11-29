@@ -37,7 +37,7 @@ typedef boost::shared_ptr<TwoDimPPMNuclide> TwoDimPPMNuclidePtr;
    Far Field, and Envrionment.
  */
 class TwoDimPPMNuclide : public NuclideModel {
-public:
+private:
   
   /**
      Default constructor for the mixed cell nuclide model class.
@@ -53,17 +53,18 @@ public:
    */
   TwoDimPPMNuclide(QueryEngine* qe);
 
+public:
   /**
      A constructor for the TwoDimPPM Nuclide Model that returns a shared pointer.
     */
-  static NuclideModelPtr create (){ return NuclideModelPtr(new TwoDimPPMNuclide()); };
+  static TwoDimPPMNuclidePtr create (){ return TwoDimPPMNuclidePtr(new TwoDimPPMNuclide()); };
 
   /**
      A constructor for the TwoDimPPM Nuclide Model that returns a shared pointer.
 
      @param qe is the QueryEngine object containing intialization info
     */
-  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new TwoDimPPMNuclide(qe)); };
+  static TwoDimPPMNuclidePtr create (QueryEngine* qe){ return TwoDimPPMNuclidePtr(new TwoDimPPMNuclide(qe)); };
 
   /**
      Virtual destructor deletes datamembers that are object pointers.

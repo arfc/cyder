@@ -52,7 +52,7 @@ typedef boost::shared_ptr<LumpedNuclide> LumpedNuclidePtr;
    Far Field, and Envrionment.
  */
 class LumpedNuclide : public NuclideModel {
-public:
+private: 
   
   /**
      Default constructor for the lumped parameter nuclide model class.
@@ -68,17 +68,18 @@ public:
    */
   LumpedNuclide(QueryEngine* qe);
 
+public:
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
     */
-  static NuclideModelPtr create (){ return NuclideModelPtr(new LumpedNuclide()); };
+  static LumpedNuclidePtr create (){ return LumpedNuclidePtr(new LumpedNuclide()); };
 
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
 
      @param qe is the QueryEngine object containing intialization info
     */
-  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new LumpedNuclide(qe)); };
+  static LumpedNuclidePtr create (QueryEngine* qe){ return LumpedNuclidePtr(new LumpedNuclide(qe)); };
 
   /**
      Virtual destructor deletes datamembers that are object pointers.

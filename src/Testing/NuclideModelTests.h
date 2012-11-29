@@ -20,7 +20,7 @@ typedef NuclideModel* NuclideModelConstructor();
 class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
  public:
   virtual void SetUp() { 
-    nuclide_model_ = (*GetParam())();
+    nuclide_model_ = NuclideModelPtr((*GetParam())());
       // set up geometry. this usually happens in the component init
       r_four_ = 4;
       r_five_ = 5;
@@ -46,7 +46,7 @@ class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
   }
     
  protected:
-  NuclideModel* nuclide_model_;
+  NuclideModelPtr nuclide_model_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
   int one_mol_;

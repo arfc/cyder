@@ -38,8 +38,7 @@ class DegRateNuclide : public NuclideModel {
   /* All NuclideModel classes   */
   /* have the following members */
   /*----------------------------*/
-public:
-  
+private: 
   /**
      Default constructor for the nuclide model class. Creates an empty nuclide model.
    */
@@ -52,17 +51,19 @@ public:
    */
   DegRateNuclide(QueryEngine* qe);
 
+public:
+
   /**
      A constructor for the DegRate Nuclide Model that returns a shared pointer.
     */
-  static NuclideModelPtr create (){ return NuclideModelPtr(new DegRateNuclide()); };
+  static DegRateNuclidePtr create(){ return DegRateNuclidePtr(new DegRateNuclide()); };
 
   /**
      A constructor for the DegRate Nuclide Model that returns a shared pointer.
 
      @param qe is the QueryEngine object containing intialization info
     */
-  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new DegRateNuclide(qe)); };
+  static DegRateNuclidePtr create(QueryEngine* qe){ return DegRateNuclidePtr(new DegRateNuclide(qe)); };
 
   /**
      Virtual destructor deletes datamembers that are object pointers.

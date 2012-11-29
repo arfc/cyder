@@ -46,8 +46,8 @@ string Component::nuclide_type_names_[] = {
 Component::Component() :
   name_(""),
   type_(LAST_EBS),
-  thermal_model_(new StubThermal()),
-  nuclide_model_(new StubNuclide()),
+  thermal_model_(StubThermal::create()),
+  nuclide_model_(StubNuclide::create()),
   parent_(),
   temp_(0),
   temp_lim_(373),
