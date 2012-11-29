@@ -49,6 +49,18 @@ public:
   virtual ~StubNuclide();
 
   /**
+     A constructor for the Stub Nuclide Model that returns a shared pointer.
+    */
+  static NuclideModelPtr create (){ return NuclideModelPtr(new StubNuclide()); };
+
+  /**
+     A constructor for the Stub Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new StubNuclide(qe)); };
+
+  /**
      initializes the model parameters from an xmlNodePtr
      
      @param qe is the QueryEngine object containing intialization info

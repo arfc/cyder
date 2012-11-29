@@ -55,6 +55,18 @@ public:
   OneDimPPMNuclide(QueryEngine* qe);
 
   /**
+     A constructor for the OneDimPPM Nuclide Model that returns a shared pointer.
+    */
+  static NuclideModelPtr create (){ return NuclideModelPtr(new OneDimPPMNuclide()); };
+
+  /**
+     A constructor for the OneDimPPM Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new OneDimPPMNuclide(qe)); };
+
+  /**
      Virtual destructor deletes datamembers that are object pointers.
     */
   virtual ~OneDimPPMNuclide();

@@ -53,6 +53,18 @@ public:
   DegRateNuclide(QueryEngine* qe);
 
   /**
+     A constructor for the DegRate Nuclide Model that returns a shared pointer.
+    */
+  static NuclideModelPtr create (){ return NuclideModelPtr(new DegRateNuclide()); };
+
+  /**
+     A constructor for the DegRate Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new DegRateNuclide(qe)); };
+
+  /**
      Virtual destructor deletes datamembers that are object pointers.
     */
   virtual ~DegRateNuclide();

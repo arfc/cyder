@@ -69,6 +69,18 @@ public:
   LumpedNuclide(QueryEngine* qe);
 
   /**
+     A constructor for the Lumped Nuclide Model that returns a shared pointer.
+    */
+  static NuclideModelPtr create (){ return NuclideModelPtr(new LumpedNuclide()); };
+
+  /**
+     A constructor for the Lumped Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new LumpedNuclide(qe)); };
+
+  /**
      Virtual destructor deletes datamembers that are object pointers.
     */
   virtual ~LumpedNuclide();

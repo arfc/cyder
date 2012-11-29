@@ -54,6 +54,18 @@ public:
   TwoDimPPMNuclide(QueryEngine* qe);
 
   /**
+     A constructor for the TwoDimPPM Nuclide Model that returns a shared pointer.
+    */
+  static NuclideModelPtr create (){ return NuclideModelPtr(new TwoDimPPMNuclide()); };
+
+  /**
+     A constructor for the TwoDimPPM Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static NuclideModelPtr create (QueryEngine* qe){ return NuclideModelPtr(new TwoDimPPMNuclide(qe)); };
+
+  /**
      Virtual destructor deletes datamembers that are object pointers.
     */
   virtual ~TwoDimPPMNuclide() ;

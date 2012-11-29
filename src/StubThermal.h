@@ -46,6 +46,18 @@ public:
   ~StubThermal() {};
 
   /**
+     A constructor for the Lumped Nuclide Model that returns a shared pointer.
+    */
+  static ThermalModelPtr create (){ return ThermalModelPtr(new StubThermal()); };
+
+  /**
+     A constructor for the Lumped Nuclide Model that returns a shared pointer.
+
+     @param qe is the QueryEngine object containing intialization info
+    */
+  static ThermalModelPtr create (QueryEngine* qe){ return ThermalModelPtr(new StubThermal(qe)); };
+
+  /**
      initializes the model parameters from an xmlNodePtr
      
      @param qe is the QueryEngine object containing intialization info
