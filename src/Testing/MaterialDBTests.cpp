@@ -5,7 +5,6 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatDataTableTest, openDB){
-  EXPECT_NO_THROW( main_db_->);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -16,22 +15,27 @@ TEST_F(MatDataTableTest, closeDB){
 TEST_F(MatDataTableTest, listAvailableMats){
   // the DB should include one table for each important mat
   // Clay, Granite, Bedrock, Salt, Steel, Copper, Glass, Bentonite, UO2
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MatDataTableTest, listAvailableMats){
-  // the DB should include one table for each important mat
-  // Clay, Granite, Bedrock, Salt, Steel, Copper, Glass, Bentonite, UO2
+  EXPECT_NO_THROW(db()->list_available_mats());
+  EXPECT_EQ(1,db()->list_available_mats().count("clay"))
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatDataTableTest, get_mat_table){
   // the DB should return a table for any mat in the list of avail mats
+  set<std::string>::iterator it;
+  for(it=db()->list_available_mats().begin();
+      it!=db()->list_available_mats().end(); ++it){
+    EXPECT_NO_THROW(db()->table((*it)))
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatDataTableTest, listAvailableElems){
   // the DB should include all elements for each mat
+  EXPECT_NO_THROW(db()->list_available_elems());
+  for(int i=1; i<120; i++){
+    EXPECT_EQ(1,db()->list_available_mats().count(i))
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
