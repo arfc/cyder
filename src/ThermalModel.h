@@ -9,6 +9,7 @@
 
 #include "Material.h"
 #include "Geometry.h"
+#include "MatDataTable.h"
 
 /**  
    type definition for Temperature in Kelvin
@@ -108,7 +109,14 @@ public:
 
      @param geom the geometry of the component, a shared pointer
     */
-  void set_geom(GeometryPtr geom){geom_ = geom;};
+  void set_geom(GeometryPtr geom){geom_ = GeometryPtr(geom);};
+
+  /**
+     set the MatDataTablePtr shared pointer
+
+     @param mat_table the matdatatableptr of of the component, a shared pointer
+    */
+  void set_mat_table(MatDataTablePtr mat_table){mat_table_ = MatDataTablePtr(mat_table);};
 
 protected:
   /// The temperature history of this component
@@ -119,6 +127,9 @@ protected:
 
   /// A shared pointer to the geometry of this component
   GeometryPtr geom_;
+
+  /// A shared pointer to the MatDataTablePtr representing the material of this component
+  MatDataTablePtr mat_table_;
 
 };
 

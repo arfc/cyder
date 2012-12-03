@@ -7,6 +7,7 @@
 #include "SqliteDb.h"
 #include "MatDataTable.h"
 
+#define MDB MaterialDB::Instance()
 
 /// a type definition for elements
 typedef int Elem;
@@ -18,12 +19,25 @@ typedef int Elem;
  */
 class MaterialDB {
 private:
+  /** 
+     A pointer to this MaterialDB once it has been initialized
+    */
+  static MaterialDB* instance_;
+
   /**
-    this database
+    this database's file path
    */
-  SqliteDb* db_;
+  std::string file_path_;
 
 public:
+  /** 
+     Provides a singleton instance for the MaterialDB.
+     Like the Highlander, there should be only one. 
+
+     @return a pointer to the MaterialDB
+    */
+  static MaterialDB* Instance();
+
   /**
      Default constructor for the MaterialDB class. 
      Initializes the data from the provided mat_data.sqlite file. 
