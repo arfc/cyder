@@ -1,13 +1,12 @@
-// MatDataTableTests.h
+// MaterialDBTests.h
 #include <gtest/gtest.h>
 #include <MatDataTable.h>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-class MatDataTableTest : public ::testing::Test {
+class MaterialDBTest : public ::testing::Test {
   protected:
-    vector mat_names_;
-    vector<int> iso_ids_;
-    vector<> iso_ids_;
+    std::vector<std::string> mat_names_;
+    std::vector<int> elem_ids_;
 
     virtual void SetUp(){
       // composition set up
