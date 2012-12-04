@@ -9,6 +9,7 @@
 #include "NuclideModel.h"
 #include "CycException.h"
 #include "Material.h"
+#include "MaterialDB.h"
 #include "XMLQueryEngine.h"
 
 using namespace std;
@@ -25,10 +26,11 @@ void DegRateNuclideTest::SetUp(){
   // other vars
   adv_vel_ = .1; // m/yr @TODO worry about units
   time_ = 0;
-  D_ = 0.00063; //@TODO worry about units 
+  mat_table_=MDB->table("clay");
 
   // composition set up
   u235_=92235;
+  u_=92;
   one_mol_=1.0;
   test_comp_= CompMapPtr(new CompMap(MASS));
   (*test_comp_)[u235_] = one_mol_;
@@ -42,8 +44,10 @@ void DegRateNuclideTest::SetUp(){
   deg_rate_ = 0.1;
   deg_rate_ptr_ = DegRateNuclidePtr(initNuclideModel()); //initializes deg_rate_ptr_
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(deg_rate_ptr_);
+  deg_rate_ptr_->set_mat_table(mat_table_);
   default_deg_rate_ptr_ = DegRateNuclidePtr(DegRateNuclide::create());
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_deg_rate_ptr_);
+  default_deg_rate_ptr_->set_mat_table(mat_table_);
 
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -60,7 +64,6 @@ DegRateNuclidePtr DegRateNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <degradation>" << deg_rate_ << "</degradation>"
-     << "  <diffusion_coeff>" << D_ << "</diffusion_coeff>"
      << "</start>";
 
   XMLParser parser(ss);
@@ -242,7 +245,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_GT(deg_rate_ptr_->geom()->radial_midpoint(), 0);
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
   // Cauchy
-  double expected_cauchy = -D_*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -263,7 +266,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  expected_cauchy = -D_*expected_neumann + adv_vel_*expected_conc; // @TODO fix
+  expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -319,7 +322,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  double expected_cauchy = -D_*expected_neumann + adv_vel_*expected_conc; // @TODO fix
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered

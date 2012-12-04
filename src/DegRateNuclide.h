@@ -231,16 +231,6 @@ public:
   void set_tot_deg(const double tot_deg){tot_deg_=tot_deg;};
 
   /**
-    Sets the hydrodynamic dispersion coefficient D_. [m^2/s] 
-   */
-  void set_D(const double D){D_ = D;};
-
-  /**
-    The hydrodynamic dispersion coefficient D_. [m^2/s] 
-   */
-  const double D() const {return D_;};
-
-  /**
     Set the advective velocity v_ through this component. [m/s] 
    */
   void set_v(const double v){v_ = v;};
@@ -266,11 +256,6 @@ protected:
    */
   double v_;
 
-  /**
-    The hydrodynamic dispersion coefficient. [m^2/s] 
-   */
-  double D_;
-   
   /**
     The degradation rate that defines this model, fraction per year.
    */

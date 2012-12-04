@@ -5,6 +5,7 @@
 #include "suffix.h"
 #include "TestInst.h"
 #include "TestMarket.h"
+#include "MaterialDB.h"
 
 #if GTEST_HAS_PARAM_TEST
 
@@ -21,6 +22,8 @@ class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
  public:
   virtual void SetUp() { 
     nuclide_model_ = (*GetParam())();
+    mat_table_ = MDB->table("clay");
+    nuclide_model_->set_mat_table(mat_table_);
     // set up geometry. this usually happens in the component init
     r_four_ = 4;
     r_five_ = 5;
@@ -47,6 +50,7 @@ class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
     
  protected:
   NuclideModelPtr nuclide_model_;
+  MatDataTablePtr mat_table_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
   int one_mol_;
