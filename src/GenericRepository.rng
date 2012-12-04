@@ -88,7 +88,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="DegRateNuclide">
       <ref name="advective_velocity"/>
       <ref name="degradation"/>
-      <ref name="diffusion_coeff"/>
     </element>
   </define>
 
@@ -114,7 +113,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="MixedCellNuclide">
       <ref name="advective_velocity"/>
       <ref name="degradation"/>
-      <ref name="diffusion_coeff"/>
       <ref name="porosity"/>
     </element>
   </define>
@@ -124,7 +122,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="initial_concentration"/>
       <ref name="source_concentration"/>
       <ref name="porosity"/>
-      <ref name="diffusion_coeff"/>
       <ref name="bulk_density"/>
       <ref name="partition_coeff"/>
       <ref name="retardation_coeff"/>
@@ -135,7 +132,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="TwoDimPPMNuclide">
       <ref name="initial_concentration"/>
       <ref name="source_concentration"/>
-      <ref name="diffusion_coeff"/>
       <ref name="porosity"/>
       <ref name="bulk_density"/>
       <ref name="partition_coeff"/>
@@ -166,14 +162,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <data type="double">
         <param name="minInclusive">0</param>
         <param name="maxInclusive">1</param>
-      </data>
-    </element>
-  </define>
-
-  <define name="diffusion_coeff">
-    <element name="diffusion_coeff">
-      <data type="double">
-        <param name="minInclusive">0</param>
       </data>
     </element>
   </define>
