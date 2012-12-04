@@ -24,7 +24,6 @@ MixedCellNuclide::MixedCellNuclide():
   tot_deg_(0),
   last_degraded_(0),
   v_(0),
-  D_(0),
   porosity_(0)
 {
   wastes_ = deque<mat_rsrc_ptr>();
@@ -41,7 +40,6 @@ MixedCellNuclide::MixedCellNuclide(QueryEngine* qe):
   tot_deg_(0),
   last_degraded_(0),
   v_(0),
-  D_(0),
   porosity_(0)
 {
   wastes_ = deque<mat_rsrc_ptr>();
@@ -61,7 +59,6 @@ MixedCellNuclide::~MixedCellNuclide(){
 void MixedCellNuclide::initModuleMembers(QueryEngine* qe){
   set_v(lexical_cast<double>(qe->getElementContent("advective_velocity")));
   set_deg_rate(lexical_cast<double>(qe->getElementContent("degradation")));
-  set_D(lexical_cast<double>(qe->getElementContent("diffusion_coeff")));
   set_porosity(lexical_cast<double>(qe->getElementContent("porosity")));
   LOG(LEV_DEBUG2,"GRDRNuc") << "The MixedCellNuclide Class initModuleMembers(qe) function has been called";;
 }
@@ -72,7 +69,6 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
 
   set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());
-  set_D(src_ptr->D());
   set_tot_deg(0);
   set_last_degraded(TI->time());
 
@@ -216,9 +212,11 @@ IsoFluxMap MixedCellNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   ConcGradMap neumann = neumann_bc(c_ext, r_ext);
   ConcGradMap::iterator it;
   Iso iso;
+  Elem elem;
   for( it = neumann.begin(); it != neumann.end(); ++it){
     iso = (*it).first;
-    to_ret.insert(make_pair(iso, -D()*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
+    elem = iso/1000;
+    to_ret.insert(make_pair(iso, -mat_table_->D(elem)*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
   }
   return to_ret;
 }

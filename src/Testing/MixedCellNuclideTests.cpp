@@ -25,12 +25,12 @@ void MixedCellNuclideTest::SetUp(){
   theta_ = 0.3; // percent porosity
   adv_vel_ = 1; // m/yr
   time_ = 0;
-  D_ = 0.000631;
   porosity_ = 0;
   deg_rate_ = 0;
 
   // composition set up
   u235_=92235;
+  u_=92;
   one_mol_=1.0;
   test_comp_= CompMapPtr(new CompMap(MASS));
   (*test_comp_)[u235_] = one_mol_;
@@ -41,10 +41,13 @@ void MixedCellNuclideTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_mixed_cell_nuclide model setup
+  mat_table_=MDB->table("clay");
   mixed_cell_ptr_ = MixedCellNuclidePtr(initNuclideModel());
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(mixed_cell_ptr_);
+  mixed_cell_ptr_->set_mat_table(mat_table_);
   default_mixed_cell_ptr_ = MixedCellNuclidePtr(MixedCellNuclide::create());
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_mixed_cell_ptr_);
+  default_mixed_cell_ptr_->set_mat_table(mat_table_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -61,7 +64,6 @@ MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <degradation>" << deg_rate_ << "</degradation>"
-     << "  <diffusion_coeff>" << D_ << "</diffusion_coeff>"
      << "  <porosity>" << porosity_ << "</porosity>"
      << "</start>";
 
@@ -264,7 +266,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   double expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
   // Cauchy
-  double expected_cauchy = -D_*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -285,7 +287,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  expected_cauchy = -D_*expected_neumann + adv_vel_*expected_conc; // @TODO fix
+  expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -341,7 +343,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
   double expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  double expected_cauchy = -D_*expected_neumann + adv_vel_*expected_conc; // @TODO fix
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
