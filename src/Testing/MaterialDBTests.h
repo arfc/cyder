@@ -16,7 +16,10 @@ class MaterialDBTest : public ::testing::Test {
       th_ = 90;
       pb_ = 82;
       one_g_ = 1.0;
-
+      elem_ids_.push_back(u_);
+      elem_ids_.push_back(th_);
+      elem_ids_.push_back(am_);
+      elem_ids_.push_back(pb_);
     }
 
     virtual void TearDown(){
