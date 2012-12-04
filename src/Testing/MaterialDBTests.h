@@ -7,7 +7,7 @@ class MaterialDBTest : public ::testing::Test {
   protected:
     std::vector<std::string> mat_names_;
     std::vector<int> elem_ids_;
-    int u_, am_, th_, pb_, one_g_; 
+    Elem u_, am_, th_, pb_, one_g_; 
 
     virtual void SetUp(){
       // composition set up

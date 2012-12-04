@@ -4,15 +4,15 @@
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, openDB){
+TEST_F(MaterialDBTest, DISABLED_openDB){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, closeDB){
+TEST_F(MaterialDBTest, DISABLED_closeDB){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, listAvailableMats){
+TEST_F(MaterialDBTest, DISABLED_listAvailableMats){
   // the DB should include one table for each important mat
   // Clay, Granite, Bedrock, Salt, Steel, Copper, Glass, Bentonite, UO2
   //EXPECT_NO_THROW(MDB->list_available_mats());
@@ -20,7 +20,7 @@ TEST_F(MaterialDBTest, listAvailableMats){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, get_mat_table){
+TEST_F(MaterialDBTest, DISABLED_get_mat_table){
   // the DB should return a table for any mat in the list of avail mats
  // set<std::string>::iterator it;
  // for(it=MDB->list_available_mats().begin();
@@ -30,7 +30,7 @@ TEST_F(MaterialDBTest, get_mat_table){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, listAvailableElems){
+TEST_F(MaterialDBTest, DISABLED_listAvailableElems){
   // the DB should include all elements for each mat
   //MatDataTablePtr clay_table = MDB->table("clay");
   //EXPECT_NO_THROW(clay_table->list_available_elems());
@@ -40,7 +40,7 @@ TEST_F(MaterialDBTest, listAvailableElems){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, get_elem_row){
+TEST_F(MaterialDBTest, DISABLED_get_elem_row){
   // from a table object,
   // the DB should return a row for any elem in the list of avail elems
   //MatDataTablePtr clay_table = MDB->table("clay");
@@ -52,13 +52,13 @@ TEST_F(MaterialDBTest, get_elem_row){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, availableData){
+TEST_F(MaterialDBTest, DISABLED_availableData){
   // the DB should include K_d, S, D, etc. for each elem
 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, get_data_elem){
+TEST_F(MaterialDBTest, DISABLED_get_data_elem){
   // from a row object,
   // the DB should return a data element for any data type in the list of 
   // available data types
@@ -67,19 +67,28 @@ TEST_F(MaterialDBTest, get_data_elem){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MaterialDBTest, S){
   // the DB should give appropriate solubility limits for canonical mat/elems, within a range.
-  EXPECT_NO_THROW(MDB->S("clay", 92));
+  EXPECT_NO_THROW(MDB->S("clay", u_));
+  EXPECT_NO_THROW(MDB->S("clay", am_));
+  EXPECT_NO_THROW(MDB->S("clay", pb_));
+  EXPECT_NO_THROW(MDB->S("clay", th_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MaterialDBTest, K_d){
   // the DB should give appropriate K_d values for canonical mat/elems, within a range.
-  EXPECT_NO_THROW(MDB->K_d("clay", 92));
+  EXPECT_NO_THROW(MDB->K_d("clay", u_));
+  EXPECT_NO_THROW(MDB->K_d("clay", am_));
+  EXPECT_NO_THROW(MDB->K_d("clay", pb_));
+  EXPECT_NO_THROW(MDB->K_d("clay", th_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MaterialDBTest, D){
   // the DB should give appropriate D values for canonical mat/elems, within a range.
-  EXPECT_NO_THROW(MDB->D("clay", 92));
+  EXPECT_NO_THROW(MDB->D("clay", u_));
+  EXPECT_NO_THROW(MDB->D("clay", am_));
+  EXPECT_NO_THROW(MDB->D("clay", pb_));
+  EXPECT_NO_THROW(MDB->D("clay", th_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
