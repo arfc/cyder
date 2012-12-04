@@ -28,7 +28,7 @@ class ComponentTest : public ::testing::Test {
       name_ = "Test";
       infty_ = numeric_limits<double>::infinity();
       type_ = BUFFER;
-      mat_ = "Clay";
+      mat_ = "clay";
       inner_radius_ = 2;
       outer_radius_ = 10;
       thermal_model_ = StubThermal::create();
@@ -61,6 +61,7 @@ TEST_F(ComponentTest, defaultConstructor) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, initFunctionNoXML) { 
+  test_component_->init(name_, type_, mat_, inner_radius_, outer_radius_, thermal_model_, nuclide_model_);
   EXPECT_NO_THROW(test_component_->init(name_, type_, mat_, inner_radius_, outer_radius_, 
         thermal_model_, nuclide_model_));
   ASSERT_EQ(name_, test_component_->name());

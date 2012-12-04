@@ -10,6 +10,7 @@
 #include "Material.h"
 #include "Geometry.h"
 #include "MatTools.h"
+#include "MatDataTable.h"
 
 /**
    enumerated list of types of nuclide transport model
@@ -348,6 +349,8 @@ public:
     return to_ret;
   }
 
+  void set_mat_table(MatDataTablePtr mat_table){mat_table_ = MatDataTablePtr(mat_table);}
+
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};
@@ -361,6 +364,8 @@ protected:
   
   /// A shared pointer to the geometry of the component
   GeometryPtr geom_;
- 
+
+  /// A shared pointer to this Component's material data table 
+  MatDataTablePtr mat_table_;
 };
 #endif

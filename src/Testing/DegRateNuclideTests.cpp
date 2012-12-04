@@ -23,7 +23,6 @@ void DegRateNuclideTest::SetUp(){
   geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
 
   // other vars
-  theta_ = 0.3; // percent porosity
   adv_vel_ = .1; // m/yr @TODO worry about units
   time_ = 0;
   D_ = 0.00063; //@TODO worry about units 
@@ -66,10 +65,10 @@ DegRateNuclidePtr DegRateNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  DegRateNuclidePtr to_ret = DegRateNuclidePtr(DegRateNuclide::create());
-  to_ret->initModuleMembers(engine);
+  deg_rate_ptr_ = DegRateNuclidePtr(DegRateNuclide::create());
+  deg_rate_ptr_->initModuleMembers(engine);
   delete engine;
-  return to_ret;
+  return deg_rate_ptr_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -214,7 +213,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
+  double expected_conc_w_vel = adv_vel_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
@@ -238,6 +237,9 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Neumann
   double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
+  EXPECT_GT(expected_conc, 0);
+  EXPECT_GT(outer_radius, deg_rate_ptr_->geom()->radial_midpoint());
+  EXPECT_GT(deg_rate_ptr_->geom()->radial_midpoint(), 0);
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
   // Cauchy
   double expected_cauchy = -D_*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
@@ -291,7 +293,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
+  double expected_conc_w_vel = adv_vel_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
