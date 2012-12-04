@@ -48,6 +48,7 @@ Component::Component() :
   type_(LAST_EBS),
   thermal_model_(StubThermal::create()),
   nuclide_model_(StubNuclide::create()),
+  mat_table_(),
   parent_(),
   temp_(0),
   temp_lim_(373),
@@ -68,16 +69,17 @@ void Component::initModuleMembers(QueryEngine* qe){
 
   string name = qe->getElementContent("name");
   ComponentType type = componentEnum(qe->getElementContent("componenttype"));
+  string mat = qe->getElementContent("material_data");
   Radius inner_radius = lexical_cast<double>(qe->getElementContent("innerradius"));
   Radius outer_radius = lexical_cast<double>(qe->getElementContent("outerradius"));
 
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
 
-  this->init(name, type, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
+  this->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::init(string name, ComponentType type, 
+void Component::init(string name, ComponentType type, string mat,
     Radius inner_radius, Radius outer_radius, ThermalModelPtr thermal_model, 
     NuclideModelPtr nuclide_model){
 
@@ -85,8 +87,9 @@ void Component::init(string name, ComponentType type,
   
   name_ = name;
   type_ = type;
-  geom_->set_radius(INNER, inner_radius);
-  geom_->set_radius(OUTER, outer_radius);
+  set_mat_table(mat);
+  geom()->set_radius(INNER, inner_radius);
+  geom()->set_radius(OUTER, outer_radius);
 
   if ( !(thermal_model) || !(nuclide_model) ) {
     string err = "The thermal or nuclide model provided is null " ;
@@ -110,6 +113,7 @@ void Component::copy(const ComponentPtr& src){
 
   set_name(src->name());
   set_type(src->type());
+  set_mat_table(src->mat_table());
 
   // warning, you are currently copying the centroid as well. 
   // does this object lay on top of the one being copied?
@@ -285,6 +289,7 @@ ThermalModelPtr Component::thermal_model(QueryEngine* qe){
     default:
       throw CycException("Unknown thermal model enum value encountered."); 
   }
+  toRet->set_mat_table(mat_table());
   return toRet;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -317,6 +322,7 @@ NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
     default:
       throw CycException("Unknown nuclide model enum value encountered."); 
   }
+  toRet->set_mat_table(mat_table());
   return toRet;
 }
 
@@ -328,15 +334,15 @@ ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
   {
     case LUMPED_THERMAL:
       toRet = ThermalModelPtr(LumpedThermal::create());
-      toRet->copy(src);
       break;
     case STUB_THERMAL:
       toRet = ThermalModelPtr(StubThermal::create());
-      toRet->copy(src);
       break;
     default:
       throw CycException("Unknown thermal model enum value encountered when copying."); 
   }      
+  toRet->copy(src);
+  toRet->set_mat_table(mat_table());
   return toRet;
 }
 
@@ -367,6 +373,7 @@ NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
       throw CycException("Unknown nuclide model enum value encountered when copying."); 
   }      
   toRet->copy(*src);
+  toRet->set_mat_table(mat_table());
   return toRet;
 }
 
@@ -375,6 +382,19 @@ const int Component::ID(){return ID_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const std::string Component::name(){return name_;} 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void Component::set_mat_table(std::string mat){
+  mat_table_ = MatDataTablePtr(MDB->table(mat));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void Component::set_mat_table(MatDataTablePtr mat_table){
+  mat_table_ = MatDataTablePtr(mat_table);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const MatDataTablePtr Component::mat_table(){return mat_table_;} 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const std::vector<ComponentPtr> Component::daughters(){return daughters_;}

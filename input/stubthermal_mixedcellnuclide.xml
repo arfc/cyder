@@ -59,6 +59,7 @@
           <innerradius>0</innerradius>
           <outerradius>1</outerradius>
           <componenttype>WF</componenttype>
+          <material_data>clay</material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
@@ -75,6 +76,7 @@
           <innerradius>1</innerradius>
           <outerradius>2</outerradius>
           <componenttype>WP</componenttype>
+          <material_data>clay</material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
@@ -91,6 +93,7 @@
           <innerradius>2</innerradius>
           <outerradius>3</outerradius>
           <componenttype>BUFFER</componenttype>
+          <material_data>clay</material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
@@ -107,6 +110,7 @@
           <innerradius>3</innerradius>
           <outerradius>100</outerradius>
           <componenttype>FF</componenttype>
+          <material_data>clay</material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>

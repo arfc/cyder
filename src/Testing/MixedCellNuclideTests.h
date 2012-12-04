@@ -12,6 +12,7 @@ protected:
   
   MixedCellNuclidePtr mixed_cell_ptr_;
   MixedCellNuclidePtr default_mixed_cell_ptr_;
+  MatDataTablePtr mat_table_;
   NuclideModelPtr nuc_model_ptr_;
   NuclideModelPtr default_nuc_model_ptr_;
   double mixed_cell_;
@@ -19,6 +20,7 @@ protected:
   mat_rsrc_ptr test_mat_;
   int one_mol_;
   int u235_, am241_;
+  Elem u_;
   double test_size_;
   double theta_;
   double adv_vel_;

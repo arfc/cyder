@@ -10,6 +10,7 @@
 #include <string>
 
 #include "Material.h"
+#include "MaterialDB.h"
 #include "ThermalModel.h"
 #include "NuclideModel.h"
 #include "Geometry.h"
@@ -81,24 +82,14 @@ public:
      
      @param name  the name_ data member, a string
      @param type the type_ data member, a ComponentType enum value
+     @param mat the name to initialize the mat_table_ data member, a string
      @param inner_radius the inner_radius_ data member, in meters
      @param outer_radius the outer_radius_ data member, in meters 
      @param thermal_model the thermal_model_ data member, a pointer
      @param nuclide_model the nuclide_model_ data member, a pointer
    */
-  void init(std::string name, ComponentType type, Radius inner_radius,
+  void init(std::string name, ComponentType type, std::string mat, Radius inner_radius,
       Radius outer_radius, ThermalModelPtr thermal_model, NuclideModelPtr nuclide_model); 
-  /**
-     initializes the model parameters from an QueryEngine object
-     
-     @param name  the name_ data member, a string
-     @param type the type_ data member, a ComponentType enum value
-     @param geom the geom_ data member, a Geometry object shared pointer
-     @param thermal_model the thermal_model_ data member, a pointer
-     @param nuclide_model the nuclide_model_ data member, a pointer
-   */
-  void init(std::string name, ComponentType type, GeometryPtr geom,
-     ThermalModelPtr thermal_model, NuclideModelPtr nuclide_model); 
 
   /**
      copies a component and its parameters from another
@@ -233,6 +224,8 @@ public:
 
   /**
      set the Name
+
+     @param the new name
    */
   void set_name(std::string name){name_=name;};
 
@@ -242,6 +235,29 @@ public:
      @return name_
    */
   const std::string name();
+
+  /**
+     set the material type that this component is made of (clay, salt, glass, etc.)
+     and retrieves the appropriate MatDataTablePtr
+
+     @param mat the name of the material type (clay, salt, glass, etc.)
+   */
+  void set_mat_table(std::string mat);
+
+  /**
+     set the material type that this component is made of (clay, salt, glass, etc.)
+     and retrieves the appropriate MatDataTablePtr
+
+     @param mat_table the MatDataTablePtr for the material type (clay, salt, glass, etc.)
+   */
+  void set_mat_table(MatDataTablePtr mat_table);
+
+  /**
+     get the material table that this component is made of (clay, salt, glass, etc.)
+     
+     @return mat_table
+   */
+  const MatDataTablePtr mat_table();
  
   /**
      get the list of daughter components 
@@ -403,6 +419,11 @@ protected:
   /**
      The type of thermal model implemented by this component
    */
+  std::string mat_;
+
+  /**
+     The type of thermal model implemented by this component
+   */
   ThermalModelPtr thermal_model_;
 
   /**
@@ -429,6 +450,11 @@ protected:
      The name of this component, a string
    */
   std::string name_;
+
+  /**
+     A pointer to the MatDataTable representing this Component's material 
+    */
+  MatDataTablePtr mat_table_;
 
   /**
      The geometry of the cylindrical component, a shared pointer

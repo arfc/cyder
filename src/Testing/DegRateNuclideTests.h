@@ -4,6 +4,7 @@
 #include "DegRateNuclide.h"
 #include "FacilityModelTests.h"
 #include "ModelTests.h"
+#include "MatDataTable.h"
 #include <string>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -19,9 +20,11 @@ protected:
   mat_rsrc_ptr test_mat_;
   int one_mol_;
   int u235_, am241_;
+  Elem u_;
   double test_size_;
   double theta_;
-  double adv_vel_, D_;
+  double adv_vel_;
+  MatDataTablePtr mat_table_;
   GeometryPtr geom_;
   Radius r_four_, r_five_;
   Length len_five_;

@@ -22,7 +22,6 @@ using boost::lexical_cast;
 DegRateNuclide::DegRateNuclide():
   deg_rate_(0),
   v_(0),
-  D_(0),
   tot_deg_(0),
   last_degraded_(0)
 {
@@ -38,7 +37,6 @@ DegRateNuclide::DegRateNuclide():
 DegRateNuclide::DegRateNuclide(QueryEngine* qe):
   deg_rate_(0),
   v_(0),
-  D_(0),
   tot_deg_(0),
   last_degraded_(0)
 {
@@ -59,7 +57,6 @@ DegRateNuclide::~DegRateNuclide(){
 void DegRateNuclide::initModuleMembers(QueryEngine* qe){
   set_v(lexical_cast<double>(qe->getElementContent("advective_velocity")));
   set_deg_rate(lexical_cast<double>(qe->getElementContent("degradation")));
-  set_D(lexical_cast<double>(qe->getElementContent("diffusion_coeff")));
   LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class initModuleMembers(qe) function has been called";;
 }
 
@@ -69,7 +66,6 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
 
   set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());
-  set_D(src_ptr->D());
   set_tot_deg(0);
   set_last_degraded(TI->time());
 
@@ -197,9 +193,11 @@ IsoFluxMap DegRateNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   ConcGradMap neumann = neumann_bc(c_ext, r_ext);
   ConcGradMap::iterator it;
   Iso iso;
+  Elem elem;
   for( it = neumann.begin(); it != neumann.end(); ++it){
     iso = (*it).first;
-    to_ret.insert(make_pair(iso, -D()*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
+    elem = iso/1000;
+    to_ret.insert(make_pair(iso, -mat_table_->D(elem)*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
   }
   return to_ret;
 }

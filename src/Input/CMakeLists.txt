@@ -1,0 +1,25 @@
+SET(GenericRepository_SRC ${GenericRepository_SRC} 
+  ${CMAKE_CURRENT_SOURCE_DIR}/MaterialDB.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/MatDataTable.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/SqliteDb.cpp
+  PARENT_SCOPE 
+  )
+
+SET(CYDER_INCLUDE_DIR ${CYDER_INCLUDE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  PARENT_SCOPE
+  )
+
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/mat_data.sqlite
+  ${CYDER_BINARY_DIR}/share/mat_data.sqlite
+  COPYONLY
+  )
+  
+INSTALL(FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/mat_data.sqlite
+  DESTINATION ${CYCLUS_CORE_SHARE_DIR}
+  COMPONENT cyder
+  )
+  
+
