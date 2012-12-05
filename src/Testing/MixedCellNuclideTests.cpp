@@ -41,7 +41,7 @@ void MixedCellNuclideTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_mixed_cell_nuclide model setup
-  mat_table_=MDB->table("clay");
+  mat_table_ = MDB->table("clay");
   mixed_cell_ptr_ = MixedCellNuclidePtr(initNuclideModel());
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(mixed_cell_ptr_);
   mixed_cell_ptr_->set_mat_table(mat_table_);
@@ -244,6 +244,8 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
+  double sol_lim = mat_table_->S(u_);
+  expected_conc = max(sol_lim, expected_conc);
 
   // set the degradation rate
   ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
@@ -321,6 +323,8 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
+  double sol_lim = mat_table_->S(u_);
+  expected_conc = max(sol_lim, expected_conc);
 
   // set the degradation rate
   ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
