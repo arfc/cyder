@@ -29,15 +29,13 @@ MixedCellNuclide::MixedCellNuclide():
   kd_limited_(true)
 {
   wastes_ = deque<mat_rsrc_ptr>();
-
   set_geom(GeometryPtr(new Geometry()));
-
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MixedCellNuclide::MixedCellNuclide(QueryEngine* qe):
+MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) : 
   deg_rate_(0),
   tot_deg_(0),
   last_degraded_(0),
@@ -47,11 +45,9 @@ MixedCellNuclide::MixedCellNuclide(QueryEngine* qe):
   kd_limited_(true)
 {
   wastes_ = deque<mat_rsrc_ptr>();
+  set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-
-  set_geom(GeometryPtr(new Geometry()));
-
   this->initModuleMembers(qe);
 }
 

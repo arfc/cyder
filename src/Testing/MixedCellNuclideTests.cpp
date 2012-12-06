@@ -76,8 +76,7 @@ MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  mixed_cell_ptr_ = MixedCellNuclidePtr(MixedCellNuclide::create());
-  mixed_cell_ptr_->initModuleMembers(engine);
+  mixed_cell_ptr_ = MixedCellNuclidePtr(MixedCellNuclide::create(engine));
   delete engine;
   return mixed_cell_ptr_;  
 }
