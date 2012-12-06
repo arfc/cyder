@@ -76,6 +76,7 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());
   set_kd_limited(src_ptr->kd_limited());
+  set_porosity(src_ptr->porosity());
   set_sol_limited(src_ptr->sol_limited());
   set_tot_deg(0);
   set_last_degraded(TI->time());

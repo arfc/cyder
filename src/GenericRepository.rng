@@ -113,9 +113,9 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="MixedCellNuclide">
       <ref name="advective_velocity"/>
       <ref name="degradation"/>
-      <ref name="kd_limited"/>
+      <ref name="kd_limited"/> <!-- 0=false, 1=true -->
       <ref name="porosity"/>
-      <ref name="sol_limited"/>
+      <ref name="sol_limited"/> <!-- 0=false, 1=true -->
     </element>
   </define>
 
