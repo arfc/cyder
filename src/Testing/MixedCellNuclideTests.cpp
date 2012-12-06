@@ -27,6 +27,9 @@ void MixedCellNuclideTest::SetUp(){
   time_ = 0;
   porosity_ = 0;
   deg_rate_ = 0;
+  kd_limited_ = 0; // false
+  sol_limited_ = 0; // false
+
 
   // composition set up
   u235_=92235;
@@ -64,7 +67,9 @@ MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <degradation>" << deg_rate_ << "</degradation>"
+     << "  <kd_limited>" << kd_limited_ << "</kd_limited>"
      << "  <porosity>" << porosity_ << "</porosity>"
+     << "  <sol_limited>" << sol_limited_ << "</sol_limited>"
      << "</start>";
 
   XMLParser parser(ss);
@@ -78,16 +83,20 @@ MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, initial_state) {
   EXPECT_EQ(deg_rate_, mixed_cell_ptr_->deg_rate());
+  EXPECT_EQ(false, mixed_cell_ptr_->kd_limited());
   EXPECT_EQ(porosity_, mixed_cell_ptr_->porosity());
   EXPECT_EQ(adv_vel_, mixed_cell_ptr_->v());
+  EXPECT_EQ(false, mixed_cell_ptr_->sol_limited());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, defaultConstructor) {
-  ASSERT_EQ("MIXEDCELL_NUCLIDE", nuc_model_ptr_->name());
-  ASSERT_EQ(MIXEDCELL_NUCLIDE, nuc_model_ptr_->type());
-  ASSERT_FLOAT_EQ(0, mixed_cell_ptr_->deg_rate());
-  ASSERT_FLOAT_EQ(0, mixed_cell_ptr_->geom()->length());
-  ASSERT_FLOAT_EQ(0, mixed_cell_ptr_->contained_mass());
+  ASSERT_EQ("MIXEDCELL_NUCLIDE", default_nuc_model_ptr_->name());
+  ASSERT_EQ(MIXEDCELL_NUCLIDE, default_nuc_model_ptr_->type());
+  ASSERT_FLOAT_EQ(0, default_mixed_cell_ptr_->deg_rate());
+  ASSERT_EQ(true, default_mixed_cell_ptr_->kd_limited());
+  ASSERT_EQ(true, default_mixed_cell_ptr_->sol_limited());
+  ASSERT_FLOAT_EQ(0, default_mixed_cell_ptr_->geom()->length());
+  ASSERT_FLOAT_EQ(0, default_mixed_cell_ptr_->contained_mass());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -98,6 +107,8 @@ TEST_F(MixedCellNuclideTest, copy) {
   EXPECT_NO_THROW(test_copy->copy(*mixed_cell_shared_ptr));
   EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
   EXPECT_FLOAT_EQ(porosity_, test_copy->porosity());
+  EXPECT_FLOAT_EQ(sol_limited_, test_copy->sol_limited());
+  EXPECT_FLOAT_EQ(kd_limited_, test_copy->kd_limited());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -436,5 +447,9 @@ TEST_F(MixedCellNuclideTest, calc_conc_grad) {
   EXPECT_THROW( mixed_cell_ptr_->calc_conc_grad(c_out, c_in, r_in, numeric_limits<double>::infinity()), CycRangeException); 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MixedCellNuclideTest, solubility){
+//  EXPECT_NO_THROW(mixed_cell_ptr_->limit_sol(ConcMap));
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 INSTANTIATE_TEST_CASE_P(MixedCellNuclideModel, NuclideModelTests, Values(&MixedCellNuclideModelConstructor));

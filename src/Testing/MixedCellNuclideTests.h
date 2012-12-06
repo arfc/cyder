@@ -31,6 +31,8 @@ protected:
   int time_;
   double porosity_, D_;
   double deg_rate_;
+  bool sol_limited_;
+  bool kd_limited_;
   
   virtual void SetUp();
   virtual void TearDown();
