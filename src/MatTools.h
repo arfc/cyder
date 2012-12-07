@@ -1,5 +1,5 @@
 /*! \file MatTools.h
-  \brief Declares the MatTools class used by the Generic Repositor 
+  \brief Declares the MatTools class used by the Generic Repository 
   \author Kathryn D. Huff
  */
 #if !defined(_MATTOOLS_H)
