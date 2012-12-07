@@ -1,0 +1,180 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Output Database &mdash; Cyder Home</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Cyder Home" href="../index.html" />
+    <link rel="up" title="Cyclus Developer Guide" href="main.html" />
+    <link rel="next" title="The Cyder Unit Tests" href="testing.html" />
+    <link rel="prev" title="Dynamic Loading Overview" href="dynamic_loading.html" />
+   
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-*']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </head>
+  <body>
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+  <a href="http://cyder.github.com">
+    <img src="../_static/header-image.png"/>
+  </a>
+</div>
+
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="testing.html" title="The Cyder Unit Tests"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dynamic_loading.html" title="Dynamic Loading Overview"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Cyder Home</a> &raquo;</li>
+          <li><a href="main.html" accesskey="U">Cyclus Developer Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Output Database</a><ul>
+<li><a class="reference internal" href="#provenance">Provenance</a></li>
+<li><a class="reference internal" href="#cyder-database-class-constituents">Cyder Database Class Constituents</a><ul>
+<li><a class="reference internal" href="#tables">Tables</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-cyder-database-visually">The Cyder Database &#8211; Visually</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dynamic_loading.html"
+                        title="previous chapter">Dynamic Loading Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="testing.html"
+                        title="next chapter">The Cyder Unit Tests</a></p>
+  <h3>Useful Pages</h3>
+    <li><a href="http://cyder.github.com/basics/glossary.html">Glossary</a></li>
+    <li><a href="http://cyder.github.com/basics/roadmap.html">Roadmap</a></li>
+    <li><a href="https://github.com/katyhuff/cyder">Source Code</a></li>
+    
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+    <h3>Acknowledgements</h3>
+    Support for this research has included funding received from:
+    <img src=/_images/AnlLogo.png height=100px>
+    <img src=/_images/crest.png height=100px>
+
+    
+
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="output-database">
+<h1>Output Database<a class="headerlink" href="#output-database" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="provenance">
+<h2>Provenance<a class="headerlink" href="#provenance" title="Permalink to this headline">¶</a></h2>
+<p>Good provenance will be provided by an output database with sufficient data to
+allow reproducibility of the results. This robust reproducibility is essential
+to the scientific effort. In the case of <em>Cyder</em>, the inclusion of a complete
+notion of the input specifications in the output database will be sufficient to
+allow for result reproduction as well as facilitate knowledge sharing,
+post-simulation analysis and error-checking. Such input specifications include
+a complete description of the simulation parameters and model configurations
+defined in the input.</p>
+</div>
+<div class="section" id="cyder-database-class-constituents">
+<h2>Cyder Database Class Constituents<a class="headerlink" href="#cyder-database-class-constituents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tables">
+<h3>Tables<a class="headerlink" href="#tables" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="the-cyder-database-visually">
+<h2>The Cyder Database &#8211; Visually<a class="headerlink" href="#the-cyder-database-visually" title="Permalink to this headline">¶</a></h2>
+<p>The Cyder database is comprised of the following tables:</p>
+<p>todo</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="testing.html" title="The Cyder Unit Tests"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dynamic_loading.html" title="Dynamic Loading Overview"
+             >previous</a> |</li>
+        <li><a href="../index.html">Cyder Home</a> &raquo;</li>
+          <li><a href="main.html" >Cyclus Developer Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      Last updated on Dec 07, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
