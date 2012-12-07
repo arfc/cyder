@@ -8,6 +8,7 @@
 #include <time.h>
 #include <assert.h>
 
+
 #include "CycException.h"
 #include "Logger.h"
 #include "Timer.h"
@@ -60,3 +61,62 @@ void MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, deque<mat
   left_over->extract(comp_to_rem, kg_to_rem);
   mat_list.push_back(left_over);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MatTools::V_f(double V_T, double theta){
+  validate_percent(theta);
+  validate_finite_pos(V_T);
+  return theta*V_T;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MatTools::V_ff(double V_T, double theta, double d){
+  validate_percent(d);
+  return d*V_f(V_T, theta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MatTools::V_mf(double V_T, double theta, double d){
+  return (V_f(V_T,theta) - V_ff(V_T, theta, d));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MatTools::V_s(double V_T, double theta){
+  return (V_T - V_f(V_T, theta));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MatTools::V_ds(double V_T, double theta, double d){
+  validate_percent(d);
+  return d*V_s(V_T, theta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MatTools::V_ms(double V_T, double theta, double d){
+  return (V_s(V_T, theta) - V_ds(V_T, theta, d));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MatTools::validate_percent(double per){
+  if( per <= 1 && per >= 0 ){
+    return;
+  } else if ( per < 0) {
+    throw CycException("The value is not a valid percent. It is less than zero.");
+  } else if ( per > 1) {
+    throw CycException("The value is not a valid percent. It is greater than one.");
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MatTools::validate_finite_pos(double pos){
+  if( pos >= 0 ){
+    return;
+  } else if ( pos < 0) {
+    throw CycException("The value is not positive and finite. It is less than zero.");
+  } else if ( pos >= numeric_limits<double>::infinity() ) {
+    throw CycException("The value is not positive and finite. It is greater than infty.");
+  }
+
+}
+
+
