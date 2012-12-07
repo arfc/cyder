@@ -24,30 +24,30 @@ MixedCellNuclide::MixedCellNuclide():
   tot_deg_(0),
   last_degraded_(0),
   v_(0),
-  porosity_(0)
+  porosity_(0),
+  sol_limited_(true),
+  kd_limited_(true)
 {
   wastes_ = deque<mat_rsrc_ptr>();
-
   set_geom(GeometryPtr(new Geometry()));
-
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MixedCellNuclide::MixedCellNuclide(QueryEngine* qe):
+MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) : 
   deg_rate_(0),
   tot_deg_(0),
   last_degraded_(0),
   v_(0),
-  porosity_(0)
+  porosity_(0),
+  sol_limited_(true),
+  kd_limited_(true)
 {
   wastes_ = deque<mat_rsrc_ptr>();
+  set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-
-  set_geom(GeometryPtr(new Geometry()));
-
   this->initModuleMembers(qe);
 }
 
@@ -59,7 +59,9 @@ MixedCellNuclide::~MixedCellNuclide(){
 void MixedCellNuclide::initModuleMembers(QueryEngine* qe){
   set_v(lexical_cast<double>(qe->getElementContent("advective_velocity")));
   set_deg_rate(lexical_cast<double>(qe->getElementContent("degradation")));
+  set_kd_limited(lexical_cast<bool>(qe->getElementContent("kd_limited")));
   set_porosity(lexical_cast<double>(qe->getElementContent("porosity")));
+  set_sol_limited(lexical_cast<bool>(qe->getElementContent("sol_limited")));
   LOG(LEV_DEBUG2,"GRDRNuc") << "The MixedCellNuclide Class initModuleMembers(qe) function has been called";;
 }
 
@@ -69,6 +71,9 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
 
   set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());
+  set_kd_limited(src_ptr->kd_limited());
+  set_porosity(src_ptr->porosity());
+  set_sol_limited(src_ptr->sol_limited());
   set_tot_deg(0);
   set_last_degraded(TI->time());
 

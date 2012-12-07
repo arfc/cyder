@@ -259,7 +259,19 @@ public:
   /**
     Returns the last timestamp at which this component was last degraded [integer timestamp]
    */
-  const int last_degraded() const{return last_degraded_;};
+  const int last_degraded() const {return last_degraded_;};
+
+  /// Sets boolean indicating whether to incorporate solubility limits
+  void set_sol_limited(bool sol_limited){sol_limited_=sol_limited;}; 
+
+  /// Gets boolean indicating whether to incorporate solubility limits
+  const bool sol_limited() const {return sol_limited_;};
+
+  /// Sets boolean indicating whether to incorporate sorption
+  void set_kd_limited(bool kd_limited){kd_limited_=kd_limited;}; 
+
+  /// Gets boolean indicating whether to incorporate sorption
+  const bool kd_limited() const {return kd_limited_;};
 
 protected:
   /**
@@ -280,6 +292,12 @@ protected:
 
   /// The porosity of the material in the component, a fraction [%] 
   double porosity_;
+
+  /// Boolean indicates whether to incorporate solubility limits. (True = yes )
+  bool sol_limited_;
+
+  /// Boolean indicates whether to incorporate sorption. (True = yes )
+  bool kd_limited_;
 
 
 };
