@@ -101,9 +101,9 @@ void MatTools::validate_percent(double per){
   if( per <= 1 && per >= 0 ){
     return;
   } else if ( per < 0) {
-    throw CycException("The value is not a valid percent. It is less than zero.");
+    throw CycRangeException("The value is not a valid percent. It is less than zero.");
   } else if ( per > 1) {
-    throw CycException("The value is not a valid percent. It is greater than one.");
+    throw CycRangeException("The value is not a valid percent. It is greater than one.");
   }
 }
 
@@ -112,9 +112,9 @@ void MatTools::validate_finite_pos(double pos){
   if( pos >= 0 ){
     return;
   } else if ( pos < 0) {
-    throw CycException("The value is not positive and finite. It is less than zero.");
+    throw CycRangeException("The value is not positive and finite. It is less than zero.");
   } else if ( pos >= numeric_limits<double>::infinity() ) {
-    throw CycException("The value is not positive and finite. It is greater than infty.");
+    throw CycRangeException("The value is not positive and finite. It is greater than infty.");
   }
 
 }

@@ -68,8 +68,8 @@ TEST_F(MatToolsTest, V_f){
   }
   EXPECT_FLOAT_EQ(0, MatTools::V_f(V_T, 0));
   EXPECT_FLOAT_EQ(V_T, MatTools::V_f(V_T, 1));
-  EXPECT_THROW(MatTools::V_f(V_T, 2),CycException);
-  EXPECT_THROW(MatTools::V_f(V_T, -1),CycException);
+  EXPECT_THROW(MatTools::V_f(V_T, 2),CycRangeException);
+  EXPECT_THROW(MatTools::V_f(V_T, -1),CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -88,10 +88,10 @@ TEST_F(MatToolsTest, V_ff){
   }
   EXPECT_FLOAT_EQ(V_T, MatTools::V_ff(V_T, 1, 1));
   EXPECT_FLOAT_EQ(0, MatTools::V_ff(V_T, 1, 0));
-  EXPECT_THROW(MatTools::V_ff(V_T, 2, 1),CycException);
-  EXPECT_THROW(MatTools::V_ff(V_T, -1, 1),CycException);
-  EXPECT_THROW(MatTools::V_ff(V_T, 1, 2),CycException);
-  EXPECT_THROW(MatTools::V_ff(V_T, 1, -1),CycException);
+  EXPECT_THROW(MatTools::V_ff(V_T, 2, 1),CycRangeException);
+  EXPECT_THROW(MatTools::V_ff(V_T, -1, 1),CycRangeException);
+  EXPECT_THROW(MatTools::V_ff(V_T, 1, 2),CycRangeException);
+  EXPECT_THROW(MatTools::V_ff(V_T, 1, -1),CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -110,10 +110,10 @@ TEST_F(MatToolsTest, V_mf){
   }
   EXPECT_FLOAT_EQ(V_T, MatTools::V_mf(V_T, 1, 0));
   EXPECT_FLOAT_EQ(0, MatTools::V_mf(V_T, 1, 1));
-  EXPECT_THROW(MatTools::V_mf(V_T, 2, 1),CycException);
-  EXPECT_THROW(MatTools::V_mf(V_T, -1, 1),CycException);
-  EXPECT_THROW(MatTools::V_mf(V_T, 1, 2),CycException);
-  EXPECT_THROW(MatTools::V_mf(V_T, 1, -1),CycException);
+  EXPECT_THROW(MatTools::V_mf(V_T, 2, 1),CycRangeException);
+  EXPECT_THROW(MatTools::V_mf(V_T, -1, 1),CycRangeException);
+  EXPECT_THROW(MatTools::V_mf(V_T, 1, 2),CycRangeException);
+  EXPECT_THROW(MatTools::V_mf(V_T, 1, -1),CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -126,8 +126,8 @@ TEST_F(MatToolsTest, V_s){
   }
   EXPECT_FLOAT_EQ(V_T, MatTools::V_s(V_T, 0));
   EXPECT_FLOAT_EQ(0, MatTools::V_s(V_T, 1));
-  EXPECT_THROW(MatTools::V_s(V_T, 2),CycException);
-  EXPECT_THROW(MatTools::V_s(V_T, -1),CycException);
+  EXPECT_THROW(MatTools::V_s(V_T, 2),CycRangeException);
+  EXPECT_THROW(MatTools::V_s(V_T, -1),CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -146,10 +146,10 @@ TEST_F(MatToolsTest, V_ds){
   }
   EXPECT_FLOAT_EQ(V_T, MatTools::V_ds(V_T, 0, 1));
   EXPECT_FLOAT_EQ(0, MatTools::V_ds(V_T, 1, 0));
-  EXPECT_THROW(MatTools::V_ds(V_T, 2, 1),CycException);
-  EXPECT_THROW(MatTools::V_ds(V_T, -1, 1),CycException);
-  EXPECT_THROW(MatTools::V_ds(V_T, 1, 2),CycException);
-  EXPECT_THROW(MatTools::V_ds(V_T, 1, -1),CycException);
+  EXPECT_THROW(MatTools::V_ds(V_T, 2, 1),CycRangeException);
+  EXPECT_THROW(MatTools::V_ds(V_T, -1, 1),CycRangeException);
+  EXPECT_THROW(MatTools::V_ds(V_T, 1, 2),CycRangeException);
+  EXPECT_THROW(MatTools::V_ds(V_T, 1, -1),CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -168,10 +168,10 @@ TEST_F(MatToolsTest, V_ms){
   }
   EXPECT_FLOAT_EQ(V_T, MatTools::V_ms(V_T, 0, 0));
   EXPECT_FLOAT_EQ(0, MatTools::V_ms(V_T, 1, 1));
-  EXPECT_THROW(MatTools::V_ms(V_T, 2, 1),CycException);
-  EXPECT_THROW(MatTools::V_ms(V_T, -1, 1),CycException);
-  EXPECT_THROW(MatTools::V_ms(V_T, 1, 2),CycException);
-  EXPECT_THROW(MatTools::V_ms(V_T, 1, -1),CycException);
+  EXPECT_THROW(MatTools::V_ms(V_T, 2, 1),CycRangeException);
+  EXPECT_THROW(MatTools::V_ms(V_T, -1, 1),CycRangeException);
+  EXPECT_THROW(MatTools::V_ms(V_T, 1, 2),CycRangeException);
+  EXPECT_THROW(MatTools::V_ms(V_T, 1, -1),CycRangeException);
 }
 
 
