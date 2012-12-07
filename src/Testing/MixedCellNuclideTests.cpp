@@ -448,12 +448,4 @@ TEST_F(MixedCellNuclideTest, calc_conc_grad) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MixedCellNuclideTest, sorption){
-
-
-}
-
-
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 INSTANTIATE_TEST_CASE_P(MixedCellNuclideModel, NuclideModelTests, Values(&MixedCellNuclideModelConstructor));

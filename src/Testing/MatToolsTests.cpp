@@ -52,7 +52,126 @@ TEST_F(MatToolsTest, sum_mats){
   EXPECT_FLOAT_EQ(3*test_size_, the_sum.second);
   EXPECT_FLOAT_EQ(1, the_sum.first.comp()->atomFraction(u235_));
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, extract){
   //@TODO this is just a placeholder, to remind you to write a test.
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, V_f){
+  double V_T = 10;
+  double theta;
+  for(int i = 1; i < 10; i++){
+    theta = i*0.1;
+    EXPECT_FLOAT_EQ(theta*V_T, MatTools::V_f(V_T, theta));
+  }
+  EXPECT_FLOAT_EQ(0, MatTools::V_f(V_T, 0));
+  EXPECT_FLOAT_EQ(V_T, MatTools::V_f(V_T, 1));
+  EXPECT_THROW(MatTools::V_f(V_T, 2),CycException);
+  EXPECT_THROW(MatTools::V_f(V_T, -1),CycException);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, V_ff){
+  double V_T = 10;
+  double theta;
+  double d;
+  for(int i = 1; i<10; i++){
+    theta = i*0.1;
+    EXPECT_FLOAT_EQ(0, MatTools::V_ff(V_T, theta, 0));
+    for(int j = 1; j<10; j++){
+      d = j*0.1;
+      EXPECT_FLOAT_EQ(d*theta*V_T,MatTools::V_ff(V_T, theta, d));
+      EXPECT_FLOAT_EQ(0, MatTools::V_ff(V_T, 0, d));
+    }
+  }
+  EXPECT_FLOAT_EQ(V_T, MatTools::V_ff(V_T, 1, 1));
+  EXPECT_FLOAT_EQ(0, MatTools::V_ff(V_T, 1, 0));
+  EXPECT_THROW(MatTools::V_ff(V_T, 2, 1),CycException);
+  EXPECT_THROW(MatTools::V_ff(V_T, -1, 1),CycException);
+  EXPECT_THROW(MatTools::V_ff(V_T, 1, 2),CycException);
+  EXPECT_THROW(MatTools::V_ff(V_T, 1, -1),CycException);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, V_mf){
+  double V_T = 10;
+  double theta;
+  double d;
+  for(int i = 1; i<10; i++){
+    theta = i*0.1;
+    EXPECT_FLOAT_EQ(theta*V_T, MatTools::V_mf(V_T, theta, 0));
+    for(int j = 1; j<10; j++){
+      d = j*0.1;
+      EXPECT_FLOAT_EQ((1-d)*theta*V_T,MatTools::V_mf(V_T, theta, d));
+      EXPECT_FLOAT_EQ(0, MatTools::V_mf(V_T, 0, d));
+    }
+  }
+  EXPECT_FLOAT_EQ(V_T, MatTools::V_mf(V_T, 1, 0));
+  EXPECT_FLOAT_EQ(0, MatTools::V_mf(V_T, 1, 1));
+  EXPECT_THROW(MatTools::V_mf(V_T, 2, 1),CycException);
+  EXPECT_THROW(MatTools::V_mf(V_T, -1, 1),CycException);
+  EXPECT_THROW(MatTools::V_mf(V_T, 1, 2),CycException);
+  EXPECT_THROW(MatTools::V_mf(V_T, 1, -1),CycException);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, V_s){
+  double V_T = 10;
+  double theta;
+  for(int i = 1; i < 10; i++){
+    theta = i*0.1;
+    EXPECT_FLOAT_EQ((1-theta)*V_T, MatTools::V_s(V_T, theta));
+  }
+  EXPECT_FLOAT_EQ(V_T, MatTools::V_s(V_T, 0));
+  EXPECT_FLOAT_EQ(0, MatTools::V_s(V_T, 1));
+  EXPECT_THROW(MatTools::V_s(V_T, 2),CycException);
+  EXPECT_THROW(MatTools::V_s(V_T, -1),CycException);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, V_ds){
+  double V_T = 10;
+  double theta;
+  double d;
+  for(int i = 1; i<10; i++){
+    theta = i*0.1;
+    EXPECT_FLOAT_EQ(0, MatTools::V_ds(V_T, theta, 0));
+    for(int j = 1; j<10; j++){
+      d = j*0.1;
+      EXPECT_FLOAT_EQ(d*(1-theta)*V_T,MatTools::V_ds(V_T, theta, d));
+      EXPECT_FLOAT_EQ(0, MatTools::V_ds(V_T, 1, d));
+    }
+  }
+  EXPECT_FLOAT_EQ(V_T, MatTools::V_ds(V_T, 0, 1));
+  EXPECT_FLOAT_EQ(0, MatTools::V_ds(V_T, 1, 0));
+  EXPECT_THROW(MatTools::V_ds(V_T, 2, 1),CycException);
+  EXPECT_THROW(MatTools::V_ds(V_T, -1, 1),CycException);
+  EXPECT_THROW(MatTools::V_ds(V_T, 1, 2),CycException);
+  EXPECT_THROW(MatTools::V_ds(V_T, 1, -1),CycException);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, V_ms){
+  double V_T = 10;
+  double theta;
+  double d;
+  for(int i = 1; i<10; i++){
+    theta = i*0.1;
+    EXPECT_FLOAT_EQ(0, MatTools::V_ms(V_T, theta, 1));
+    for(int j = 1; j<10; j++){
+      d = j*0.1;
+      EXPECT_FLOAT_EQ((1-d)*(1-theta)*V_T,MatTools::V_ms(V_T, theta, d));
+      EXPECT_FLOAT_EQ(0, MatTools::V_ms(V_T, 1, d));
+    }
+  }
+  EXPECT_FLOAT_EQ(V_T, MatTools::V_ms(V_T, 0, 0));
+  EXPECT_FLOAT_EQ(0, MatTools::V_ms(V_T, 1, 1));
+  EXPECT_THROW(MatTools::V_ms(V_T, 2, 1),CycException);
+  EXPECT_THROW(MatTools::V_ms(V_T, -1, 1),CycException);
+  EXPECT_THROW(MatTools::V_ms(V_T, 1, 2),CycException);
+  EXPECT_THROW(MatTools::V_ms(V_T, 1, -1),CycException);
+}
+
+

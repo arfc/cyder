@@ -39,5 +39,13 @@ public:
     **/
   static void extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
       std::deque<mat_rsrc_ptr>& mat_list);
+
+  static double V_f(double V_T, double theta){};
+  static double V_ff(double V_T, double theta, double d){};
+  static double V_mf(double V_T, double theta, double d){};
+  static double V_s(double V_T, double theta){};
+  static double V_ds(double V_T, double theta, double d){};
+  static double V_ms(double V_T, double theta, double d){};
+
 };
 #endif
