@@ -1,0 +1,43 @@
+
+{% extends "!layout.html" %}
+
+{% block header %}
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+  <a href="http://cyder.github.com">
+    <img src="{{ pathto("_static/header-image.png", 1) }}"/>
+  </a>
+</div>
+{{ super() }}
+{% endblock %}
+
+{%- block extrahead %}
+  {{ super() }}
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-*']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+{% endblock %}
+
+
+{% block sidebarsearch %}
+  <h3>{{ _('Useful Pages') }}</h3>
+    <li><a href="http://cyder.github.com/basics/glossary.html">Glossary</a></li>
+    <li><a href="http://cyder.github.com/basics/roadmap.html">Roadmap</a></li>
+    <li><a href="https://github.com/katyhuff/cyder">Source Code</a></li>
+    {{ super() }}
+    <h3>Acknowledgements</h3>
+    Support for this research has included funding received from:
+    <img src=/_images/AnlLogo.png height=100px>
+    <img src=/_images/crest.png height=100px>
+
+    
+{% endblock %}
