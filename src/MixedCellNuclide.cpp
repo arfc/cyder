@@ -278,3 +278,14 @@ void MixedCellNuclide::update_vec_hist(int the_time){
   vec_hist_[ the_time ] = MatTools::sum_mats(wastes_) ;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclide::sorb(int the_time){
+  if(kd_limited()=false){
+    throw CycException("The sorb function was called, but kd_limited=false.")
+  }
+  C = SolLim::m_ff(m_T, K_d, V_s, V_f)/V_f;
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclide::

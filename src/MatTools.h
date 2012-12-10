@@ -33,9 +33,9 @@ public:
      removes the specified amount of the specified composition from a 
      deque of materials provided to the function by reference. 
 
-     @param
-     @param
-     @param
+     @param comp_to_rem a CompMapPtr representing what to remove
+     @param kg_to_rem a mass to remove of the CompMapPtr [kg]
+     @param mat_list the list of materials to remove that comp from
     **/
   static void extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
       std::deque<mat_rsrc_ptr>& mat_list);

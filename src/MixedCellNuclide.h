@@ -225,6 +225,20 @@ public:
      */
   void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
 
+  /**
+     Update the isotopic vector history to incorporate sorption
+
+     @param time the time at which to update the vector history
+     */
+  void sorb(int time);
+
+  /**
+     Update the isotopic vector history to incorporate solubility limitation
+
+     @param time the time at which to update the vector history
+     */
+  void precipitate(int time);
+
   /// returns the total degradation of the component
   const double tot_deg() const {return tot_deg_;};
 

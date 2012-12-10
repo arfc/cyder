@@ -256,8 +256,10 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-  double sol_lim = mat_table_->S(u_);
-  expected_conc = min(sol_lim, expected_conc);
+  if(mixed_cell_ptr_->sol_limited() && mixed_cell_ptr_->kd_limited()){
+    double sol_lim = mat_table_->S(u_);
+    expected_conc = min(sol_lim, expected_conc);
+  };
 
   // set the degradation rate
   ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
@@ -335,8 +337,10 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-  double sol_lim = mat_table_->S(u_);
-  expected_conc = min(sol_lim, expected_conc);
+  if(mixed_cell_ptr_->sol_limited() && mixed_cell_ptr_->kd_limited()){
+    double sol_lim = mat_table_->S(u_);
+    expected_conc = min(sol_lim, expected_conc);
+  };
 
   // set the degradation rate
   ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
@@ -446,6 +450,32 @@ TEST_F(MixedCellNuclideTest, calc_conc_grad) {
   EXPECT_THROW( mixed_cell_ptr_->calc_conc_grad(c_out, c_in, r_in, r_out), CycRangeException); 
   EXPECT_THROW( mixed_cell_ptr_->calc_conc_grad(c_out, c_in, r_in, r_in), CycRangeException); 
   EXPECT_THROW( mixed_cell_ptr_->calc_conc_grad(c_out, c_in, r_in, numeric_limits<double>::infinity()), CycRangeException); 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MixedCellNuclideTest, sorb){
+  mixed_cell_ptr_->set_kd_limited(true);
+  ASSERT_TRUE(mixed_cell_ptr_->kd_limited());
+  EXPECT_NO_THROW(mixed_cell_ptr_->sorb(time_));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MixedCellNuclideTest, dont_sorb){
+  // if kd_limited = false, don't call sorb()
+  EXPECT_THROW( mixed_cell_ptr_->sorb(time_) );
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MixedCellNuclideTest, precipitate){
+  mixed_cell_ptr_->set_sol_limited(true);
+  ASSERT_TRUE(mixed_cell_ptr_->sol_limited());
+  EXPECT_NO_THROW(mixed_cell_ptr_->precipitate(time_));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MixedCellNuclideTest, dont_precipitate){
+  // if sol_limited = false, don't call precipitate()
+  EXPECT_NO_THROW(mixed_cell_ptr_->precipitate(time_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
