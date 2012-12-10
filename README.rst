@@ -48,6 +48,7 @@ LISCENSE
     ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 
+
 ------------------------------------------------------------------
 Building Cyder
 ------------------------------------------------------------------
@@ -114,9 +115,13 @@ Now, you can run your installed cyclus program with an input file that defines a
 The `Cyclus Homepage`_ has much more detailed guides and information.  If
 you intend to develop for *Cyclus*, please visit it to learn more.
 
+------------------------------------------------------------------
+Acknowledgements
+------------------------------------------------------------------
+    
+
 
 .. _`Cyder Homepage`: http://cyder.github.com
 .. _`Cyclus Homepage`: http://cyclus.github.com
-
 
 
