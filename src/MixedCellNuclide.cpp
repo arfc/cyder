@@ -14,6 +14,7 @@
 #include "Timer.h"
 #include "MixedCellNuclide.h"
 #include "Material.h"
+#include "SolLim.h"
 
 using namespace std;
 using boost::lexical_cast;
@@ -235,29 +236,41 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time){
 IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_degraded() <= the_time);
 
-  IsoConcMap to_ret;
-
   pair<IsoVector, double> sum_pair; 
   sum_pair = shared_from_this()->vec_hist(the_time);
 
+  IsoConcMap to_ret;
   int iso;
-  double conc;
-  if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
-    double scale = sum_pair.second/geom_->volume();
+  double mass;
+  double m_ff;
+  double m_aff;
+  double vol;
+  if(sum_pair.second != 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
+    mass = sum_pair.second;
     CompMapPtr curr_comp = sum_pair.first.comp();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
     while(it != (*curr_comp).end() ) {
       iso = (*it).first;
-      conc = (*it).second;
-      to_ret.insert(make_pair(iso, conc*scale));
+      if(kd_limited()){
+        m_ff = sorb(the_time, iso, (*it).second*mass);
+      } else { 
+        m_ff = (*it).second*mass;
+      }
+      if(sol_limited()){
+        m_aff = precipitate(the_time, iso, m_ff);
+      } else { 
+        m_aff = m_ff;
+      }
+      to_ret.insert(make_pair(iso, m_aff/V_ff()));
       ++it;
     }
   } else {
     to_ret[ 92235 ] = 0; 
   }
   conc_hist_[the_time] = to_ret ;
-  return to_ret;
+
+  return conc_hist_[the_time];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -279,13 +292,37 @@ void MixedCellNuclide::update_vec_hist(int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void MixedCellNuclide::sorb(int the_time){
-  if(kd_limited()=false){
-    throw CycException("The sorb function was called, but kd_limited=false.")
+double MixedCellNuclide::sorb(int the_time, int iso, double mass){
+  if(!kd_limited()){
+    throw CycException("The sorb function was called, but kd_limited=false.");
   }
-  C = SolLim::m_ff(m_T, K_d, V_s, V_f)/V_f;
+  return SolLim::m_ff(mass, mat_table_->K_d(iso), V_s(), V_f(), tot_deg());
 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void MixedCellNuclide::
+double MixedCellNuclide::precipitate(int the_time, int iso, double mass){
+  if(!sol_limited()){
+    throw CycException("The sorb function was called, but sol_limited=false.");
+  }
+  return SolLim::m_aff(mass, mat_table_->K_d(iso), V_s(), V_f(), tot_deg(), mat_table_->S(iso));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::V_f(){
+  return MatTools::V_f(V_T(),tot_deg());
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::V_s(){
+  return MatTools::V_s(V_T(),tot_deg());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::V_ff(){
+  return MatTools::V_f(V_T(),tot_deg());
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double MixedCellNuclide::V_T(){
+  return geom_->volume();
+}
+

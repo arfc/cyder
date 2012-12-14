@@ -229,15 +229,23 @@ public:
      Update the isotopic vector history to incorporate sorption
 
      @param time the time at which to update the vector history
+     @param iso the isotope to update
+     @param mass the total mass of that isotope in the component
+
+     @return the sorption limited mass
      */
-  void sorb(int time);
+  double sorb(int time, int iso, double mass);
 
   /**
      Update the isotopic vector history to incorporate solubility limitation
 
      @param time the time at which to update the vector history
+     @param iso the isotope to update
+     @param mass the total mass of that isotope in the component
+
+     @return the solubility limited mass
      */
-  void precipitate(int time);
+  double precipitate(int time, int iso, double mass);
 
   /// returns the total degradation of the component
   const double tot_deg() const {return tot_deg_;};
@@ -287,6 +295,18 @@ public:
   /// Gets boolean indicating whether to incorporate sorption
   const bool kd_limited() const {return kd_limited_;};
 
+  /// Gets the total volume
+  double V_T();
+
+  /// Gets the fluid volume, based on porosity
+  double V_f();
+
+  /// Gets the fluid volume, based on porosity
+  double V_s();
+
+  /// Gets the free fluid volume, based on porosity and degradation rate
+  double V_ff();
+
 protected:
   /**
     The advective velocity through this component [m/s]
@@ -312,7 +332,6 @@ protected:
 
   /// Boolean indicates whether to incorporate sorption. (True = yes )
   bool kd_limited_;
-
 
 };
 #endif

@@ -249,9 +249,20 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR0){
 TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){ 
   // if the degradation rate is .5, everything should be released in two years
   deg_rate_= 0.5;
+  // set the degradation rate
+  ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
+  EXPECT_FLOAT_EQ(mixed_cell_ptr_->deg_rate(), deg_rate_);
+  // set geometry
   EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
+  // fill it with some material
+  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
+  double expected_conc;
+  if(mixed_cell_ptr_->V_ff()>0){
+    expected_conc = expected_src/(mixed_cell_ptr_->V_ff());
+  } else { 
+    expected_conc = 0;
+  }
   double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
@@ -259,13 +270,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   if(mixed_cell_ptr_->sol_limited() && mixed_cell_ptr_->kd_limited()){
     double sol_lim = mat_table_->S(u_);
     expected_conc = min(sol_lim, expected_conc);
-  };
-
-  // set the degradation rate
-  ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
-  EXPECT_FLOAT_EQ(mixed_cell_ptr_->deg_rate(), deg_rate_);
-  // fill it with some material
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+   }
 
   // TRANSPORT NUCLIDES 
   ASSERT_EQ(0, time_);
@@ -330,6 +335,12 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
 TEST_F(MixedCellNuclideTest, transportNuclidesDR1){ 
   // if the degradation rate is one, everything should be released in a timestep
   deg_rate_= 1;
+  // set the degradation rate
+  ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
+  EXPECT_FLOAT_EQ(mixed_cell_ptr_->deg_rate(), deg_rate_);
+  // fill it with some material
+  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  // set the geometry
   EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
@@ -341,12 +352,6 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
     double sol_lim = mat_table_->S(u_);
     expected_conc = min(sol_lim, expected_conc);
   };
-
-  // set the degradation rate
-  ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
-  EXPECT_FLOAT_EQ(mixed_cell_ptr_->deg_rate(), deg_rate_);
-  // fill it with some material
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
@@ -456,26 +461,26 @@ TEST_F(MixedCellNuclideTest, calc_conc_grad) {
 TEST_F(MixedCellNuclideTest, sorb){
   mixed_cell_ptr_->set_kd_limited(true);
   ASSERT_TRUE(mixed_cell_ptr_->kd_limited());
-  EXPECT_NO_THROW(mixed_cell_ptr_->sorb(time_));
+  EXPECT_NO_THROW(mixed_cell_ptr_->sorb(time_, u_, 10));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, dont_sorb){
   // if kd_limited = false, don't call sorb()
-  EXPECT_THROW( mixed_cell_ptr_->sorb(time_) );
+  EXPECT_THROW( mixed_cell_ptr_->sorb(time_, u_, 10), CycException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, precipitate){
   mixed_cell_ptr_->set_sol_limited(true);
   ASSERT_TRUE(mixed_cell_ptr_->sol_limited());
-  EXPECT_NO_THROW(mixed_cell_ptr_->precipitate(time_));
+  EXPECT_NO_THROW(mixed_cell_ptr_->precipitate(time_, u_, 10));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, dont_precipitate){
   // if sol_limited = false, don't call precipitate()
-  EXPECT_NO_THROW(mixed_cell_ptr_->precipitate(time_));
+  EXPECT_THROW(mixed_cell_ptr_->precipitate(time_, u_, 10), CycException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
