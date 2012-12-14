@@ -352,10 +352,10 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-  if(mixed_cell_ptr_->sol_limited() && mixed_cell_ptr_->kd_limited()){
+  if(mixed_cell_ptr_->sol_limited()){
     double sol_lim = mat_table_->S(u_);
     expected_conc = min(sol_lim, expected_conc);
-  };
+  }
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
