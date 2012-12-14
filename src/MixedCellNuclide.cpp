@@ -310,7 +310,7 @@ double MixedCellNuclide::precipitate(int the_time, int iso, double mass){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::V_f(){
-  return MatTools::V_f(V_T(),tot_deg());
+  return MatTools::V_f(V_T(),porosity());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::V_s(){
@@ -319,7 +319,7 @@ double MixedCellNuclide::V_s(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::V_ff(){
-  return MatTools::V_f(V_T(),tot_deg());
+  return tot_deg()*(MatTools::V_f(V_T(),porosity()));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::V_T(){

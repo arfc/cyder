@@ -71,7 +71,7 @@ MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){
      << "  <degradation>" << deg_rate_ << "</degradation>"
      << "  <kd_limited>" << kd_limited_ << "</kd_limited>"
      << "  <porosity>" << porosity_ << "</porosity>"
-     << "  <sol_limited>" << kd_limited_ << "</sol_limited>"
+     << "  <sol_limited>" << sol_limited_ << "</sol_limited>"
      << "</start>";
 
   XMLParser parser(ss);
@@ -258,25 +258,25 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   double expected_src = deg_rate_*test_size_;
   double expected_conc;
-  if(mixed_cell_ptr_->V_ff()>0){
-    expected_conc = expected_src/(mixed_cell_ptr_->V_ff());
-  } else { 
-    expected_conc = 0;
-  }
+  ASSERT_FLOAT_EQ(0, mixed_cell_ptr_->tot_deg());
+  ASSERT_FLOAT_EQ(0, mixed_cell_ptr_->V_ff());
+  expected_conc = 0;
   double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-  if(mixed_cell_ptr_->sol_limited() && mixed_cell_ptr_->kd_limited()){
+  if(mixed_cell_ptr_->sol_limited()){
     double sol_lim = mat_table_->S(u_);
     expected_conc = min(sol_lim, expected_conc);
-   }
+  }
 
   // TRANSPORT NUCLIDES 
   ASSERT_EQ(0, time_);
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  ASSERT_GT(mixed_cell_ptr_->V_ff(),0);
+  expected_conc = expected_src/(mixed_cell_ptr_->V_ff());
 
   // check that half that material is offered as the source term in one year
   // Source Term
@@ -298,6 +298,8 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   time_++;
   ASSERT_EQ(2, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  ASSERT_GT(mixed_cell_ptr_->V_ff(),0);
+  expected_conc = expected_src/(mixed_cell_ptr_->V_ff());
 
   // check that the remaining half is offered as the source term in year two
   // Source Term
@@ -319,6 +321,8 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   time_++;
   ASSERT_EQ(3, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  ASSERT_GT(mixed_cell_ptr_->V_ff(), 0);
+  expected_conc = expected_src/(mixed_cell_ptr_->V_ff());
 
   // check that timestep 3 doesn't crash or offer material it doesn't have
   // Source Term
