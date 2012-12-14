@@ -337,17 +337,20 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, transportNuclidesDR1){ 
-  // if the degradation rate is one, everything should be released in a timestep
+  // if the degradation rate is .5, everything should be released in two years
   deg_rate_= 1;
   // set the degradation rate
   ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(mixed_cell_ptr_->deg_rate(), deg_rate_);
+  // set geometry
+  EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  // set the geometry
-  EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
+  double expected_conc;
+  ASSERT_FLOAT_EQ(0, mixed_cell_ptr_->tot_deg());
+  ASSERT_FLOAT_EQ(0, mixed_cell_ptr_->V_ff());
+  expected_conc = 0;
   double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
@@ -357,35 +360,62 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
     expected_conc = min(sol_lim, expected_conc);
   }
 
-  // check that half that material is offered as the source term in one timestep
-  // TRANSPORT NUCLIDES
+  // TRANSPORT NUCLIDES 
   ASSERT_EQ(0, time_);
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  ASSERT_GT(mixed_cell_ptr_->V_ff(),0);
+  expected_conc = expected_src/(mixed_cell_ptr_->V_ff());
 
+  // check that half that material is offered as the source term in one year
   // Source Term
   EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Neumann 
+  // Neumann
   double expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
-  EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
+  EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
   // Cauchy
-  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
   CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
   double extract_mass = nuc_model_ptr_->source_term_bc().second;
   EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
-  // TRANSPORT NUCLIDES
+  // TRANSPORT NUCLIDES 
   time_++;
   ASSERT_EQ(2, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  ASSERT_GT(mixed_cell_ptr_->V_ff(),0);
 
-  // check that nothing more is offered in time step 2
+  // check that no more is offered as the source term in year two
+  // Source Term
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
+  // Dirichlet
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
+  // Neumann 
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
+  // Cauchy
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
+
+  // TRANSPORT NUCLIDES 
+  time_++;
+  ASSERT_EQ(3, time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
+  ASSERT_GT(mixed_cell_ptr_->V_ff(), 0);
+  expected_conc = expected_src/(mixed_cell_ptr_->V_ff());
+
+  // check that timestep 3 doesn't crash or offer material it doesn't have
+  // Source Term
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
+  // Dirichlet
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
+  // Cauchy
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
+  // Neumann
+  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
