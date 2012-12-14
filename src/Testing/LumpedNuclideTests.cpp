@@ -187,7 +187,8 @@ TEST_F(LumpedNuclideTest, set_formulation){
   EXPECT_EQ(EPM, lumped_ptr_->formulation());
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(PFM));
   EXPECT_EQ(PFM, lumped_ptr_->formulation());
-  EXPECT_THROW(lumped_ptr_->set_formulation(6), CycException);
+  EXPECT_THROW(lumped_ptr_->set_formulation("OTHER"), CycException);
+  EXPECT_THROW(lumped_ptr_->set_formulation(LAST_FORMULATION_TYPE), CycException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
