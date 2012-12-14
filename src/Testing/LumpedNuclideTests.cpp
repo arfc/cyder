@@ -141,30 +141,30 @@ TEST_F(LumpedNuclideTest, extract){
     EXPECT_NO_THROW(lumped_ptr_->transportNuclides(time_));
     //EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, lumped_ptr_->contained_mass(time_));
   }
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, set_some_param){ 
+TEST_F(LumpedNuclideTest, set_porosity){ 
   // the deg rate must be between 0 and 1, inclusive
-  some_param_=0;
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
-  some_param_=1;
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
+  theta_=0;
+  ASSERT_NO_THROW(lumped_ptr_->set_porosity(theta_));
+  EXPECT_FLOAT_EQ(lumped_ptr_->porosity(), theta_);
+  theta_=1;
+  ASSERT_NO_THROW(lumped_ptr_->set_porosity(theta_));
+  EXPECT_FLOAT_EQ(lumped_ptr_->porosity(), theta_);
   // it should accept floats
-  some_param_= 0.1;
-  //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-  //EXPECT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
+  theta_= 0.1;
+  ASSERT_NO_THROW(lumped_ptr_->set_porosity(theta_));
+  EXPECT_FLOAT_EQ(lumped_ptr_->porosity(), theta_);
   // an exception should be thrown if it's set outside the bounds
-  some_param_= -1;
-  //EXPECT_THROW(lumped_ptr_->set_some_param(some_param_), CycRangeException);
-  //EXPECT_NE(lumped_ptr_->some_param(), some_param_);
-  some_param_= 2;
-  //EXPECT_THROW(lumped_ptr_->set_some_param(some_param_), CycRangeException);
-  //EXPECT_NE(lumped_ptr_->some_param(), some_param_);
+  theta_= -1;
+  EXPECT_THROW(lumped_ptr_->set_porosity(theta_), CycRangeException);
+  EXPECT_NE(lumped_ptr_->porosity(), theta_);
+  theta_= 2;
+  EXPECT_THROW(lumped_ptr_->set_porosity(theta_), CycRangeException);
+  EXPECT_NE(lumped_ptr_->porosity(), theta_);
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, total_degradation){
   some_param_=0.3;
