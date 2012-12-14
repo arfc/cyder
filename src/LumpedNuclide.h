@@ -194,6 +194,15 @@ public:
    */
   double v(){return v_;};
 
+  /// Gets the total volume
+  double V_T();
+
+  /// Gets the fluid volume, based on porosity
+  double V_f();
+
+  /// Gets the fluid volume, based on porosity
+  double V_s();
+
 protected:
   /**
     The advective velocity through this component [m/s]

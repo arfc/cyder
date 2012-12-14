@@ -189,4 +189,17 @@ FormulationType LumpedNuclide::enumerateFormulation(string type_name) {
 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::V_f(){
+  return MatTools::V_f(V_T(),porosity());
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::V_s(){
+  return MatTools::V_s(V_T(),porosity());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::V_T(){
+  return geom_->volume();
+}
 
