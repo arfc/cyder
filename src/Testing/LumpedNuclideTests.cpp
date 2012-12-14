@@ -59,6 +59,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
+     << "  <porosity>" << theta_ << "</porosity>"
      << "  <transit_time>" << t_t_ << "</transit_time>"
      << "  <formulation>"
      << "    <EM/>"
@@ -188,7 +189,9 @@ TEST_F(LumpedNuclideTest, set_formulation){
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(PFM));
   EXPECT_EQ(PFM, lumped_ptr_->formulation());
   EXPECT_THROW(lumped_ptr_->set_formulation("OTHER"), CycException);
-  EXPECT_THROW(lumped_ptr_->set_formulation(LAST_FORMULATION_TYPE), CycException);
+  EXPECT_NO_THROW(lumped_ptr_->set_formulation(LAST_FORMULATION_TYPE));
+  EXPECT_EQ(LAST_FORMULATION_TYPE, lumped_ptr_->formulation());
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -280,7 +283,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
 TEST_F(LumpedNuclideTest, transportNuclidesEM){ 
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(EM));
-  double Pe =  
+  double Pe = 0.1; // @TODO fix !!! 
   double expected_conc = (test_size_*exp(Pe)*pow(1-(1+(4*time_)/Pe),0.5))/(2*lumped_ptr_->V_f());
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
@@ -295,7 +298,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  double expected_conc = test_size_*exp(time_)/lumped_ptr_->V_f();
+  expected_conc = test_size_*exp(time_)/lumped_ptr_->V_f();
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
@@ -339,7 +342,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesEPM){
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  double expected_conc = test_size_*exp(time_)/lumped_ptr_->V_f();
+  expected_conc = test_size_*exp(time_)/lumped_ptr_->V_f();
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);

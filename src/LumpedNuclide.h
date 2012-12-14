@@ -186,6 +186,9 @@ public:
   /// Sets the formulation of the concentration relationship
   void set_formulation(FormulationType formulation){formulation_ = formulation;};
 
+  /// Sets the porosity_ variable, the percent of the permeable porous medium.
+  void set_porosity(double porosity);
+
   /// Returns the transit time of the radioactive tracer through the cell
   double transit_time(){return t_t_;};
 
@@ -193,6 +196,9 @@ public:
     The advective velocity through this component. [m/s] 
    */
   double v(){return v_;};
+
+  /// The porosity of the permeable porous mediuam of theis component. [%]
+  double porosity(){return porosity_;};
 
   /// Gets the total volume
   double V_T();
@@ -202,6 +208,7 @@ public:
 
   /// Gets the fluid volume, based on porosity
   double V_s();
+
 
 protected:
   /**
@@ -226,6 +233,9 @@ protected:
 
   /// The dispersion parameter (the inverse of the Peclet number).
   double P_D_;
+
+  /// The porosity of the permeable porous medium
+  double porosity_;
 
 };
 

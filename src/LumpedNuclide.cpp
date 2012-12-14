@@ -55,6 +55,7 @@ LumpedNuclide::~LumpedNuclide(){
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
+  porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
 
   eta_ratio_=NULL;
   P_D_=NULL;
@@ -187,6 +188,22 @@ FormulationType LumpedNuclide::enumerateFormulation(string type_name) {
   }
   return toRet;
 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::set_porosity(double porosity){
+  if( porosity < 0 || porosity > 1 ) {
+    stringstream msg_ss;
+    msg_ss << "The LumpedNuclide porosity range is 0 to 1, inclusive.";
+    msg_ss << " The value provided was ";
+    msg_ss << porosity;
+    msg_ss <<  ".";
+    LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
+    throw CycRangeException(msg_ss.str());
+  } else {
+    this->porosity_ = porosity;
+  }
+  assert((porosity >=0) && (porosity <= 1));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

@@ -93,6 +93,8 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
   <define name="LumpedNuclide">
     <element name="LumpedNuclide">
+      <ref name="advective_velocity"/>
+      <ref name="porosity"/>
       <ref name="transit_time"/>
       <choice>
         <element name="EM">
