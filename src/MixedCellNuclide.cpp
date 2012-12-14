@@ -314,7 +314,7 @@ double MixedCellNuclide::V_f(){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::V_s(){
-  return MatTools::V_s(V_T(),tot_deg());
+  return MatTools::V_s(V_T(),porosity());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
