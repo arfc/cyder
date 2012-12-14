@@ -116,6 +116,7 @@ SET(GenericRepository_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/StubThermal.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/TwoDimPPMNuclide.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MatTools.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/SolLim.cpp
   )
 
 ADD_SUBDIRECTORY(Input)
