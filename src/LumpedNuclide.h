@@ -16,7 +16,6 @@
 enum FormulationType{
   DM, 
   EM, 
-  EPM, 
   PFM, 
   LAST_FORMULATION_TYPE};
 
@@ -217,22 +216,16 @@ protected:
   double v_;
   /**
    * The name of the lumped parameter model formulation. This can be 
-   * the Exponential Model (EM), Piston Flow Model (PFM), Combined Exponential and 
-   * Piston Flow Model (EPM), or the Dispersion Model(DM).
+   * the Exponential Model (EM), Piston Flow Model (PFM), 
+   * or the Dispersion Model(DM).
    */
   FormulationType formulation_;
 
   /// The transit time of a radioactive tracer through the cell
   double t_t_;
-  
-  /**
-   * In the EPM model, the ratio of the total volume to the volue with the exponential 
-   * distribution of transit times.
-   */
-  double eta_ratio_;
 
-  /// The dispersion parameter (the inverse of the Peclet number).
-  double P_D_;
+  /// The dimensionless mass diffusion Peclet number of the medium [-].
+  double Pe_;
 
   /// The porosity of the permeable porous medium
   double porosity_;

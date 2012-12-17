@@ -105,7 +105,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
           <ref name="eta_ratio"/>
         </element>
         <element name="DM">
-          <ref name="dispersion_coeff"/>
+          <ref name="peclet"/>
         </element>
       </choice>
     </element>
@@ -170,11 +170,11 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
-  <define name ="dispersion_coeff">
-    <element name="dispersion_coeff">
+  <define name ="peclet">
+    <element name="peclet">
       <data type="double">
         <param name="minInclusive">0</param>
-        <param name="maxInclusive">3</param>
+        <param name="maxInclusive">20</param>
       </data>
     </element>
   </define>

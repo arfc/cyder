@@ -18,16 +18,14 @@ using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide() : 
   t_t_(0),
-  eta_ratio_(0),
-  P_D_(0),
+  Pe_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
   set_geom(GeometryPtr(new Geometry()));
 
   t_t_ = 0;
   v_ = 0;
-  eta_ratio_ = 0;
-  P_D_ = 0;
+  Pe_ = 0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
@@ -35,8 +33,7 @@ LumpedNuclide::LumpedNuclide() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   t_t_(0),
-  eta_ratio_(0),
-  P_D_(0),
+  Pe_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -57,14 +54,12 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
 
-  eta_ratio_=NULL;
-  P_D_=NULL;
+  Pe_=NULL;
 
   list<string> choices;
   list<string>::iterator it;
   choices.push_back ("DM");
   choices.push_back ("EM");
-  choices.push_back ("EPM");
   choices.push_back ("PFM");
 
   QueryEngine* formulation_qe = qe->queryElement("formulation");
@@ -78,12 +73,9 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   QueryEngine* ptr = formulation_qe->queryElement(formulation_string);
   switch(formulation_){
     case DM :
-      P_D_ = lexical_cast<double>(ptr->getElementContent("dispersion_coeff"));
+      Pe_ = lexical_cast<double>(ptr->getElementContent("peclet"));
       break;
     case EM :
-      break;
-    case EPM :
-      eta_ratio_ = lexical_cast<double>(ptr->getElementContent("eta_ratio"));
       break;
     case PFM :
       break;
@@ -169,7 +161,7 @@ IsoFluxMap LumpedNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 FormulationType LumpedNuclide::enumerateFormulation(string type_name) {
   FormulationType toRet = LAST_FORMULATION_TYPE;
-  string formulation_type_names[] = {"DM", "EM", "EPM", "PFM", "LAST_FORMULATION_TYPE"};
+  string formulation_type_names[] = {"DM", "EM", "PFM", "LAST_FORMULATION_TYPE"};
   for(int type = 0; type < LAST_FORMULATION_TYPE; type++){
     if(formulation_type_names[type] == type_name){
       toRet = (FormulationType)type;
