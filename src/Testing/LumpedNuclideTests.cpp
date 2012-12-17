@@ -66,6 +66,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
      << "  </formulation>"
      << "</start>";
 
+  ///@TODO  test other formulation stringstreams... 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
   lumped_ptr_ = LumpedNuclidePtr(LumpedNuclide::create());

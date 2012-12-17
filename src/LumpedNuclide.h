@@ -188,8 +188,11 @@ public:
   /// Sets the porosity_ variable, the percent of the permeable porous medium.
   void set_porosity(double porosity);
 
-  /// Returns the transit time of the radioactive tracer through the cell
+  /// Returns the transit time of the radioactive tracer through the cell [s?] 
   double transit_time(){return t_t_;};
+
+  /// Returns the peclet number of the component [-]
+  double Pe(){return Pe_;};
 
   /**
     The advective velocity through this component. [m/s] 
@@ -207,6 +210,60 @@ public:
 
   /// Gets the fluid volume, based on porosity
   double V_s();
+
+  /// @TODO verify whether last_updated is larger than last_updated, but less 
+  //than or equal to the current time.
+  void set_last_updated(int last_updated){last_updated_ = last_updated;};
+  double last_updated(){return last_updated_;};
+
+  /** 
+     DM model concentration calculator
+     @param C_0 the incoming concentration map
+     @param the_time the length of the timestep over which to calculate
+     @return C_f the final concentration at the end of the timestep
+     */
+  IsoConcMap C_DM(IsoConcMap C_0, int the_time);
+
+  /**
+     EM model concentration calculator
+
+     @param C_0 the incoming concentration map
+     @param the_time the length of the timestep over which to calculate
+     @return C_f the final concentration at the end of the timestep
+     */
+  IsoConcMap C_EM(IsoConcMap C_0, int the_time);
+
+  /** 
+    PFM model concentration calculator
+
+     @param C_0 the incoming concentration map
+     @param the_time the length of the timestep over which to calculate
+     @return C_f the final concentration at the end of the timestep
+    */
+  IsoConcMap C_PFM(IsoConcMap C_0, int the_time);
+
+  /**
+    This is a helper function that scales an IsoConcMap with a scalar
+
+    @param C_0 the original IsoConcMap, to be scaled.
+    @param scalar the scalar by which to multiply each element of C_0 [-]
+    */
+  IsoConcMap scaleConcMap(IsoConcMap C_0, double scalar);
+
+  /** 
+     Updates the contained vector
+
+     @param the_time the time at which to update the vector
+    */
+  void update_vec_hist(int the_time);
+
+  /** 
+     Updates the available concentration
+
+     @param the_time the time at which to update the IsoConcMap
+     @param mats the materials that are part of the available concentration
+    */
+  void update_conc_hist(int the_time, std::deque<mat_rsrc_ptr> mats);
 
 
 protected:
@@ -229,6 +286,9 @@ protected:
 
   /// The porosity of the permeable porous medium
   double porosity_;
+
+  /// the time at which the conc hist was last updated
+  int last_updated_;
 
 };
 

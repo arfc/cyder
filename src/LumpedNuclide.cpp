@@ -17,6 +17,7 @@ using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide() : 
+  last_updated_(0),
   t_t_(0),
   Pe_(0),
   formulation_(LAST_FORMULATION_TYPE)
@@ -32,6 +33,7 @@ LumpedNuclide::LumpedNuclide() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
+  last_updated_(0),
   t_t_(0),
   Pe_(0),
   formulation_(LAST_FORMULATION_TYPE)
@@ -123,14 +125,15 @@ void LumpedNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void LumpedNuclide::transportNuclides(int time){
+void LumpedNuclide::transportNuclides(int the_time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   // The convention will be that flux is positive in the radial direction
   // If these fluxes are negative, nuclides aphysically flow toward the waste package 
   // It will send the adjacent components information?
   // The LumpedNuclide class should transport all nuclides
-
+  update_vec_hist(the_time);
+  update_conc_hist(the_time, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -210,5 +213,65 @@ double LumpedNuclide::V_s(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double LumpedNuclide::V_T(){
   return geom_->volume();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
+  assert(last_updated() <= the_time);
+  IsoConcMap to_ret;
+
+  IsoConcMap C_0 = conc_hist(last_updated());
+  switch(formulation_){
+    case DM :
+      to_ret = C_DM(C_0, the_time);
+      break;
+    case EM :
+      to_ret = C_EM(C_0, the_time);
+      break;
+    case PFM :
+      to_ret = C_PFM(C_0, the_time);
+      break;
+    default:
+      string err = "The formulation type '"; 
+      err += formulation_;
+      err += "' is not supported.";
+      throw CycException(err);
+      LOG(LEV_ERROR,"GRLNuc") << err;
+      break;
+  }
+  set_last_updated(the_time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::C_DM(IsoConcMap C_0, int the_time){
+  double arg = (Pe()/2.0)*(1-pow(1+4*the_time/Pe(), 0.5));
+  return scaleConcMap(C_0, exp(arg));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
+  double scale = 1/(1+the_time);
+  return scaleConcMap(C_0, scale);
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
+  double scale = exp(-the_time);
+  return scaleConcMap(C_0, scale);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::scaleConcMap(IsoConcMap C_0, double scalar){
+  double orig;
+  IsoConcMap::iterator it;
+  for(it = C_0.begin(); it != C_0.end(); ++it) { 
+    orig = C_0[(*it).first];
+    C_0[(*it).first] = orig*scalar;
+  }
+  return C_0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::update_vec_hist(int the_time){
+  vec_hist_[the_time] = MatTools::sum_mats(wastes_);
 }
 
