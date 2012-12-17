@@ -132,15 +132,15 @@ TEST_F(LumpedNuclideTest, extract){
   ASSERT_EQ(0,time_);
   ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   EXPECT_NO_THROW(lumped_ptr_->transportNuclides(time_));
-  //EXPECT_FLOAT_EQ(test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
-  //EXPECT_FLOAT_EQ(test_size_, lumped_ptr_->contained_mass(time_));
+  EXPECT_FLOAT_EQ(test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
+  EXPECT_FLOAT_EQ(test_size_, lumped_ptr_->contained_mass(time_));
 
   for(int i=1; i<4; i++){
     time_++;
     ASSERT_EQ(i,time_);
     EXPECT_NO_THROW(nuc_model_ptr_->extract(test_comp_, frac*test_size_));
     EXPECT_NO_THROW(lumped_ptr_->transportNuclides(time_));
-    //EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, lumped_ptr_->contained_mass(time_));
+    EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, lumped_ptr_->contained_mass(time_));
   }
 }
 
