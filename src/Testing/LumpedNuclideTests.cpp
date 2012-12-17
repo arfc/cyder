@@ -107,18 +107,18 @@ TEST_F(LumpedNuclideTest, absorb){
   // you shouldn't absorb more material than you can handle. how much is that?
   ASSERT_EQ(0,time_);
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
-  //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
+  EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
+  EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
   time_++;
   ASSERT_EQ(1,time_);
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
-  //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
+  EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
+  EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
   time_++;
   ASSERT_EQ(2,time_);
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
-  //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
+  EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
+  EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), lumped_ptr_->contained_mass(time_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
