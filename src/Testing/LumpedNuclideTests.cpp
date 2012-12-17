@@ -222,6 +222,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   // check that nothing more is offered in time step 2
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, transportNuclidesDM){ 
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
@@ -342,6 +343,42 @@ TEST_F(LumpedNuclideTest, getVolume) {
   EXPECT_NO_THROW(lumped_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()));
   EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), nuc_model_ptr_->geom()->volume());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(LumpedNuclideTest, C_DM){
+  deque<mat_rsrc_ptr> mats;
+  mats.push_back(test_mat_);
+  lumped_ptr_->set_formulation(DM);
+  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(LumpedNuclideTest, C_EM){
+  deque<mat_rsrc_ptr> mats;
+  mats.push_back(test_mat_);
+  lumped_ptr_->set_formulation(EM);
+  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(LumpedNuclideTest, C_PFM){
+  deque<mat_rsrc_ptr> mats;
+  mats.push_back(test_mat_);
+  lumped_ptr_->set_formulation(PFM);
+  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(LumpedNuclideTest, C_LAST_FORMULATION_TYPE){
+  deque<mat_rsrc_ptr> mats;
+  mats.push_back(test_mat_);
+  lumped_ptr_->set_formulation(LAST_FORMULATION_TYPE);
+  EXPECT_THROW(lumped_ptr_->update_conc_hist(time_, mats), CycException);
+}
+
+
+
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 INSTANTIATE_TEST_CASE_P(LumpedNuclideModel, NuclideModelTests, Values(&LumpedNuclideModelConstructor));
