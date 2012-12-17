@@ -348,8 +348,24 @@ TEST_F(LumpedNuclideTest, getVolume) {
 TEST_F(LumpedNuclideTest, C_DM){
   deque<mat_rsrc_ptr> mats;
   mats.push_back(test_mat_);
+
+  IsoConcMap conc_map;
+  conc_map[92235] = 10;
+  conc_map[95242] = 10;
+
+  IsoConcMap expected;
+  conc_map[92235] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
+  conc_map[95242] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
+
+
   lumped_ptr_->set_formulation(DM);
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+  EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
+  EXPECT_FLOAT_EQ( expected,  lumped_ptr_->C_DM( conc_map, time_ ));
+  time_++;
+  expected = ;
+  EXPECT_FLOAT_EQ( expected,  lumped_ptr_->C_DM( conc_map, time_ ));
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
