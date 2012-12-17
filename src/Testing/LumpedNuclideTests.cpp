@@ -167,19 +167,6 @@ TEST_F(LumpedNuclideTest, set_porosity){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, total_degradation){
-  some_param_=0.3;
-  int max_degs = 1.0/some_param_;
-  // Check deg rate
-  for(int i=0; i<10; i++){
-    ASSERT_EQ(i, time_);
-    //ASSERT_NO_THROW(lumped_ptr_->set_some_param(some_param_));
-    //ASSERT_FLOAT_EQ(lumped_ptr_->some_param(), some_param_);
-    time_++;
-  }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, set_formulation){
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(DM));
   EXPECT_EQ(DM, lumped_ptr_->formulation());
