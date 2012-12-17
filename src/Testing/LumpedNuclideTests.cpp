@@ -326,15 +326,13 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, updateVecHist){ 
   time_++;
+  EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
+  EXPECT_NO_THROW(lumped_ptr_->set_formulation(EM));
+
+  // fill it with some material
+  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, contained_mass){ 
-  time_++;
-  //EXPECT_FLOAT_EQ(0, lumped_ptr_->contained_mass());
-
-}
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, setGeometry) {  
