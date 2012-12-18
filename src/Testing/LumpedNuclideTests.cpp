@@ -270,8 +270,6 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
 TEST_F(LumpedNuclideTest, transportNuclidesEM){ 
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(EM));
-  double Pe = 0.1; // @TODO fix !!! 
-  double expected_conc = (test_size_*exp(Pe)*pow(1-(1+(4*time_)/Pe),0.5))/(2*lumped_ptr_->V_f());
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
@@ -285,7 +283,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  expected_conc = test_size_*exp(time_)/lumped_ptr_->V_f();
+  double expected_conc = (test_size_/(1+time_))*lumped_ptr_->V_f();
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
@@ -348,23 +346,24 @@ TEST_F(LumpedNuclideTest, getVolume) {
 TEST_F(LumpedNuclideTest, C_DM){
   deque<mat_rsrc_ptr> mats;
   mats.push_back(test_mat_);
+  double Pe = 0.1;
+  lumped_ptr_->set_Pe(Pe);
+  lumped_ptr_->set_formulation(DM);
 
   IsoConcMap conc_map;
   conc_map[92235] = 10;
   conc_map[95242] = 10;
 
   IsoConcMap expected;
-  conc_map[92235] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
-  conc_map[95242] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
+  expected[92235] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
+  expected[95242] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
 
 
-  lumped_ptr_->set_formulation(DM);
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
-  EXPECT_FLOAT_EQ( expected,  lumped_ptr_->C_DM( conc_map, time_ ));
+  EXPECT_FLOAT_EQ(expected[92235],  lumped_ptr_->C_DM( conc_map, time_ )[92235]);
+  EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_DM( conc_map, time_ )[95242]);
   time_++;
-  expected = ;
-  EXPECT_FLOAT_EQ( expected,  lumped_ptr_->C_DM( conc_map, time_ ));
 
 }
 
@@ -373,7 +372,20 @@ TEST_F(LumpedNuclideTest, C_EM){
   deque<mat_rsrc_ptr> mats;
   mats.push_back(test_mat_);
   lumped_ptr_->set_formulation(EM);
+
+  IsoConcMap conc_map;
+  conc_map[92235] = 10;
+  conc_map[95242] = 10;
+
+  IsoConcMap expected;
+  expected[92235] = 10/(1+time_);
+  expected[95242] = 10/(1+time_);
+
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+  EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
+  EXPECT_FLOAT_EQ(expected[92235],  lumped_ptr_->C_EM( conc_map, time_ )[92235]);
+  EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_EM( conc_map, time_ )[95242]);
+  time_++;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -381,7 +393,20 @@ TEST_F(LumpedNuclideTest, C_PFM){
   deque<mat_rsrc_ptr> mats;
   mats.push_back(test_mat_);
   lumped_ptr_->set_formulation(PFM);
+
+  IsoConcMap conc_map;
+  conc_map[92235] = 10;
+  conc_map[95242] = 10;
+
+  IsoConcMap expected;
+  expected[92235] = 10*exp(-time_);
+  expected[95242] = 10*exp(-time_);
+
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+  EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
+  EXPECT_FLOAT_EQ(expected[92235],  lumped_ptr_->C_PFM( conc_map, time_ )[92235]);
+  EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_PFM( conc_map, time_ )[95242]);
+  time_++;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

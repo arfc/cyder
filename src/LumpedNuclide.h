@@ -188,6 +188,9 @@ public:
   /// Sets the porosity_ variable, the percent of the permeable porous medium.
   void set_porosity(double porosity);
 
+  /// Sets the peclet_ variable, the ratio of advective to diffusive transport.
+  void set_Pe(double Pe);
+
   /// Returns the transit time of the radioactive tracer through the cell [s?] 
   double transit_time(){return t_t_;};
 
