@@ -95,8 +95,24 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
-  LumpedNuclidePtr toRet = LumpedNuclidePtr( new LumpedNuclide() );
-  return (NuclideModelPtr)toRet;
+  const LumpedNuclide* src_ptr = dynamic_cast<const LumpedNuclide*>(&src);
+
+  set_last_updated(TI->time());
+  set_t_t(src_ptr->t_t());
+  set_Pe(src_ptr->Pe());
+  set_formulation(src_ptr->formulation());
+
+  // copy the geometry AND the centroid, it should be reset later.
+  set_geom(GeometryPtr( new Geometry() ) );
+  geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid());
+
+  wastes_ = deque<mat_rsrc_ptr>();
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+  update_vec_hist(TI->time());
+  update_conc_hist(TI->time());
+
+  return shared_from_this();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -258,6 +274,11 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       break;
   }
   set_last_updated(the_time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::update_conc_hist(int the_time){
+  return update_conc_hist(the_time, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

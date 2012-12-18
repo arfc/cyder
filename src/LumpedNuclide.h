@@ -170,7 +170,7 @@ public:
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /// Returns the formulation of the concentration relationship
-  FormulationType formulation(){return formulation_;};
+  const FormulationType formulation() const {return formulation_;};
 
   /** Returns the FormulationType corresponding to the string
    * 
@@ -191,19 +191,22 @@ public:
   /// Sets the peclet_ variable, the ratio of advective to diffusive transport.
   void set_Pe(double Pe);
 
+  /// Sets the transit time, t_t_, variable of the radioactive tracer through the cell [s?] 
+  void set_t_t(double t_t){t_t_ = t_t;};
+
   /// Returns the transit time of the radioactive tracer through the cell [s?] 
-  double transit_time(){return t_t_;};
+  const double t_t() const {return t_t_;};
 
   /// Returns the peclet number of the component [-]
-  double Pe(){return Pe_;};
+  const double Pe() const {return Pe_;};
 
   /**
     The advective velocity through this component. [m/s] 
    */
-  double v(){return v_;};
+  const double v() const {return v_;};
 
   /// The porosity of the permeable porous mediuam of theis component. [%]
-  double porosity(){return porosity_;};
+  const double porosity() const {return porosity_;};
 
   /// Gets the total volume
   double V_T();
@@ -259,6 +262,13 @@ public:
      @param the_time the time at which to update the vector
     */
   void update_vec_hist(int the_time);
+
+  /** 
+     Updates the available concentration using the wastes_ as mats
+
+     @param the_time the time at which to update the IsoConcMap
+    */
+  void update_conc_hist(int the_time);
 
   /** 
      Updates the available concentration

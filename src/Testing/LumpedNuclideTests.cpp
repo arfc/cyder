@@ -76,7 +76,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, initial_state){
-  EXPECT_EQ(t_t_, lumped_ptr_->transit_time());
+  EXPECT_EQ(t_t_, lumped_ptr_->t_t());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, defaultConstructor) {
@@ -92,7 +92,7 @@ TEST_F(LumpedNuclideTest, copy) {
   NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
   EXPECT_NO_THROW(test_copy->copy(*lumped_shared_ptr));
   EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
-  EXPECT_FLOAT_EQ(lumped_ptr_->transit_time(), test_copy->transit_time());
+  EXPECT_FLOAT_EQ(lumped_ptr_->t_t(), test_copy->t_t());
   EXPECT_FLOAT_EQ(lumped_ptr_->V_T(), test_copy->V_T());
   EXPECT_FLOAT_EQ(lumped_ptr_->V_f(), test_copy->V_f());
   EXPECT_FLOAT_EQ(lumped_ptr_->V_s(), test_copy->V_s());
@@ -416,9 +416,6 @@ TEST_F(LumpedNuclideTest, C_LAST_FORMULATION_TYPE){
   lumped_ptr_->set_formulation(LAST_FORMULATION_TYPE);
   EXPECT_THROW(lumped_ptr_->update_conc_hist(time_, mats), CycException);
 }
-
-
-
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
