@@ -20,6 +20,7 @@ LumpedNuclide::LumpedNuclide() :
   last_updated_(0),
   t_t_(0),
   Pe_(0),
+  porosity_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
   set_geom(GeometryPtr(new Geometry()));
@@ -36,6 +37,7 @@ LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   last_updated_(0),
   t_t_(0),
   Pe_(0),
+  porosity_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -100,6 +102,7 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   set_last_updated(TI->time());
   set_t_t(src_ptr->t_t());
   set_Pe(src_ptr->Pe());
+  set_porosity(src_ptr->porosity());
   set_formulation(src_ptr->formulation());
 
   // copy the geometry AND the centroid, it should be reset later.
