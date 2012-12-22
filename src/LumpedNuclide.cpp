@@ -106,7 +106,6 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   set_formulation(src_ptr->formulation());
 
   // copy the geometry AND the centroid, it should be reset later.
-  set_geom(GeometryPtr( new Geometry() ) );
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
 
   wastes_ = deque<mat_rsrc_ptr>();
