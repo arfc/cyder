@@ -87,6 +87,7 @@ TEST_F(LumpedNuclideTest, defaultConstructor) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, copy) {
+  EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
   LumpedNuclidePtr test_copy = LumpedNuclidePtr(LumpedNuclide::create());
   LumpedNuclidePtr lumped_shared_ptr = LumpedNuclidePtr(lumped_ptr_);
   NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
@@ -94,6 +95,7 @@ TEST_F(LumpedNuclideTest, copy) {
   EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
   EXPECT_FLOAT_EQ(lumped_ptr_->t_t(), test_copy->t_t());
   EXPECT_FLOAT_EQ(lumped_ptr_->V_T(), test_copy->V_T());
+  EXPECT_GT(test_copy->V_T(),0);
   EXPECT_FLOAT_EQ(lumped_ptr_->V_f(), test_copy->V_f());
   EXPECT_FLOAT_EQ(lumped_ptr_->V_s(), test_copy->V_s());
   EXPECT_FLOAT_EQ(lumped_ptr_->porosity(), test_copy->porosity());
