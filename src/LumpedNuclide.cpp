@@ -203,7 +203,17 @@ ConcGradMap  LumpedNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoFluxMap LumpedNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
-  /// @TODO This is just a placeholder
+  IsoFluxMap to_ret;
+  ConcGradMap neumann = neumann_bc(c_ext, r_ext);
+
+  ConcGradMap::iterator it;
+  Iso iso;
+  Elem elem;
+  for( it = neumann.begin(); it!=neumann.end(); ++it){
+    iso = (*it).first;
+    elem = iso/1000;
+    to_ret.insert(make_pair(iso, -mat_table_->D(elem)*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
+  }
   return conc_hist_.at(TI->time());
 }
 
