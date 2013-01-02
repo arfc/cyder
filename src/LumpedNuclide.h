@@ -220,7 +220,7 @@ public:
   /// @TODO verify whether last_updated is larger than last_updated, but less 
   //than or equal to the current time.
   void set_last_updated(int last_updated){last_updated_ = last_updated;};
-  double last_updated(){return last_updated_;};
+  int last_updated(){return last_updated_;};
 
   /** 
      DM model concentration calculator

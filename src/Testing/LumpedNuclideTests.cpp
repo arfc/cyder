@@ -41,10 +41,14 @@ void LumpedNuclideTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_lumped_nuclide model setup
+  mat_table_ = MDB->table("clay");
   lumped_ptr_=LumpedNuclidePtr(initNuclideModel());
+  lumped_ptr_->set_mat_table(mat_table_);
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(lumped_ptr_);
+  nuc_model_ptr_->set_mat_table(mat_table_);
   default_lumped_ptr_ = LumpedNuclidePtr(LumpedNuclide::create());
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_lumped_ptr_);
+  
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclideTest::TearDown() {  

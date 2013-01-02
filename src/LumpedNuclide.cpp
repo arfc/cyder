@@ -156,7 +156,7 @@ void LumpedNuclide::transportNuclides(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> LumpedNuclide::source_term_bc(){
-  double tot_mass = shared_from_this()->contained_mass(TI->time());
+  double tot_mass = shared_from_this()->contained_mass(last_updated());
   IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), V_T());
   CompMapPtr comp_map = CompMapPtr(new CompMap(MASS));
   IsoConcMap::iterator it;
@@ -169,11 +169,11 @@ pair<IsoVector, double> LumpedNuclide::source_term_bc(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::dirichlet_bc(){
-  return conc_hist_.at(TI->time());
+  return conc_hist(last_updated());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ConcGradMap  LumpedNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
+ConcGradMap LumpedNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   ConcGradMap to_ret;
   IsoConcMap c_int = conc_hist(last_updated());
   Radius r_int = geom()->radial_midpoint();
@@ -211,7 +211,7 @@ IsoFluxMap LumpedNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   for( it = neumann.begin(); it!=neumann.end(); ++it){
     iso = (*it).first;
     elem = iso/1000;
-    to_ret.insert(make_pair(iso, -mat_table_->D(elem)*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
+    to_ret.insert(make_pair(iso, -mat_table_->D(elem)*(*it).second + shared_from_this()->dirichlet_bc(iso)*v()));
   }
   return conc_hist_.at(TI->time());
 }
