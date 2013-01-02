@@ -159,9 +159,9 @@ pair<IsoVector, double> LumpedNuclide::source_term_bc(){
   double tot_vol = shared_from_this()->geom()->volume();
   double tot_mass = shared_from_this()->contained_mass(TI->time());
   IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), tot_vol);
-  CompMapPtr comp_map;
+  CompMapPtr comp_map = CompMapPtr(new CompMap(MASS));
   IsoConcMap::iterator it;
-  for( it=conc_map.begin(); it!=conc_map.end(); it++){
+  for( it=conc_map.begin(); it!=conc_map.end(); ++it){
     (*comp_map)[(*it).first]=(*it).second;
   }
   IsoVector to_ret = IsoVector(comp_map);
