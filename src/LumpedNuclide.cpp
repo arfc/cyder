@@ -170,14 +170,35 @@ pair<IsoVector, double> LumpedNuclide::source_term_bc(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::dirichlet_bc(){
-  /// @TODO This is just a placeholder should call actual outer radius
   return conc_hist_.at(TI->time());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ConcGradMap  LumpedNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
-  /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time());
+  ConcGradMap to_ret;
+  IsoConcMap c_int = conc_hist(last_updated());
+  Radius r_int = geom()->radial_midpoint();
+
+  int iso;
+  IsoConcMap::iterator it;
+  for( it=c_int.begin(); it!=c_int.end(); ++it){
+    iso=(*it).first;
+    if( c_ext.count(iso) != 0 ) {
+      // in both
+      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
+    } else {
+      // in c_int only
+      to_ret[iso] = calc_conc_grad(0, c_int[iso], r_ext, r_int);
+    }
+  }
+  for( it=c_ext.begin(); it!=c_ext.end(); ++it){
+    iso = (*it).first;
+    if( c_int.count(iso) == 0) {
+      // in c_ext only
+      to_ret[iso] = calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
+    }
+  }
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
