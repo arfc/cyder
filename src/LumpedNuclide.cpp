@@ -156,9 +156,12 @@ void LumpedNuclide::transportNuclides(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> LumpedNuclide::source_term_bc(){
-  /// @TODO This is just a placeholder
-  pair<IsoVector, double> to_ret;
-  return to_ret;
+  double tot = shared_from_this()->contained_mass(last_updated());
+  IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), tot);
+  CompMapPtr to_ret;
+  conc_map = to_ret;
+  IsoVector(to_ret, tot);
+  return make_pair(to_ret, tot);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
