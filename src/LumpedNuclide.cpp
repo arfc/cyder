@@ -156,12 +156,16 @@ void LumpedNuclide::transportNuclides(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> LumpedNuclide::source_term_bc(){
-  double tot = shared_from_this()->contained_mass(last_updated());
-  IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), tot);
-  CompMapPtr to_ret;
-  conc_map = to_ret;
-  IsoVector(to_ret, tot);
-  return make_pair(to_ret, tot);
+  double tot_vol = shared_from_this()->geom()->volume();
+  double tot_mass = shared_from_this()->contained_mass(TI->time());
+  IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), tot_vol);
+  CompMapPtr comp_map;
+  IsoConcMap::iterator it;
+  for( it=conc_map.begin(); it!=conc_map.end(); it++){
+    (*comp_map)[(*it).first]=(*it).second;
+  }
+  IsoVector to_ret = IsoVector(comp_map);
+  return make_pair(to_ret, tot_mass);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -224,6 +228,7 @@ void LumpedNuclide::set_Pe(double Pe){
   }
   assert((Pe >=0));
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::set_porosity(double porosity){
   if( porosity < 0 || porosity > 1 ) {
