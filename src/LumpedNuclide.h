@@ -71,7 +71,7 @@ public:
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
     */
-  static LumpedNuclidePtr create (){ return LumpedNuclidePtr(new LumpedNuclide()); };
+  static LumpedNuclidePtr create (){ LumpedNuclidePtr to_ret = LumpedNuclidePtr(new LumpedNuclide()); to_ret->set_formulation(DM); return to_ret;};
 
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
