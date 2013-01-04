@@ -9,7 +9,9 @@ restructuredText (the markup language used to construct site content).
 
 A brief summary of how to modify the website:
 
-#. Clone the `katyhuff/cyder.github.com` repository.
+#. Clone the `github.com/katyhuff/cyder` repository.
+
+#. Switch branches to gh-pages.
 
 #. Modify the source `rst` files (using the restructuredText markup language)
    in the repository's `source` directory as desired.
@@ -23,9 +25,9 @@ A brief summary of how to modify the website:
 #. Type `git add .` in the root directory of the repository and commit the site
    build changes.
 
-#. Push changes to the `katyhuff/cyder.github.com` repository.
+#. Push changes to the `github.com/katyhuff/cyder` repository.
 
-#. Visit http://cyder.github.com to inspect your work online.
+#. Visit http://katyhuff.github.com/cyder to inspect your work online.
 
 .. _Sphinx: http://sphinx.pocoo.org/
 
@@ -43,6 +45,6 @@ Thou Shalt Not
 * Thou shalt not commit site build changes (i.e. after running `make html`)
   together with changes to the site's source `rst` files in any single commit.
 
-* Thou shalt not push any site build changes to the `katyhuff/cyder.github.com`
+* Thou shalt not push any site build changes to the `katyhuff/cyder`
   repository without first having inspected the newly built html pages that
   correspond with your changes.
