@@ -16,6 +16,15 @@ Interested developers are welcome and encouraged to contribute but may
 experience code instability in the early experimental stages of
 the project.
 
+Background Literature
+---------------------
+
+Background literature related to the Cyder generic geology performance library 
+includes :
+
+  
+
+
 Important Features
 -------------------
 
