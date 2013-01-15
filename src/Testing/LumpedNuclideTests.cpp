@@ -237,7 +237,6 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   double Pe = 0.1;
   lumped_ptr_->set_Pe(Pe);
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(DM));
-  double expected_conc = (test_size_/lumped_ptr_->V_f())/(1+time_);
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
@@ -251,7 +250,9 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  expected_conc = (test_size_/lumped_ptr_->V_f())/(1+time_);
+  double pow_arg = (Pe/2)*(1-pow(1+4*time_/Pe, 0.5));
+  double exponent = exp(pow_arg);
+  double expected_conc = (test_size_/lumped_ptr_->V_f())*exponent;
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
@@ -261,7 +262,8 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
+  // @TODO fix units everywhere
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; 
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -273,8 +275,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   ASSERT_EQ(2, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
-  // check that nothing more is offered in time step 2
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
+  // @TODO add behavior for later timesteps.
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, transportNuclidesEM){ 
@@ -303,7 +304,8 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
+  // @TODO fix units everywhere
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; 
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
