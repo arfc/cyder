@@ -32,9 +32,9 @@ void LumpedNuclideTest::SetUp(){
   // composition set up
   u_=92;
   u235_=92235;
-  one_mol_=1.0;
+  one_kg_=1.0;
   test_comp_= CompMapPtr(new CompMap(MASS));
-  (*test_comp_)[u235_] = one_mol_;
+  (*test_comp_)[u235_] = one_kg_;
   test_size_=10.0;
 
   // material creation
@@ -254,12 +254,12 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Cauchy
-  double expected_cauchy = 900; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // Neumann 
   double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
+  // Cauchy
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
+  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
   CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
@@ -296,12 +296,12 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Cauchy
-  double expected_cauchy = 900; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
   // Neumann 
   double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
+  // Cauchy
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
+  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
   CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();

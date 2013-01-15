@@ -17,7 +17,7 @@ protected:
   MatDataTablePtr mat_table_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
-  int one_mol_;
+  int one_kg_;
   double t_t_;
   int u235_, am241_;
   Elem u_;
