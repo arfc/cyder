@@ -20,6 +20,7 @@ protected:
   int one_mol_;
   double t_t_;
   int u235_, am241_;
+  Elem u_;
   double test_size_;
   double theta_;
   double adv_vel_;
