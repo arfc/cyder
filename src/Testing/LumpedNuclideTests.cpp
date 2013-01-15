@@ -234,6 +234,8 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, transportNuclidesDM){ 
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
+  double Pe = 0.1;
+  lumped_ptr_->set_Pe(Pe);
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(DM));
   double expected_conc = (test_size_/lumped_ptr_->V_f())/(1+time_);
   IsoConcMap zero_conc_map;
