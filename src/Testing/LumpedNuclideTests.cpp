@@ -294,7 +294,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  double expected_conc = (test_size_/(1+time_))*lumped_ptr_->V_f();
+  double expected_conc = (test_size_/lumped_ptr_->V_f())/(1+time_);
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
