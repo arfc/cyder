@@ -156,12 +156,13 @@ void LumpedNuclide::transportNuclides(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> LumpedNuclide::source_term_bc(){
-  double tot_mass = shared_from_this()->contained_mass(last_updated());
+  double tot_mass = 0;
   IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), V_T());
   CompMapPtr comp_map = CompMapPtr(new CompMap(MASS));
   IsoConcMap::iterator it;
   for( it=conc_map.begin(); it!=conc_map.end(); ++it){
     (*comp_map)[(*it).first]=(*it).second;
+    tot_mass += (*it).second;
   }
   IsoVector to_ret = IsoVector(comp_map);
   return make_pair(to_ret, tot_mass);
@@ -293,6 +294,7 @@ double LumpedNuclide::V_T(){
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_updated() <= the_time);
   IsoConcMap to_ret;
+  // @ TODO - This ignores the materials that were added SINCE C_0
 
   IsoConcMap C_0 = conc_hist(last_updated());
   switch(formulation_){
@@ -313,6 +315,7 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       LOG(LEV_ERROR,"GRLNuc") << err;
       break;
   }
+  conc_hist_[last_updated()] = to_ret;
   set_last_updated(the_time);
 }
 
