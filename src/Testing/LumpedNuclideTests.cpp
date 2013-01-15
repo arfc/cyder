@@ -228,8 +228,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   ASSERT_EQ(2, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
-  // check that nothing more is offered in time step 2
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
+  // @TODO add behavior for later timesteps.
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
