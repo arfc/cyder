@@ -32,6 +32,7 @@ void LumpedNuclideTest::SetUp(){
   // composition set up
   u_=92;
   u235_=92235;
+  am241_=92235;
   one_kg_=1.0;
   test_comp_= CompMapPtr(new CompMap(MASS));
   (*test_comp_)[u235_] = one_kg_;
@@ -51,6 +52,7 @@ void LumpedNuclideTest::SetUp(){
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_lumped_ptr_);
   
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclideTest::TearDown() {  
 }
@@ -314,6 +316,28 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
 
   // check that nothing more is offered in time step 2
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(LumpedNuclideTest, convert_comp_to_conc){ 
+  IsoConcMap test_conc_map; 
+
+  // composition set up
+  CompMapPtr test_comp_map= CompMapPtr(new CompMap(MASS));
+  (*test_comp_map)[u235_] = one_kg_;
+  (*test_comp_map)[am241_] = 0.5*one_kg_;
+  test_comp_map->normalize();
+  double exp_u235_conc, exp_am241_conc;
+
+  for(int v=1; v<10; v++){
+    for(int m=1; m<10; m++){
+      EXPECT_NO_THROW(lumped_ptr_->comp_to_conc_map(test_comp_map, m, v));
+      test_conc_map=lumped_ptr_->comp_to_conc_map(test_comp_map, m, v);
+      exp_u235_conc = (*test_comp_map)[u235_]*m/v;
+      EXPECT_FLOAT_EQ(exp_u235_conc, test_conc_map[u235_]);
+      exp_am241_conc = (*test_comp_map)[am241_]*m/v;
+      EXPECT_FLOAT_EQ(exp_am241_conc, test_conc_map[am241_]);
+    }
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

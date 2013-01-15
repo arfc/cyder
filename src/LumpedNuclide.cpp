@@ -157,7 +157,7 @@ void LumpedNuclide::transportNuclides(int the_time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> LumpedNuclide::source_term_bc(){
   double tot_mass = 0;
-  IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), V_T());
+  IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), V_f());
   CompMapPtr comp_map = CompMapPtr(new CompMap(MASS));
   IsoConcMap::iterator it;
   for( it=conc_map.begin(); it!=conc_map.end(); ++it){
@@ -257,7 +257,7 @@ void LumpedNuclide::set_Pe(double Pe){
   } else {
     this->Pe_ = Pe;
   }
-  assert((Pe >=0));
+  MatTools::validate_finite_pos((Pe));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -273,7 +273,7 @@ void LumpedNuclide::set_porosity(double porosity){
   } else {
     this->porosity_ = porosity;
   }
-  assert((porosity >=0) && (porosity <= 1));
+  MatTools::validate_percent(porosity);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -291,12 +291,33 @@ double LumpedNuclide::V_T(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::comp_to_conc_map(CompMapPtr comp, double mass, double vol){
+  MatTools::validate_finite_pos(vol);
+  MatTools::validate_finite_pos(mass);
+
+  IsoConcMap to_ret;
+  int iso;
+  double m_iso;
+  CompMap::const_iterator it;
+  it=(*comp).begin();
+  while(it!= (*comp).end() ){
+    iso = (*it).first;
+    m_iso=((*it).second)*mass;
+    to_ret.insert(make_pair(iso, m_iso/vol));
+    ++it;
+  } 
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_updated() <= the_time);
   IsoConcMap to_ret;
-  // @ TODO - This ignores the materials that were added SINCE C_0
 
-  IsoConcMap C_0 = conc_hist(last_updated());
+  pair<IsoVector, double> sum_pair;
+  sum_pair = shared_from_this()->vec_hist(the_time);
+  IsoConcMap C_0 = comp_to_conc_map(sum_pair.first.comp(), sum_pair.second, V_f());
+
   switch(formulation_){
     case DM :
       to_ret = C_DM(C_0, the_time);
@@ -315,8 +336,8 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       LOG(LEV_ERROR,"GRLNuc") << err;
       break;
   }
-  conc_hist_[last_updated()] = to_ret;
   set_last_updated(the_time);
+  conc_hist_[last_updated()] = to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
