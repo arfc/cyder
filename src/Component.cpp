@@ -19,7 +19,6 @@
 #include "MixedCellNuclide.h"
 #include "OneDimPPMNuclide.h"
 #include "StubNuclide.h"
-#include "TwoDimPPMNuclide.h"
 #include "BookKeeper.h"
 #include "Logger.h"
 
@@ -39,7 +38,6 @@ string Component::nuclide_type_names_[] = {
   "MixedCellNuclide",
   "OneDimPPMNuclide",
   "StubNuclide", 
-  "TwoDimPPMNuclide" 
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -316,9 +314,6 @@ NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
     case STUB_NUCLIDE:
       toRet = NuclideModelPtr(StubNuclide::create(input));
       break;
-    case TWODIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(TwoDimPPMNuclide::create(input));
-      break;
     default:
       throw CycException("Unknown nuclide model enum value encountered."); 
   }
@@ -365,9 +360,6 @@ NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
       break;
     case STUB_NUCLIDE:
       toRet = NuclideModelPtr(StubNuclide::create());
-      break;
-    case TWODIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(TwoDimPPMNuclide::create());
       break;
     default:
       throw CycException("Unknown nuclide model enum value encountered when copying."); 

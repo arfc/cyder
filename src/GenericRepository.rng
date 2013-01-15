@@ -50,7 +50,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
                 <ref name="MixedCellNuclide"/>
                 <ref name="OneDimPPMNuclide"/>
                 <ref name="StubNuclide"/>
-                <ref name="TwoDimPPMNuclide"/>
                 <!-- insert potential nuclide models here -->
               </choice>
             </element>
@@ -129,16 +128,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="bulk_density"/>
       <ref name="partition_coeff"/>
       <ref name="retardation_coeff"/>
-    </element>
-  </define>
-
-  <define name="TwoDimPPMNuclide">
-    <element name="TwoDimPPMNuclide">
-      <ref name="initial_concentration"/>
-      <ref name="source_concentration"/>
-      <ref name="porosity"/>
-      <ref name="bulk_density"/>
-      <ref name="partition_coeff"/>
     </element>
   </define>
 
