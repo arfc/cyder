@@ -35,8 +35,8 @@ typedef boost::shared_ptr<OneDimPPMNuclide> OneDimPPMNuclidePtr;
    
     For the boundary and initial conditions, 
     \f{eqnarray*}{
-      -D \frac{\partial C}{\partial z}\big|_{z=0} + v_zc &=& v_zC_0 \mbox{ when } \left( 0<t<t_0 \right)\\
-      -D \frac{\partial C}{\partial z}\big|_{z=0} + v_zc &=& 0 \mbox{ when } \left( t>t_0 \right)\\
+      -D \frac{\partial C}{\partial z}\big|_{z=0} + v_zc &=& v_zC_0\mbox{ when }\left( 0<t<t_0 \right)\\
+      -D \frac{\partial C}{\partial z}\big|_{z=0} + v_zc &=& 0\mbox{ when }\left( t>t_0 \right)\\
       \frac{\partial C}{\partial z}\big|_{z=\infty} &=& 0\\
       C(z,0) &=& C_i,
       \label{1dinfBC}
@@ -57,18 +57,20 @@ typedef boost::shared_ptr<OneDimPPMNuclide> OneDimPPMNuclidePtr;
    than the concentration within the mixed cell, this cell will accept the 
    appropriate diffusive flux accross that boundary. So too if the concentration 
    is lower in the adjacent cell, a corresponding contaminant flux will leave 
-   this cell accross that boundary. Similarly, the advective velocity 
+   this cell across that boundary. Similarly, the advective velocity 
    (unidirectional) at the internal boundary of this cell will cause material to 
    enter the cell advectively. 
 
-When accepting a flux of Material, this cell immediately incorporates it into 
-   the mixed volume. The mixed volume will then make the corresponding homogeneous 
-   concentration available at all boundaries.  
+   When accepting a flux of Material, this cell incorporates it into the list of 
+   wastes that it contains.. The volume will then make the corresponding 
+   boundary conditions available at all boundaries.  
    
    The OneDimPPMNuclide model can be used to represent nuclide models of the 
-   disposal system such as the Waste Form, Waste Package, Buffer, Near Field,
-   Far Field, and Envrionment.
- */
+   disposal system such as the Waste Form, Waste Package, Buffer, Near Field, 
+   Far Field, and Envrionment. However, is is best used to represent either the 
+   Buffer or the Environment components, due to its long running time and lack 
+   of degradation.
+   */
 class OneDimPPMNuclide : public NuclideModel {
 private:
   
