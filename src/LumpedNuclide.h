@@ -217,17 +217,6 @@ public:
   /// Gets the fluid volume, based on porosity
   double V_s();
 
-  /**
-     Converts a CompMap and associated total mass to an IsoConcMap for a Volume
-
-     @param comp the composition to convert, a CompMapPtr
-     @param mass the total mass of the composition [kg]
-     @param vol the total volume in which the concentration exists [m^3]
-
-     @return an IsoConcMap whose elements are comp[iso]*mass/volume
-     */
-  IsoConcMap comp_to_conc_map(CompMapPtr comp, double mass, double vol);
-
   /// @TODO verify whether last_updated is larger than last_updated, but less 
   //than or equal to the current time.
   void set_last_updated(int last_updated){last_updated_ = last_updated;};

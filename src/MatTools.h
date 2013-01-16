@@ -15,6 +15,48 @@
 #include "IsoVector.h"
 #include "Material.h"
 
+/**
+   type definition for radiotoxicity in Sv
+  */
+typedef double Tox;
+
+/**
+   type definition for Concentration Gradients in kg/m^o4
+ */
+typedef double ConcGrad;
+
+/**
+   type definition for a map from isotopes to concentrations
+   The keys are the isotope identifiers Z*1000 + A
+   The values are the Concentration Gradients for each isotope
+  */
+typedef std::map<int, ConcGrad> ConcGradMap;
+
+/**
+   type definition for Concentrations in kg/m^3
+ */
+typedef double Concentration;
+
+/**
+   type definition for a map from isotopes to concentrations
+   The keys are the isotope identifiers Z*1000 + A
+   The values are the Concentrations of each isotope [kg/m^3]
+  */
+typedef std::map<int, Concentration> IsoConcMap;
+
+/**
+   type definition for Fluxes in kg/m^2s
+ */
+typedef double Flux;
+
+/**
+   type definition for a map from isotopes to concentrations
+   The keys are the isotope identifiers Z*1000 + A
+   The values are the Fluxes of each isotope [kg/m^2s]
+  */
+typedef std::map<int, Flux> IsoFluxMap;
+
+
 /** 
    @brief MatTools is a toolkit for manipulating materials. 
    **/
@@ -39,6 +81,17 @@ public:
     **/
   static void extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
       std::deque<mat_rsrc_ptr>& mat_list);
+
+  /**
+    Converts a CompMap and associated total mass to an IsoConcMap for a Volume
+
+    @param comp the composition to convert, a CompMapPtr
+    @param mass the total mass of the composition [kg]
+    @param vol the total volume in which the concentration exists [m^3]
+
+    @return an IsoConcMap whose elements are comp[iso]*mass/volume
+  */  
+  static IsoConcMap comp_to_conc_map(const CompMapPtr comp, double mass, double vol); 
 
   /**
     Returns the fluid volume [m^3] based on the total volume and the porosity

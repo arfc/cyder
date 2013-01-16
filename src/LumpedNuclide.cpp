@@ -292,32 +292,13 @@ double LumpedNuclide::V_T(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap LumpedNuclide::comp_to_conc_map(CompMapPtr comp, double mass, double vol){
-  MatTools::validate_finite_pos(vol);
-  MatTools::validate_finite_pos(mass);
-
-  IsoConcMap to_ret;
-  int iso;
-  double m_iso;
-  CompMap::const_iterator it;
-  it=(*comp).begin();
-  while(it!= (*comp).end() ){
-    iso = (*it).first;
-    m_iso=((*it).second)*mass;
-    to_ret.insert(make_pair(iso, m_iso/vol));
-    ++it;
-  } 
-  return to_ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_updated() <= the_time);
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair;
   sum_pair = shared_from_this()->vec_hist(the_time);
-  IsoConcMap C_0 = comp_to_conc_map(sum_pair.first.comp(), sum_pair.second, V_f());
+  IsoConcMap C_0 = MatTools::comp_to_conc_map(sum_pair.first.comp(), sum_pair.second, V_f());
 
   switch(formulation_){
     case DM :
