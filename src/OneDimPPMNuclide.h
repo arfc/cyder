@@ -20,16 +20,48 @@ typedef boost::shared_ptr<OneDimPPMNuclide> OneDimPPMNuclidePtr;
 
 
 /** 
-   @brief OneDimPPMNuclide is a nuclide transport model that treats the volume 
-   as a homogeneously mixed cell.
+   @brief OneDimPPMNuclide is a nuclide transport model that treats the volume
+   as a one dimensional system with unidirectional flow and a semi-infinite
+   boundary condition in the positive flow direction. 
+
+   The solution is given in :
+   F. J. Leij, T. H. Skaggs, and M. T. Van Genuchten, ``Analytical solutions for
+   solute transport in three-dimensional semi-infinite porous media,'' Water
+   resources research, vol. 27, no. 10, p. 27192733, 1991. 
    
-   This disposal system nuclide model will receive material diffusively. That is, at
-   the internal boundary, if the concentration from an adjacent cell is
-   higher than the concentration within the mixed cell, this cell will accept the 
-   appropriate flux accross that boundary. So too if the concentration is lower in the 
-   adjacent cell, a corresponding contaminant flux will leave this cell accross that boundary. 
+   This disposal system nuclide model will receive material both diffusively and 
+   advectively. That is, at the internal boundary a Cauchy type boundary 
+   condition is applied. 
    
-   When accepting a flux of Material, this cell immediately incorporates it into 
+    For the boundary and initial conditions, 
+    \f{eqnarray*}{
+      -D \frac{\partial C}{\partial z}\big|_{z=0} + v_zc &=& v_zC_0 \mbox{ when } \left( 0<t<t_0 \right)\\
+      -D \frac{\partial C}{\partial z}\big|_{z=0} + v_zc &=& 0 \mbox{ when } \left( t>t_0 \right)\\
+      \frac{\partial C}{\partial z}\big|_{z=\infty} &=& 0\\
+      C(z,0) &=& C_i,
+      \label{1dinfBC}
+    \f}
+      
+   the solution is given as 
+
+   \f{eqnarray*}{
+      C(z,t) = \frac{C_0}{2}\Bigg[&\mbox{erfc}\left[{\frac{L-v_zt}{2\sqrt{D_Lt}}}\right] 
+      + \frac{1}{2} \left(\frac{v_z^2t}{\pi D_L}\right)^{1/2}e^{\frac{-( L - 
+      v_zt)^2}{4D_Lt}}\nonumber\\
+      &- \frac{1}{2}\left( 
+      1+\frac{v_zL}{D_L}+\frac{v_z^2t}{D_L}\right)e^\frac{v_zL}{D_L}\mbox{erfc}\left[\frac{L-V_zt}{2\sqrt{D_Lt}}\right]
+      \Bigg].
+    \f}
+
+   If the concentration from an adjacent cell is higher 
+   than the concentration within the mixed cell, this cell will accept the 
+   appropriate diffusive flux accross that boundary. So too if the concentration 
+   is lower in the adjacent cell, a corresponding contaminant flux will leave 
+   this cell accross that boundary. Similarly, the advective velocity 
+   (unidirectional) at the internal boundary of this cell will cause material to 
+   enter the cell advectively. 
+
+When accepting a flux of Material, this cell immediately incorporates it into 
    the mixed volume. The mixed volume will then make the corresponding homogeneous 
    concentration available at all boundaries.  
    
