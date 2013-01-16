@@ -262,7 +262,9 @@ void LumpedNuclide::set_Pe(double Pe){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::set_porosity(double porosity){
-  if( porosity < 0 || porosity > 1 ) {
+  try {
+    MatTools::validate_percent(porosity);
+  } catch (CycRangeException e) {
     stringstream msg_ss;
     msg_ss << "The LumpedNuclide porosity range is 0 to 1, inclusive.";
     msg_ss << " The value provided was ";
@@ -270,10 +272,9 @@ void LumpedNuclide::set_porosity(double porosity){
     msg_ss <<  ".";
     LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
     throw CycRangeException(msg_ss.str());
-  } else {
-    this->porosity_ = porosity;
   }
-  MatTools::validate_percent(porosity);
+
+  porosity_ = porosity;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

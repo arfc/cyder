@@ -192,31 +192,59 @@ public:
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /**
+     update the istopic contaminant vector history, vec_hist_ based on wastes_
+
+     @param the_time the time at which to update the vec_hist_ [timestep]
+    */
+  void update_vec_hist(int the_time);
+
+  /**
      return porosity
     */
-  double n(){return n_;};
+  const double porosity() const {return porosity_;};
+
+  /// sets the porosity_ variable, the percent void of the medium 
+  void set_porosity(double porosity);
 
   /**
      return initial concentration
      @TODO this shoudn't be a double it should be an isoconcmap
     */
-  double Ci(){return Ci_;};
+  const double Ci() const {return Ci_;};
+
+  /// sets the Ci_ variable, the initial concentration.
+  void set_Ci(double Ci);
 
   /**
      return Co, the source concentration?
      @TODO figure out what you intended to do with this variable. It shouldn't be a double, should be IsoConcMap.
     */
-  double Co(){return Co_;};
+  const double Co() const {return Co_;};
+
+  /// sets the Co_ variable, the source concentration 
+  void set_Co(double Co);
 
   /**
      return bulk density
     */
-  double rho(){return rho_;};
+  const double rho() const {return rho_;};
+
+  /// sets the rho_ variable, the dry bulk density of the medium [kg/m^3] 
+  void set_rho(double rho);
 
   /**
     The advective velocity through this component. [m/s] 
+    @TODO is m/s the right unit? shouldn't be m/yr?
    */
-  double v(){return v_;};
+  const double v() const {return v_;};
+
+  /// sets the v_ variable, the advective velocity through this component. 
+  void set_v(double v);
+
+  /// @TODO verify whether last_updated is larger than last_updated, but less 
+  //than or equal to the current time.
+  void set_last_updated(int last_updated){last_updated_ = last_updated;};
+  int last_updated(){return last_updated_;};
 
 protected:
   /**
@@ -233,10 +261,14 @@ protected:
   double Co_;
 
   /// Porosity of the component matrix, a fraction between 0 and 1, inclusive.
-  double n_;
+  double porosity_;
 
   /// The bulk (dry) density of the component matrix, in g/cm^3.
   double rho_;
+
+  /// The last time the concentration history was updated 
+  int last_updated_;
+
 };
 
 

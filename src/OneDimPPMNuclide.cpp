@@ -21,7 +21,7 @@ OneDimPPMNuclide::OneDimPPMNuclide():
   Ci_(0),
   Co_(0),
   v_(0),
-  n_(0),
+  porosity_(0),
   rho_(0)
 {
   wastes_ = deque<mat_rsrc_ptr>();
@@ -35,7 +35,7 @@ OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
   Ci_(0),
   Co_(0),
   v_(0),
-  n_(0),
+  porosity_(0),
   rho_(0)
 {
   wastes_ = deque<mat_rsrc_ptr>();
@@ -55,11 +55,11 @@ void OneDimPPMNuclide::initModuleMembers(QueryEngine* qe){
   // -D{\frac{\partial C}{\partial x}}|_{x=0} + vC = vC_0, for t<t_0
   Co_ = lexical_cast<double>(qe->getElementContent("source_concentration"));
 
-  // adv_vel.
+  // advective velocity (hopefully the same as the whole system).
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
 
   // rock parameters
-  n_ = lexical_cast<double>(qe->getElementContent("porosity"));
+  porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
   rho_ = lexical_cast<double>(qe->getElementContent("bulk_density"));
 
   LOG(LEV_DEBUG2,"GR1DNuc") << "The OneDimPPMNuclide Class init(cur) function has been called";;
@@ -67,8 +67,25 @@ void OneDimPPMNuclide::initModuleMembers(QueryEngine* qe){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr OneDimPPMNuclide::copy(const NuclideModel& src){
-  OneDimPPMNuclidePtr toRet = OneDimPPMNuclidePtr(new OneDimPPMNuclide());
-  return (NuclideModelPtr)toRet;
+  const OneDimPPMNuclide* src_ptr = dynamic_cast<const OneDimPPMNuclide*>(&src);
+
+  set_last_updated(TI->time());
+  set_porosity(src_ptr->porosity());
+  set_rho(src_ptr->rho());
+  set_v(src_ptr->v());
+  set_Ci(src_ptr->Ci());
+  set_Co(src_ptr->Co());
+
+
+  // copy the geometry AND the centroid. It should be reset later.
+  set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
+
+  wastes_ = deque<mat_rsrc_ptr>();
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+  update_vec_hist(TI->time());
+
+  return shared_from_this();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -131,3 +148,57 @@ IsoFluxMap OneDimPPMNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::update_vec_hist(int the_time){
+  vec_hist_[the_time]=MatTools::sum_mats(wastes_);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::set_porosity(double porosity){
+  try { 
+    MatTools::validate_percent(porosity);
+  } catch (CycRangeException e) {
+    stringstream msg_ss;
+    msg_ss << "The OneDimPPMNuclide porosity range is 0 to 1, inclusive.";
+    msg_ss << " The value provided was ";
+    msg_ss << porosity;
+    msg_ss << ".";
+    LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
+    throw CycRangeException(msg_ss.str());
+  }
+  porosity_ = porosity;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::set_rho(double rho){
+  try { 
+    MatTools::validate_finite_pos(rho);
+  } catch (CycRangeException e) {
+    stringstream msg_ss;
+    msg_ss << "The OneDimPPMNuclide bulk density (rho) range must be positive and finite";
+    msg_ss << " The value provided was ";
+    msg_ss << rho;
+    msg_ss << ".";
+    LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
+    throw CycRangeException(msg_ss.str());
+  }
+  rho_ = rho;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::set_Co(double Co){
+  Co_=Co;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::set_Ci(double Ci){
+  Ci_=Ci;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::set_v(double v){
+  v_=v;
+}
+
+

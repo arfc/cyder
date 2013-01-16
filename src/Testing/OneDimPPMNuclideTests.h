@@ -28,7 +28,7 @@ protected:
   Length len_five_;
   point_t origin_;
   int time_;
-  double Ci_,Co_,n_, D_, rho_, Kd_; 
+  double Ci_,Co_,porosity_, D_, rho_, Kd_; 
   
   virtual void SetUp();
   virtual void TearDown();
