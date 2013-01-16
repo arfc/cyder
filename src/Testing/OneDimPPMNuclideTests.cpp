@@ -138,7 +138,7 @@ TEST_F(OneDimPPMNuclideTest, extract){
     ASSERT_EQ(i,time_);
     EXPECT_NO_THROW(nuc_model_ptr_->extract(test_comp_, frac*test_size_));
     EXPECT_NO_THROW(one_dim_ppm_ptr_->transportNuclides(time_));
-    //EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, one_dim_ppm_ptr_->contained_mass(time_));
+    EXPECT_FLOAT_EQ(test_size_, one_dim_ppm_ptr_->contained_mass(time_));
   }
 
 }
