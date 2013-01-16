@@ -337,7 +337,7 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       break;
   }
   set_last_updated(the_time);
-  conc_hist_[last_updated()] = to_ret;
+  conc_hist_[the_time] = to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -353,7 +353,7 @@ IsoConcMap LumpedNuclide::C_DM(IsoConcMap C_0, int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
-  double scale = 1/(1+the_time);
+  double scale = 1.0/(1.0+the_time);
   return scaleConcMap(C_0, scale);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
