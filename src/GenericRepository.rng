@@ -50,7 +50,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
                 <ref name="MixedCellNuclide"/>
                 <ref name="OneDimPPMNuclide"/>
                 <ref name="StubNuclide"/>
-                <ref name="TwoDimPPMNuclide"/>
                 <!-- insert potential nuclide models here -->
               </choice>
             </element>
@@ -93,6 +92,8 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
   <define name="LumpedNuclide">
     <element name="LumpedNuclide">
+      <ref name="advective_velocity"/>
+      <ref name="porosity"/>
       <ref name="transit_time"/>
       <choice>
         <element name="EM">
@@ -103,7 +104,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
           <ref name="eta_ratio"/>
         </element>
         <element name="DM">
-          <ref name="dispersion_coeff"/>
+          <ref name="peclet"/>
         </element>
       </choice>
     </element>
@@ -127,16 +128,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="bulk_density"/>
       <ref name="partition_coeff"/>
       <ref name="retardation_coeff"/>
-    </element>
-  </define>
-
-  <define name="TwoDimPPMNuclide">
-    <element name="TwoDimPPMNuclide">
-      <ref name="initial_concentration"/>
-      <ref name="source_concentration"/>
-      <ref name="porosity"/>
-      <ref name="bulk_density"/>
-      <ref name="partition_coeff"/>
     </element>
   </define>
 
@@ -168,11 +159,11 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
-  <define name ="dispersion_coeff">
-    <element name="dispersion_coeff">
+  <define name ="peclet">
+    <element name="peclet">
       <data type="double">
         <param name="minInclusive">0</param>
-        <param name="maxInclusive">3</param>
+        <param name="maxInclusive">20</param>
       </data>
     </element>
   </define>

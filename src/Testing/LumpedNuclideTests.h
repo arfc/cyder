@@ -14,11 +14,13 @@ protected:
   LumpedNuclidePtr default_lumped_ptr_;
   NuclideModelPtr nuc_model_ptr_;
   NuclideModelPtr default_nuc_model_ptr_;
+  MatDataTablePtr mat_table_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
-  int one_mol_;
+  int one_kg_;
   double t_t_;
   int u235_, am241_;
+  Elem u_;
   double test_size_;
   double theta_;
   double adv_vel_;

@@ -17,26 +17,27 @@ using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide() : 
+  last_updated_(0),
   t_t_(0),
-  eta_ratio_(0),
-  P_D_(0),
+  Pe_(0),
+  porosity_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
   set_geom(GeometryPtr(new Geometry()));
 
   t_t_ = 0;
   v_ = 0;
-  eta_ratio_ = 0;
-  P_D_ = 0;
+  Pe_ = 0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
+  last_updated_(0),
   t_t_(0),
-  eta_ratio_(0),
-  P_D_(0),
+  Pe_(0),
+  porosity_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -55,15 +56,14 @@ LumpedNuclide::~LumpedNuclide(){
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
+  porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
 
-  eta_ratio_=NULL;
-  P_D_=NULL;
+  Pe_=NULL;
 
   list<string> choices;
   list<string>::iterator it;
   choices.push_back ("DM");
   choices.push_back ("EM");
-  choices.push_back ("EPM");
   choices.push_back ("PFM");
 
   QueryEngine* formulation_qe = qe->queryElement("formulation");
@@ -77,12 +77,9 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   QueryEngine* ptr = formulation_qe->queryElement(formulation_string);
   switch(formulation_){
     case DM :
-      P_D_ = lexical_cast<double>(ptr->getElementContent("dispersion_coeff"));
+      Pe_ = lexical_cast<double>(ptr->getElementContent("peclet"));
       break;
     case EM :
-      break;
-    case EPM :
-      eta_ratio_ = lexical_cast<double>(ptr->getElementContent("eta_ratio"));
       break;
     case PFM :
       break;
@@ -100,8 +97,24 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
-  LumpedNuclidePtr toRet = LumpedNuclidePtr( new LumpedNuclide() );
-  return (NuclideModelPtr)toRet;
+  const LumpedNuclide* src_ptr = dynamic_cast<const LumpedNuclide*>(&src);
+
+  set_last_updated(TI->time());
+  set_t_t(src_ptr->t_t());
+  set_Pe(src_ptr->Pe());
+  set_porosity(src_ptr->porosity());
+  set_formulation(src_ptr->formulation());
+
+  // copy the geometry AND the centroid, it should be reset later.
+  set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
+
+  wastes_ = deque<mat_rsrc_ptr>();
+  vec_hist_ = VecHist();
+  conc_hist_ = ConcHist();
+  update_vec_hist(TI->time());
+  update_conc_hist(TI->time());
+
+  return shared_from_this();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -130,45 +143,84 @@ void LumpedNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void LumpedNuclide::transportNuclides(int time){
+void LumpedNuclide::transportNuclides(int the_time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   // The convention will be that flux is positive in the radial direction
   // If these fluxes are negative, nuclides aphysically flow toward the waste package 
   // It will send the adjacent components information?
   // The LumpedNuclide class should transport all nuclides
-
+  update_vec_hist(the_time);
+  update_conc_hist(the_time, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> LumpedNuclide::source_term_bc(){
-  /// @TODO This is just a placeholder
-  pair<IsoVector, double> to_ret;
-  return to_ret;
+  double tot_mass = 0;
+  IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), V_f());
+  CompMapPtr comp_map = CompMapPtr(new CompMap(MASS));
+  IsoConcMap::iterator it;
+  for( it=conc_map.begin(); it!=conc_map.end(); ++it){
+    (*comp_map)[(*it).first]=(*it).second;
+    tot_mass += (*it).second;
+  }
+  IsoVector to_ret = IsoVector(comp_map);
+  return make_pair(to_ret, tot_mass);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::dirichlet_bc(){
-  /// @TODO This is just a placeholder should call actual outer radius
-  return conc_hist_.at(TI->time());
+  return conc_hist(last_updated());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-ConcGradMap  LumpedNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
-  /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time());
+ConcGradMap LumpedNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
+  ConcGradMap to_ret;
+  IsoConcMap c_int = conc_hist(last_updated());
+  Radius r_int = geom()->radial_midpoint();
+
+  int iso;
+  IsoConcMap::iterator it;
+  for( it=c_int.begin(); it!=c_int.end(); ++it){
+    iso=(*it).first;
+    if( c_ext.count(iso) != 0 ) {
+      // in both
+      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
+    } else {
+      // in c_int only
+      to_ret[iso] = calc_conc_grad(0, c_int[iso], r_ext, r_int);
+    }
+  }
+  for( it=c_ext.begin(); it!=c_ext.end(); ++it){
+    iso = (*it).first;
+    if( c_int.count(iso) == 0) {
+      // in c_ext only
+      to_ret[iso] = calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
+    }
+  }
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoFluxMap LumpedNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
-  /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time());
+  IsoFluxMap to_ret;
+  ConcGradMap neumann = neumann_bc(c_ext, r_ext);
+
+  ConcGradMap::iterator it;
+  Iso iso;
+  Elem elem;
+  for( it = neumann.begin(); it!=neumann.end(); ++it){
+    iso = (*it).first;
+    elem = iso/1000;
+    to_ret.insert(make_pair(iso, -mat_table_->D(elem)*(*it).second + shared_from_this()->dirichlet_bc(iso)*v()));
+  }
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 FormulationType LumpedNuclide::enumerateFormulation(string type_name) {
   FormulationType toRet = LAST_FORMULATION_TYPE;
-  string formulation_type_names[] = {"DM", "EM", "EPM", "PFM", "LAST_FORMULATION_TYPE"};
+  string formulation_type_names[] = {"DM", "EM", "PFM", "LAST_FORMULATION_TYPE"};
   for(int type = 0; type < LAST_FORMULATION_TYPE; type++){
     if(formulation_type_names[type] == type_name){
       toRet = (FormulationType)type;
@@ -189,4 +241,140 @@ FormulationType LumpedNuclide::enumerateFormulation(string type_name) {
 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::set_Pe(double Pe){
+  // We won't allow the situation in which Pe is negative
+  // as it would mean that the flow is moving toward the source, 
+  // which won't happen for vertical flow
+  if( Pe < 0 ) {
+    stringstream msg_ss;
+    msg_ss << "The LumpedNuclide Pe range is 0 to infinity, inclusive.";
+    msg_ss << " The value provided was ";
+    msg_ss << Pe;
+    msg_ss <<  ".";
+    LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
+    throw CycRangeException(msg_ss.str());
+  } else {
+    this->Pe_ = Pe;
+  }
+  MatTools::validate_finite_pos((Pe));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::set_porosity(double porosity){
+  if( porosity < 0 || porosity > 1 ) {
+    stringstream msg_ss;
+    msg_ss << "The LumpedNuclide porosity range is 0 to 1, inclusive.";
+    msg_ss << " The value provided was ";
+    msg_ss << porosity;
+    msg_ss <<  ".";
+    LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
+    throw CycRangeException(msg_ss.str());
+  } else {
+    this->porosity_ = porosity;
+  }
+  MatTools::validate_percent(porosity);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::V_f(){
+  return MatTools::V_f(V_T(),porosity());
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::V_s(){
+  return MatTools::V_s(V_T(),porosity());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::V_T(){
+  return geom_->volume();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::comp_to_conc_map(CompMapPtr comp, double mass, double vol){
+  MatTools::validate_finite_pos(vol);
+  MatTools::validate_finite_pos(mass);
+
+  IsoConcMap to_ret;
+  int iso;
+  double m_iso;
+  CompMap::const_iterator it;
+  it=(*comp).begin();
+  while(it!= (*comp).end() ){
+    iso = (*it).first;
+    m_iso=((*it).second)*mass;
+    to_ret.insert(make_pair(iso, m_iso/vol));
+    ++it;
+  } 
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
+  assert(last_updated() <= the_time);
+  IsoConcMap to_ret;
+
+  pair<IsoVector, double> sum_pair;
+  sum_pair = shared_from_this()->vec_hist(the_time);
+  IsoConcMap C_0 = comp_to_conc_map(sum_pair.first.comp(), sum_pair.second, V_f());
+
+  switch(formulation_){
+    case DM :
+      to_ret = C_DM(C_0, the_time);
+      break;
+    case EM :
+      to_ret = C_EM(C_0, the_time);
+      break;
+    case PFM :
+      to_ret = C_PFM(C_0, the_time);
+      break;
+    default:
+      string err = "The formulation type '"; 
+      err += formulation_;
+      err += "' is not supported.";
+      throw CycException(err);
+      LOG(LEV_ERROR,"GRLNuc") << err;
+      break;
+  }
+  set_last_updated(the_time);
+  conc_hist_[the_time] = to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::update_conc_hist(int the_time){
+  return update_conc_hist(the_time, wastes_);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::C_DM(IsoConcMap C_0, int the_time){
+  double arg = (Pe()/2.0)*(1-pow(1+4*the_time/Pe(), 0.5));
+  return scaleConcMap(C_0, exp(arg));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
+  double scale = 1.0/(1.0+the_time);
+  return scaleConcMap(C_0, scale);
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
+  double scale = exp(-the_time);
+  return scaleConcMap(C_0, scale);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::scaleConcMap(IsoConcMap C_0, double scalar){
+  double orig;
+  IsoConcMap::iterator it;
+  for(it = C_0.begin(); it != C_0.end(); ++it) { 
+    orig = C_0[(*it).first];
+    C_0[(*it).first] = orig*scalar;
+  }
+  return C_0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::update_vec_hist(int the_time){
+  vec_hist_[the_time] = MatTools::sum_mats(wastes_);
+}
 

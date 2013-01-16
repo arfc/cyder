@@ -16,7 +16,6 @@
 enum FormulationType{
   DM, 
   EM, 
-  EPM, 
   PFM, 
   LAST_FORMULATION_TYPE};
 
@@ -72,7 +71,7 @@ public:
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
     */
-  static LumpedNuclidePtr create (){ return LumpedNuclidePtr(new LumpedNuclide()); };
+  static LumpedNuclidePtr create (){ LumpedNuclidePtr to_ret = LumpedNuclidePtr(new LumpedNuclide()); to_ret->set_formulation(DM); return to_ret;};
 
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
@@ -171,7 +170,7 @@ public:
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /// Returns the formulation of the concentration relationship
-  FormulationType formulation(){return formulation_;};
+  const FormulationType formulation() const {return formulation_;};
 
   /** Returns the FormulationType corresponding to the string
    * 
@@ -186,13 +185,110 @@ public:
   /// Sets the formulation of the concentration relationship
   void set_formulation(FormulationType formulation){formulation_ = formulation;};
 
-  /// Returns the transit time of the radioactive tracer through the cell
-  double transit_time(){return t_t_;};
+  /// Sets the porosity_ variable, the percent of the permeable porous medium.
+  void set_porosity(double porosity);
+
+  /// Sets the peclet_ variable, the ratio of advective to diffusive transport.
+  void set_Pe(double Pe);
+
+  /// Sets the transit time, t_t_, variable of the radioactive tracer through the cell [s?] 
+  void set_t_t(double t_t){t_t_ = t_t;};
+
+  /// Returns the transit time of the radioactive tracer through the cell [s?] 
+  const double t_t() const {return t_t_;};
+
+  /// Returns the peclet number of the component [-]
+  const double Pe() const {return Pe_;};
 
   /**
     The advective velocity through this component. [m/s] 
    */
-  double v(){return v_;};
+  const double v() const {return v_;};
+
+  /// The porosity of the permeable porous mediuam of theis component. [%]
+  const double porosity() const {return porosity_;};
+
+  /// Gets the total volume
+  double V_T();
+
+  /// Gets the fluid volume, based on porosity
+  double V_f();
+
+  /// Gets the fluid volume, based on porosity
+  double V_s();
+
+  /**
+     Converts a CompMap and associated total mass to an IsoConcMap for a Volume
+
+     @param comp the composition to convert, a CompMapPtr
+     @param mass the total mass of the composition [kg]
+     @param vol the total volume in which the concentration exists [m^3]
+
+     @return an IsoConcMap whose elements are comp[iso]*mass/volume
+     */
+  IsoConcMap comp_to_conc_map(CompMapPtr comp, double mass, double vol);
+
+  /// @TODO verify whether last_updated is larger than last_updated, but less 
+  //than or equal to the current time.
+  void set_last_updated(int last_updated){last_updated_ = last_updated;};
+  int last_updated(){return last_updated_;};
+
+  /** 
+     DM model concentration calculator
+     @param C_0 the incoming concentration map
+     @param the_time the length of the timestep over which to calculate
+     @return C_f the final concentration at the end of the timestep
+     */
+  IsoConcMap C_DM(IsoConcMap C_0, int the_time);
+
+  /**
+     EM model concentration calculator
+
+     @param C_0 the incoming concentration map
+     @param the_time the length of the timestep over which to calculate
+     @return C_f the final concentration at the end of the timestep
+     */
+  IsoConcMap C_EM(IsoConcMap C_0, int the_time);
+
+  /** 
+    PFM model concentration calculator
+
+     @param C_0 the incoming concentration map
+     @param the_time the length of the timestep over which to calculate
+     @return C_f the final concentration at the end of the timestep
+    */
+  IsoConcMap C_PFM(IsoConcMap C_0, int the_time);
+
+  /**
+    This is a helper function that scales an IsoConcMap with a scalar
+
+    @param C_0 the original IsoConcMap, to be scaled.
+    @param scalar the scalar by which to multiply each element of C_0 [-]
+    */
+  IsoConcMap scaleConcMap(IsoConcMap C_0, double scalar);
+
+  /** 
+     Updates the contained vector
+
+     @param the_time the time at which to update the vector
+    */
+  void update_vec_hist(int the_time);
+
+  /** 
+     Updates the available concentration using the wastes_ as mats
+
+     @param the_time the time at which to update the IsoConcMap
+    */
+  void update_conc_hist(int the_time);
+
+  /** 
+     Updates the available concentration
+
+     @param the_time the time at which to update the IsoConcMap
+     @param mats the materials that are part of the available concentration
+    */
+  void update_conc_hist(int the_time, std::deque<mat_rsrc_ptr> mats);
+
 
 protected:
   /**
@@ -201,22 +297,22 @@ protected:
   double v_;
   /**
    * The name of the lumped parameter model formulation. This can be 
-   * the Exponential Model (EM), Piston Flow Model (PFM), Combined Exponential and 
-   * Piston Flow Model (EPM), or the Dispersion Model(DM).
+   * the Exponential Model (EM), Piston Flow Model (PFM), 
+   * or the Dispersion Model(DM).
    */
   FormulationType formulation_;
 
   /// The transit time of a radioactive tracer through the cell
   double t_t_;
-  
-  /**
-   * In the EPM model, the ratio of the total volume to the volue with the exponential 
-   * distribution of transit times.
-   */
-  double eta_ratio_;
 
-  /// The dispersion parameter (the inverse of the Peclet number).
-  double P_D_;
+  /// The dimensionless mass diffusion Peclet number of the medium [-].
+  double Pe_;
+
+  /// The porosity of the permeable porous medium
+  double porosity_;
+
+  /// the time at which the conc hist was last updated
+  int last_updated_;
 
 };
 
