@@ -101,6 +101,7 @@ void OneDimPPMNuclide::absorb(mat_rsrc_ptr matToAdd)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GR1DNuc") << "OneDimPPMNuclide is absorbing material: ";
   matToAdd->print();
+  wastes_.push_back(matToAdd);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,6 +112,7 @@ void OneDimPPMNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GR1DNuc") << "OneDimPPMNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
+  MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -121,6 +123,7 @@ void OneDimPPMNuclide::transportNuclides(int time){
   // If these fluxes are negative, nuclides aphysically flow toward the waste package 
   // It will send the adjacent components information?
   // The OneDimPPMNuclide class should transport all nuclides
+  update_vec_hist(time);
 
 }
 
