@@ -23,7 +23,7 @@ void OneDimPPMNuclideTest::SetUp(){
 
   // other vars
   theta_ = 0.3; // percent porosity
-  adv_vel_ = 1; // m/yr
+  v_ = 1; // m/yr
   time_ = 0;
   Ci_ = 1;
   Co_ = 2;
@@ -66,13 +66,11 @@ NuclideModelPtr OneDimPPMNuclideModelConstructor (){
 OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
-     << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
+     << "  <advective_velocity>" << v_ << "</advective_velocity>"
      << "  <initial_concentration>" << Ci_ << "</initial_concentration>"
      << "  <source_concentration>" << Co_ << "</source_concentration>"
      << "  <porosity>" << n_ << "</porosity>"
-     << "  <diffusion_coeff>" << D_ << "</diffusion_coeff>"
      << "  <bulk_density>" << rho_ << "</bulk_density>"
-     << "  <partition_coeff>" << Kd_ << "</partition_coeff>"
      << "</start>";
 
   XMLParser parser(ss);
@@ -85,7 +83,10 @@ OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, initial_state) {
-  EXPECT_EQ(D_, one_dim_ppm_ptr_->D());
+  EXPECT_EQ(v_, one_dim_ppm_ptr_->v());
+  EXPECT_EQ(Ci_, one_dim_ppm_ptr_->Ci());
+  EXPECT_EQ(Co_, one_dim_ppm_ptr_->Co());
+  EXPECT_EQ(rho_, one_dim_ppm_ptr_->rho());
   EXPECT_EQ(n_, one_dim_ppm_ptr_->n());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -207,7 +208,7 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){
   EXPECT_NO_THROW(one_dim_ppm_ptr_->set_geom(geom_));
   double expected_src = n_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
+  double expected_conc_w_vel = theta_*v_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();

@@ -192,22 +192,19 @@ public:
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
   /**
-     return diffusion coefficient
-    */
-  double D(){return D_;};
-
-  /**
      return porosity
     */
   double n(){return n_;};
 
   /**
      return initial concentration
+     @TODO this shoudn't be a double it should be an isoconcmap
     */
   double Ci(){return Ci_;};
 
   /**
-     return Co
+     return Co, the source concentration?
+     @TODO figure out what you intended to do with this variable. It shouldn't be a double, should be IsoConcMap.
     */
   double Co(){return Co_;};
 
@@ -215,16 +212,6 @@ public:
      return bulk density
     */
   double rho(){return rho_;};
-
-  /**
-     return partitioning coefficient
-    */
-  double Kd(){return Kd_;};
-
-  /**
-     return retardation coefficient
-    */
-  double R(){return R_;};
 
   /**
     The advective velocity through this component. [m/s] 
@@ -248,21 +235,8 @@ protected:
   /// Porosity of the component matrix, a fraction between 0 and 1, inclusive.
   double n_;
 
-  /// Diffusion coefficient (which kind?) (what units?)
-  double D_;
-
   /// The bulk (dry) density of the component matrix, in g/cm^3.
   double rho_;
-
-  /**
-    Partition coefficient, the ratio of absorbed adsorbate per mass 
-    of solid to the amount of the adsorbate remaining in solution at equilibrium. 
-   */
-  double Kd_;
-
-  /// Retardation coefficient, R = 1 + rho_*Kd_/n 
-  double R_;
-
 };
 
 

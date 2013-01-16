@@ -22,10 +22,7 @@ OneDimPPMNuclide::OneDimPPMNuclide():
   Co_(0),
   v_(0),
   n_(0),
-  D_(0),
-  rho_(0),
-  Kd_(0),
-  R_(0)
+  rho_(0)
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
@@ -39,10 +36,7 @@ OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
   Co_(0),
   v_(0),
   n_(0),
-  D_(0),
-  rho_(0),
-  Kd_(0),
-  R_(0)
+  rho_(0)
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
@@ -66,12 +60,7 @@ void OneDimPPMNuclide::initModuleMembers(QueryEngine* qe){
 
   // rock parameters
   n_ = lexical_cast<double>(qe->getElementContent("porosity"));
-  D_ = lexical_cast<double>(qe->getElementContent("diffusion_coeff"));
   rho_ = lexical_cast<double>(qe->getElementContent("bulk_density"));
-  Kd_ = lexical_cast<double>(qe->getElementContent("partition_coeff"));
-
-  // retardation
-  R_= 1 + (rho_*Kd_)/n_;
 
   LOG(LEV_DEBUG2,"GR1DNuc") << "The OneDimPPMNuclide Class init(cur) function has been called";;
 }

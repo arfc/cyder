@@ -14,6 +14,7 @@ protected:
   OneDimPPMNuclidePtr default_one_dim_ppm_ptr_;
   NuclideModelPtr nuc_model_ptr_;
   NuclideModelPtr default_nuc_model_ptr_;
+  MatDataTablePtr mat_table_;
   double one_dim_ppm_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
@@ -21,7 +22,7 @@ protected:
   int u235_, am241_;
   double test_size_;
   double theta_;
-  double adv_vel_;
+  double v_;
   GeometryPtr geom_;
   Radius r_four_, r_five_;
   Length len_five_;

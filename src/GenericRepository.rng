@@ -122,12 +122,11 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
   <define name="OneDimPPMNuclide">
     <element name="OneDimPPMNuclide">
+      <ref name="advective_velocity"/>
       <ref name="initial_concentration"/>
       <ref name="source_concentration"/>
       <ref name="porosity"/>
       <ref name="bulk_density"/>
-      <ref name="partition_coeff"/>
-      <ref name="retardation_coeff"/>
     </element>
   </define>
 
