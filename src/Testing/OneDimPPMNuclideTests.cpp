@@ -147,22 +147,22 @@ TEST_F(OneDimPPMNuclideTest, extract){
 TEST_F(OneDimPPMNuclideTest, set_porosity){ 
   // the deg rate must be between 0 and 1, inclusive
   porosity_=0;
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
-  //EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
   porosity_=1;
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
-  //EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
   // it should accept floats
   porosity_= 0.1;
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
-  //EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
   // an exception should be thrown if it's set outside the bounds
   porosity_= -1;
-  //EXPECT_THROW(one_dim_ppm_ptr_->set_porosity(porosity_), CycRangeException);
-  //EXPECT_NE(one_dim_ppm_ptr_->porosity(), porosity_);
+  EXPECT_THROW(one_dim_ppm_ptr_->set_porosity(porosity_), CycRangeException);
+  EXPECT_NE(one_dim_ppm_ptr_->porosity(), porosity_);
   porosity_= 2;
-  //EXPECT_THROW(one_dim_ppm_ptr_->set_porosity(porosity_), CycRangeException);
-  //EXPECT_NE(one_dim_ppm_ptr_->porosity(), porosity_);
+  EXPECT_THROW(one_dim_ppm_ptr_->set_porosity(porosity_), CycRangeException);
+  EXPECT_NE(one_dim_ppm_ptr_->porosity(), porosity_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
