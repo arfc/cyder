@@ -34,9 +34,10 @@ void OneDimPPMNuclideTest::SetUp(){
 
   // composition set up
   u235_=92235;
-  one_mol_=1.0;
+  am241_=95241;
+  one_kg_=1.0;
   test_comp_= CompMapPtr(new CompMap(MASS));
-  (*test_comp_)[u235_] = one_mol_;
+  (*test_comp_)[u235_] = one_kg_;
   test_size_=10.0;
 
   // material creation
@@ -44,8 +45,11 @@ void OneDimPPMNuclideTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_one_dim_ppm_nuclide model setup
+  mat_table_ = MDB->table("clay");
   one_dim_ppm_ptr_ = OneDimPPMNuclidePtr(initNuclideModel());
+  one_dim_ppm_ptr_->set_mat_table(mat_table_);
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(one_dim_ppm_ptr_);
+  nuc_model_ptr_->set_mat_table(mat_table_);
   default_one_dim_ppm_ptr_ = OneDimPPMNuclidePtr(OneDimPPMNuclide::create());
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_one_dim_ppm_ptr_);
 }

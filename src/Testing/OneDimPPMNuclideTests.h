@@ -17,7 +17,7 @@ protected:
   double one_dim_ppm_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
-  int one_mol_;
+  int one_kg_;
   int u235_, am241_;
   double test_size_;
   double theta_;
