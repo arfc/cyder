@@ -177,14 +177,14 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesZero){
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
   double radial_midpoint = outer_radius + (outer_radius - nuc_model_ptr_->geom()->inner_radius())/2;
 
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(n_));
-  //EXPECT_FLOAT_EQ(n_, one_dim_ppm_ptr_->porosity());
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(porosity_, one_dim_ppm_ptr_->porosity());
   // get the initial mass
-  //double initial_mass = one_dim_ppm_ptr_->contained_mass();
+  double initial_mass = one_dim_ppm_ptr_->contained_mass(time_);
   // transport the nuclides
-  //EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
   // check that the contained mass matches the initial mass
-  //EXPECT_FLOAT_EQ(initial_mass, one_dim_ppm_ptr_->contained_mass()); 
+  EXPECT_FLOAT_EQ(initial_mass, one_dim_ppm_ptr_->contained_mass(time_)); 
   // check the source term 
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
   // check the boundary concentration ?
@@ -274,7 +274,7 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, contained_mass){ 
   time_++;
-  //EXPECT_FLOAT_EQ(0, one_dim_ppm_ptr_->contained_mass());
+  EXPECT_FLOAT_EQ(0, one_dim_ppm_ptr_->contained_mass(time_));
 
 }
 
