@@ -32,7 +32,7 @@ void LumpedNuclideTest::SetUp(){
   // composition set up
   u_=92;
   u235_=92235;
-  am241_=92235;
+  am241_=95241;
   one_kg_=1.0;
   test_comp_= CompMapPtr(new CompMap(MASS));
   (*test_comp_)[u235_] = one_kg_;
