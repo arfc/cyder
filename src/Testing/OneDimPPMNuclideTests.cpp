@@ -27,7 +27,7 @@ void OneDimPPMNuclideTest::SetUp(){
   time_ = 0;
   Ci_ = 1;
   Co_ = 2;
-  porosity_ = 3;
+  porosity_ = 0.1;
   D_ = 4;
   rho_ = 5;
   Kd_ = 6;
