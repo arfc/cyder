@@ -26,6 +26,7 @@ class MatToolsTest : public ::testing::Test {
     virtual void SetUp(){
       // composition set up
       u235_=92235;
+      am241_=95241;
       one_mol_=1.0;
       test_comp_= CompMapPtr(new CompMap(MASS));
       (*test_comp_)[u235_] = one_mol_;
