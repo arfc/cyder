@@ -157,7 +157,7 @@ void LumpedNuclide::transportNuclides(int the_time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> LumpedNuclide::source_term_bc(){
   double tot_mass = 0;
-  IsoConcMap conc_map = scaleConcMap(conc_hist(last_updated()), V_f());
+  IsoConcMap conc_map = MatTools::scaleConcMap(conc_hist(last_updated()), V_f());
   CompMapPtr comp_map = CompMapPtr(new CompMap(MASS));
   IsoConcMap::iterator it;
   for( it=conc_map.begin(); it!=conc_map.end(); ++it){
@@ -330,29 +330,18 @@ void LumpedNuclide::update_conc_hist(int the_time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_DM(IsoConcMap C_0, int the_time){
   double arg = (Pe()/2.0)*(1-pow(1+4*the_time/Pe(), 0.5));
-  return scaleConcMap(C_0, exp(arg));
+  return MatTools::scaleConcMap(C_0, exp(arg));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
   double scale = 1.0/(1.0+the_time);
-  return scaleConcMap(C_0, scale);
+  return MatTools::scaleConcMap(C_0, scale);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
   double scale = exp(-the_time);
-  return scaleConcMap(C_0, scale);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap LumpedNuclide::scaleConcMap(IsoConcMap C_0, double scalar){
-  double orig;
-  IsoConcMap::iterator it;
-  for(it = C_0.begin(); it != C_0.end(); ++it) { 
-    orig = C_0[(*it).first];
-    C_0[(*it).first] = orig*scalar;
-  }
-  return C_0;
+  return MatTools::scaleConcMap(C_0, scale);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

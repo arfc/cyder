@@ -175,5 +175,15 @@ public:
      @throws CycRangeException
     */
   static void validate_finite_pos(double pos);
+
+
+  /**
+    This is a helper function that scales an IsoConcMap with a scalar
+
+    @param C_0 the original IsoConcMap, to be scaled.
+    @param scalar the scalar by which to multiply each element of C_0 [-]
+    */
+  static IsoConcMap scaleConcMap(IsoConcMap C_0, double scalar);
+  
 };
 #endif

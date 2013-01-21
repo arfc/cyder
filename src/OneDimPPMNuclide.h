@@ -203,6 +203,31 @@ public:
     */
   const double porosity() const {return porosity_;};
 
+  /** 
+     Updates the available concentration using the wastes_ as mats
+
+     @param the_time the time at which to update the IsoConcMap
+    */
+  void update_conc_hist(int the_time);
+
+  /** 
+     Updates the available concentration
+
+     @param the_time the time at which to update the IsoConcMap
+     @param mats the materials that are part of the available concentration
+    */
+  void update_conc_hist(int the_time, std::deque<mat_rsrc_ptr> mats);
+
+  /**
+     Calculates the IsoConcMap at a certain time and radius.
+     
+     @param C_0 the initial concentration at that radius?
+     @param r_calc the radius at which to calculate the IsoConcMap [m]
+     @param the_time the time at which to calculate the IsoConcMap [timestep]
+    */
+  IsoConcMap conc_profile(IsoConcMap C_0, double r_calc, int the_time);
+
+
   /// sets the porosity_ variable, the percent void of the medium 
   void set_porosity(double porosity);
 
@@ -245,6 +270,12 @@ public:
   //than or equal to the current time.
   void set_last_updated(int last_updated){last_updated_ = last_updated;};
   int last_updated(){return last_updated_;};
+
+  /// Gets the total fluid volume
+  double V_T();
+
+  /// Gets the fluid volume, based on porosity
+  double V_f();
 
 protected:
   /**
