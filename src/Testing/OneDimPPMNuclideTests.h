@@ -33,5 +33,7 @@ protected:
   virtual void SetUp();
   virtual void TearDown();
   OneDimPPMNuclidePtr initNuclideModel();
+  IsoConcMap calculate_conc(IsoConcMap C_0, Radius r, int the_time);
+  double calculate_conc(IsoConcMap C_0, Radius r, Iso iso, int the_time); 
 };
 

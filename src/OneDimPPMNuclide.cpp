@@ -7,6 +7,7 @@
 #include <deque>
 #include <time.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/math/special_functions/erf.hpp>
 
 #include "CycException.h"
 #include "Logger.h"

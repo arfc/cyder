@@ -2,6 +2,7 @@
 #include <deque>
 #include <map>
 #include <gtest/gtest.h>
+#include <boost/math/special_functions/erf.hpp>
 
 #include "OneDimPPMNuclideTests.h"
 #include "NuclideModelTests.h"
@@ -59,9 +60,39 @@ void OneDimPPMNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, double r, Iso iso, int the_time) {
+  double D_L = mat_table_->D(iso/1000);
+  int delT = the_time - 0; /// this would be different in the code... maybe want delT param?
+  double term_1_frac = (r-v_*delT)/2*pow(D_L*delT,0.5);
+  double term_1_scalar = boost::math::erfc(term_1_frac);
+  double term_2_radical = (pow(v_,2)*delT/boost::math::constants::pi<double>()/D_L);
+  double term_2_exp = exp( -pow(r-v_*delT,2)/(4*D_L*delT)); 
+  double term_2_scalar = 0.5*pow(term_2_radical,0.5)*term_2_exp;
+  double term_3_factor = 0.5*(1 + v_*r/D_L + pow(v_,2)*delT/D_L);
+  double term_3_exp = exp(v_*r/D_L);
+  double term_3_erfc = boost::math::erfc( (r - v_*delT) / (2*pow(D_L*delT,0.5)) );
+  double term_3_scalar = 0.5*term_3_factor*term_3_exp*term_3_erfc;
+  double scalar = term_1_scalar + term_2_scalar + term_3_scalar;
+  return C_0[iso]*0.5*scalar;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, double r, int the_time) {
+  IsoConcMap to_ret;
+  IsoConcMap::iterator it;
+  Iso iso;
+  for( it=C_0.begin(); it!=C_0.end(); ++it){
+    iso = (*it).first;
+    to_ret[iso] = calculate_conc(C_0, r, iso, the_time);
+  }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr OneDimPPMNuclideModelConstructor (){
   return boost::dynamic_pointer_cast<NuclideModel>(OneDimPPMNuclide::create());
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
   stringstream ss("");
@@ -167,7 +198,7 @@ TEST_F(OneDimPPMNuclideTest, set_porosity){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, transportNuclidesZero){ 
-  // for some setting, nothing should be released
+  // for some settings, nothing should be released
   porosity_=0;
   EXPECT_NO_THROW(one_dim_ppm_ptr_->set_geom(geom_));
   double expected_src = porosity_*test_size_;
