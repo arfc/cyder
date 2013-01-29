@@ -45,11 +45,11 @@ typedef boost::shared_ptr<OneDimPPMNuclide> OneDimPPMNuclidePtr;
    the solution is given as 
 
    \f{eqnarray*}{
-      C(z,t) = \frac{C_0}{2}\Bigg[&\mbox{erfc}\left[{\frac{L-v_zt}{2\sqrt{D_Lt}}}\right] 
-      + \frac{1}{2} \left(\frac{v_z^2t}{\pi D_L}\right)^{1/2}e^{\frac{-( L - 
+      C(z,r,t) = \frac{C_0}{2}\Bigg[&\mbox{erfc}\left[{\frac{r-v_zt}{2\sqrt{D_Lt}}}\right] 
+      + \frac{1}{2} \left(\frac{v_z^2t}{\pi D_L}\right)^{1/2}e^{\frac{-( r - 
       v_zt)^2}{4D_Lt}}\nonumber\\
       &- \frac{1}{2}\left( 
-      1+\frac{v_zL}{D_L}+\frac{v_z^2t}{D_L}\right)e^\frac{v_zL}{D_L}\mbox{erfc}\left[\frac{L-V_zt}{2\sqrt{D_Lt}}\right]
+      1+\frac{v_zr}{D_L}+\frac{v_z^2t}{D_L}\right)e^\frac{v_zr}{D_L}\mbox{erfc}\left[\frac{r-V_zt}{2\sqrt{D_Lt}}\right]
       \Bigg].
     \f}
 
@@ -219,13 +219,28 @@ public:
   void update_conc_hist(int the_time, std::deque<mat_rsrc_ptr> mats);
 
   /**
-     Calculates the IsoConcMap at a certain time and radius.
+     Calculates the concentration of each isotope a certain time and radius.
      
      @param C_0 the initial concentration at that radius?
      @param r_calc the radius at which to calculate the IsoConcMap [m]
-     @param the_time the time at which to calculate the IsoConcMap [timestep]
+     @param dt the change in time since C_0 was calculated [timestep]
     */
-  IsoConcMap conc_profile(IsoConcMap C_0, double r_calc, int the_time);
+  IsoConcMap conc_profile(IsoConcMap C_0, double r_calc, int dt);
+
+
+  /**
+     Calculates the concentration of a single isotope due to C_0 after dt at 
+     radius r_calc
+
+
+     /// describe leij et. al eqn. here... 
+     
+     @param C_0 the initial concentration at that radius?
+     @param r_calc the radius at which to calculate the IsoConcMap [m]
+     @param iso the isotope whose concentration is being queried [-]
+     @param dt the change in time since C_0 was calculated [timestep]
+    */
+  double calculate_conc(IsoConcMap C_0, double r_calc, int iso, int dt);
 
 
   /// sets the porosity_ variable, the percent void of the medium 

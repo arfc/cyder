@@ -220,9 +220,34 @@ void OneDimPPMNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap OneDimPPMNuclide::conc_profile(IsoConcMap C_0, Radius r, int time){
-  /// @TODO this is a placeholder.
-  return C_0;
+IsoConcMap OneDimPPMNuclide::conc_profile(IsoConcMap C_0, Radius r, int dt){
+
+  // @TODO decay will accidentally get neglected here if you don't watch out. Fix.
+  IsoConcMap to_ret;
+  IsoConcMap::iterator it;
+  Iso iso;
+  for(it=C_0.begin(); it!=C_0.end(); ++it){
+    iso = (*it).first;
+    to_ret[iso] = calculate_conc(C_0, r, iso, dt);
+  }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, double r, Iso iso, int dt) {
+  double D_L = mat_table_->D(iso/1000);
+  double pi = boost::math::constants::pi<double>();
+  double term_1_frac = (r-v_*dt)/2*pow(D_L*dt,0.5);
+  double term_1_scalar = boost::math::erfc(term_1_frac);
+  double term_2_radical = (pow(v_,2)*dt/pi/D_L);
+  double term_2_exp = exp( -pow(r-v_*dt,2)/(4*D_L*dt)); 
+  double term_2_scalar = 0.5*pow(term_2_radical,0.5)*term_2_exp;
+  double term_3_factor = 0.5*(1 + v_*r/D_L + pow(v_,2)*dt/D_L);
+  double term_3_exp = exp(v_*r/D_L);
+  double term_3_erfc = boost::math::erfc( (r - v_*dt) / (2*pow(D_L*dt,0.5)) );
+  double term_3_scalar = 0.5*term_3_factor*term_3_exp*term_3_erfc;
+  double scalar = term_1_scalar + term_2_scalar + term_3_scalar;
+  return C_0[iso]*0.5*scalar;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
