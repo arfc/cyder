@@ -144,7 +144,7 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
       n_sub_components = qe->nElementsMatchingQuery("allowedcommod");
       for (int i=0; i<n_sub_components; i++) {
         allowed_commod_name = qe->getElementContent("allowedcommod",i);
-        commod_wf_map_.insert(std::make_pair(allowed_commod_name, toRet));
+        commod_wf_map_[allowed_commod_name] = toRet;
       }
       wf_templates_.push_back(toRet);
       break;
@@ -471,13 +471,16 @@ void GenericRepository::emplaceWaste(){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::conditionWaste(WasteStream waste_stream){
   // figure out what waste form to put the waste stream in
+  std::map<std::string, ComponentPtr>::iterator found_pair;
+  found_pair= commod_wf_map_.find(waste_stream.second);
   ComponentPtr chosen_wf_template;
-  chosen_wf_template = commod_wf_map_[waste_stream.second];
-  if (chosen_wf_template){
+  if (found_pair == commod_wf_map_.end()){
     std::string err_msg = "The commodity '";
     err_msg += waste_stream.second;
     err_msg +="' does not have a matching WF in the GenericRepository.";
     throw CycException(err_msg);
+  } else {
+    chosen_wf_template = commod_wf_map_[waste_stream.second];
   }
   // if there doesn't already exist a partially full one
   // @todo check for partially full wf's before creating new one (katyhuff)
