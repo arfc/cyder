@@ -174,7 +174,7 @@ void Component::extract(CompMapPtr comp_to_rem, double kg_to_rem){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportHeat(int time){
-  if ( thermal_model_ ) {
+  if ( !thermal_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no thermal_model_ loaded before Component::transportHeat." ;
   } else {
     thermal_model_->transportHeat(time);
@@ -182,7 +182,7 @@ void Component::transportHeat(int time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportNuclides(int time){
-  if ( nuclide_model_ ) {
+  if ( !nuclide_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
   } else { 
     nuclide_model_->transportNuclides(time);
