@@ -100,8 +100,15 @@ public:
 
      @return the data of type data for element elt in this material.
     */
-
   double data(Elem ent, ChemDataType data);
+
+
+  /**
+     returns the string name of the material that this table represents
+
+     @return mat_
+     */
+  std::string mat(){return mat_;};
 
 protected:
   /**

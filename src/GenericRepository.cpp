@@ -52,7 +52,8 @@
 
 using boost::lexical_cast;
 
-table_ptr GenericRepository::gr_params_table = table_ptr(new Table( "GenericRepositoryParams"));
+table_ptr GenericRepository::gr_params_table_ = table_ptr(new Table( "GenericRepositoryParams"));
+table_ptr GenericRepository::components_table_ = table_ptr(new Table( "GenericRepositoryComponents"));
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GenericRepository::GenericRepository() {
@@ -165,6 +166,8 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
       break;
     default:
       throw CycException("Unknown ComponentType enum value encountered."); }
+
+  addComponentToTable(toRet);
 
   return toRet;
 }
@@ -649,7 +652,7 @@ void GenericRepository::mapVars(std::string name, std::string type, void* ref) {
   member_refs_.insert(std::make_pair( name , ref ));
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::makeParamsTable(){
+void GenericRepository::defineParamsTable(){
   // declare the table columns
   std::vector<column> columns;
   std::string id_name("facID");
@@ -661,13 +664,13 @@ void GenericRepository::makeParamsTable(){
   // declare the table's primary key
   primary_key pk;
   pk.push_back(id_name);
-  gr_params_table->defineTable(columns,pk);
+  gr_params_table_->defineTable(columns,pk);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::addRowToParamsTable(){
-  if( !gr_params_table->defined() ){
-    makeParamsTable();
+  if( !gr_params_table_->defined() ){
+    defineParamsTable();
   }
   // add a row
   row a_row;
@@ -682,16 +685,53 @@ void GenericRepository::addRowToParamsTable(){
     }
     a_row.push_back(i);
   }
-  gr_params_table->addRow(a_row);
+  gr_params_table_->addRow(a_row);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::defineComponentsTable(){
+  // declare the table columns
+  std::vector<column> columns;
+  columns.push_back(std::make_pair("compID", "INTEGER"));
+  columns.push_back(std::make_pair("parentID", "INTEGER")); 
+  columns.push_back(std::make_pair("compType", "INTEGER"));
+  columns.push_back(std::make_pair("name", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("material_data", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("nuclidemodel", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("thermalmodel", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("innerradius", "REAL"));
+  columns.push_back(std::make_pair("outerradius", "REAL"));
+  columns.push_back(std::make_pair("x", "REAL"));
+  columns.push_back(std::make_pair("y", "REAL"));
+  columns.push_back(std::make_pair("z", "REAL"));
 
+  // declare the table's primary key
+  primary_key pk;
+  pk.push_back("compID");
+  components_table_->defineTable(columns,pk);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::addComponentToTable(ComponentPtr comp){
+  if( !components_table_->defined() ){
+    defineComponentsTable();
+  }
+  // add a row
+  row a_row;
+  a_row.push_back(std::make_pair("compID", comp->ID()));
+  a_row.push_back(std::make_pair("parentID", 0)); // @TODO update with parent in setparent
+  a_row.push_back(std::make_pair("compType", int(comp->type())));
+  a_row.push_back(std::make_pair("name", comp->name()));
+  a_row.push_back(std::make_pair("material_data", comp->mat_table()->mat()));
+  a_row.push_back(std::make_pair("nuclidemodel", comp->nuclide_model()->name()));
+  a_row.push_back(std::make_pair("thermalmodel", comp->thermal_model()->name()));
+  a_row.push_back(std::make_pair("innerradius", comp->inner_radius()));
+  a_row.push_back(std::make_pair("outerradius", comp->outer_radius()));
+  a_row.push_back(std::make_pair("x", comp->x()));
+  a_row.push_back(std::make_pair("y", comp->y()));
+  a_row.push_back(std::make_pair("z", comp->z()));
+
+  components_table_->addRow(a_row);
 
 }
 
