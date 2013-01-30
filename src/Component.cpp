@@ -59,8 +59,8 @@ Component::Component() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
-//}
+Component::~Component(){ // @TODO is there anything to delete? Make This virtual? 
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::initModuleMembers(QueryEngine* qe){

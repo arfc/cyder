@@ -67,7 +67,7 @@ public:
   /** 
      Default destructor does nothing.
    */
-  //~Component();
+  ~Component();
 
   /**
      initializes the model parameters from an QueryEngine object
