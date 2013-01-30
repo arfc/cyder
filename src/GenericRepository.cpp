@@ -65,16 +65,16 @@ GenericRepository::GenericRepository() {
   buffer_template_ =  ComponentPtr(new Component());
 
   is_full_ = false;
-  mapVars("x", "FLOAT", &x_);
-  mapVars("y", "FLOAT", &y_);
-  mapVars("z", "FLOAT", &z_);
-  mapVars("dx", "FLOAT", &dx_);
-  mapVars("dy", "FLOAT", &dy_);
-  mapVars("dz", "FLOAT", &dz_);
-  mapVars("advective_velocity", "FLOAT", &adv_vel_);
-  mapVars("capacity", "FLOAT", &capacity_);
-  mapVars("inventorysize", "FLOAT", &inventory_size_);
-  mapVars("lifetime", "FLOAT", &lifetime_);
+  mapVars("x", "REAL", &x_);
+  mapVars("y", "REAL", &y_);
+  mapVars("z", "REAL", &z_);
+  mapVars("dx", "REAL", &dx_);
+  mapVars("dy", "REAL", &dy_);
+  mapVars("dz", "REAL", &dz_);
+  mapVars("advective_velocity", "REAL", &adv_vel_);
+  mapVars("capacity", "REAL", &capacity_);
+  mapVars("inventorysize", "REAL", &inventory_size_);
+  mapVars("lifetime", "REAL", &lifetime_);
   mapVars("startOperYear", "INTEGER", &start_op_yr_);
   mapVars("startOperMonth", "INTEGER", &start_op_mo_);
 }
@@ -85,7 +85,7 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
   for (item = member_types_.begin(); item != member_types_.end(); item++) {
     if (item->second =="INTEGER"){
       *(static_cast<int*>(member_refs_[item->first])) = lexical_cast<int>(qe->getElementContent(item->first.c_str()));
-    } else if (item->second == "FLOAT") {
+    } else if (item->second == "REAL") {
       *(static_cast<double*>(member_refs_[item->first])) = lexical_cast<double>(qe->getElementContent(item->first.c_str()));
     } else {
       std::string err = "The ";
@@ -112,6 +112,7 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
     component_input = qe->queryElement("component",i);
     initComponent(component_input);
   }
+  makeParamsTable();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -649,15 +650,30 @@ void GenericRepository::mapVars(std::string name, std::string type, void* ref) {
 void GenericRepository::makeParamsTable(){
   // declare the table columns
   std::vector<column> columns;
-  columns.push_back(std::make_pair("facID", "INTEGER"));
+  std::string id_name("facID");
+  columns.push_back(std::make_pair(id_name, "INTEGER"));
   std::map<std::string, std::string>::iterator item;
   for (item = member_types_.begin(); item != member_types_.end(); item++){
     columns.push_back(std::make_pair(item->first, item->second));
   }
   // declare the table's primary key
   primary_key pk;
-  pk.push_back("facID");
+  pk.push_back(id_name);
   gr_params_table->defineTable(columns,pk);
+
+  // add a row
+  row a_row;
+  entry i(id_name, data(ID()));
+  a_row.push_back(i);
+  for (item = member_types_.begin(); item != member_types_.end(); item++){
+    if (item->second =="INTEGER"){
+      i = make_pair(item->first, *(static_cast<int*>(member_refs_[item->first]))) ;
+    } else if (item->second == "REAL") {
+      i = make_pair(item->first, *(static_cast<double*>(member_refs_[item->first]))) ;
+    }
+    a_row.push_back(i);
+  }
+  gr_params_table->addRow(a_row);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
