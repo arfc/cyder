@@ -29,6 +29,7 @@ MaterialDB::MaterialDB() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MaterialDB::~MaterialDB() {
+  delete instance_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

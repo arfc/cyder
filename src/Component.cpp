@@ -59,8 +59,8 @@ Component::Component() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
-}
+//Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
+//}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::initModuleMembers(QueryEngine* qe){
@@ -73,7 +73,7 @@ void Component::initModuleMembers(QueryEngine* qe){
 
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
 
-  this->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
+  shared_from_this()->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -149,9 +149,9 @@ void Component::copy(const ComponentPtr& src){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void Component::print(){
-  LOG(LEV_DEBUG2,"GRComp") << "Component: " << this->name();
+  LOG(LEV_DEBUG2,"GRComp") << "Component: " << shared_from_this()->name();
   LOG(LEV_DEBUG2,"GRComp") << "Contains Materials:";
-  for(int i=0; i<this->wastes().size() ; i++){
+  for(int i=0; i<shared_from_this()->wastes().size() ; i++){
     LOG(LEV_DEBUG2,"GRComp") << wastes_[i];
   }
 }
@@ -190,7 +190,7 @@ void Component::transportNuclides(int time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
-  to_load->setParent(ComponentPtr(this));
+  to_load->setParent(ComponentPtr(shared_from_this()));
   daughters_.push_back(to_load);
   return shared_from_this();
 }

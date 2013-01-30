@@ -52,8 +52,7 @@
 
 using boost::lexical_cast;
 
-table_ptr GenericRepository::gr_params_table = new Table(
-    "GenericRepositoryParams");
+table_ptr GenericRepository::gr_params_table = table_ptr(new Table( "GenericRepositoryParams"));
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GenericRepository::GenericRepository() {
@@ -342,7 +341,7 @@ void GenericRepository::makeRequests(int time){
       trans.setPrice(commod_price);
       trans.setResource(request_res); 
   
-      msg_ptr request = new Message(this, recipient, trans); 
+      msg_ptr request = msg_ptr(new Message(this, recipient, trans)); 
       request->sendOn();
       LOG(LEV_INFO3, "GenRepoFac") << " requests " << requestAmt << " kg of " << in_commod << ".";
     }
