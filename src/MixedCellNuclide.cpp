@@ -49,7 +49,7 @@ MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) :
   set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  this->initModuleMembers(qe);
+  shared_from_this()->initModuleMembers(qe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,7 +122,7 @@ void MixedCellNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
 void MixedCellNuclide::transportNuclides(int the_time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
-  update_degradation(the_time, this->deg_rate());
+  update_degradation(the_time, shared_from_this()->deg_rate());
   update_vec_hist(the_time);
   update_conc_hist(the_time);
 }
@@ -138,7 +138,7 @@ void MixedCellNuclide::set_deg_rate(double cur_rate){
     LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
     throw CycRangeException(msg_ss.str());
   } else {
-    this->deg_rate_ = cur_rate;
+    shared_from_this()->deg_rate_ = cur_rate;
   }
   assert((cur_rate >=0) && (cur_rate <= 1));
 }
@@ -154,7 +154,7 @@ void MixedCellNuclide::set_porosity(double porosity){
     LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
     throw CycRangeException(msg_ss.str());
   } else {
-    this->porosity_ = porosity;
+    shared_from_this()->porosity_ = porosity;
   }
   assert((porosity >=0) && (porosity <= 1));
 }
@@ -277,10 +277,10 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::update_degradation(int the_time, double cur_rate){
   assert(last_degraded() <= the_time);
-  if(cur_rate != this->deg_rate()){
+  if(cur_rate != shared_from_this()->deg_rate()){
     set_deg_rate(cur_rate);
   };
-  double total = this->tot_deg() + this->deg_rate()*(the_time - last_degraded());
+  double total = shared_from_this()->tot_deg() + shared_from_this()->deg_rate()*(the_time - last_degraded());
   set_tot_deg(min(1.0, total));
   set_last_degraded(the_time);
 
