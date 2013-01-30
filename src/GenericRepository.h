@@ -396,6 +396,7 @@ protected:
        define this generic repository model.
     */
     void makeParamsTable();
+    void addRowToParamsTable();
 
     /**
        This table will hold information about the component templates 

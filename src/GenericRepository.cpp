@@ -74,7 +74,7 @@ GenericRepository::GenericRepository() {
   mapVars("advective_velocity", "REAL", &adv_vel_);
   mapVars("capacity", "REAL", &capacity_);
   mapVars("inventorysize", "REAL", &inventory_size_);
-  mapVars("lifetime", "REAL", &lifetime_);
+  mapVars("lifetime", "INTEGER", &lifetime_);
   mapVars("startOperYear", "INTEGER", &start_op_yr_);
   mapVars("startOperMonth", "INTEGER", &start_op_mo_);
 }
@@ -112,7 +112,6 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
     component_input = qe->queryElement("component",i);
     initComponent(component_input);
   }
-  makeParamsTable();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -185,6 +184,7 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   adv_vel_ = src->adv_vel_;
   capacity_ = src->capacity_;
   inventory_size_ = src->inventory_size_;
+  inventory_size_ = src->lifetime_;
   start_op_yr_ = src->start_op_yr_;
   start_op_mo_ = src->start_op_mo_;
   in_commods_ = src->in_commods_;
@@ -203,6 +203,8 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
   is_full_ = false;
+
+  addRowToParamsTable();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -660,11 +662,18 @@ void GenericRepository::makeParamsTable(){
   primary_key pk;
   pk.push_back(id_name);
   gr_params_table->defineTable(columns,pk);
+}
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void GenericRepository::addRowToParamsTable(){
+  if( !gr_params_table->defined() ){
+    makeParamsTable();
+  }
   // add a row
   row a_row;
-  entry i(id_name, data(ID()));
+  entry i("facID", data(ID()));
   a_row.push_back(i);
+  std::map<std::string, std::string>::iterator item;
   for (item = member_types_.begin(); item != member_types_.end(); item++){
     if (item->second =="INTEGER"){
       i = make_pair(item->first, *(static_cast<int*>(member_refs_[item->first]))) ;
