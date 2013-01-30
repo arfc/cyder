@@ -28,7 +28,7 @@ StubNuclide::StubNuclide(QueryEngine* qe){
   set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  this->initModuleMembers(qe);
+  initModuleMembers(qe);
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

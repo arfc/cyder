@@ -45,7 +45,7 @@ LumpedNuclide::LumpedNuclide(QueryEngine* qe):
 
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  this->initModuleMembers(qe);
+  initModuleMembers(qe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -255,7 +255,7 @@ void LumpedNuclide::set_Pe(double Pe){
     LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
     throw CycRangeException(msg_ss.str());
   } else {
-    this->Pe_ = Pe;
+    Pe_ = Pe;
   }
   MatTools::validate_finite_pos((Pe));
 }
@@ -271,7 +271,7 @@ void LumpedNuclide::set_porosity(double porosity){
     LOG(LEV_ERROR,"GRDRNuc") << msg_ss.str();;
     throw CycRangeException(msg_ss.str());
   } else {
-    this->porosity_ = porosity;
+    porosity_ = porosity;
   }
   MatTools::validate_percent(porosity);
 }

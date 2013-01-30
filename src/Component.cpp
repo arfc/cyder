@@ -59,7 +59,7 @@ Component::Component() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
+Component::~Component(){ // @TODO is there anything to delete? Make This virtual? 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -67,13 +67,13 @@ void Component::initModuleMembers(QueryEngine* qe){
 
   string name = qe->getElementContent("name");
   ComponentType type = componentEnum(qe->getElementContent("componenttype"));
-  string mat = qe->getElementContent("material_data");
+  string mat = qe->queryElement("material_data")->getElementName();
   Radius inner_radius = lexical_cast<double>(qe->getElementContent("innerradius"));
   Radius outer_radius = lexical_cast<double>(qe->getElementContent("outerradius"));
 
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
 
-  this->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
+  shared_from_this()->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -149,9 +149,9 @@ void Component::copy(const ComponentPtr& src){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void Component::print(){
-  LOG(LEV_DEBUG2,"GRComp") << "Component: " << this->name();
+  LOG(LEV_DEBUG2,"GRComp") << "Component: " << shared_from_this()->name();
   LOG(LEV_DEBUG2,"GRComp") << "Contains Materials:";
-  for(int i=0; i<this->wastes().size() ; i++){
+  for(int i=0; i<shared_from_this()->wastes().size() ; i++){
     LOG(LEV_DEBUG2,"GRComp") << wastes_[i];
   }
 }
@@ -174,7 +174,7 @@ void Component::extract(CompMapPtr comp_to_rem, double kg_to_rem){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportHeat(int time){
-  if ( thermal_model_ ) {
+  if ( !thermal_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no thermal_model_ loaded before Component::transportHeat." ;
   } else {
     thermal_model_->transportHeat(time);
@@ -182,7 +182,7 @@ void Component::transportHeat(int time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportNuclides(int time){
-  if ( nuclide_model_ ) {
+  if ( !nuclide_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
   } else { 
     nuclide_model_->transportNuclides(time);
@@ -190,7 +190,7 @@ void Component::transportNuclides(int time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
-  to_load->setParent(ComponentPtr(this));
+  to_load->setParent(ComponentPtr(shared_from_this()));
   daughters_.push_back(to_load);
   return shared_from_this();
 }

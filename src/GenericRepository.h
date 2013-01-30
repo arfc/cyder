@@ -393,9 +393,14 @@ protected:
 
     /**
        This creates and fills  table that will hold the parameters that uniquely
-       define this generic repository model.
+       define all generic repository models in the simulation.
     */
-    void makeParamsTable();
+    void defineParamsTable();
+
+    /**
+      This adds a row that uniquely defines this repository model
+      */
+    void addRowToParamsTable();
 
     /**
        This table will hold information about the component templates 
@@ -413,7 +418,12 @@ protected:
        This table will hold the parameters that uniquely define this generic
        repository model.
      */
-    static table_ptr gr_params_table;
+    static table_ptr gr_params_table_;
+
+    /**
+       This table will hold the parameters that uniquely describe each component in the simulation. 
+     */
+    static table_ptr components_table_;
 
 public:
     /**
