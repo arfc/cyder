@@ -60,9 +60,10 @@ GenericRepository::GenericRepository() {
   // initialize things that don't depend on the input
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
-  waste_packages_ = std::deque< ComponentPtr >();
-  waste_forms_ = std::deque< ComponentPtr >();
+  commod_wf_map_ = std::map< std::string, ComponentPtr >();
+  wf_wp_map_ = std::map< std::string, ComponentPtr >();
   far_field_ = ComponentPtr(new Component());
+  buffer_template_ =  ComponentPtr(new Component());
 
   is_full_ = false;
   mapVars("x", "FLOAT", &x_);
@@ -113,7 +114,6 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
     initComponent(component_input);
   }
 }
-
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
@@ -202,8 +202,6 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   // initialize empty structures instead
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
-  waste_packages_ = std::deque< ComponentPtr >();
-  waste_forms_ = std::deque< ComponentPtr >();
   is_full_ = false;
 }
 
@@ -408,18 +406,19 @@ void GenericRepository::emplaceWaste(){
   if (!stocks_.empty()) {
     // for each waste stream in the stocks
     for (std::deque< WasteStream >::const_iterator iter = stocks_.begin(); iter != 
-        stocks_.end(); iter ++) {
+        stocks_.end(); ++iter) {
       // -- put the waste stream in the waste form
       // -- associate the waste stream with the waste form
       conditionWaste((*iter));
     }
+    // for each conditioned waste form
     for (std::deque< ComponentPtr >::const_iterator iter = 
-        current_waste_forms_.begin(); iter != current_waste_forms_.end(); iter 
-        ++){
+        current_waste_forms_.begin(); iter != current_waste_forms_.end(); ++iter){
       // -- put the waste form in a waste package
       // -- associate the waste form with the waste package
       packageWaste((*iter));
     }
+    // add each current_waste_form to waste_forms_
     int nwf = current_waste_forms_.size();
     for (int i=0; i < nwf; i++){
       waste_forms_.push_back(current_waste_forms_.front());
@@ -454,13 +453,14 @@ void GenericRepository::emplaceWaste(){
           }
         }
         // take the waste package out of the current packagess
-        waste_packages_.push_back(current_waste_packages_.front());
+        waste_packages_.push_back(iter);
+        current_waste_packages_.pop_front();
+      } else {
+        // if the waste package was either too hot or not full
+        // push it back on the stack
+        current_waste_packages_.push_back(iter);
         current_waste_packages_.pop_front();
       }
-      // if the waste package was either too hot or not full
-      // push it back on the stack
-      current_waste_packages_.push_back(current_waste_packages_.front());
-      current_waste_packages_.pop_front();
       inventory_.push_back(stocks_.front());
       stocks_.pop_front();
       // once the waste is emplaced, is there anything else to do?
