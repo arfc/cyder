@@ -162,14 +162,26 @@ void Component::print(){
 void Component::defineContaminantTable(){
   std::vector<column> columns;
   columns.push_back(std::make_pair( "CompID", "INTEGER"));
-  columns.push_back(std::make_pair( "time", "INTEGER"));
+  columns.push_back(std::make_pair( "Time", "INTEGER"));
   columns.push_back(std::make_pair( "IsoID", "INTEGER"));
-  columns.push_back(std::make_pair( "Mass[kg]", "REAL"));
-  columns.push_back(std::make_pair( "Avail. Conc.[kg/m^3]", "REAL"));
+  columns.push_back(std::make_pair( "MassKG", "REAL"));
+  columns.push_back(std::make_pair( "AvailConc", "REAL"));
 
   primary_key pk;
-  pk.push_back("compID");
+  pk.push_back("CompID");
+  pk.push_back("Time");
+  pk.push_back("IsoID");
   gr_contaminant_table_->defineTable(columns,pk);
+
+  // add CompID in the GenRepoComponentsTable as a foriegn key
+  foreign_key_ref *fkref;
+  foreign_key *fk;
+  key mykey, theirkey;
+  theirkey.push_back("CompID");
+  fkref= new foreign_key_ref("GenRepoComponentsTable",theirkey);
+  mykey.push_back("CompID");
+  fk= new foreign_key(mykey, (*fkref));
+  gr_contaminant_table_->addForeignKey( (*fk) );
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -188,12 +200,12 @@ void Component::updateContaminantTable(int the_time){
   a_row.push_back(std::make_pair( "CompID", ID()));
   a_row.push_back(std::make_pair( "Time", the_time));
   a_row.push_back(std::make_pair( "IsoID", 92235));
-  a_row.push_back(std::make_pair( "Mass[kg]", 0));
-  a_row.push_back(std::make_pair( "Avail. Conc.[kg/m^3]", 0));
+  a_row.push_back(std::make_pair( "MassKG", 0));
+  a_row.push_back(std::make_pair( "AvailConc", 0));
   for( entry=comp->begin(); entry!=comp->end(); ++entry ){
     a_row[2] = std::make_pair( "IsoID", (*entry).first);
-    a_row[3] = std::make_pair( "Mass[kg]", (*entry).second*mass);
-    a_row[4] = std::make_pair( "Avail. Conc.[kg/m^3]", nuclide_model()->conc_hist(the_time, (*entry).first));
+    a_row[3] = std::make_pair( "MassKG", (*entry).second*mass);
+    a_row[4] = std::make_pair( "AvailConc", nuclide_model()->conc_hist(the_time, (*entry).first));
 
     gr_contaminant_table_->addRow(a_row);
   }
