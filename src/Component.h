@@ -104,6 +104,16 @@ public:
   void print(); 
 
   /**
+     Defines the gen_repo_contaminant_table_
+    */
+  void defineContaminantTable();
+
+  /**
+     Updates the gen_repo_contaminant_table_ for this component.
+    */
+  void updateContaminantTable(int the_time);
+
+  /**
      Absorbs the contents of the given Material into this Component.
      
      @param mat_to_add the Material to be absorbed
@@ -502,6 +512,10 @@ protected:
    */
   ConcMap concentrations_;
 
+  /**
+     The table holding the contaminant history of the component
+     */
+  static table_ptr gr_contaminant_table_;
 
 };
 

@@ -302,6 +302,7 @@ void GenericRepository::handleTock(int time) {
   
   // calculate the nuclide transport
   transportNuclides(time);
+
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -630,19 +631,23 @@ void GenericRepository::transportNuclides(int time){
       iter != waste_forms_.end();
       iter++){
     (*iter)->transportNuclides(time);
+    (*iter)->updateContaminantTable(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
     (*iter)->transportNuclides(time);
+    (*iter)->updateContaminantTable(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
     (*iter)->transportNuclides(time);
+    (*iter)->updateContaminantTable(time);
   }
   if (NULL != far_field_){
     far_field_->transportNuclides(time);
+    (far_field_)->updateContaminantTable(time);
   }
 }
 
