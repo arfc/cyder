@@ -40,6 +40,8 @@ string Component::nuclide_type_names_[] = {
   "StubNuclide", 
 };
 
+table_ptr Component::gr_contaminant_table_ = table_ptr(new Table("gen_repo_contaminants"));
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component() :
   name_(""),
@@ -153,6 +155,47 @@ void Component::print(){
   LOG(LEV_DEBUG2,"GRComp") << "Contains Materials:";
   for(int i=0; i<shared_from_this()->wastes().size() ; i++){
     LOG(LEV_DEBUG2,"GRComp") << wastes_[i];
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::defineContaminantTable(){
+  std::vector<column> columns;
+  columns.push_back(std::make_pair( "CompID", "INTEGER"));
+  columns.push_back(std::make_pair( "time", "INTEGER"));
+  columns.push_back(std::make_pair( "IsoID", "INTEGER"));
+  columns.push_back(std::make_pair( "Mass[kg]", "REAL"));
+  columns.push_back(std::make_pair( "Avail. Conc.[kg/m^3]", "REAL"));
+
+  primary_key pk;
+  pk.push_back("compID");
+  gr_contaminant_table_->defineTable(columns,pk);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::updateContaminantTable(int the_time){
+  if(!gr_contaminant_table_->defined()){
+    defineContaminantTable();
+  }
+  // get the vec_hist
+  std::pair<IsoVector, double> vec_pair = nuclide_model()->vec_hist(the_time);
+  CompMapPtr comp = vec_pair.first.comp();
+  double mass = vec_pair.second;
+  // iterate over the vec_hist IsoVector
+  std::map<int, double>::iterator entry;
+
+  row a_row;
+  a_row.push_back(std::make_pair( "CompID", ID()));
+  a_row.push_back(std::make_pair( "Time", the_time));
+  a_row.push_back(std::make_pair( "IsoID", 92235));
+  a_row.push_back(std::make_pair( "Mass[kg]", 0));
+  a_row.push_back(std::make_pair( "Avail. Conc.[kg/m^3]", 0));
+  for( entry=comp->begin(); entry!=comp->end(); ++entry ){
+    a_row[2] = std::make_pair( "IsoID", (*entry).first);
+    a_row[3] = std::make_pair( "Mass[kg]", (*entry).second*mass);
+    a_row[4] = std::make_pair( "Avail. Conc.[kg/m^3]", nuclide_model()->conc_hist(the_time, (*entry).first));
+
+    gr_contaminant_table_->addRow(a_row);
   }
 }
 
