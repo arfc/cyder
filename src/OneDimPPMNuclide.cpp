@@ -142,3 +142,13 @@ IsoFluxMap OneDimPPMNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
   return conc_hist_.at(TI->time());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+std::vector<IsoVector> OneDimPPMNuclide::update_wastes(int the_time, std::vector<NuclideModelPtr> daughters){
+  /// @TODO use cauchy.
+  std::vector<IsoVector> to_ret;
+  std::vector<NuclideModelPtr>::iterator daughter;
+  for( daughter = daughters.begin(); daughters.end(); ++daughter){
+    to_ret.push_back(daughter->source_term_bc(the_time));
+  }
+}

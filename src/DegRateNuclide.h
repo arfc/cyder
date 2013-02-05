@@ -224,6 +224,17 @@ public:
      */
   void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
 
+  /** 
+     Determines what IsoVector to remove from the daughter nuclide models
+
+     @param time the timestep at which the nuclides should be transported
+     @param daughter nuclide_model of an internal component. there may be many.
+     
+     @return wastes a vector of IsoVectors to absorb into the wastes_ of this component
+     and remove from the wastes_ of the daughter.     
+     */
+  std::vector<IsoVector> update_wastes(int the_time, std::vector<NuclideModelPtr> daughters); 
+
   /// returns the total degradation of the component
   const double tot_deg() const {return tot_deg_;};
 

@@ -268,6 +268,17 @@ public:
   IsoConcMap scaleConcMap(IsoConcMap C_0, double scalar);
 
   /** 
+     Determines what IsoVector to remove from the daughter nuclide models
+
+     @param time the timestep at which the nuclides should be transported
+     @param daughter nuclide_model of an internal component. there may be many.
+     
+     @return wastes a vector of IsoVectors to absorb into the wastes_ of this component
+     and remove from the wastes_ of the daughter.     
+     */
+  std::vector<IsoVector> update_wastes(int the_time, std::vector<NuclideModelPtr> daughters); 
+
+  /** 
      Updates the contained vector
 
      @param the_time the time at which to update the vector
@@ -313,6 +324,9 @@ protected:
 
   /// the time at which the conc hist was last updated
   int last_updated_;
+
+  /// the current conc map at the inner boundary
+  IsoConcMap C_0_;
 
 };
 

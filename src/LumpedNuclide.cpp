@@ -378,3 +378,30 @@ void LumpedNuclide::update_vec_hist(int the_time){
   vec_hist_[the_time] = MatTools::sum_mats(wastes_);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+std::map<NuclideModelPtr, std::pair<IsoVector,double>> LumpedNuclide::update_wastes(int the_time, std::vector<NuclideModelPtr> daughters){
+
+  std::map<NuclideModelPtr, std::pair<IsoVector,double> to_ret;
+  std::vector<NuclideModelPtr>::iterator daughter;
+  
+  std::map<IsoConcMap> d_c_v;
+  IsoConcMap conc;
+  Volume vol;
+  Mass scaled_conc_sum;
+  Volume vol_sum;
+  
+  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+    conc = daughter->dirichlet_bc(the_time);
+    vol = daughter->geom()->vol();
+    scaled_conc_sum += conc * vol;
+    vol_sum += vol;
+    to_ret.push_back(make_pair(daughter, concMapToVec(scaleConcMap(conc, vol))));
+    ///@TODO don't take everything!
+  }
+  C_0_= scaled_conc_sum/vol_sum; 
+  ///@TODO Divide by only the fluid volume. 
+  return to_ret;
+}
+
+
+

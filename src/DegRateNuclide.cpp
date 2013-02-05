@@ -255,7 +255,11 @@ void DegRateNuclide::update_vec_hist(int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-mat_rsrc_ptr DegRateNuclide::update_wastes(int the_time, ComponentPtr daughter){
-  return daughter->source_term_bc(the_time);
+std::map<NuclideModelPtr, std::pair<IsoVector,double>> DegRateNuclide::update_wastes(int the_time, std::vector<NuclideModelPtr> daughters){
+  std::map<NuclideModelPtr, std::pair<IsoVector,double> to_ret;
+  std::vector<NuclideModelPtr>::iterator daughter;
+  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+    to_ret.push_back(make_pair(daughter,daughter->source_term_bc()));
+  }
 }
 

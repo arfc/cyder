@@ -83,6 +83,15 @@ void StubNuclide::transportNuclides(int time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+std::vector<IsoVector> StubNuclide::update_wastes(int the_time, std::vector<NuclideModelPtr> daughters){
+  std::vector<IsoVector> to_ret;
+  std::vector<NuclideModelPtr>::iterator daughter;
+  for( daughter = daughters.begin(); daughters.end(); ++daughter){
+    to_ret.push_back(daughter->source_term_bc(the_time));
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> StubNuclide::source_term_bc(){
   /// @TODO This is just a placeholder
   pair<IsoVector, double> to_ret;

@@ -117,6 +117,18 @@ public:
    */
   virtual void transportNuclides(int time);
 
+
+  /** 
+     Determines what IsoVector to remove from the daughter nuclide models
+
+     @param time the timestep at which the nuclides should be transported
+     @param daughter nuclide_model of an internal component. there may be many.
+     
+     @return wastes a vector of IsoVectors to absorb into the wastes_ of this component
+     and remove from the wastes_ of the daughter.     
+     */
+  std::vector<IsoVector> update_wastes(int the_time, std::vector<NuclideModelPtr> daughters); 
+
   /**
      Returns the nuclide model type
    */

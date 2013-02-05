@@ -293,6 +293,15 @@ void MixedCellNuclide::update_vec_hist(int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+std::vector<IsoVector> MixedCellNuclide::update_wastes(int the_time, std::vector<NuclideModelPtr> daughters){
+  std::vector<IsoVector> to_ret;
+  std::vector<NuclideModelPtr>::iterator daughter;
+  for( daughter = daughters.begin(); daughters.end(); ++daughter){
+    to_ret.push_back(daughter->source_term_bc(the_time));
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::sorb(int the_time, int iso, double mass){
   if(!kd_limited()){
     throw CycException("The sorb function was called, but kd_limited=false.");
