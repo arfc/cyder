@@ -136,6 +136,18 @@ public:
   virtual void extract(CompMapPtr comp_to_rem, double kg_to_rem) = 0 ;
 
   /**
+     updates the wastes to reflect the boundary condition at the the daughter boundary.
+
+     @param time the timestep at which the nuclides should be transported
+     @param daughter an internal component. there may be many, this is just one
+     
+     @return waste a material item to absorb into the wastes_ of this component
+     and remove from the wastes_ of the daughter.     
+     */
+  virtual mat_rsrc_ptr update_wastes(int the_time, ComponentPtr daughter) = 0;
+
+
+  /**
      Transports nuclides from the inner boundary to the outer boundary in this 
      component
 

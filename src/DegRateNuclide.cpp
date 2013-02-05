@@ -254,3 +254,8 @@ void DegRateNuclide::update_vec_hist(int the_time){
   vec_hist_[ the_time ] = MatTools::sum_mats(wastes_) ;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr DegRateNuclide::update_wastes(int the_time, ComponentPtr daughter){
+  return daughter->source_term_bc(the_time);
+}
+
