@@ -95,20 +95,22 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="advective_velocity"/>
       <ref name="porosity"/>
       <ref name="transit_time"/>
-      <choice>
-        <element name="EM">
-          <text/>
-        </element>
-        <element name="PFM">
-          <text/>
-        </element>
-        <element name="EPM">
-          <ref name="eta_ratio"/>
-        </element>
-        <element name="DM">
-          <ref name="peclet"/>
-        </element>
-      </choice>
+      <element name="formulation">
+        <choice>
+          <element name="EM">
+            <text/>
+          </element>
+          <element name="PFM">
+            <text/>
+          </element>
+          <element name="EPM">
+            <ref name="eta_ratio"/>
+          </element>
+          <element name="DM">
+            <ref name="peclet"/>
+          </element>
+        </choice>
+      </element>
     </element>
   </define>
   
