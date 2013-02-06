@@ -40,6 +40,7 @@ string Component::nuclide_type_names_[] = {
   "StubNuclide", 
 };
 
+table_ptr Component::gr_components_table_ = table_ptr(new Table("gen_repo_components"));
 table_ptr Component::gr_contaminant_table_ = table_ptr(new Table("gen_repo_contaminants"));
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,7 +105,7 @@ void Component::init(string name, ComponentType type, string mat,
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
-
+  addComponentToTable(shared_from_this());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -146,6 +147,7 @@ void Component::copy(const ComponentPtr& src){
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
+  addComponentToTable(shared_from_this());
 
 }
 
@@ -435,7 +437,52 @@ const std::vector<NuclideModelPtr> Component::nuclide_daughters(){
   }
   return to_ret;
 }
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::defineComponentsTable(){
+  // declare the table columns
+  std::vector<column> columns;
+  columns.push_back(std::make_pair("compID", "INTEGER"));
+  columns.push_back(std::make_pair("parentID", "INTEGER")); 
+  columns.push_back(std::make_pair("compType", "INTEGER"));
+  columns.push_back(std::make_pair("name", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("material_data", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("nuclidemodel", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("thermalmodel", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("innerradius", "REAL"));
+  columns.push_back(std::make_pair("outerradius", "REAL"));
+  columns.push_back(std::make_pair("x", "REAL"));
+  columns.push_back(std::make_pair("y", "REAL"));
+  columns.push_back(std::make_pair("z", "REAL"));
 
+  // declare the table's primary key
+  primary_key pk;
+  pk.push_back("compID");
+  gr_components_table_->defineTable(columns,pk);
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::addComponentToTable(ComponentPtr comp){
+  if( !gr_components_table_->defined() ){
+    defineComponentsTable();
+  }
+  // add a row
+  row a_row;
+  a_row.push_back(std::make_pair("compID", comp->ID()));
+  a_row.push_back(std::make_pair("parentID", 0)); // @TODO update with parent in setparent
+  a_row.push_back(std::make_pair("compType", int(comp->type())));
+  a_row.push_back(std::make_pair("name", comp->name()));
+  a_row.push_back(std::make_pair("material_data", comp->mat_table()->mat()));
+  a_row.push_back(std::make_pair("nuclidemodel", comp->nuclide_model()->name()));
+  a_row.push_back(std::make_pair("thermalmodel", comp->thermal_model()->name()));
+  a_row.push_back(std::make_pair("innerradius", comp->inner_radius()));
+  a_row.push_back(std::make_pair("outerradius", comp->outer_radius()));
+  a_row.push_back(std::make_pair("x", comp->x()));
+  a_row.push_back(std::make_pair("y", comp->y()));
+  a_row.push_back(std::make_pair("z", comp->z()));
+
+  gr_components_table_->addRow(a_row);
+
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const int Component::ID(){return ID_;}
