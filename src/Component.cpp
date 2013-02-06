@@ -237,11 +237,12 @@ void Component::transportHeat(int time){
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::transportNuclides(int time){
+void Component::transportNuclides(int the_time){
   if ( !nuclide_model() ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
   } else { 
-    nuclide_model()->transportNuclides(time);
+    nuclide_model()->update_inner_bc(the_time, nuclide_daughters());
+    nuclide_model()->transportNuclides(the_time);
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -424,6 +425,17 @@ NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
   toRet->set_mat_table(mat_table());
   return toRet;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const std::vector<NuclideModelPtr> Component::nuclide_daughters(){
+  std::vector<NuclideModelPtr> to_ret;
+  std::vector<ComponentPtr>::iterator daughter;
+  for( daughter = daughters_.begin(); daughter!=daughters_.end(); ++daughter){
+    to_ret.push_back((*daughter)->nuclide_model());
+  }
+  return to_ret;
+}
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const int Component::ID(){return ID_;}

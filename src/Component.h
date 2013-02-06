@@ -226,6 +226,11 @@ public:
   NuclideModelPtr copyNuclideModel(NuclideModelPtr src);
 
   /**
+     Returns the nuclide models of each daughter component.
+     */
+  const std::vector<NuclideModelPtr> nuclide_daughters();
+
+  /**
      get the ID
      
      @return ID_
