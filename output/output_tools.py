@@ -418,7 +418,7 @@ class Query(object) :
         c = self.conn.cursor()
 
         compList = []
-        c.execute("SELECT GenericRepositoryComponents.CompID FROM GenericRepositoryComponents, gen_repo_contaminants ")
+        c.execute("SELECT gen_repo_components.CompID FROM gen_repo_components, gen_repo_contaminants ")
 
         for row in c :
             if row[0] not in compList :
@@ -593,7 +593,6 @@ class Query(object) :
                 mass = row[3]
 
                 compInd = actList.index(comp)
-                print time
                 self.data[time][compInd][self.isoToInd[isos]] += mass
 
             # Store the labels.
