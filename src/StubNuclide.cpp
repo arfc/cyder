@@ -87,8 +87,12 @@ void StubNuclide::transportNuclides(int time){
 void StubNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
+  std::pair<IsoVector, double> source_term;
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    absorb((*daughter)->extract((*daughter)->source_term_bc().first.comp(),(*daughter)->source_term_bc().second));
+    source_term = (*daughter)->source_term_bc();
+    if( source_term.second > 0 ){
+      absorb((*daughter)->extract(source_term.first.comp(), source_term.second));
+    }
   }
 }
 
