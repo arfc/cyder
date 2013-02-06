@@ -98,13 +98,14 @@ void OneDimPPMNuclide::absorb(mat_rsrc_ptr matToAdd)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void OneDimPPMNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
+mat_rsrc_ptr OneDimPPMNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
 {
   // Get the given OneDimPPMNuclide's contaminant material.
   // add the material to it with the material extract function.
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GR1DNuc") << "OneDimPPMNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
+  return MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -144,11 +145,11 @@ IsoFluxMap OneDimPPMNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-std::vector<IsoVector> OneDimPPMNuclide::update_wastes(int the_time, std::vector<NuclideModelPtr> daughters){
+void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   /// @TODO use cauchy.
-  std::vector<IsoVector> to_ret;
+  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
-  for( daughter = daughters.begin(); daughters.end(); ++daughter){
-    to_ret.push_back(daughter->source_term_bc(the_time));
+  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+    absorb((*daughter)->extract((*daughter)->source_term_bc().first.comp(), (*daughter)->source_term_bc().second));
   }
 }

@@ -132,8 +132,10 @@ public:
      
      @param comp_to_rem the composition to decrement against this NuclideModel
      @param comp_to_rem the mass in kg to decrement against this NuclideModel
+
+     @return the material extracted
    */
-  virtual void extract(CompMapPtr comp_to_rem, double kg_to_rem) = 0 ;
+  virtual mat_rsrc_ptr extract(CompMapPtr comp_to_rem, double kg_to_rem) = 0 ;
 
   /** 
      Determines what IsoVector to remove from the daughter nuclide models
@@ -141,10 +143,8 @@ public:
      @param time the timestep at which the nuclides should be transported
      @param daughter nuclide_model of an internal component. there may be many.
      
-     @return wastes a vector of IsoVectors to absorb into the wastes_ of this component
-     and remove from the wastes_ of the daughter.     
      */
-  virtual std::vector<IsoVector> update_wastes(int the_time, std::vector<NuclideModelPtr> daughters)=0; 
+  virtual void update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters)=0; 
 
   /**
      Transports nuclides from the inner boundary to the outer boundary in this 
@@ -360,6 +360,9 @@ public:
   }
 
   void set_mat_table(MatDataTablePtr mat_table){mat_table_ = MatDataTablePtr(mat_table);}
+
+  /// Returns wastes_
+  std::deque<mat_rsrc_ptr> wastes() {return wastes_;};
 
 protected:
   /// A vector of the wastes contained by this component

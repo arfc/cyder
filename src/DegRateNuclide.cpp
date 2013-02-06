@@ -99,14 +99,14 @@ void DegRateNuclide::absorb(mat_rsrc_ptr matToAdd)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void DegRateNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
+mat_rsrc_ptr DegRateNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
 {
   // Get the given DegRateNuclide's contaminant material.
   // add the material to it with the material extract function.
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
+  return MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -255,11 +255,11 @@ void DegRateNuclide::update_vec_hist(int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-std::map<NuclideModelPtr, std::pair<IsoVector,double>> DegRateNuclide::update_wastes(int the_time, std::vector<NuclideModelPtr> daughters){
-  std::map<NuclideModelPtr, std::pair<IsoVector,double> to_ret;
+void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
+  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    to_ret.push_back(make_pair(daughter,daughter->source_term_bc()));
+    absorb((*daughter)->extract((*daughter)->source_term_bc().first.comp(), (*daughter)->source_term_bc().second));
   }
 }
 

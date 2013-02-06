@@ -151,10 +151,11 @@ void Component::copy(const ComponentPtr& src){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void Component::print(){
+  std::deque<mat_rsrc_ptr> waste_list=wastes();
   LOG(LEV_DEBUG2,"GRComp") << "Component: " << shared_from_this()->name();
   LOG(LEV_DEBUG2,"GRComp") << "Contains Materials:";
-  for(int i=0; i<shared_from_this()->wastes().size() ; i++){
-    LOG(LEV_DEBUG2,"GRComp") << wastes_[i];
+  for(int i=0; i< waste_list.size() ; i++){
+    LOG(LEV_DEBUG2,"GRComp") << waste_list[i];
   }
 }
 
@@ -214,7 +215,7 @@ void Component::updateContaminantTable(int the_time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::absorb(mat_rsrc_ptr mat_to_add){
   try{
-    nuclide_model_->absorb(mat_to_add);
+    nuclide_model()->absorb(mat_to_add);
   } catch ( exception& e ) {
     LOG(LEV_ERROR, "GRComp") << "Error occured in component absorb function." << e.what();
   }
@@ -222,7 +223,7 @@ void Component::absorb(mat_rsrc_ptr mat_to_add){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::extract(CompMapPtr comp_to_rem, double kg_to_rem){
   try{
-    nuclide_model_->extract(comp_to_rem, kg_to_rem);
+    nuclide_model()->extract(comp_to_rem, kg_to_rem);
   } catch ( exception& e ) {
     LOG(LEV_ERROR, "GRComp") << "Error occured in component extract function." << e.what();
   }
@@ -237,10 +238,10 @@ void Component::transportHeat(int time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportNuclides(int time){
-  if ( !nuclide_model_ ) {
+  if ( !nuclide_model() ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
   } else { 
-    nuclide_model_->transportNuclides(time);
+    nuclide_model()->transportNuclides(time);
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -450,7 +451,7 @@ const std::vector<ComponentPtr> Component::daughters(){return daughters_;}
 ComponentPtr Component::parent(){return parent_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const vector<mat_rsrc_ptr> Component::wastes(){return wastes_;}
+const deque<mat_rsrc_ptr> Component::wastes(){return nuclide_model()->wastes();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Temp Component::temp_lim(){return temp_lim_;}
