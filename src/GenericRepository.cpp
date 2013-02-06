@@ -53,7 +53,6 @@
 using boost::lexical_cast;
 
 table_ptr GenericRepository::gr_params_table_ = table_ptr(new Table( "GenericRepositoryParams"));
-table_ptr GenericRepository::components_table_ = table_ptr(new Table( "GenericRepositoryComponents"));
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GenericRepository::GenericRepository() {
@@ -167,7 +166,6 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
     default:
       throw CycException("Unknown ComponentType enum value encountered."); }
 
-  addComponentToTable(toRet);
 
   return toRet;
 }
@@ -283,7 +281,6 @@ void GenericRepository::handleTick(int time)
   // if this is the first timestep, register the far field
   if (time==0){
     setPlacement(far_field_);
-    addComponentToTable(far_field_);
   }
 
   // make requests
@@ -547,14 +544,12 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   emplaced_waste_packages_.push_back(waste_package);
   // set the location of the waste package 
   setPlacement(waste_package);
-  addComponentToTable(waste_package);
   // set the location of the waste forms within the waste package
   std::vector<ComponentPtr> daughters = waste_package->daughters();
   for (std::vector<ComponentPtr>::iterator iter = daughters.begin();  
       iter != daughters.end(); 
       iter ++){
     setPlacement(*iter);
-    addComponentToTable((*iter));
   }
   return buffers_.front();
 }
@@ -691,53 +686,6 @@ void GenericRepository::addRowToParamsTable(){
     a_row.push_back(i);
   }
   gr_params_table_->addRow(a_row);
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::defineComponentsTable(){
-  // declare the table columns
-  std::vector<column> columns;
-  columns.push_back(std::make_pair("compID", "INTEGER"));
-  columns.push_back(std::make_pair("parentID", "INTEGER")); 
-  columns.push_back(std::make_pair("compType", "INTEGER"));
-  columns.push_back(std::make_pair("name", "VARCHAR(128)"));
-  columns.push_back(std::make_pair("material_data", "VARCHAR(128)"));
-  columns.push_back(std::make_pair("nuclidemodel", "VARCHAR(128)"));
-  columns.push_back(std::make_pair("thermalmodel", "VARCHAR(128)"));
-  columns.push_back(std::make_pair("innerradius", "REAL"));
-  columns.push_back(std::make_pair("outerradius", "REAL"));
-  columns.push_back(std::make_pair("x", "REAL"));
-  columns.push_back(std::make_pair("y", "REAL"));
-  columns.push_back(std::make_pair("z", "REAL"));
-
-  // declare the table's primary key
-  primary_key pk;
-  pk.push_back("compID");
-  components_table_->defineTable(columns,pk);
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::addComponentToTable(ComponentPtr comp){
-  if( !components_table_->defined() ){
-    defineComponentsTable();
-  }
-  // add a row
-  row a_row;
-  a_row.push_back(std::make_pair("compID", comp->ID()));
-  a_row.push_back(std::make_pair("parentID", 0)); // @TODO update with parent in setparent
-  a_row.push_back(std::make_pair("compType", int(comp->type())));
-  a_row.push_back(std::make_pair("name", comp->name()));
-  a_row.push_back(std::make_pair("material_data", comp->mat_table()->mat()));
-  a_row.push_back(std::make_pair("nuclidemodel", comp->nuclide_model()->name()));
-  a_row.push_back(std::make_pair("thermalmodel", comp->thermal_model()->name()));
-  a_row.push_back(std::make_pair("innerradius", comp->inner_radius()));
-  a_row.push_back(std::make_pair("outerradius", comp->outer_radius()));
-  a_row.push_back(std::make_pair("x", comp->x()));
-  a_row.push_back(std::make_pair("y", comp->y()));
-  a_row.push_back(std::make_pair("z", comp->z()));
-
-  components_table_->addRow(a_row);
-
 }
 
 /* --------------------

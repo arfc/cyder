@@ -403,27 +403,10 @@ protected:
     void addRowToParamsTable();
 
     /**
-       This table will hold information about the component templates 
-       Each component template will have an EBS, a nuclide model ID, 
-       a thermal model ID, 
-     */
-    static void defineComponentsTable();
-
-    /**
-       Adds a component to the components table.
-     */
-    static void addComponentToTable(ComponentPtr comp);
-
-    /**
        This table will hold the parameters that uniquely define this generic
        repository model.
      */
     static table_ptr gr_params_table_;
-
-    /**
-       This table will hold the parameters that uniquely describe each component in the simulation. 
-     */
-    static table_ptr components_table_;
 
 public:
     /**
