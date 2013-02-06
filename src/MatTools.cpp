@@ -51,15 +51,16 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, deque<mat_rsrc_ptr>& mat_list){
+mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, deque<mat_rsrc_ptr>& mat_list){
   mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material(comp_to_rem));
   left_over->setQuantity(0);
   while(!mat_list.empty()) { 
     left_over->absorb(mat_list.back());
     mat_list.pop_back();
   }
-  left_over->extract(comp_to_rem, kg_to_rem);
+  mat_rsrc_ptr to_ret = left_over->extract(comp_to_rem, kg_to_rem);
   mat_list.push_back(left_over);
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

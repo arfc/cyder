@@ -62,13 +62,14 @@ void StubNuclide::absorb(mat_rsrc_ptr matToAdd)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void StubNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
+mat_rsrc_ptr StubNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem)
 {
   // Get the given StubNuclide's contaminant material.
   // add the material to it with the material extract function.
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRSNuc") << "StubNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
+  return MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -80,6 +81,19 @@ void StubNuclide::transportNuclides(int time){
   // It will send the adjacent components information?
   // The StubNuclide class should transport all nuclides
 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void StubNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
+  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
+  std::vector<NuclideModelPtr>::iterator daughter;
+  std::pair<IsoVector, double> source_term;
+  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+    source_term = (*daughter)->source_term_bc();
+    if( source_term.second > 0 ){
+      absorb((*daughter)->extract(source_term.first.comp(), source_term.second));
+    }
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

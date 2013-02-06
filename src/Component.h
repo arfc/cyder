@@ -226,6 +226,11 @@ public:
   NuclideModelPtr copyNuclideModel(NuclideModelPtr src);
 
   /**
+     Returns the nuclide models of each daughter component.
+     */
+  const std::vector<NuclideModelPtr> nuclide_daughters();
+
+  /**
      get the ID
      
      @return ID_
@@ -288,7 +293,7 @@ public:
      
      @return wastes
    */
-  const std::vector<mat_rsrc_ptr> wastes();
+  const std::deque<mat_rsrc_ptr> wastes();
 
   /**
      get the maximum Temperature this object allows at its boundaries 
@@ -450,11 +455,6 @@ protected:
      The immediate daughter components of this component.
    */
   std::vector<ComponentPtr> daughters_;
-
-  /**
-     The contained contaminants, a list of material objects..
-   */
-  std::vector<mat_rsrc_ptr> wastes_;
 
   /**
      The name of this component, a string

@@ -133,13 +133,13 @@ void LumpedNuclide::absorb(mat_rsrc_ptr matToAdd) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void LumpedNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem) {
+mat_rsrc_ptr LumpedNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem) {
   // Get the given LumpedNuclide's contaminant material.
   // add the material to it with the material extract function.
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
+  return MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -377,4 +377,28 @@ IsoConcMap LumpedNuclide::scaleConcMap(IsoConcMap C_0, double scalar){
 void LumpedNuclide::update_vec_hist(int the_time){
   vec_hist_[the_time] = MatTools::sum_mats(wastes_);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
+
+  std::vector<NuclideModelPtr>::iterator daughter;
+  
+  IsoConcMap conc;
+  Volume vol;
+  double scaled_conc_sum;
+  Volume vol_sum;
+  
+  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+    conc = (*daughter)->dirichlet_bc();
+    vol = (*daughter)->geom()->volume();
+    //scaled_conc_sum += conc * vol;
+    //vol_sum += vol;
+    //concMapToVec(scaleConcMap(conc, vol));
+    ///@TODO don't take everything!
+  }
+  //C_0_= scaled_conc_sum/vol_sum; 
+  ///@TODO Divide by only the fluid volume. 
+}
+
+
 
