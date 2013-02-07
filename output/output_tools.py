@@ -2,6 +2,9 @@
 import sqlite3
 from numpy import zeros
 from numpy import cumsum
+from numpy import mean
+from matplotlib import cm as cm
+import pylab
 
 ###############################################################################
 ###############################################################################
@@ -127,7 +130,9 @@ class Query(object) :
         elif 'contaminants' == queryType : 
             self.set_q_stmt( SqlStmt("gen_repo_contaminants.Time, gen_repo_contaminants.CompID, " + \
               "gen_repo_contaminants.IsoID, gen_repo_contaminants.MassKG", \
-              "gen_repo_contaminants") ) 
+              "gen_repo_contaminants", \
+              "gen_repo_contaminants.Time >= " + str(t0) + " AND " + \
+              "gen_repo_contaminants.Time < " + str(tf) ) ) 
 
         self.conn = sqlite3.connect(file)
 
@@ -416,6 +421,23 @@ class Query(object) :
         return actList
 
 ###############################################################################
+    def getCompTypes(self) :
+        """
+        Count and record how many Components exist during the range of the
+        calculation.
+        """
+        c = self.conn.cursor()
+
+        compTypes = {}
+        c.execute("SELECT gen_repo_components.CompID, gen_repo_components.Type FROM gen_repo_components")
+
+        for row in c :
+            if row[0] not in compTypes :
+                compTypes[row[0]]=row[1]
+
+        return compTypes
+
+###############################################################################
     def getCompList(self) :
         """
         Count and record how many Components exist during the range of the
@@ -618,11 +640,12 @@ class Query(object) :
             for row in c :
                 time = row[0] - self.t0
                 comp = row[1]
-                isos = row[2]
+                iso = row[2]
                 mass = row[3]
 
                 compInd = actList.index(comp)
-                self.data[time][compInd][self.isoToInd[isos]] += mass
+
+                self.data[time][compInd][self.isoToInd[iso]] += mass
 
             # Store the labels.
             self.dataLabels[0] = range(self.t0, self.tf)
@@ -715,14 +738,14 @@ class Query(object) :
                         "only make a river plot of a 2D data array."
 
         # Creae the figure and the data we need to do the plotting.
-        fig = pylab.figure(1) # the figure
-        ax = fig.add_subplot(111) # the axes
+        self.figure = pylab.figure(1) # the figure
+        self.ax = self.figure.add_subplot(111) # the axes
         t = self.dataLabels[timeDim] # get time dimension labels
         runSum = zeros(self.data.shape[timeDim])
         graphLim = 0
-        colors = get_colours(len(streamList))
+        #colors = get_colours(len(streamList))
         # For RANDOM colors:
-        # colors = pylab.rand(len(streamList),len(streamList))
+        #colors = pylab.rand(ilen(streamList),len(streamList))
 
         # Turn the list of stream labels into a list of indices.
         indList = [0] * len(streamList)
@@ -731,19 +754,20 @@ class Query(object) :
         
         # Iterate through the streams and add them to the plot.
         for ind in indList :
-             ax.fill_between(t, runSum, runSum + plotData[:,ind], \
-                                              facecolor=colors[ind],alpha=0.9, \
-                                             label= str(ind))
+             self.ax.fill_between(t, runSum, runSum + plotData[:,ind], \
+                     facecolor=cm.spectral_r(ind),alpha=0.9, \
+                     label= str(ind))
              runSum += plotData[:,ind]
         
         # Override the default x-axis behavior.
-        ax.set_xlim(xmin = self.t0, xmax = self.tf)
+        self.ax.set_xlim(xmin = self.t0, xmax = self.tf)
 
         # Use a reasonable scale on the y axis
-        #graphLim = max(runSum)*1.05
-        graphLim = mean(runSum)
-        ax.set_ylim(ymin=0.01, ymax= graphLim )
+        graphLim = max(runSum)*1.05
+        #graphLim = mean(runSum)
+        self.ax.set_ylim(ymin=0.01, ymax= graphLim )
         #ax.set_ylim(ymax=)
+        self.ax.set_title(self.dataAxes[selectDim]+" "+self.dataUnits[selectDim]+" = "+str(selectItem))
 
         # Use a log scale if plotting by isotope.
         #if self.dataAxes[streamDim] == 'iso' :
@@ -751,9 +775,7 @@ class Query(object) :
         #    ax.set_ylim(ymin=1e-6)
 
 
-
-        # Assign the figure to the appropriate Query class data member.
-        self.figure = fig
+        return self
 
 ###############################################################################
 
@@ -772,6 +794,13 @@ class Query(object) :
 
         fig = self.figure
         pylab.savefig(filename)
+        return self
+
+###############################################################################
+    def clear_fig(self) : 
+        self.ax=None
+        self.figure=None
+        pylab.close()
 
 ###############################################################################
 ###############################################################################
