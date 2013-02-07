@@ -7,7 +7,9 @@ def resource_file(dbname, receiver):
     new_query = Query(dbname,'resource')
     list2file(outfile,'resource', list(cumsum(new_query.allReceivedBy(receiver))))
 
-def contaminant_file(dbname):
+def get_contaminants(dbname):
     new_query = Query(dbname,'contaminants',t0=0, tf=11)
-    data = new_query.getData()
-    print data
+    print new_query.getData()
+
+
+

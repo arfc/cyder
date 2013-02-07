@@ -131,22 +131,28 @@ class Query(object) :
 
         self.conn = sqlite3.connect(file)
 
-        # Generate isotope maps.
-        isos = getIsoList()
-        for index, iso in enumerate(isos) :
-            self.isoToInd[iso] = index
-            self.indToIso[index] = iso
 
         # Record the labels and the (default) units for the Query.
         if self.qType == 'material' :
             self.dataAxes = ['time', 'from', 'to', 'iso']
             self.dataUnits = ['months', 'agentID', 'agentID', 'tons']
+            # Generate isotope maps.
+            isos = getIsoList()
+            for index, iso in enumerate(isos) :
+                self.isoToInd[iso] = index
+                self.indToIso[index] = iso
         elif self.qType == 'resource' :
             self.dataAxes = ['time', 'from', 'to']
             self.dataUnits = ['months', 'agentID', 'agentID']
+            # Generate isotope maps.
+            isos = getIsoList()
+            for index, iso in enumerate(isos) :
+                self.isoToInd[iso] = index
+                self.indToIso[index] = iso
         elif self.qType == 'contaminants' :
             self.dataAxes = ['time', 'CompID', 'IsoID', 'MassKG']
             self.dataUnits = ['months', 'CompID', 'IsoID', "kg"]
+
 
 
 ###############################################################################
@@ -428,6 +434,25 @@ class Query(object) :
         return compList
 
 ###############################################################################
+    def getShortIsoList(self, table='gen_repo_contaminants') :
+        """
+        Count and record how many IsoIDs exist in the table, and make a list
+        """
+        c = self.conn.cursor()
+
+        iso_list = []
+        c.execute("SELECT "+table+".IsoID FROM "+table )
+
+        for row in c :
+            if row[0] not in iso_list :
+                iso_list.append(row[0])
+
+        iso_list.sort()
+        return iso_list
+
+
+
+###############################################################################
 
     def execute(self) :
         """
@@ -570,6 +595,10 @@ class Query(object) :
             # get the list of actors
             actList = self.getCompList()
             numActs = len(actList)
+            isos = self.getShortIsoList('gen_repo_contaminants')
+            for index, iso in enumerate(isos) :
+                self.isoToInd[iso] = index
+                self.indToIso[index] = iso
             numIsos = len(self.indToIso)
 
             # Initialize the array.
