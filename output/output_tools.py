@@ -683,7 +683,7 @@ class Query(object):
 
 ###############################################################################
     def check_plottable(self, streamDim=None, streamList=None,
-                        selectDim=None, selectItem=None):
+                        selectDim=None):
 
         if not self.is_executed:
             raise QueryException("Error: plotting can only be " +
@@ -722,6 +722,35 @@ class Query(object):
         return timeDim, streamDim, selectDim, streamList
 
 ###############################################################################
+    def prep_data(self, stream_dim=None, select_dim=None, select_item=None):
+
+        # Let's create a new view of the data to plot...
+        plot_data = self.data
+
+        # And reduce it if that's what we've been told to do.
+        if select_dim is not None :
+            if select_item is None :
+                raise QueryException("If you specify a select_dim, you must " +
+                                     "specify the label of the item you " +
+                                     "want to select.")
+            select_ind = self.data_labels[select_dim].index(select_item)
+            if 1 == select_dim and 2 == stream_dim:
+                plot_data = plot_data[:, select_ind, :]
+            elif 2 == select_dim and 1 == stream_dim:
+                plot_data = plot_data[:, :, select_ind]
+            else:
+                raise QueryException("Error: bad function input or the " +
+                                     "data axes have gotten out of order " +
+                                     "somehow.")
+        # Now we should be down to two dimensions. Check.
+        if len(plot_data.shape) != 2:
+            raise QueryException("Error: bad stream_dim/select_dim combo. "
+                                 "You can only make a river plot of a 2D " +
+                                 "data array.")
+        return plot_data
+
+
+###############################################################################
     def bar_plot(self, streamDim=None, streamList=None,
                  selectDim=None, selectItem=None):
         """
@@ -748,8 +777,9 @@ class Query(object):
         q.bar_plot(streamDim = 'iso', selectDim = 'thru', selectItem = 5)
         """
         time_dim, stream_dim, select_dim, stream_list = \
-                self.check_plottable(streamDim, streamList, selectDim, 
-                                     selectItem)
+                self.check_plottable(streamDim, streamList, selectDim) 
+
+        plot_data = self.prep_data(stream_dim, select_dim, select_item)
 
 ###############################################################################
     def river_plot(self, streamDim=None, streamList=None,
@@ -780,33 +810,9 @@ class Query(object):
         """
 
         time_dim, stream_dim, select_dim, stream_list = \
-                self.check_plottable(streamDim, streamList, selectDim, 
-                                     selectItem)
+                self.check_plottable(streamDim, streamList, selectDim)
 
-        # Let's create a new view of the data to plot...
-        plotData = self.data
-
-        # And reduce it if that's what we've been told to do.
-        if None != select_dim:
-            if None == selectItem:
-                raise QueryException("If you specify a select_dim, you must " +
-                                     "specify the label of the item you " +
-                                     "want to select.")
-            selectInd = self.data_labels[select_dim].index(selectItem)
-            if 1 == select_dim and 2 == stream_dim:
-                plotData = plotData[:, selectInd, :]
-            elif 2 == select_dim and 1 == stream_dim:
-                plotData = plotData[:, :, selectInd]
-            else:
-                raise QueryException("Error: bad function input or the " +
-                                     "data axes have gotten out of order " +
-                                     "somehow.")
-
-        # Now we should be down to two dimensions. Check.
-        if len(plotData.shape) != 2:
-            raise QueryException("Error: bad stream_dim/select_dim combo. "
-                                 "You can only make a river plot of a 2D " +
-                                 "data array.")
+        plot_data = self.prep_data(stream_dim, select_dim, selectItem)
 
         # Creae the figure and the data we need to do the plotting.
         self.figure = pylab.figure(1)  # the figure
@@ -825,10 +831,10 @@ class Query(object):
 
         # Iterate through the streams and add them to the plot.
         for ind in indList:
-            self.ax.fill_between(t, runSum, runSum + plotData[:, ind],
+            self.ax.fill_between(t, runSum, runSum + plot_data[:, ind],
                                  facecolor=cm.spectral_r(ind), alpha=0.9,
                                  label=str(ind))
-            runSum += plotData[:, ind]
+            runSum += plot_data[:, ind]
 
         # Override the default x-axis behavior.
         self.ax.set_xlim(xmin=self.t0, xmax=self.tf)
@@ -839,11 +845,6 @@ class Query(object):
         self.ax.set_ylim(ymin=0.01, ymax=graphLim)
         # ax.set_ylim(ymax=)
         self.ax.set_title(self.data_axes[select_dim] + " = " + str(selectItem))
-
-        # Use a log scale if plotting by isotope.
-        # if self.data_axes[stream_dim] == 'iso' :
-        #    ax.set_yscale('log')
-        #    ax.set_ylim(ymin=1e-6)
 
         return self
 
