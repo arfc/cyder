@@ -682,36 +682,8 @@ class Query(object):
         self.is_executed = True
 
 ###############################################################################
-    def bar_plot() :
-
-
-###############################################################################
-    def river_plot(self, streamDim=None, streamList=None,
-                   selectDim=None, selectItem=None):
-        """
-        Creates a river plot of the data in this Query. 'time' and at least one
-        (but no more than two) other axes must exist.
-
-        Plots the data in the dimension 'streamDim' against time. If a
-        streamList of label names of items in the streamDim axis is given, we
-        plot
-        only those streams instead of all of them. If the data array is
-        currently
-        three dimensional, the user must also specify a dimension, selectDim,
-        and a label of an element in that dimension, selectItem, to plot.
-
-        3D example:
-
-        To make an isotope-wise river plot for facility 5 when the array
-        looks like this:
-
-        data_axes = ['time', 'thru', 'iso']
-        data_units = ['months', 'facID', 'tons']
-
-        call
-
-        q.river_plot(streamDim = 'iso', selectDim = 'thru', selectItem = 5)
-        """
+    def check_plottable(self, streamDim=None, streamList=None,
+                        selectDim=None, selectItem=None):
 
         if not self.is_executed:
             raise QueryException("Error: plotting can only be " +
@@ -746,6 +718,71 @@ class Query(object):
         # If they gave no streamlist, assume they want all possible streams.
         if None == streamList:
             streamList = self.data_labels[streamDim]
+
+        return timeDim, streamDim, selectDim
+
+
+###############################################################################
+    def bar_plot(self, streamDim=None, streamList=None,
+                 selectDim=None, selectItem=None):
+        """
+        Creates a stacked bar histogram plot of the data in Query.  
+        'time' and at least one (but no more than two) other axes must exist.
+
+        Plots the data in the dimension 'streamDim' against time. If a
+        streamList of label names of items in the streamDim axis is given, we
+        plot only those streams instead of all of them. If the data array is
+        currently three dimensional, the user must also specify a dimension, 
+        selectDim, and a label of an element in that dimension, selectItem, to 
+        plot.
+
+        3D example:
+
+        To make an isotope-wise bar plot for facility 5 when the array
+        looks like this:
+
+        data_axes = ['time', 'thru', 'iso']
+        data_units = ['months', 'facID', 'tons']
+
+        call
+
+        q.bar_plot(streamDim = 'iso', selectDim = 'thru', selectItem = 5)
+        """
+        time_dim, stream_dim, select_dim = self.check_plottable(streamDim, 
+                streamList, selectItem)
+
+
+
+###############################################################################
+    def river_plot(self, streamDim=None, streamList=None,
+                   selectDim=None, selectItem=None):
+        """
+        Creates a river plot of the data in this Query. 'time' and at least one
+        (but no more than two) other axes must exist.
+
+        Plots the data in the dimension 'streamDim' against time. If a
+        streamList of label names of items in the streamDim axis is given, we
+        plot
+        only those streams instead of all of them. If the data array is
+        currently
+        three dimensional, the user must also specify a dimension, selectDim,
+        and a label of an element in that dimension, selectItem, to plot.
+
+        3D example:
+
+        To make an isotope-wise river plot for facility 5 when the array
+        looks like this:
+
+        data_axes = ['time', 'thru', 'iso']
+        data_units = ['months', 'facID', 'tons']
+
+        call
+
+        q.river_plot(streamDim = 'iso', selectDim = 'thru', selectItem = 5)
+        """
+
+        time_dim, stream_dim, select_dim = self.check_plottable(streamDim, 
+                streamList, selectItem)
 
         # Let's create a new view of the data to plot...
         plotData = self.data
@@ -819,7 +856,7 @@ class Query(object):
         """
 
         if None == self.figure:
-            raise QueryException("Error: this Query hasn't been asked to plot
+            raise QueryException("Error: this Query hasn't been asked to plot \
                                  anything.")
 
         if '' == filename:
