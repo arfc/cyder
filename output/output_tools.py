@@ -353,8 +353,8 @@ class Query(object):
             fromDim = self.data_axes.index('from')
             toDim = self.data_axes.index('to')
         except ValueError:
-            print "Warning: Query data no longer have both a 'from' and " +
-            "'to' dimension."
+            print("Warning: Query data no longer have both a 'from' and 'to' \
+                    dimension.")
             return
 
         self.data = sum(self.data, fromDim) - sum(self.data, toDim)
@@ -696,12 +696,11 @@ class Query(object):
                                  "element, use a single-item streamList.")
 
         # Parse the dimensions.
-        try:
+        try :
             timeDim = self.data_axes.index('time')
             streamDim = self.data_axes.index(streamDim)
-            if selectDim is not None:
+            if selectDim != None:
                 selectDim = self.data_axes.index(selectDim)
-
         except ValueError:
             raise QueryException("Warning: Query data no longer have the " +
                                  "requested dimension (and the 'time' " +
@@ -720,7 +719,7 @@ class Query(object):
         if None == streamList:
             streamList = self.data_labels[streamDim]
 
-        return timeDim, streamDim, selectDim
+        return timeDim, streamDim, selectDim, streamList
 
 ###############################################################################
     def bar_plot(self, streamDim=None, streamList=None,
@@ -748,9 +747,9 @@ class Query(object):
 
         q.bar_plot(streamDim = 'iso', selectDim = 'thru', selectItem = 5)
         """
-        time_dim, stream_dim, select_dim = self.check_plottable(streamDim,
-                                                                streamList,
-                                                                selectItem)
+        time_dim, stream_dim, select_dim, stream_list = \
+                self.check_plottable(streamDim, streamList, selectDim, 
+                                     selectItem)
 
 ###############################################################################
     def river_plot(self, streamDim=None, streamList=None,
@@ -780,23 +779,23 @@ class Query(object):
         q.river_plot(streamDim = 'iso', selectDim = 'thru', selectItem = 5)
         """
 
-        time_dim, stream_dim, select_dim = self.check_plottable(streamDim,
-                                                                streamList,
-                                                                selectItem)
+        time_dim, stream_dim, select_dim, stream_list = \
+                self.check_plottable(streamDim, streamList, selectDim, 
+                                     selectItem)
 
         # Let's create a new view of the data to plot...
         plotData = self.data
 
         # And reduce it if that's what we've been told to do.
-        if None != selectDim:
+        if None != select_dim:
             if None == selectItem:
-                raise QueryException("If you specify a selectDim, you must " +
+                raise QueryException("If you specify a select_dim, you must " +
                                      "specify the label of the item you " +
                                      "want to select.")
-            selectInd = self.data_labels[selectDim].index(selectItem)
-            if 1 == selectDim and 2 == streamDim:
+            selectInd = self.data_labels[select_dim].index(selectItem)
+            if 1 == select_dim and 2 == stream_dim:
                 plotData = plotData[:, selectInd, :]
-            elif 2 == selectDim and 1 == streamDim:
+            elif 2 == select_dim and 1 == stream_dim:
                 plotData = plotData[:, :, selectInd]
             else:
                 raise QueryException("Error: bad function input or the " +
@@ -805,24 +804,24 @@ class Query(object):
 
         # Now we should be down to two dimensions. Check.
         if len(plotData.shape) != 2:
-            raise QueryException("Error: bad streamDim/selectDim combo. "
+            raise QueryException("Error: bad stream_dim/select_dim combo. "
                                  "You can only make a river plot of a 2D " +
                                  "data array.")
 
         # Creae the figure and the data we need to do the plotting.
         self.figure = pylab.figure(1)  # the figure
         self.ax = self.figure.add_subplot(111)  # the axes
-        t = self.data_labels[timeDim]  # get time dimension labels
-        runSum = zeros(self.data.shape[timeDim])
+        t = self.data_labels[time_dim]  # get time dimension labels
+        runSum = zeros(self.data.shape[time_dim])
         graphLim = 0
-        # colors = get_colours(len(streamList))
+        # colors = get_colours(len(stream_list))
         # For RANDOM colors:
-        # colors = pylab.rand(ilen(streamList),len(streamList))
+        # colors = pylab.rand(ilen(stream_list),len(stream_list))
 
         # Turn the list of stream labels into a list of indices.
-        indList = [0] * len(streamList)
-        for i, s in enumerate(streamList):
-            indList[i] = self.data_labels[streamDim].index(s)
+        indList = [0] * len(stream_list)
+        for i, s in enumerate(stream_list):
+            indList[i] = self.data_labels[stream_dim].index(s)
 
         # Iterate through the streams and add them to the plot.
         for ind in indList:
@@ -839,10 +838,10 @@ class Query(object):
         # graphLim = mean(runSum)
         self.ax.set_ylim(ymin=0.01, ymax=graphLim)
         # ax.set_ylim(ymax=)
-        self.ax.set_title(self.data_axes[selectDim] + " = " + str(selectItem))
+        self.ax.set_title(self.data_axes[select_dim] + " = " + str(selectItem))
 
         # Use a log scale if plotting by isotope.
-        # if self.data_axes[streamDim] == 'iso' :
+        # if self.data_axes[stream_dim] == 'iso' :
         #    ax.set_yscale('log')
         #    ax.set_ylim(ymin=1e-6)
 
