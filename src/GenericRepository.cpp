@@ -591,6 +591,7 @@ ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
   // figure out what buffer to put the waste package in
   point_t point = {x,y,z};
   comp->setPlacement(point);
+  comp->addComponentToTable(comp);
   return comp; 
 }
 

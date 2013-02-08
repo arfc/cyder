@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 from output_tools import Query
 from numpy import cumsum
 from file_io import list2file
@@ -27,12 +29,12 @@ def plot_all_comps(dbname, pltroot):
     comps = query.getCompList()
     ind = 0
     for comp in comps : 
-        pltname=pltroot+str(ind)+".png"
+        pltname=pltroot+str(ind)+".eps"
         plot_contaminants(dbname, pltname, stream_dim='IsoID',select_dim='CompID', select_item=comps.index(comp))
         ind+=1
 
 def stack_comps(dbname, pltroot): 
     query = query_contaminants(dbname)
-    pltname=pltroot+".png"
+    pltname=pltroot+".eps"
     plot_contaminants(dbname, pltname, stream_dim='CompID',select_dim='IsoID', select_item=92235)
 

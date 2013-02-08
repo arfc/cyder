@@ -105,7 +105,7 @@ void Component::init(string name, ComponentType type, string mat,
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
-  addComponentToTable(shared_from_this());
+  //addComponentToTable(shared_from_this());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -147,7 +147,7 @@ void Component::copy(const ComponentPtr& src){
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
-  addComponentToTable(shared_from_this());
+  //addComponentToTable(shared_from_this());
 
 }
 

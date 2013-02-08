@@ -767,7 +767,7 @@ class Query(object) :
         #graphLim = mean(runSum)
         self.ax.set_ylim(ymin=0.01, ymax= graphLim )
         #ax.set_ylim(ymax=)
-        self.ax.set_title(self.dataAxes[selectDim]+" "+self.dataUnits[selectDim]+" = "+str(selectItem))
+        self.ax.set_title(self.dataAxes[selectDim]+" = "+str(selectItem))
 
         # Use a log scale if plotting by isotope.
         #if self.dataAxes[streamDim] == 'iso' :
