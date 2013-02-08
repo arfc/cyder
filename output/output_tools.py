@@ -111,8 +111,8 @@ class Query(object):
         if (queryType in q_types):
             self.q_type = queryType
         else:
-            raise QueryException, "Error: " + queryType +\
-                " is not a recognized Query type at this time."
+            raise QueryException("Error: " + queryType +
+                                 " is not a recognized Query type at this time.")
 
         # Initialize the SQL.
         if 'material' == queryType:
@@ -204,8 +204,8 @@ class Query(object):
             return totRsrc
 
         else:
-            raise QueryException, "Error: " + queryType +\
-                "cannot return all resources received at this time."
+            raise QueryException("Error: " + queryType +
+                                 "cannot return all resources received at this time.")
 
 ###############################################################################
     def collapse_isos_to_elts(self, EltsList=[92]):
@@ -251,8 +251,8 @@ class Query(object):
         """
 
         if not self.is_executed:
-            raise QueryException, "Error: operations on the isotope dimension can " + \
-                "can be performed only after Query execution."
+            raise QueryException("Error: operations on the isotope dimension can " +
+                                 "can be performed only after Query execution.")
 
         try:
             isoDim = self.data_axes.index('iso')
@@ -274,10 +274,10 @@ class Query(object):
         execution.
         """
         if not self.is_executed:
-            raise QueryException, "Error: operations on the 'from' dimension can " + \
-                "can be performed only after Query execution. If you want to " + \
-                "limit the number of total actors, used the appropriate " + \
-                "collapseActorsTo...() function."
+            raise QueryException("Error: operations on the 'from' dimension can " +
+                                 "can be performed only after Query execution. If you want to " +
+                                 "limit the number of total actors, used the appropriate " +
+                                 "collapseActorsTo...() function.")
 
         try:
             fromDim = self.data_axes.index('from')
@@ -300,10 +300,10 @@ class Query(object):
         execution.
         """
         if not self.is_executed:
-            raise QueryException, "Error: operations on the 'to' dimension can " + \
-                "can be performed only after Query execution. If you want to " + \
-                "limit the number of total actors, used the appropriate " + \
-                "collapseActorsTo...() function."
+            raise QueryException("Error: operations on the 'to' dimension can " +
+                                 "can be performed only after Query execution. If you want to " +
+                                 "limit the number of total actors, used the appropriate " +
+                                 "collapseActorsTo...() function.")
 
         try:
             toDim = self.data_axes.index('to')
@@ -327,11 +327,11 @@ class Query(object):
         time. This function can only be called after execution.
         """
         if not self.is_executed:
-            raise QueryException, "Error: operations on the 'from' and 'to'" + \
-                "dimensions can " + \
-                "can be performed only after Query execution. If you want to " + \
-                "limit the number of total actors, used the appropriate " + \
-                "collapseActorsTo...() function."
+            raise QueryException("Error: operations on the 'from' and 'to'" +
+                                 "dimensions can " +
+                                 "can be performed only after Query execution. If you want to " +
+                                 "limit the number of total actors, used the appropriate " +
+                                 "collapseActorsTo...() function.")
         try:
             fromDim = self.data_axes.index('from')
             toDim = self.data_axes.index('to')
@@ -363,8 +363,8 @@ class Query(object):
         """
 
         if not self.is_executed:
-            raise QueryException, "Error: integration over time can only be " + \
-                "performed after Query execution."
+            raise QueryException("Error: integration over time can only be " +
+                                 "performed after Query execution.")
 
         try:
             timeDim = self.data_axes.index('time')
@@ -475,8 +475,8 @@ class Query(object):
         # cases where we want the Query to read from the database again rather than
         # simply create a new Query object.
         if self.is_executed:
-            raise QueryException, "Error: This query has already been executed. " + \
-                "Try reExecute()."
+            raise QueryException("Error: This query has already been executed. " +
+                                 "Try reExecute().")
 
         c = self.conn.cursor()
 
@@ -503,10 +503,10 @@ class Query(object):
                 self.data = zeros(
                     (self.tf - self.t0, numActs, numActs, numIsos))
             except ValueError:
-                raise QueryException, "Error: you've executed a Query whose array " + \
-                    "representation would be " + str(self.tf - self.t0) + " x " + \
-                    str(numActs) + " x " + str(numActs) + " x " + str(numIsos) + \
-                    ". That's too large."
+                raise QueryException("Error: you've executed a Query whose array " +
+                                     "representation would be " + str(self.tf - self.t0) + " x " +
+                                     str(numActs) + " x " + str(numActs) + " x " + str(numIsos) +
+                                     ". That's too large.")
 
             # Perform the SQL query.
             c.execute(str(self.q_stmt))
@@ -560,10 +560,10 @@ class Query(object):
             try:
                 self.data = zeros((self.tf - self.t0, numActs, numActs))
             except ValueError:
-                raise QueryException, "Error: you've executed a Query whose array " + \
-                    "representation would be " + str(self.tf - self.t0) + " x " + \
-                    str(numActs) + " x " + str(numActs) + \
-                    ". That's too large."
+                raise QueryException("Error: you've executed a Query whose array " +
+                                     "representation would be " + str(self.tf - self.t0) + " x " +
+                                     str(numActs) + " x " + str(numActs) +
+                                     ". That's too large.")
 
             # Perform the SQL query.
             c.execute(str(self.q_stmt))
@@ -618,10 +618,10 @@ class Query(object):
             try:
                 self.data = zeros((self.tf - self.t0, numActs, numIsos))
             except ValueError:
-                raise QueryException, "Error: you've executed a Query whose array " + \
-                    "representation would be " + str(self.tf - self.t0) + " x " + \
-                    str(numActs) + " x " + str(numIsos) + \
-                    ". That's too large."
+                raise QueryException("Error: you've executed a Query whose array " +
+                                     "representation would be " + str(self.tf - self.t0) + " x " +
+                                     str(numActs) + " x " + str(numIsos) +
+                                     ". That's too large.")
 
             # Perform the SQL query.
             c.execute(str(self.q_stmt))
@@ -672,13 +672,13 @@ class Query(object):
         """
 
         if not self.is_executed:
-            raise QueryException, "Error: plotting can only be " + \
-                "performed after Query execution."
+            raise QueryException("Error: plotting can only be " +
+                                 "performed after Query execution.")
 
         if selectDim == streamDim:
-            raise QueryException, "Error, streamDim and selectDim values were the " + \
-                "same. To plot only a single stream when streamDim has more " + \
-                "than one element, use a single-item streamList."
+            raise QueryException("Error, streamDim and selectDim values were the " +
+                                 "same. To plot only a single stream when streamDim has more " +
+                                 "than one element, use a single-item streamList.")
 
         # Parse the dimensions.
         try:
@@ -688,16 +688,16 @@ class Query(object):
                 selectDim = self.data_axes.index(selectDim)
 
         except ValueError:
-            raise QueryException, "Warning: Query data no longer have the requested" +\
-                "dimension (and the 'time' dimension, without which it's not" + \
-                "meaningful to create a river plot."
+            raise QueryException("Warning: Query data no longer have the requested" +
+                                 "dimension (and the 'time' dimension, without which it's not" +
+                                 "meaningful to create a river plot.")
 
         # Make sure the we don't have too many data dimensions.
         if len(self.data.shape) > 3:
-            raise QueryException, "Warning: data dimensionality too large. You " + \
-                "can't do a river plot of data that's larger than 3D--two " + \
-                "dimensions that you plot and one dimenion that you choose an " + \
-                "item from."
+            raise QueryException("Warning: data dimensionality too large. You " +
+                                 "can't do a river plot of data that's larger than 3D--two " +
+                                 "dimensions that you plot and one dimenion that you choose an " +
+                                 "item from.")
 
         # If they gave no streamlist, assume they want all possible streams.
         if None == streamList:
@@ -709,21 +709,21 @@ class Query(object):
         # And reduce it if that's what we've been told to do.
         if None != selectDim:
             if None == selectItem:
-                raise QueryException, "If you specify a selectDim, you must specify " + \
-                    "the label of the item you want to select."
+                raise QueryException("If you specify a selectDim, you must specify " +
+                                     "the label of the item you want to select.")
             selectInd = self.data_labels[selectDim].index(selectItem)
             if 1 == selectDim and 2 == streamDim:
                 plotData = plotData[:, selectInd, :]
             elif 2 == selectDim and 1 == streamDim:
                 plotData = plotData[:, :, selectInd]
             else:
-                raise QueryException, "Error: bad function input or the data axes" + \
-                    "have gotten out of order somehow."
+                raise QueryException("Error: bad function input or the data axes" +
+                                     "have gotten out of order somehow.")
 
         # Now we should be down to two dimensions. Check.
         if len(plotData.shape) != 2:
-            raise QueryException, "Error: bad streamDim/selectDim combo. You can " + \
-                "only make a river plot of a 2D data array."
+            raise QueryException("Error: bad streamDim/selectDim combo. You can " +
+                                 "only make a river plot of a 2D data array.")
 
         # Creae the figure and the data we need to do the plotting.
         self.figure = pylab.figure(1)  # the figure
@@ -773,11 +773,12 @@ class Query(object):
         """
 
         if None == self.figure:
-            raise QueryException, "Error: this Query hasn't been asked to plot " + \
-                "anything."
+            raise QueryException("Error: this Query hasn't been asked to plot " +
+                                 "anything.")
 
         if '' == filename:
-            raise QueryException, "Error: please give filename for plot output."
+            raise QueryException(
+                "Error: please give filename for plot output.")
 
         fig = self.figure
         pylab.savefig(filename)
