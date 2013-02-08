@@ -58,8 +58,8 @@ class Query(object):
 
     is_plottable = False
     """
-    True if this Query's data is currently plottable, whatever that will eventually
-    mean.
+    True if this Query's data is currently plottable, whatever that will
+    eventually mean.
     """
 
     t0 = 0
@@ -95,11 +95,11 @@ class Query(object):
 
     def __init__(self, file, queryType, t0=0, tf=1200):
         """
-        Creates the Query object by connecting to the database, checking that the
-        Query type specified is valid, and initializing a partial SQL statment
-        querying the correct quantity over the correct time period. Like the
-        python range() function, the rule for the time bounds is that the lower
-        is in-clusive and the upper, ex-clusive
+        Creates the Query object by connecting to the database, checking that
+        the Query type specified is valid, and initializing a partial SQL
+        statment querying the correct quantity over the correct time period.
+        Like the python range() function, the rule for the time bounds is that
+        the lower is in-clusive and the upper, ex-clusive
         """
 
         # Save the times.
@@ -112,28 +112,39 @@ class Query(object):
             self.q_type = queryType
         else:
             raise QueryException("Error: " + queryType +
-                                 " is not a recognized Query type at this time.")
+                                 " is not a recognized Query type.")
 
         # Initialize the SQL.
         if 'material' == queryType:
-            self.set_q_stmt(sql_stmt("Transactions.Time, Transactions.senderID, " +
-                                     "Transactions.receiverID, IsotopicStates.IsoID, IsotopicStates.value ",
-                                     "Transactions, IsotopicStates", "Transactions.Time >= " + str(t0) + " AND " +
-                                     "Transactions.Time < " + str(tf)))
+            self.set_q_stmt(sql_stmt("Transactions.Time, " +
+                                     "Transactions.senderID, " +
+                                     "Transactions.receiverID, " +
+                                     "IsotopicStates.IsoID, "
+                                     "IsotopicStates.value ",
+                                     "Transactions, IsotopicStates",
+                                     "Transactions.Time >= " + str(t0) +
+                                     " AND " + "Transactions.Time < " +
+                                     str(tf)))
         elif 'resource' == queryType:
             self.set_q_stmt(
                 sql_stmt("Transactions.Time, Transactions.senderID, " +
-                         "Transactions.receiverID, TransactedResources.Quantity",
+                         "Transactions.receiverID, " +
+                         "TransactedResources.Quantity",
                          "Transactions, TransactedResources",
-                         "Transactions.ID == TransactedResources.TransactionID AND "
+                         "Transactions.ID == " +
+                         "TransactedResources.TransactionID AND " +
                          "Transactions.Time >= " + str(t0) + " AND " +
                          "Transactions.Time < " + str(tf)))
         elif 'contaminants' == queryType:
-            self.set_q_stmt(sql_stmt("gen_repo_contaminants.Time, gen_repo_contaminants.CompID, " +
-                                     "gen_repo_contaminants.IsoID, gen_repo_contaminants.MassKG",
+            self.set_q_stmt(sql_stmt("gen_repo_contaminants.Time, " +
+                                     "gen_repo_contaminants.CompID, " +
+                                     "gen_repo_contaminants.IsoID, " +
+                                     "gen_repo_contaminants.MassKG",
                                      "gen_repo_contaminants",
-                                     "gen_repo_contaminants.Time >= " + str(t0) + " AND " +
-                                     "gen_repo_contaminants.Time < " + str(tf)))
+                                     "gen_repo_contaminants.Time >= " +
+                                     str(t0) + " AND " +
+                                     "gen_repo_contaminants.Time < " +
+                                     str(tf)))
 
         self.conn = sqlite3.connect(file)
 
@@ -168,8 +179,8 @@ class Query(object):
 ###############################################################################
     def all_received_by(self, recID):
         """
-        This filters the data to include only the material or resources received
-        by the model with ID = recID
+        This filters the data to include only the material or resources
+        received by the model with ID = recID
         """
         try:
             toDim = self.data_axes.index('to')
@@ -188,9 +199,11 @@ class Query(object):
 
             # Perform the SQL query.
             c = self.conn.cursor()
-            c.execute("SELECT Transactions.Time, TransactedResources.Quantity " +
+            c.execute("SELECT Transactions.Time, " +
+                      "TransactedResources.Quantity " +
                       "FROM Transactions, TransactedResources " +
-                      "WHERE transactions.ID == transactedresources.transactionID AND " +
+                      "WHERE transactions.ID == " +
+                      "transactedresources.transactionID AND " +
                       "transactions.receiverID == ? ", (recID,))
 
             # Load the results into the array.
@@ -205,7 +218,7 @@ class Query(object):
 
         else:
             raise QueryException("Error: " + queryType +
-                                 "cannot return all resources received at this time.")
+                                 "cannot return all resources received.")
 
 ###############################################################################
     def collapse_isos_to_elts(self, EltsList=[92]):
@@ -234,9 +247,9 @@ class Query(object):
             # Only requested isotops or elements are read
             if iso in EltsList or P in EltsList or 'All' in EltsList:
 
-                # The mass of that uranium isotope is added to the total mass of U of the shipment.
-                # The density number (nb of atoms) is converted into tons of
-                # Uranium
+                # The mass of that uranium isotope is added to the total mass
+                # of U of the shipment. The density number (nb of atoms) is
+                # converted into tons of Uranium
                 TotU += L[i + 1] * N / 6.02214e29
 
         return round(TotU, 3)
@@ -245,14 +258,15 @@ class Query(object):
 
     def collapse_isos(self):
         """
-        Collapses the isotope set for this Query from whatever it currently is to
-        a single mass value, eliminating an entire dimension in the array
+        Collapses the isotope set for this Query from whatever it currently is
+        to a single mass value, eliminating an entire dimension in the array
         representation. This function may only be called after execution.
         """
 
         if not self.is_executed:
-            raise QueryException("Error: operations on the isotope dimension can " +
-                                 "can be performed only after Query execution.")
+            raise QueryException("Error: operations on the isotope " +
+                                 "dimension can be performed only " +
+                                 "after Query execution.")
 
         try:
             isoDim = self.data_axes.index('iso')
@@ -274,10 +288,11 @@ class Query(object):
         execution.
         """
         if not self.is_executed:
-            raise QueryException("Error: operations on the 'from' dimension can " +
-                                 "can be performed only after Query execution. If you want to " +
-                                 "limit the number of total actors, used the appropriate " +
-                                 "collapseActorsTo...() function.")
+            raise QueryException("Error: operations on the 'from' dimension " +
+                                 "can be performed only after Query " +
+                                 "execution. If you want to limit the " +
+                                 "number of total actors, use the " +
+                                 "appropriate collapseActorsTo...() function.")
 
         try:
             fromDim = self.data_axes.index('from')
@@ -300,10 +315,11 @@ class Query(object):
         execution.
         """
         if not self.is_executed:
-            raise QueryException("Error: operations on the 'to' dimension can " +
-                                 "can be performed only after Query execution. If you want to " +
-                                 "limit the number of total actors, used the appropriate " +
-                                 "collapseActorsTo...() function.")
+            raise QueryException("Error: operations on the 'to' dimension " +
+                                 "can be performed only after Query " +
+                                 "execution. If you want to limit the " +
+                                 "number of total actors, use the " +
+                                 "appropriate collapseActorsTo...() function.")
 
         try:
             toDim = self.data_axes.index('to')
@@ -320,23 +336,25 @@ class Query(object):
 
     def collapse_senders_and_receivers(self):
         """
-        Performs a signed material flow analysis by subtracting the array summed
-        over 'from' dimension from the array summed over the 'to' dimension. The
-        resulting array contains signed material transfer information suitable
-        for plots where we want to study where material resided at a particular
-        time. This function can only be called after execution.
+        Performs a signed material flow analysis. Subtracts the array summed
+        over 'from' dimension from the array summed over the 'to' dimension.
+        The resulting array contains signed material transfer information
+        suitable for plots where we want to study where material resided at a
+        particular time. This function can only be called after execution.
         """
         if not self.is_executed:
-            raise QueryException("Error: operations on the 'from' and 'to'" +
-                                 "dimensions can " +
-                                 "can be performed only after Query execution. If you want to " +
-                                 "limit the number of total actors, used the appropriate " +
-                                 "collapseActorsTo...() function.")
+            raise QueryException("Error: operations on the 'from' and 'to' " +
+                                 "dimensions can be performed only after " +
+                                 "Query execution. If you want to limit " +
+                                 "the number of total actors, use the " +
+                                 "appropriate collapseActorsTo...() " +
+                                 "function.")
         try:
             fromDim = self.data_axes.index('from')
             toDim = self.data_axes.index('to')
         except ValueError:
-            print "Warning: Query data no longer have both a 'from' and 'to' dimension."
+            print "Warning: Query data no longer have both a 'from' and 'to' \
+            dimension."
             return
 
         self.data = sum(self.data, fromDim) - sum(self.data, toDim)
@@ -377,7 +395,8 @@ class Query(object):
 ###############################################################################
     def get_data(self):
         """
-        Executes the current form of the Query if it has not been executed already
+        Executes the current form of the Query if it has not been executed
+        already
         and returns the numpy array that stores the data.
         """
 
@@ -419,7 +438,8 @@ class Query(object):
         c = self.conn.cursor()
 
         compTypes = {}
-        c.execute("SELECT gen_repo_components.CompID, gen_repo_components.Type FROM gen_repo_components")
+        c.execute("SELECT gen_repo_components.CompID, gen_repo_components.Type\
+                   FROM gen_repo_components")
 
         for row in c:
             if row[0] not in compTypes:
@@ -437,7 +457,8 @@ class Query(object):
 
         compList = []
         c.execute(
-            "SELECT gen_repo_components.CompID FROM gen_repo_components, gen_repo_contaminants ")
+            "SELECT gen_repo_components.CompID FROM gen_repo_components, \
+                    gen_repo_contaminants ")
 
         for row in c:
             if row[0] not in compList:
@@ -466,25 +487,29 @@ class Query(object):
 ###############################################################################
     def execute(self):
         """
-        Executes the current form of the Query, storing the data in a numpy array.
+        Executes the current form of the Query, storing the data in a numpy
+        array.
         If you want to execute AND return the data, you can use get_data().
         """
 
         # If we've already executed, report as such with an Exception. This may
         # be an important warning. Perhaps we should implement a reExecute for
-        # cases where we want the Query to read from the database again rather than
+        # cases where we want the Query to read from the database again rather
+        # than
         # simply create a new Query object.
         if self.is_executed:
-            raise QueryException("Error: This query has already been executed. " +
-                                 "Try reExecute().")
+            raise QueryException("Error: This query has already been \
+                                 executed. Try reExecute().")
 
         c = self.conn.cursor()
 
         if 'material' == self.q_type:
 
-            # Get the array dimensions. We don't know if we've filtered or collapsed
+            # Get the array dimensions. We don't know if we've filtered or
+            # collapsed
             # away some of
-            # the potential result space, so we need to assume the array has the
+            # the potential result space, so we need to assume the array has
+            # the
             # following dimensions (and size).
             # time (tf - t0) X from (numFrom) X to (numTo) X iso (numIsos)
             # or time X from X to
@@ -494,7 +519,8 @@ class Query(object):
             numActs = len(actlist)
 
             # Get the list of isotopes from the hard-coded list in . Count
-            # them up and make a dictionary for mapping them into the iso dimension
+            # them up and make a dictionary for mapping them into the iso
+            # dimension
             # of the Query's data array.
             numIsos = len(self.ind_to_iso)
 
@@ -503,9 +529,11 @@ class Query(object):
                 self.data = zeros(
                     (self.tf - self.t0, numActs, numActs, numIsos))
             except ValueError:
-                raise QueryException("Error: you've executed a Query whose array " +
-                                     "representation would be " + str(self.tf - self.t0) + " x " +
-                                     str(numActs) + " x " + str(numActs) + " x " + str(numIsos) +
+                raise QueryException("Error: you've executed a Query whose \
+                                     array representation would be " +
+                                     str(self.tf - self.t0) + " x " +
+                                     str(numActs) + " x " + str(numActs) +
+                                     " x " + str(numIsos) +
                                      ". That's too large.")
 
             # Perform the SQL query.
@@ -524,7 +552,8 @@ class Query(object):
                 # Get the indexes for the 'from' and 'to' dimensions.
                 d = self.conn.cursor()
                 d.execute(
-                    "SELECT Agents.ID FROM Agents WHERE Agents.ID = ? ", (fFac,))
+                    "SELECT Agents.ID FROM Agents WHERE Agents.ID = ? ",
+                    (fFac,))
 
                 for roe in d:
                     fromInd = actList.index(roe[0])
@@ -545,9 +574,11 @@ class Query(object):
 
         elif 'resource' == self.q_type:
 
-            # Get the array dimensions. We don't know if we've filtered or collapsed
+            # Get the array dimensions. We don't know if we've filtered or
+            # collapsed
             # away some of
-            # the potential result space, so we need to assume the array has the
+            # the potential result space, so we need to assume the array has
+            # the
             # following dimensions (and size).
             # time (tf - t0) X from (numFrom) X to (numTo) X iso (numIsos)
             # or time X from X to
@@ -560,8 +591,9 @@ class Query(object):
             try:
                 self.data = zeros((self.tf - self.t0, numActs, numActs))
             except ValueError:
-                raise QueryException("Error: you've executed a Query whose array " +
-                                     "representation would be " + str(self.tf - self.t0) + " x " +
+                raise QueryException("Error: you've executed a Query whose \
+                                     array representation would be " +
+                                     str(self.tf - self.t0) + " x " +
                                      str(numActs) + " x " + str(numActs) +
                                      ". That's too large.")
 
@@ -580,7 +612,8 @@ class Query(object):
                 # Get the indexes for the 'from' and 'to' dimensions.
                 d = self.conn.cursor()
                 d.execute(
-                    "SELECT Agents.ID FROM Agents WHERE Agents.ID = ? ", (fFac,))
+                    "SELECT Agents.ID FROM Agents WHERE Agents.ID = ? ",
+                    (fFac,))
 
                 for roe in d:
                     fromInd = actList.index(roe[0])
@@ -599,9 +632,11 @@ class Query(object):
             self.data_labels[2] = actList
 
         elif 'contaminants' == self.q_type:
-            # Get the array dimensions. We don't know if we've filtered or collapsed
+            # Get the array dimensions. We don't know if we've filtered or
+            # collapsed
             # away some of
-            # the potential result space, so we need to assume the array has the
+            # the potential result space, so we need to assume the array has
+            # the
             # following dimensions (and size).
             # time (tf - t0) X iso (numIsos) X components
 
@@ -618,8 +653,9 @@ class Query(object):
             try:
                 self.data = zeros((self.tf - self.t0, numActs, numIsos))
             except ValueError:
-                raise QueryException("Error: you've executed a Query whose array " +
-                                     "representation would be " + str(self.tf - self.t0) + " x " +
+                raise QueryException("Error: you've executed a Query whose \
+                                     array representation would be " +
+                                     str(self.tf - self.t0) + " x " +
                                      str(numActs) + " x " + str(numIsos) +
                                      ". That's too large.")
 
@@ -653,8 +689,10 @@ class Query(object):
         (but no more than two) other axes must exist.
 
         Plots the data in the dimension 'streamDim' against time. If a
-        streamList of label names of items in the streamDim axis is given, we plot
-        only those streams instead of all of them. If the data array is currently
+        streamList of label names of items in the streamDim axis is given, we
+        plot
+        only those streams instead of all of them. If the data array is
+        currently
         three dimensional, the user must also specify a dimension, selectDim,
         and a label of an element in that dimension, selectItem, to plot.
 
@@ -676,9 +714,10 @@ class Query(object):
                                  "performed after Query execution.")
 
         if selectDim == streamDim:
-            raise QueryException("Error, streamDim and selectDim values were the " +
-                                 "same. To plot only a single stream when streamDim has more " +
-                                 "than one element, use a single-item streamList.")
+            raise QueryException("Error, streamDim and selectDim values were \
+                                 the same. To plot only a single stream when \
+                                 streamDim has more than one element, use a \
+                                 single-item streamList.")
 
         # Parse the dimensions.
         try:
@@ -688,16 +727,17 @@ class Query(object):
                 selectDim = self.data_axes.index(selectDim)
 
         except ValueError:
-            raise QueryException("Warning: Query data no longer have the requested" +
-                                 "dimension (and the 'time' dimension, without which it's not" +
-                                 "meaningful to create a river plot.")
+            raise QueryException("Warning: Query data no longer have the \
+                                 requested dimension (and the 'time' \
+                                 dimension, without which it's not \
+                                 meaningful to create a river plot.")
 
         # Make sure the we don't have too many data dimensions.
         if len(self.data.shape) > 3:
-            raise QueryException("Warning: data dimensionality too large. You " +
-                                 "can't do a river plot of data that's larger than 3D--two " +
-                                 "dimensions that you plot and one dimenion that you choose an " +
-                                 "item from.")
+            raise QueryException("Warning: data dimensionality too large. You \
+                                 can't do a river plot of data that's larger \
+                                 than 3D--two dimensions that you plot and \
+                                 one dimenion that you choose an item from.")
 
         # If they gave no streamlist, assume they want all possible streams.
         if None == streamList:
@@ -709,21 +749,23 @@ class Query(object):
         # And reduce it if that's what we've been told to do.
         if None != selectDim:
             if None == selectItem:
-                raise QueryException("If you specify a selectDim, you must specify " +
-                                     "the label of the item you want to select.")
+                raise QueryException("If you specify a selectDim, you must \
+                                     specify the label of the item you want \
+                                     to select.")
             selectInd = self.data_labels[selectDim].index(selectItem)
             if 1 == selectDim and 2 == streamDim:
                 plotData = plotData[:, selectInd, :]
             elif 2 == selectDim and 1 == streamDim:
                 plotData = plotData[:, :, selectInd]
             else:
-                raise QueryException("Error: bad function input or the data axes" +
-                                     "have gotten out of order somehow.")
+                raise QueryException("Error: bad function input or the data \
+                                     axes have gotten out of order somehow.")
 
         # Now we should be down to two dimensions. Check.
         if len(plotData.shape) != 2:
-            raise QueryException("Error: bad streamDim/selectDim combo. You can " +
-                                 "only make a river plot of a 2D data array.")
+            raise QueryException("Error: bad streamDim/selectDim combo. \
+                                 You can only make a river plot of a 2D data \
+                                 array.")
 
         # Creae the figure and the data we need to do the plotting.
         self.figure = pylab.figure(1)  # the figure
@@ -773,8 +815,8 @@ class Query(object):
         """
 
         if None == self.figure:
-            raise QueryException("Error: this Query hasn't been asked to plot " +
-                                 "anything.")
+            raise QueryException("Error: this Query hasn't been asked to plot
+                                 anything.")
 
         if '' == filename:
             raise QueryException(
@@ -808,9 +850,10 @@ class sql_stmt(object):
 
     def __init__(self, s, f, w=None, o=None):
         """
-        Initializes the SELECT, FROM, and (optionally) WHERE clauses of the sql_stmt.
-        Do not include the keywords themselves in the clauses, but do separate items
-        by commas and use standard syntax.
+        Initializes the SELECT, FROM, and (optionally) WHERE clauses of the
+        sql_stmt.  Do not include the keywords themselves in the clauses, but
+        do
+        separate items by commas and use standard syntax.
         """
 
         self.sStr = 'SELECT ' + s + ' '
