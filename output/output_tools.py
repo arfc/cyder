@@ -682,6 +682,10 @@ class Query(object):
         self.is_executed = True
 
 ###############################################################################
+    def bar_plot() :
+
+
+###############################################################################
     def river_plot(self, streamDim=None, streamList=None,
                    selectDim=None, selectItem=None):
         """
