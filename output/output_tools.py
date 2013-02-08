@@ -1,5 +1,6 @@
 # query.py
 import sqlite3
+import numpy as np
 from numpy import zeros
 from numpy import cumsum
 from numpy import mean
@@ -751,6 +752,12 @@ class Query(object):
 
 
 ###############################################################################
+    def set_up_figure(self):
+        # Create the figure and the data we need to do the plotting.
+        self.figure = pylab.figure(1)  # the figure
+        self.ax = self.figure.add_subplot(111)  # the axes
+
+###############################################################################
     def bar_plot(self, streamDim=None, streamList=None,
                  selectDim=None, selectItem=None):
         """
@@ -779,7 +786,41 @@ class Query(object):
         time_dim, stream_dim, select_dim, stream_list = \
                 self.check_plottable(streamDim, streamList, selectDim) 
 
-        plot_data = self.prep_data(stream_dim, select_dim, select_item)
+        plot_data = self.prep_data(stream_dim, select_dim, selectItem)
+
+        self.set_up_figure()
+
+        self.ax.set_title(self.data_axes[select_dim] + " = " + str(selectItem))
+
+        # For RANDOM colors:
+        colors = pylab.rand(len(stream_list),len(stream_list))
+
+        # get time dimension labels
+        t = self.data_labels[time_dim]  
+        run_sum = zeros(self.data.shape[time_dim])
+
+        # Turn the list of stream labels into a list of indices.
+        indList = [0] * len(stream_list)
+        for i, s in enumerate(stream_list):
+            indList[i] = self.data_labels[stream_dim].index(s)
+        # Iterate through the streams and add them to the plot.
+        p=[]
+        for ind in indList:
+            for time in t :
+                the_plot = self.ax.bar(time, 
+                          plot_data[time, ind], 
+                          width=1,
+                          bottom=run_sum[time], 
+                          color=colors[ind], alpha=0.9, label=str(ind))
+                run_sum[time] += plot_data[time, ind]
+            p.append(the_plot)
+
+        self.ax.set_ylabel(self.data_axes[stream_dim])
+        #self.ax.set_xticks(indList, t)
+        #self.ax.set_yticks(np.arange(0,max(run_sum)))
+        self.ax.legend( (p,stream_list) )
+
+        return self
 
 ###############################################################################
     def river_plot(self, streamDim=None, streamList=None,
@@ -814,15 +855,14 @@ class Query(object):
 
         plot_data = self.prep_data(stream_dim, select_dim, selectItem)
 
-        # Creae the figure and the data we need to do the plotting.
-        self.figure = pylab.figure(1)  # the figure
-        self.ax = self.figure.add_subplot(111)  # the axes
-        t = self.data_labels[time_dim]  # get time dimension labels
-        runSum = zeros(self.data.shape[time_dim])
-        graphLim = 0
+        self.set_up_figure()
+
+        # get time dimension labels
+        t = self.data_labels[time_dim]  
+
         # colors = get_colours(len(stream_list))
         # For RANDOM colors:
-        # colors = pylab.rand(ilen(stream_list),len(stream_list))
+        colors = pylab.rand(len(stream_list),len(stream_list))
 
         # Turn the list of stream labels into a list of indices.
         indList = [0] * len(stream_list)
@@ -832,7 +872,7 @@ class Query(object):
         # Iterate through the streams and add them to the plot.
         for ind in indList:
             self.ax.fill_between(t, runSum, runSum + plot_data[:, ind],
-                                 facecolor=cm.spectral_r(ind), alpha=0.9,
+                                 facecolor=colors[ind], alpha=0.9,
                                  label=str(ind))
             runSum += plot_data[:, ind]
 
