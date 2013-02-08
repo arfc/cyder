@@ -684,7 +684,7 @@ class Query(object):
         try:
             timeDim = self.data_axes.index('time')
             streamDim = self.data_axes.index(streamDim)
-            if selectDim != None:
+            if selectDim is not None:
                 selectDim = self.data_axes.index(selectDim)
 
         except ValueError:
