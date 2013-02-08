@@ -353,8 +353,8 @@ class Query(object):
             fromDim = self.data_axes.index('from')
             toDim = self.data_axes.index('to')
         except ValueError:
-            print "Warning: Query data no longer have both a 'from' and 'to' \
-            dimension."
+            print "Warning: Query data no longer have both a 'from' and " +
+            "'to' dimension."
             return
 
         self.data = sum(self.data, fromDim) - sum(self.data, toDim)
@@ -438,8 +438,8 @@ class Query(object):
         c = self.conn.cursor()
 
         compTypes = {}
-        c.execute("SELECT gen_repo_components.CompID, gen_repo_components.Type\
-                   FROM gen_repo_components")
+        c.execute("SELECT gen_repo_components.CompID, " +
+                  "gen_repo_components.Type FROM gen_repo_components")
 
         for row in c:
             if row[0] not in compTypes:
@@ -457,8 +457,8 @@ class Query(object):
 
         compList = []
         c.execute(
-            "SELECT gen_repo_components.CompID FROM gen_repo_components, \
-                    gen_repo_contaminants ")
+            "SELECT gen_repo_components.CompID FROM gen_repo_components, " +
+            "gen_repo_contaminants ")
 
         for row in c:
             if row[0] not in compList:
@@ -498,8 +498,8 @@ class Query(object):
         # than
         # simply create a new Query object.
         if self.is_executed:
-            raise QueryException("Error: This query has already been \
-                                 executed. Try reExecute().")
+            raise QueryException("Error: This query has already been " +
+                                 "executed. Try reExecute().")
 
         c = self.conn.cursor()
 
@@ -529,8 +529,8 @@ class Query(object):
                 self.data = zeros(
                     (self.tf - self.t0, numActs, numActs, numIsos))
             except ValueError:
-                raise QueryException("Error: you've executed a Query whose \
-                                     array representation would be " +
+                raise QueryException("Error: you've executed a Query whose " +
+                                     "array representation would be " +
                                      str(self.tf - self.t0) + " x " +
                                      str(numActs) + " x " + str(numActs) +
                                      " x " + str(numIsos) +
@@ -591,8 +591,8 @@ class Query(object):
             try:
                 self.data = zeros((self.tf - self.t0, numActs, numActs))
             except ValueError:
-                raise QueryException("Error: you've executed a Query whose \
-                                     array representation would be " +
+                raise QueryException("Error: you've executed a Query whose " +
+                                     "array representation would be " +
                                      str(self.tf - self.t0) + " x " +
                                      str(numActs) + " x " + str(numActs) +
                                      ". That's too large.")
@@ -653,8 +653,8 @@ class Query(object):
             try:
                 self.data = zeros((self.tf - self.t0, numActs, numIsos))
             except ValueError:
-                raise QueryException("Error: you've executed a Query whose \
-                                     array representation would be " +
+                raise QueryException("Error: you've executed a Query whose " +
+                                     "array representation would be " +
                                      str(self.tf - self.t0) + " x " +
                                      str(numActs) + " x " + str(numIsos) +
                                      ". That's too large.")
@@ -690,10 +690,10 @@ class Query(object):
                                  "performed after Query execution.")
 
         if selectDim == streamDim:
-            raise QueryException("Error, streamDim and selectDim values were \
-                                 the same. To plot only a single stream when \
-                                 streamDim has more than one element, use a \
-                                 single-item streamList.")
+            raise QueryException("Error, streamDim and selectDim values " +
+                                 "were the same. To plot only a single " +
+                                 "stream when streamDim has more than one " +
+                                 "element, use a single-item streamList.")
 
         # Parse the dimensions.
         try:
@@ -703,17 +703,18 @@ class Query(object):
                 selectDim = self.data_axes.index(selectDim)
 
         except ValueError:
-            raise QueryException("Warning: Query data no longer have the \
-                                 requested dimension (and the 'time' \
-                                 dimension, without which it's not \
-                                 meaningful to create a river plot.")
+            raise QueryException("Warning: Query data no longer have the " +
+                                 "requested dimension (and the 'time' " +
+                                 "dimension, without which it's not " +
+                                 "meaningful to create a river plot.")
 
         # Make sure the we don't have too many data dimensions.
         if len(self.data.shape) > 3:
-            raise QueryException("Warning: data dimensionality too large. You \
-                                 can't do a river plot of data that's larger \
-                                 than 3D--two dimensions that you plot and \
-                                 one dimenion that you choose an item from.")
+            raise QueryException("Warning: data dimensionality too large. " +
+                                 "You can't do a river plot of data that's " +
+                                 "larger than 3D--two dimensions that you " +
+                                 "plot and one dimenion that you choose an " +
+                                 "item from.")
 
         # If they gave no streamlist, assume they want all possible streams.
         if None == streamList:
@@ -721,19 +722,18 @@ class Query(object):
 
         return timeDim, streamDim, selectDim
 
-
 ###############################################################################
     def bar_plot(self, streamDim=None, streamList=None,
                  selectDim=None, selectItem=None):
         """
-        Creates a stacked bar histogram plot of the data in Query.  
+        Creates a stacked bar histogram plot of the data in Query.
         'time' and at least one (but no more than two) other axes must exist.
 
         Plots the data in the dimension 'streamDim' against time. If a
         streamList of label names of items in the streamDim axis is given, we
         plot only those streams instead of all of them. If the data array is
-        currently three dimensional, the user must also specify a dimension, 
-        selectDim, and a label of an element in that dimension, selectItem, to 
+        currently three dimensional, the user must also specify a dimension,
+        selectDim, and a label of an element in that dimension, selectItem, to
         plot.
 
         3D example:
@@ -748,10 +748,9 @@ class Query(object):
 
         q.bar_plot(streamDim = 'iso', selectDim = 'thru', selectItem = 5)
         """
-        time_dim, stream_dim, select_dim = self.check_plottable(streamDim, 
-                streamList, selectItem)
-
-
+        time_dim, stream_dim, select_dim = self.check_plottable(streamDim,
+                                                                streamList,
+                                                                selectItem)
 
 ###############################################################################
     def river_plot(self, streamDim=None, streamList=None,
@@ -781,8 +780,9 @@ class Query(object):
         q.river_plot(streamDim = 'iso', selectDim = 'thru', selectItem = 5)
         """
 
-        time_dim, stream_dim, select_dim = self.check_plottable(streamDim, 
-                streamList, selectItem)
+        time_dim, stream_dim, select_dim = self.check_plottable(streamDim,
+                                                                streamList,
+                                                                selectItem)
 
         # Let's create a new view of the data to plot...
         plotData = self.data
@@ -790,23 +790,24 @@ class Query(object):
         # And reduce it if that's what we've been told to do.
         if None != selectDim:
             if None == selectItem:
-                raise QueryException("If you specify a selectDim, you must \
-                                     specify the label of the item you want \
-                                     to select.")
+                raise QueryException("If you specify a selectDim, you must " +
+                                     "specify the label of the item you " +
+                                     "want to select.")
             selectInd = self.data_labels[selectDim].index(selectItem)
             if 1 == selectDim and 2 == streamDim:
                 plotData = plotData[:, selectInd, :]
             elif 2 == selectDim and 1 == streamDim:
                 plotData = plotData[:, :, selectInd]
             else:
-                raise QueryException("Error: bad function input or the data \
-                                     axes have gotten out of order somehow.")
+                raise QueryException("Error: bad function input or the " +
+                                     "data axes have gotten out of order " +
+                                     "somehow.")
 
         # Now we should be down to two dimensions. Check.
         if len(plotData.shape) != 2:
-            raise QueryException("Error: bad streamDim/selectDim combo. \
-                                 You can only make a river plot of a 2D data \
-                                 array.")
+            raise QueryException("Error: bad streamDim/selectDim combo. "
+                                 "You can only make a river plot of a 2D " +
+                                 "data array.")
 
         # Creae the figure and the data we need to do the plotting.
         self.figure = pylab.figure(1)  # the figure
@@ -856,8 +857,8 @@ class Query(object):
         """
 
         if None == self.figure:
-            raise QueryException("Error: this Query hasn't been asked to plot \
-                                 anything.")
+            raise QueryException("Error: this Query hasn't been asked to " +
+                                 "plot anything.")
 
         if '' == filename:
             raise QueryException(
