@@ -23,8 +23,10 @@ protected:
   std::string bname_, btype_;
   std::string ffname_, fftype_;
   TestMarket* incommod_market;
-  mat_rsrc_ptr hot_mat;
-  mat_rsrc_ptr cold_mat;
+  CompMapPtr hot_comp_;
+  CompMapPtr cold_comp_;
+  mat_rsrc_ptr hot_mat_;
+  mat_rsrc_ptr cold_mat_;
   
   virtual void SetUp();
   virtual void TearDown();

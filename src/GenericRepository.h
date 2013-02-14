@@ -391,6 +391,12 @@ protected:
       */
     void mapVars(std::string name, std::string type, void* ref);
 
+    bool mat_acceptable(mat_rsrc_ptr mat);
+    void set_thermal_limit_temp(double temp);
+    void set_thermal_limit_radius(double radius);
+    double thermal_limit_temp();
+    
+
     /**
        This creates and fills  table that will hold the parameters that uniquely
        define all generic repository models in the simulation.

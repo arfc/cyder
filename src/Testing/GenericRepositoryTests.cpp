@@ -169,6 +169,8 @@ TEST_F(GenericRepositoryTest, accept_cold_mat){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(GenericRepositoryTest, set_thermal_limit){
+  double radius = 3;
+  double temp = 100; // kelvin?
   EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(radius));
   EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(temp));
   EXPECT_FLOAT_EQ(radius, src_facility->thermal_limit_radius());
