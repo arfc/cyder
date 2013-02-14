@@ -238,7 +238,7 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
 
-  // set the degradation rate
+  // set the porosity
   ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
   EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
   // fill it with some material
