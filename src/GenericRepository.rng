@@ -97,8 +97,10 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="transit_time"/>
       <choice>
         <element name="EM">
+          <text/>
         </element>
         <element name="PFM">
+          <text/>
         </element>
         <element name="EPM">
           <ref name="eta_ratio"/>
@@ -218,6 +220,20 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
+  <define name="sol_limited">
+    <element name="sol_limited">
+      <data type="boolean">
+      </data>
+    </element>
+  </define>
+
+  <define name="kd_limited">
+    <element name="kd_limited">
+      <data type="boolean">
+      </data>
+    </element>
+  </define>
+
   <define name="transit_time">
     <element name="transit_time">
       <data type="double">
@@ -231,24 +247,34 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="material_data">
       <choice>
         <element name="clay">
+          <text/>
         </element>
         <element name="granite">
+          <text/>
         </element>
         <element name="salt">
+          <text/>
         </element>
         <element name="deep_borehole">
+          <text/>
         </element>
         <element name="steel">
+          <text/>
         </element>
         <element name="copper">
+          <text/>
         </element>
         <element name="bentonite">
+          <text/>
         </element>
         <element name="borosilicate_glass">
+          <text/>
         </element>
         <element name="oxide_fuel_form">
+          <text/>
         </element>
         <element name="metal_fuel_form">
+          <text/>
         </element>
       </choice>
     </element>

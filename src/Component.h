@@ -104,6 +104,16 @@ public:
   void print(); 
 
   /**
+     Defines the gen_repo_contaminant_table_
+    */
+  void defineContaminantTable();
+
+  /**
+     Updates the gen_repo_contaminant_table_ for this component.
+    */
+  void updateContaminantTable(int the_time);
+
+  /**
      Absorbs the contents of the given Material into this Component.
      
      @param mat_to_add the Material to be absorbed
@@ -216,6 +226,23 @@ public:
   NuclideModelPtr copyNuclideModel(NuclideModelPtr src);
 
   /**
+     Returns the nuclide models of each daughter component.
+     */
+  const std::vector<NuclideModelPtr> nuclide_daughters();
+
+  /**
+     This table will hold information about the component templates 
+     Each component template will have an EBS, a nuclide model ID, 
+     a thermal model ID, 
+   */
+  static void defineComponentsTable();
+
+  /**
+     Adds a component to the components table.
+   */
+  static void addComponentToTable(ComponentPtr comp);
+
+  /**
      get the ID
      
      @return ID_
@@ -278,7 +305,7 @@ public:
      
      @return wastes
    */
-  const std::vector<mat_rsrc_ptr> wastes();
+  const std::deque<mat_rsrc_ptr> wastes();
 
   /**
      get the maximum Temperature this object allows at its boundaries 
@@ -442,11 +469,6 @@ protected:
   std::vector<ComponentPtr> daughters_;
 
   /**
-     The contained contaminants, a list of material objects..
-   */
-  std::vector<mat_rsrc_ptr> wastes_;
-
-  /**
      The name of this component, a string
    */
   std::string name_;
@@ -502,6 +524,15 @@ protected:
    */
   ConcMap concentrations_;
 
+  /**
+     The table holding the contaminant history of the component
+     */
+  static table_ptr gr_contaminant_table_;
+
+  /**
+     This table will hold the parameters that uniquely describe each component in the simulation. 
+    */
+  static table_ptr gr_components_table_;
 
 };
 

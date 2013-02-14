@@ -59,50 +59,55 @@
           <innerradius>0</innerradius>
           <outerradius>1</outerradius>
           <componenttype>WF</componenttype>
-          <material_data>clay</material_data>
+          <material_data>
+            <clay/>
+          </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <MixedCellNuclide>
+            <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-              <porosity>0.00001</porosity>
-            </MixedCellNuclide>
+              <degradation>0.5</degradation>
+            </DegRateNuclide>
           </nuclidemodel>
+          <allowedcommod>waste</allowedcommod>
         </component>
         <component>
           <name>WP</name>
           <innerradius>1</innerradius>
           <outerradius>2</outerradius>
           <componenttype>WP</componenttype>
-          <material_data>clay</material_data>
+          <material_data>
+            <clay/>
+          </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <MixedCellNuclide>
+            <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-              <porosity>0.00001</porosity>
-            </MixedCellNuclide>
+              <degradation>0.5</degradation>
+            </DegRateNuclide>
           </nuclidemodel>
+          <allowedwf>WF</allowedwf>
         </component>
         <component>
           <name>BUFFER</name>
           <innerradius>2</innerradius>
           <outerradius>3</outerradius>
           <componenttype>BUFFER</componenttype>
-          <material_data>clay</material_data>
+          <material_data>
+            <clay/>
+          </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <MixedCellNuclide>
+            <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-              <porosity>0.00001</porosity>
-            </MixedCellNuclide>
+              <degradation>0.5</degradation>
+            </DegRateNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -110,16 +115,17 @@
           <innerradius>3</innerradius>
           <outerradius>100</outerradius>
           <componenttype>FF</componenttype>
-          <material_data>clay</material_data>
+          <material_data>
+            <clay/>
+          </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <MixedCellNuclide>
+            <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-              <porosity>0.00001</porosity>
-            </MixedCellNuclide>
+              <degradation>0.5</degradation>
+            </DegRateNuclide>
           </nuclidemodel>
         </component>
       </GenericRepository>

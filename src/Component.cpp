@@ -40,6 +40,9 @@ string Component::nuclide_type_names_[] = {
   "StubNuclide", 
 };
 
+table_ptr Component::gr_components_table_ = table_ptr(new Table("gen_repo_components"));
+table_ptr Component::gr_contaminant_table_ = table_ptr(new Table("gen_repo_contaminants"));
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component() :
   name_(""),
@@ -59,7 +62,7 @@ Component::Component() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component::~Component(){ // @TODO is there anything to delete? Make this virtual? 
+Component::~Component(){ // @TODO is there anything to delete? Make This virtual? 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -67,13 +70,13 @@ void Component::initModuleMembers(QueryEngine* qe){
 
   string name = qe->getElementContent("name");
   ComponentType type = componentEnum(qe->getElementContent("componenttype"));
-  string mat = qe->getElementContent("material_data");
+  string mat = qe->queryElement("material_data")->getElementName();
   Radius inner_radius = lexical_cast<double>(qe->getElementContent("innerradius"));
   Radius outer_radius = lexical_cast<double>(qe->getElementContent("outerradius"));
 
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
 
-  this->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
+  shared_from_this()->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -102,7 +105,7 @@ void Component::init(string name, ComponentType type, string mat,
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
-
+  //addComponentToTable(shared_from_this());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -144,22 +147,77 @@ void Component::copy(const ComponentPtr& src){
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
+  //addComponentToTable(shared_from_this());
 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void Component::print(){
-  LOG(LEV_DEBUG2,"GRComp") << "Component: " << this->name();
+  std::deque<mat_rsrc_ptr> waste_list=wastes();
+  LOG(LEV_DEBUG2,"GRComp") << "Component: " << shared_from_this()->name();
   LOG(LEV_DEBUG2,"GRComp") << "Contains Materials:";
-  for(int i=0; i<this->wastes().size() ; i++){
-    LOG(LEV_DEBUG2,"GRComp") << wastes_[i];
+  for(int i=0; i< waste_list.size() ; i++){
+    LOG(LEV_DEBUG2,"GRComp") << waste_list[i];
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::defineContaminantTable(){
+  std::vector<column> columns;
+  columns.push_back(std::make_pair( "CompID", "INTEGER"));
+  columns.push_back(std::make_pair( "Time", "INTEGER"));
+  columns.push_back(std::make_pair( "IsoID", "INTEGER"));
+  columns.push_back(std::make_pair( "MassKG", "REAL"));
+  columns.push_back(std::make_pair( "AvailConc", "REAL"));
+
+  primary_key pk;
+  pk.push_back("CompID");
+  pk.push_back("Time");
+  pk.push_back("IsoID");
+  gr_contaminant_table_->defineTable(columns,pk);
+
+  // add CompID in the GenRepoComponentsTable as a foriegn key
+  foreign_key_ref *fkref;
+  foreign_key *fk;
+  key mykey, theirkey;
+  theirkey.push_back("CompID");
+  fkref= new foreign_key_ref("GenRepoComponentsTable",theirkey);
+  mykey.push_back("CompID");
+  fk= new foreign_key(mykey, (*fkref));
+  gr_contaminant_table_->addForeignKey( (*fk) );
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::updateContaminantTable(int the_time){
+  if(!gr_contaminant_table_->defined()){
+    defineContaminantTable();
+  }
+  // get the vec_hist
+  std::pair<IsoVector, double> vec_pair = nuclide_model()->vec_hist(the_time);
+  CompMapPtr comp = vec_pair.first.comp();
+  double mass = vec_pair.second;
+  // iterate over the vec_hist IsoVector
+  std::map<int, double>::iterator entry;
+
+  row a_row;
+  a_row.push_back(std::make_pair( "CompID", ID()));
+  a_row.push_back(std::make_pair( "Time", the_time));
+  a_row.push_back(std::make_pair( "IsoID", 92235));
+  a_row.push_back(std::make_pair( "MassKG", 0));
+  a_row.push_back(std::make_pair( "AvailConc", 0));
+  for( entry=comp->begin(); entry!=comp->end(); ++entry ){
+    a_row[2] = std::make_pair( "IsoID", (*entry).first);
+    a_row[3] = std::make_pair( "MassKG", (*entry).second*mass);
+    a_row[4] = std::make_pair( "AvailConc", nuclide_model()->conc_hist(the_time, (*entry).first));
+
+    gr_contaminant_table_->addRow(a_row);
   }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::absorb(mat_rsrc_ptr mat_to_add){
   try{
-    nuclide_model_->absorb(mat_to_add);
+    nuclide_model()->absorb(mat_to_add);
   } catch ( exception& e ) {
     LOG(LEV_ERROR, "GRComp") << "Error occured in component absorb function." << e.what();
   }
@@ -167,30 +225,31 @@ void Component::absorb(mat_rsrc_ptr mat_to_add){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::extract(CompMapPtr comp_to_rem, double kg_to_rem){
   try{
-    nuclide_model_->extract(comp_to_rem, kg_to_rem);
+    nuclide_model()->extract(comp_to_rem, kg_to_rem);
   } catch ( exception& e ) {
     LOG(LEV_ERROR, "GRComp") << "Error occured in component extract function." << e.what();
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::transportHeat(int time){
-  if ( thermal_model_ ) {
+  if ( !thermal_model_ ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no thermal_model_ loaded before Component::transportHeat." ;
   } else {
     thermal_model_->transportHeat(time);
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::transportNuclides(int time){
-  if ( nuclide_model_ ) {
+void Component::transportNuclides(int the_time){
+  if ( !nuclide_model() ) {
     LOG(LEV_ERROR, "GRComp") << "Error, no nuclide_model_ loaded before Component::transportNuclides." ;
   } else { 
-    nuclide_model_->transportNuclides(time);
+    nuclide_model()->update_inner_bc(the_time, nuclide_daughters());
+    nuclide_model()->transportNuclides(the_time);
   }
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
-  to_load->setParent(ComponentPtr(this));
+  to_load->setParent(ComponentPtr(shared_from_this()));
   daughters_.push_back(to_load);
   return shared_from_this();
 }
@@ -370,6 +429,62 @@ NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+const std::vector<NuclideModelPtr> Component::nuclide_daughters(){
+  std::vector<NuclideModelPtr> to_ret;
+  std::vector<ComponentPtr>::iterator daughter;
+  for( daughter = daughters_.begin(); daughter!=daughters_.end(); ++daughter){
+    to_ret.push_back((*daughter)->nuclide_model());
+  }
+  return to_ret;
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::defineComponentsTable(){
+  // declare the table columns
+  std::vector<column> columns;
+  columns.push_back(std::make_pair("compID", "INTEGER"));
+  columns.push_back(std::make_pair("parentID", "INTEGER")); 
+  columns.push_back(std::make_pair("compType", "INTEGER"));
+  columns.push_back(std::make_pair("name", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("material_data", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("nuclidemodel", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("thermalmodel", "VARCHAR(128)"));
+  columns.push_back(std::make_pair("innerradius", "REAL"));
+  columns.push_back(std::make_pair("outerradius", "REAL"));
+  columns.push_back(std::make_pair("x", "REAL"));
+  columns.push_back(std::make_pair("y", "REAL"));
+  columns.push_back(std::make_pair("z", "REAL"));
+
+  // declare the table's primary key
+  primary_key pk;
+  pk.push_back("compID");
+  gr_components_table_->defineTable(columns,pk);
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Component::addComponentToTable(ComponentPtr comp){
+  if( !gr_components_table_->defined() ){
+    defineComponentsTable();
+  }
+  // add a row
+  row a_row;
+  a_row.push_back(std::make_pair("compID", comp->ID()));
+  a_row.push_back(std::make_pair("parentID", 0)); // @TODO update with parent in setparent
+  a_row.push_back(std::make_pair("compType", int(comp->type())));
+  a_row.push_back(std::make_pair("name", comp->name()));
+  a_row.push_back(std::make_pair("material_data", comp->mat_table()->mat()));
+  a_row.push_back(std::make_pair("nuclidemodel", comp->nuclide_model()->name()));
+  a_row.push_back(std::make_pair("thermalmodel", comp->thermal_model()->name()));
+  a_row.push_back(std::make_pair("innerradius", comp->inner_radius()));
+  a_row.push_back(std::make_pair("outerradius", comp->outer_radius()));
+  a_row.push_back(std::make_pair("x", comp->x()));
+  a_row.push_back(std::make_pair("y", comp->y()));
+  a_row.push_back(std::make_pair("z", comp->z()));
+
+  gr_components_table_->addRow(a_row);
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const int Component::ID(){return ID_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -395,7 +510,7 @@ const std::vector<ComponentPtr> Component::daughters(){return daughters_;}
 ComponentPtr Component::parent(){return parent_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const vector<mat_rsrc_ptr> Component::wastes(){return wastes_;}
+const deque<mat_rsrc_ptr> Component::wastes(){return nuclide_model()->wastes();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Temp Component::temp_lim(){return temp_lim_;}

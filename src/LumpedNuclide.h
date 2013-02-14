@@ -119,8 +119,10 @@ public:
      
      @param comp_to_rem the composition to decrement against this LumpedNuclide
      @param comp_to_rem the mass in kg to decrement against this LumpedNuclide
+
+     @return the material extracted
    */
-  virtual void extract(CompMapPtr comp_to_rem, double kg_to_rem);
+  virtual mat_rsrc_ptr extract(CompMapPtr comp_to_rem, double kg_to_rem);
 
   /**
      Transports nuclides from the inner to the outer boundary 
@@ -249,6 +251,15 @@ public:
   IsoConcMap C_PFM(IsoConcMap C_0, int the_time);
 
   /** 
+     Determines what IsoVector to remove from the daughter nuclide models
+
+     @param time the timestep at which the nuclides should be transported
+     @param daughter nuclide_model of an internal component. there may be many.
+     
+    */
+  void update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters); 
+
+  /** 
      Updates the contained vector
 
      @param the_time the time at which to update the vector
@@ -294,6 +305,9 @@ protected:
 
   /// the time at which the conc hist was last updated
   int last_updated_;
+
+  /// the current conc map at the inner boundary
+  IsoConcMap C_0_;
 
 };
 

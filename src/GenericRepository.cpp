@@ -52,29 +52,29 @@
 
 using boost::lexical_cast;
 
-table_ptr GenericRepository::gr_params_table = new Table(
-    "GenericRepositoryParams");
+table_ptr GenericRepository::gr_params_table_ = table_ptr(new Table( "GenericRepositoryParams"));
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GenericRepository::GenericRepository() {
   // initialize things that don't depend on the input
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
-  waste_packages_ = std::deque< ComponentPtr >();
-  waste_forms_ = std::deque< ComponentPtr >();
+  commod_wf_map_ = std::map< std::string, ComponentPtr >();
+  wf_wp_map_ = std::map< std::string, ComponentPtr >();
   far_field_ = ComponentPtr(new Component());
+  buffer_template_ =  ComponentPtr(new Component());
 
   is_full_ = false;
-  mapVars("x", "FLOAT", &x_);
-  mapVars("y", "FLOAT", &y_);
-  mapVars("z", "FLOAT", &z_);
-  mapVars("dx", "FLOAT", &dx_);
-  mapVars("dy", "FLOAT", &dy_);
-  mapVars("dz", "FLOAT", &dz_);
-  mapVars("advective_velocity", "FLOAT", &adv_vel_);
-  mapVars("capacity", "FLOAT", &capacity_);
-  mapVars("inventorysize", "FLOAT", &inventory_size_);
-  mapVars("lifetime", "FLOAT", &lifetime_);
+  mapVars("x", "REAL", &x_);
+  mapVars("y", "REAL", &y_);
+  mapVars("z", "REAL", &z_);
+  mapVars("dx", "REAL", &dx_);
+  mapVars("dy", "REAL", &dy_);
+  mapVars("dz", "REAL", &dz_);
+  mapVars("advective_velocity", "REAL", &adv_vel_);
+  mapVars("capacity", "REAL", &capacity_);
+  mapVars("inventorysize", "REAL", &inventory_size_);
+  mapVars("lifetime", "INTEGER", &lifetime_);
   mapVars("startOperYear", "INTEGER", &start_op_yr_);
   mapVars("startOperMonth", "INTEGER", &start_op_mo_);
 }
@@ -85,7 +85,7 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
   for (item = member_types_.begin(); item != member_types_.end(); item++) {
     if (item->second =="INTEGER"){
       *(static_cast<int*>(member_refs_[item->first])) = lexical_cast<int>(qe->getElementContent(item->first.c_str()));
-    } else if (item->second == "FLOAT") {
+    } else if (item->second == "REAL") {
       *(static_cast<double*>(member_refs_[item->first])) = lexical_cast<double>(qe->getElementContent(item->first.c_str()));
     } else {
       std::string err = "The ";
@@ -113,7 +113,6 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
     initComponent(component_input);
   }
 }
-
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
@@ -144,7 +143,7 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
       n_sub_components = qe->nElementsMatchingQuery("allowedcommod");
       for (int i=0; i<n_sub_components; i++) {
         allowed_commod_name = qe->getElementContent("allowedcommod",i);
-        commod_wf_map_.insert(std::make_pair(allowed_commod_name, toRet));
+        commod_wf_map_[allowed_commod_name] = toRet;
       }
       wf_templates_.push_back(toRet);
       break;
@@ -167,6 +166,7 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
     default:
       throw CycException("Unknown ComponentType enum value encountered."); }
 
+
   return toRet;
 }
 
@@ -185,6 +185,7 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   adv_vel_ = src->adv_vel_;
   capacity_ = src->capacity_;
   inventory_size_ = src->inventory_size_;
+  inventory_size_ = src->lifetime_;
   start_op_yr_ = src->start_op_yr_;
   start_op_mo_ = src->start_op_mo_;
   in_commods_ = src->in_commods_;
@@ -202,9 +203,9 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   // initialize empty structures instead
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
-  waste_packages_ = std::deque< ComponentPtr >();
-  waste_forms_ = std::deque< ComponentPtr >();
   is_full_ = false;
+
+  addRowToParamsTable();
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -280,7 +281,6 @@ void GenericRepository::handleTick(int time)
   // if this is the first timestep, register the far field
   if (time==0){
     setPlacement(far_field_);
-    addComponentToTable(far_field_);
   }
 
   // make requests
@@ -299,6 +299,7 @@ void GenericRepository::handleTock(int time) {
   
   // calculate the nuclide transport
   transportNuclides(time);
+
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -344,7 +345,7 @@ void GenericRepository::makeRequests(int time){
       trans.setPrice(commod_price);
       trans.setResource(request_res); 
   
-      msg_ptr request = new Message(this, recipient, trans); 
+      msg_ptr request = msg_ptr(new Message(this, recipient, trans)); 
       request->sendOn();
       LOG(LEV_INFO3, "GenRepoFac") << " requests " << requestAmt << " kg of " << in_commod << ".";
     }
@@ -408,18 +409,19 @@ void GenericRepository::emplaceWaste(){
   if (!stocks_.empty()) {
     // for each waste stream in the stocks
     for (std::deque< WasteStream >::const_iterator iter = stocks_.begin(); iter != 
-        stocks_.end(); iter ++) {
+        stocks_.end(); ++iter) {
       // -- put the waste stream in the waste form
       // -- associate the waste stream with the waste form
       conditionWaste((*iter));
     }
+    // for each conditioned waste form
     for (std::deque< ComponentPtr >::const_iterator iter = 
-        current_waste_forms_.begin(); iter != current_waste_forms_.end(); iter 
-        ++){
+        current_waste_forms_.begin(); iter != current_waste_forms_.end(); ++iter){
       // -- put the waste form in a waste package
       // -- associate the waste form with the waste package
       packageWaste((*iter));
     }
+    // add each current_waste_form to waste_forms_
     int nwf = current_waste_forms_.size();
     for (int i=0; i < nwf; i++){
       waste_forms_.push_back(current_waste_forms_.front());
@@ -454,13 +456,14 @@ void GenericRepository::emplaceWaste(){
           }
         }
         // take the waste package out of the current packagess
-        waste_packages_.push_back(current_waste_packages_.front());
+        waste_packages_.push_back(iter);
+        current_waste_packages_.pop_front();
+      } else {
+        // if the waste package was either too hot or not full
+        // push it back on the stack
+        current_waste_packages_.push_back(iter);
         current_waste_packages_.pop_front();
       }
-      // if the waste package was either too hot or not full
-      // push it back on the stack
-      current_waste_packages_.push_back(current_waste_packages_.front());
-      current_waste_packages_.pop_front();
       inventory_.push_back(stocks_.front());
       stocks_.pop_front();
       // once the waste is emplaced, is there anything else to do?
@@ -471,13 +474,16 @@ void GenericRepository::emplaceWaste(){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::conditionWaste(WasteStream waste_stream){
   // figure out what waste form to put the waste stream in
+  std::map<std::string, ComponentPtr>::iterator found_pair;
+  found_pair= commod_wf_map_.find(waste_stream.second);
   ComponentPtr chosen_wf_template;
-  chosen_wf_template = commod_wf_map_[waste_stream.second];
-  if (chosen_wf_template){
+  if (found_pair == commod_wf_map_.end()){
     std::string err_msg = "The commodity '";
     err_msg += waste_stream.second;
     err_msg +="' does not have a matching WF in the GenericRepository.";
     throw CycException(err_msg);
+  } else {
+    chosen_wf_template = commod_wf_map_[waste_stream.second];
   }
   // if there doesn't already exist a partially full one
   // @todo check for partially full wf's before creating new one (katyhuff)
@@ -538,14 +544,12 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   emplaced_waste_packages_.push_back(waste_package);
   // set the location of the waste package 
   setPlacement(waste_package);
-  addComponentToTable(waste_package);
   // set the location of the waste forms within the waste package
   std::vector<ComponentPtr> daughters = waste_package->daughters();
   for (std::vector<ComponentPtr>::iterator iter = daughters.begin();  
       iter != daughters.end(); 
       iter ++){
     setPlacement(*iter);
-    addComponentToTable((*iter));
   }
   return buffers_.front();
 }
@@ -587,6 +591,7 @@ ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
   // figure out what buffer to put the waste package in
   point_t point = {x,y,z};
   comp->setPlacement(point);
+  comp->addComponentToTable(comp);
   return comp; 
 }
 
@@ -622,19 +627,23 @@ void GenericRepository::transportNuclides(int time){
       iter != waste_forms_.end();
       iter++){
     (*iter)->transportNuclides(time);
+    (*iter)->updateContaminantTable(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       iter++){
     (*iter)->transportNuclides(time);
+    (*iter)->updateContaminantTable(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       iter++){
     (*iter)->transportNuclides(time);
+    (*iter)->updateContaminantTable(time);
   }
   if (NULL != far_field_){
     far_field_->transportNuclides(time);
+    (far_field_)->updateContaminantTable(time);
   }
 }
 
@@ -644,28 +653,40 @@ void GenericRepository::mapVars(std::string name, std::string type, void* ref) {
   member_refs_.insert(std::make_pair( name , ref ));
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::makeParamsTable(){
+void GenericRepository::defineParamsTable(){
   // declare the table columns
   std::vector<column> columns;
-  columns.push_back(std::make_pair("facID", "INTEGER"));
+  std::string id_name("facID");
+  columns.push_back(std::make_pair(id_name, "INTEGER"));
   std::map<std::string, std::string>::iterator item;
   for (item = member_types_.begin(); item != member_types_.end(); item++){
     columns.push_back(std::make_pair(item->first, item->second));
   }
   // declare the table's primary key
   primary_key pk;
-  pk.push_back("facID");
-  gr_params_table->defineTable(columns,pk);
+  pk.push_back(id_name);
+  gr_params_table_->defineTable(columns,pk);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::defineComponentsTable(){
-
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::addComponentToTable(ComponentPtr comp){
-
+void GenericRepository::addRowToParamsTable(){
+  if( !gr_params_table_->defined() ){
+    defineParamsTable();
+  }
+  // add a row
+  row a_row;
+  entry i("facID", data(ID()));
+  a_row.push_back(i);
+  std::map<std::string, std::string>::iterator item;
+  for (item = member_types_.begin(); item != member_types_.end(); item++){
+    if (item->second =="INTEGER"){
+      i = make_pair(item->first, *(static_cast<int*>(member_refs_[item->first]))) ;
+    } else if (item->second == "REAL") {
+      i = make_pair(item->first, *(static_cast<double*>(member_refs_[item->first]))) ;
+    }
+    a_row.push_back(i);
+  }
+  gr_params_table_->addRow(a_row);
 }
 
 /* --------------------

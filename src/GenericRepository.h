@@ -393,27 +393,20 @@ protected:
 
     /**
        This creates and fills  table that will hold the parameters that uniquely
-       define this generic repository model.
+       define all generic repository models in the simulation.
     */
-    void makeParamsTable();
+    void defineParamsTable();
 
     /**
-       This table will hold information about the component templates 
-       Each component template will have an EBS, a nuclide model ID, 
-       a thermal model ID, 
-     */
-    static void defineComponentsTable();
-
-    /**
-       Adds a component to the components table.
-     */
-    static void addComponentToTable(ComponentPtr comp);
+      This adds a row that uniquely defines this repository model
+      */
+    void addRowToParamsTable();
 
     /**
        This table will hold the parameters that uniquely define this generic
        repository model.
      */
-    static table_ptr gr_params_table;
+    static table_ptr gr_params_table_;
 
 public:
     /**

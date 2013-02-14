@@ -103,8 +103,10 @@ public:
 
      @param comp_to_rem the composition to decrement against this DegRateNuclide
      @param kg_to_rem the amount in kg to decrement against this DegRateNuclide
+
+     @return the material extracted
    */
-  virtual void extract(CompMapPtr comp_to_rem, double kg_to_rem );
+  virtual mat_rsrc_ptr extract(CompMapPtr comp_to_rem, double kg_to_rem );
 
   /**
      Transports nuclides from the inner to the outer boundary 
@@ -223,6 +225,14 @@ public:
      last_degraded_ time.
      */
   void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
+
+  /** 
+     Determines what IsoVector to remove from the daughter nuclide models
+
+     @param time the timestep at which the nuclides should be transported
+     @param daughter nuclide_model of an internal component. there may be many.
+     */
+  void update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters); 
 
   /// returns the total degradation of the component
   const double tot_deg() const {return tot_deg_;};

@@ -39,8 +39,20 @@ class MatToolsTest : public ::testing::Test {
     }
 };
 
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MatToolsTest, sum_mats){
+TEST_F(MatToolsTest, sum_mats_empty){
+
+  deque<mat_rsrc_ptr> mats;
+  
+  pair<IsoVector, double> the_sum;
+  the_sum = MatTools::sum_mats(mats);
+  EXPECT_FLOAT_EQ(0, the_sum.second);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, sum_mats_one){
+
   mat_rsrc_ptr new_test_mat = mat_rsrc_ptr(new Material(test_comp_));
   new_test_mat->setQuantity(2*test_size_);
 

@@ -78,8 +78,9 @@ public:
      @param comp_to_rem a CompMapPtr representing what to remove
      @param kg_to_rem a mass to remove of the CompMapPtr [kg]
      @param mat_list the list of materials to remove that comp from
+     @return the material extracted
     **/
-  static void extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
+  static mat_rsrc_ptr extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
       std::deque<mat_rsrc_ptr>& mat_list);
 
   /**
