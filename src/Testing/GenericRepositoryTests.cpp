@@ -25,12 +25,30 @@ void GenericRepositoryTest::SetUp(){
   lifetime_ = 3000000;
   start_op_yr_ = 1; 
   start_op_mo_ = 1;
-  cname_ = "component";
-  innerradius_ = 0;
-  outerradius_ = 100;
-  componenttype_ = "FF";
+  wfname_ = "wf_name";
+  wfinnerradius_ = 0;
+  wfouterradius_ = 1;
+  wftype_ = "WF";
+  wpname_ = "wp_name";
+  wpinnerradius_ = 1;
+  wpouterradius_ = 2;
+  wptype_ = "WP";
+  bname_ = "wp_name";
+  binnerradius_ = 2;
+  bouterradius_ = 20;
+  btype_ = "BUFFER";
+  ffname_ = "ff_name";
+  ffinnerradius_ = 20;
+  ffouterradius_ = 100;
+  fftype_ = "FF";
   src_facility = initSrcFacility();
   initWorld();
+
+  hot_comp_ = CompMapPtr(new CompMap(MASS));
+  cold_comp_ = CompMapPtr(new CompMap(MASS));
+
+  hot_mat _ =mat_rsrc_ptr(new Material(hot_comp_));
+  cold_mat_ =mat_rsrc_ptr(new Material(cold_comp_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -52,12 +70,44 @@ GenericRepository* GenericRepositoryTest::initSrcFacility(){
          << "      <StubNuclide/>"
          << "    </nuclidemodel>";
       
-      stringstream cs("");
-      cs << "  <component>"
-         << "    <name>" << cname_ << "</name>" 
-         << "    <innerradius>" << innerradius_ << "</innerradius>" 
-         << "    <outerradius>" << outerradius_ << "</outerradius>" 
-         << "    <componenttype>" << componenttype_ << "</componenttype>" 
+      stringstream wfs("");
+      wfs << "  <component>"
+         << "    <name>" << wfname_ << "</name>" 
+         << "    <innerradius>" << wfinnerradius_ << "</innerradius>" 
+         << "    <outerradius>" << wfouterradius_ << "</outerradius>" 
+         << "    <type>" << wftype_ << "</type>" 
+         << "    <allowedcommod>" << in_commod_ << "</allowedcommod>" 
+         << st
+         << sn
+         << "  </component>";
+
+      stringstream wps("");
+      wps << "  <component>"
+         << "    <name>" << wpname_ << "</name>" 
+         << "    <innerradius>" << wpinnerradius_ << "</innerradius>" 
+         << "    <outerradius>" << wpouterradius_ << "</outerradius>" 
+         << "    <wptype>" << wptype_ << "</wptype>" 
+         << "    <allowedwf>" << wfname_ << "</allowedwf>" 
+         << st
+         << sn
+         << "  </component>";
+
+      stringstream bs("");
+      bs << "  <component>"
+         << "    <name>" << bname_ << "</name>" 
+         << "    <innerradius>" << binnerradius_ << "</innerradius>" 
+         << "    <outerradius>" << bouterradius_ << "</outerradius>" 
+         << "    <type>" << btype_ << "</type>" 
+         << st
+         << sn
+         << "  </component>";
+
+      stringstream ffs("");
+      ffs << "  <component>"
+         << "    <name>" << ffname_ << "</name>" 
+         << "    <innerradius>" << ffinnerradius_ << "</innerradius>" 
+         << "    <outerradius>" << ffouterradius_ << "</outerradius>" 
+         << "    <type>" << fftype_ << "</type>" 
          << st
          << sn
          << "  </component>";
@@ -115,6 +165,30 @@ TEST_F(GenericRepositoryTest, reject_hot_mat){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(GenericRepositoryTest, accept_cold_mat){
   EXPECT_EQ(true, src_facility->mat_acceptable());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+TEST_F(GenericRepositoryTest, set_thermal_limit){
+  EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(radius));
+  EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(temp));
+  EXPECT_FLOAT_EQ(radius, src_facility->thermal_limit_radius());
+  EXPECT_FLOAT_EQ(temp, src_facility->thermal_limit_temp());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+TEST_F(GenericRepositoryTest, reject_all_0_thermal_lim){
+  EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(0))
+  EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(0.2))
+  EXPECT_BOOL_EQ(false, src_facility->mat_acceptable(hot_mat));
+  EXPECT_BOOL_EQ(false, src_facility->mat_acceptable(cold_mat));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+TEST_F(GenericRepositoryTest, accept_all_high_thermal_lim){
+  EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(numeric_limits<double>::infinity()))
+  EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(0.2))
+  EXPECT_BOOL_EQ(true, src_facility->mat_acceptable(hot_mat));
+  EXPECT_BOOL_EQ(true, src_facility->mat_acceptable(cold_mat));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
