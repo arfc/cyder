@@ -100,6 +100,22 @@ TEST_F(GenericRepositoryTest, initial_state) {
   EXPECT_EQ(adv_vel_, src_facility->adv_vel());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+TEST_F(GenericRepositoryTest, assess_capacity_crude){
+  // after stuff is absorbed, the capacity should be lower than before.
+  EXPECT_NO_THROW(src_facility->emplaceWaste());
+  EXPECT_NO_THROW(src_facility->handleTick(time));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+TEST_F(GenericRepositoryTest, reject_hot_mat){
+  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+TEST_F(GenericRepositoryTest, accept_cold_mat){
+  EXPECT_EQ(true, src_facility->mat_acceptable());
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 INSTANTIATE_TEST_CASE_P(GenericRepositoryFac, FacilityModelTests, Values(&GenericRepositoryFacilityConstructor));
