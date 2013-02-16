@@ -815,7 +815,7 @@ class Query(object):
                 run_sum[time] += plot_data[time, ind]
             p.append(the_plot[0])
 
-        self.ax.set_ylabel(self.data_units[select_dim])
+        self.ax.set_ylabel(self.data_units[3])
         self.ax.set_xlabel(self.data_axes[time_dim])
         #self.ax.set_xticks(indList, t)
         #self.ax.set_yticks(np.arange(0,max(run_sum)))
