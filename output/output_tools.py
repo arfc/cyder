@@ -813,13 +813,13 @@ class Query(object):
                           bottom=run_sum[time], 
                           color=colors[ind], alpha=0.9, label=str(ind))
                 run_sum[time] += plot_data[time, ind]
-            p.append(the_plot)
+            p.append(the_plot[0])
 
         self.ax.set_ylabel(self.data_axes[stream_dim])
         self.ax.set_xlabel(self.data_axes[time_dim])
         #self.ax.set_xticks(indList, t)
         #self.ax.set_yticks(np.arange(0,max(run_sum)))
-        self.ax.legend( (p,stream_list) )
+        self.ax.legend(p,stream_list )
 
         return self
 
