@@ -816,6 +816,7 @@ class Query(object):
             p.append(the_plot)
 
         self.ax.set_ylabel(self.data_axes[stream_dim])
+        self.ax.set_xlabel(self.data_axes[time_dim])
         #self.ax.set_xticks(indList, t)
         #self.ax.set_yticks(np.arange(0,max(run_sum)))
         self.ax.legend( (p,stream_list) )
