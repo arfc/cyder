@@ -793,7 +793,7 @@ class Query(object):
         self.ax.set_title(self.data_axes[select_dim] + " = " + str(selectItem))
 
         # For RANDOM colors:
-        colors = pylab.rand(len(stream_list),len(stream_list))
+        #colors = pylab.rand(len(stream_list),len(stream_list))
 
         # get time dimension labels
         t = self.data_labels[time_dim]  
@@ -806,13 +806,15 @@ class Query(object):
         # Iterate through the streams and add them to the plot.
         p=[]
         for ind in indList:
+          if(max(plot_data[:, ind] > 0)):
             for time in t :
-                the_plot = self.ax.bar(time, 
-                          plot_data[time, ind], 
-                          width=1,
-                          bottom=run_sum[time], 
-                          color=colors[ind], alpha=0.9, label=str(ind))
-                run_sum[time] += plot_data[time, ind]
+              the_plot = self.ax.bar(time,
+                                     plot_data[time, ind], 
+                                     width=1,
+                                     bottom=run_sum[time], 
+                                     color=cm.jet(float(ind/20.)), 
+                                     alpha=0.5, label=str(ind))
+              run_sum[time] += plot_data[time, ind]
             p.append(the_plot[0])
 
         self.ax.set_ylabel(self.data_units[3])
