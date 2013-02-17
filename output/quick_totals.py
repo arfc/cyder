@@ -34,7 +34,7 @@ def plot_contaminants(dbname, plttype, pltname, stream_dim='IsoID', select_dim=N
                          selectItem=select_item)
     else :
         raise Exception("The plottype, " + plttype + ", is not recognized.") 
-    query.save_plot(pltname)
+    query.save_plot(pltname+".eps")
     query.clear_fig()
 
 
