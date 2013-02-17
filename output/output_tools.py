@@ -804,7 +804,8 @@ class Query(object):
         for i, s in enumerate(stream_list):
             indList[i] = self.data_labels[stream_dim].index(s)
         # Iterate through the streams and add them to the plot.
-        p=[]
+        legend_items=[]
+        legend_ids=[]
         for ind in indList:
           if(max(plot_data[:, ind] > 0)):
             for time in t :
@@ -815,13 +816,14 @@ class Query(object):
                                      color=cm.jet(float(ind/20.)), 
                                      alpha=0.5, label=str(ind))
               run_sum[time] += plot_data[time, ind]
-            p.append(the_plot[0])
+            legend_items.append(the_plot[0])
+            legend_ids.append(indList[ind])
 
         self.ax.set_ylabel(self.data_units[3])
         self.ax.set_xlabel(self.data_axes[time_dim])
         #self.ax.set_xticks(indList, t)
         #self.ax.set_yticks(np.arange(0,max(run_sum)))
-        self.ax.legend(p,stream_list, title=self.data_axes[stream_dim])
+        self.ax.legend(legend_items,legend_ids, title=self.data_axes[stream_dim])
 
         return self
 
