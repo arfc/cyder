@@ -790,7 +790,8 @@ class Query(object):
 
         self.set_up_figure()
 
-        self.ax.set_title(self.data_axes[select_dim] + " = " + str(selectItem))
+        self.ax.set_title(self.data_axes[select_dim] + " = " + 
+            str(self.data_labels[select_dim].index(selectItem)))
 
         # For RANDOM colors:
         #colors = pylab.rand(len(stream_list),len(stream_list))
@@ -813,12 +814,13 @@ class Query(object):
                                      plot_data[time, ind], 
                                      width=1,
                                      bottom=run_sum[time], 
-                                     color=cm.jet(float(ind/20.)), 
-                                     alpha=0.5, label=str(ind))
+                                     color=cm.jet(float(ind/20.), alpha=0.5), 
+                                     label=str(ind))
               run_sum[time] += plot_data[time, ind]
             legend_items.append(the_plot[0])
             legend_ids.append(indList[ind])
 
+        self.ax.set_xlim(left=0)
         self.ax.set_ylabel(self.data_units[3])
         self.ax.set_xlabel(self.data_axes[time_dim])
         #self.ax.set_xticks(indList, t)

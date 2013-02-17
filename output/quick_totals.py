@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg')
+import os
 from output_tools import Query
 from numpy import cumsum
 from file_io import list2file
@@ -43,14 +43,24 @@ def plot_all_comps(dbname, plttype, pltroot):
     comps = query.get_comp_list()
     ind = 0
     for comp in comps:
-        pltname = pltroot + str(ind) + ".eps"
+        pltname = pltroot + str(ind) 
         plot_contaminants(dbname, plttype, pltname,
                           stream_dim='IsoID', select_dim='CompID',
-                          select_item=comps.index(comp))
+                          select_item=comp)
         ind += 1
 
 def stack_comps(dbname, plttype, pltroot):
     query = query_contaminants(dbname)
-    pltname = pltroot + ".eps"
-    plot_contaminants(dbname, plttype, pltname, stream_dim='CompID', select_dim='IsoID',
+    plot_contaminants(dbname, plttype, pltroot, stream_dim='CompID', select_dim='IsoID',
                       select_item=92235)
+
+def plot_this_dir() :
+    dir_list = os.listdir(".")
+    for fname in dir_list :
+      if ".sqlite" in fname : 
+        plot_all(fname)
+
+def plot_all(dbname) :
+    #plot_contaminants(dbname, "bar", dbname.replace('.sqlite', ''), 
+        #stream_dim='CompID', select_dim='IsoID', select_item=92235) 
+    plot_all_comps(dbname, "bar", dbname.replace('.sqlite', ''))
