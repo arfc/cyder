@@ -120,6 +120,7 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
 void LumpedNuclide::update(int the_time){
   update_vec_hist(the_time);
   update_conc_hist(the_time);
+  set_last_updated(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

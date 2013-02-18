@@ -132,6 +132,7 @@ void OneDimPPMNuclide::transportNuclides(int the_time){
 void OneDimPPMNuclide::update(int the_time){
   update_vec_hist(the_time);
   update_conc_hist(the_time, wastes_);
+  set_last_updated(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

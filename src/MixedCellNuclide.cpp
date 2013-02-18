@@ -94,6 +94,7 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
 void MixedCellNuclide::update(int the_time) {
   update_vec_hist(the_time);
   update_conc_hist(the_time);
+  set_last_updated(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
