@@ -625,19 +625,19 @@ void GenericRepository::transportNuclides(int time){
   // pass the transport nuclides signal through the components, inner -> outer
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
-      iter++){
+      ++iter){
     (*iter)->transportNuclides(time);
     (*iter)->updateContaminantTable(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
-      iter++){
+      ++iter){
     (*iter)->transportNuclides(time);
     (*iter)->updateContaminantTable(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
-      iter++){
+      ++iter){
     (*iter)->transportNuclides(time);
     (*iter)->updateContaminantTable(time);
   }
