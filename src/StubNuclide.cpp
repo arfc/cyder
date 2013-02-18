@@ -84,6 +84,10 @@ void StubNuclide::transportNuclides(int time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void StubNuclide::update(int the_time){
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void StubNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;

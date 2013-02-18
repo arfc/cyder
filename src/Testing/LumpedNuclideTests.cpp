@@ -32,7 +32,7 @@ void LumpedNuclideTest::SetUp(){
   // composition set up
   u_=92;
   u235_=92235;
-  am241_=92235;
+  am241_=95241;
   one_kg_=1.0;
   test_comp_= CompMapPtr(new CompMap(MASS));
   (*test_comp_)[u235_] = one_kg_;
@@ -216,7 +216,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
+  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; /// @TODO fix units everywhere
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -228,7 +228,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   ASSERT_EQ(2, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
-  // @TODO add behavior for later timesteps.
+  /// @TODO add behavior for later timesteps.
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -262,7 +262,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  // @TODO fix units everywhere
+  /// @TODO fix units everywhere
   double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; 
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
@@ -275,7 +275,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   ASSERT_EQ(2, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
-  // @TODO add behavior for later timesteps.
+  /// @TODO add behavior for later timesteps.
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, transportNuclidesEM){ 
@@ -304,7 +304,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   double expected_neumann= -expected_conc/(outer_radius*2 - geom_->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  // @TODO fix units everywhere
+  /// @TODO fix units everywhere
   double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; 
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
@@ -317,29 +317,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   ASSERT_EQ(2, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
 
-  // @TODO add behavior for later timesteps.
-}
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, convert_comp_to_conc){ 
-  IsoConcMap test_conc_map; 
-
-  // composition set up
-  CompMapPtr test_comp_map= CompMapPtr(new CompMap(MASS));
-  (*test_comp_map)[u235_] = one_kg_;
-  (*test_comp_map)[am241_] = 0.5*one_kg_;
-  test_comp_map->normalize();
-  double exp_u235_conc, exp_am241_conc;
-
-  for(int v=1; v<10; v++){
-    for(int m=1; m<10; m++){
-      EXPECT_NO_THROW(lumped_ptr_->comp_to_conc_map(test_comp_map, m, v));
-      test_conc_map=lumped_ptr_->comp_to_conc_map(test_comp_map, m, v);
-      exp_u235_conc = (*test_comp_map)[u235_]*m/v;
-      EXPECT_FLOAT_EQ(exp_u235_conc, test_conc_map[u235_]);
-      exp_am241_conc = (*test_comp_map)[am241_]*m/v;
-      EXPECT_FLOAT_EQ(exp_am241_conc, test_conc_map[am241_]);
-    }
-  }
+  /// @TODO add behavior for later timesteps.
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -355,7 +333,7 @@ TEST_F(LumpedNuclideTest, updateVecHist){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, setGeometry) {  
-  //@TODO tests like this should be interface tests for the NuclideModel class concrete instances.
+  /// @TODO tests like this should be interface tests for the NuclideModel class concrete instances.
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
   EXPECT_FLOAT_EQ(len_five_ , nuc_model_ptr_->geom()->length());
   EXPECT_FLOAT_EQ(r_four_ , nuc_model_ptr_->geom()->inner_radius());

@@ -23,47 +23,6 @@ enum NuclideModelType {
   STUB_NUCLIDE, 
   LAST_NUCLIDE};
 
-/**
-   type definition for radiotoxicity in Sv
-  */
-typedef double Tox;
-
-/**
-   type definition for Concentration Gradients in kg/m^o4
- */
-typedef double ConcGrad;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Concentration Gradients for each isotope
-  */
-typedef std::map<int, ConcGrad> ConcGradMap;
-
-/**
-   type definition for Concentrations in kg/m^3
- */
-typedef double Concentration;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Concentrations of each isotope [kg/m^3]
-  */
-typedef std::map<int, Concentration> IsoConcMap;
-
-/**
-   type definition for Fluxes in kg/m^2s
- */
-typedef double Flux;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Fluxes of each isotope [kg/m^2s]
-  */
-typedef std::map<int, Flux> IsoFluxMap;
-
 /** 
    type definition for a map from times to IsoConcMap
    The keys are timesteps, in the unit of the timesteps in the simulation.
@@ -163,6 +122,13 @@ public:
      returns the name of the NuclideModelType of the model
    */
   virtual std::string name() = 0;
+
+  /** 
+     Update the hists at a certain time
+
+     @param the_time the time at which to update the hists
+   */
+  virtual void update(int the_time) = 0;
 
   /**
      returns the available material source term at the outer boundary of the 
@@ -370,14 +336,17 @@ public:
   /// Returns wastes_
   std::deque<mat_rsrc_ptr> wastes() {return wastes_;};
 
+  /// returns the time at which the vec_hist and conc_hist were updated
+  int last_updated(){return last_updated_;};
+
   /** sets the last time that the vec_hist and conc_hist were updated,
     * first verifying whether last_updated is larger than last_updated_ 
     *
     * @param last_updated the time to set last_updated_ to.
     */ 
-  void set_last_updated(int last_updated){
-    if( last_updated >= last_updated() ){
-      last_updated_=last_updated;
+  void set_last_updated(int new_last_updated){
+    if( last_updated() <= new_last_updated ){
+      last_updated_=new_last_updated;
     } else {
       std::stringstream msg_ss;
       msg_ss << "The suggested last updated time is before the current last updated time.";
@@ -385,9 +354,6 @@ public:
       throw CycRangeException(msg_ss.str());
     }
   };
-
-  /// returns the time at which the vec_hist and conc_hist were updated
-  int last_updated(){return last_updated_;};
 
 protected:
   /// A vector of the wastes contained by this component
