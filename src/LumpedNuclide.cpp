@@ -111,10 +111,15 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update_vec_hist(TI->time());
-  update_conc_hist(TI->time());
+  update(TI->time());
 
   return shared_from_this();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::update(the_time){
+  update_vec_hist(the_time);
+  update_conc_hist(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

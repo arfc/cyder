@@ -85,10 +85,15 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update_vec_hist(TI->time());
-  update_conc_hist(TI->time());
+  update(TI->time());
 
   return shared_from_this();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclide::update(int the_time) {
+  update_vec_hist(the_time);
+  update_conc_hist(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -123,8 +128,7 @@ void MixedCellNuclide::transportNuclides(int the_time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   update_degradation(the_time, deg_rate());
-  update_vec_hist(the_time);
-  update_conc_hist(the_time);
+  update(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

@@ -262,6 +262,9 @@ public:
      @return vec_hist_.at(time). If not found an empty pair is returned.
      */
   std::pair<IsoVector, double> vec_hist(int the_time){
+    if( last_updated() < the_time ){
+      update(the_time);
+    }
     std::pair<IsoVector, double> to_ret;
     VecHist::const_iterator it;
     if( !vec_hist_.empty() ) {
@@ -299,6 +302,9 @@ public:
      @return conc_hist_.at(time). If not found an empty IsoConcMap is return
     */
   IsoConcMap conc_hist(int the_time){
+    if( last_updated() < the_time ){
+      update(the_time);
+    }
     IsoConcMap to_ret;
     ConcHist::iterator it;
     it = conc_hist_.find(the_time);
@@ -364,6 +370,25 @@ public:
   /// Returns wastes_
   std::deque<mat_rsrc_ptr> wastes() {return wastes_;};
 
+  /** sets the last time that the vec_hist and conc_hist were updated,
+    * first verifying whether last_updated is larger than last_updated_ 
+    *
+    * @param last_updated the time to set last_updated_ to.
+    */ 
+  void set_last_updated(int last_updated){
+    if( last_updated >= last_updated() ){
+      last_updated_=last_updated;
+    } else {
+      std::stringstream msg_ss;
+      msg_ss << "The suggested last updated time is before the current last updated time.";
+      LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
+      throw CycRangeException(msg_ss.str());
+    }
+  };
+
+  /// returns the time at which the vec_hist and conc_hist were updated
+  int last_updated(){return last_updated_;};
+
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};
@@ -380,5 +405,9 @@ protected:
 
   /// A shared pointer to this Component's material data table 
   MatDataTablePtr mat_table_;
+
+  /// the time at which the histories were last updated
+  int last_updated_;
+
 };
 #endif
