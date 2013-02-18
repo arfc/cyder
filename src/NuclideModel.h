@@ -23,47 +23,6 @@ enum NuclideModelType {
   STUB_NUCLIDE, 
   LAST_NUCLIDE};
 
-/**
-   type definition for radiotoxicity in Sv
-  */
-typedef double Tox;
-
-/**
-   type definition for Concentration Gradients in kg/m^o4
- */
-typedef double ConcGrad;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Concentration Gradients for each isotope
-  */
-typedef std::map<int, ConcGrad> ConcGradMap;
-
-/**
-   type definition for Concentrations in kg/m^3
- */
-typedef double Concentration;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Concentrations of each isotope [kg/m^3]
-  */
-typedef std::map<int, Concentration> IsoConcMap;
-
-/**
-   type definition for Fluxes in kg/m^2s
- */
-typedef double Flux;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Fluxes of each isotope [kg/m^2s]
-  */
-typedef std::map<int, Flux> IsoFluxMap;
-
 /** 
    type definition for a map from times to IsoConcMap
    The keys are timesteps, in the unit of the timesteps in the simulation.
