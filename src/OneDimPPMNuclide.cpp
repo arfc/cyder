@@ -116,7 +116,10 @@ void OneDimPPMNuclide::transportNuclides(int time){
   // If these fluxes are negative, nuclides aphysically flow toward the waste package 
   // It will send the adjacent components information?
   // The OneDimPPMNuclide class should transport all nuclides
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::update(int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -157,3 +160,5 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
     }
   }
 }
+
+
