@@ -231,6 +231,18 @@ public:
   const std::vector<NuclideModelPtr> nuclide_daughters();
 
   /**
+     This table will hold information about the component templates 
+     Each component template will have an EBS, a nuclide model ID, 
+     a thermal model ID, 
+   */
+  static void defineComponentsTable();
+
+  /**
+     Adds a component to the components table.
+   */
+  static void addComponentToTable(ComponentPtr comp);
+
+  /**
      get the ID
      
      @return ID_
@@ -516,6 +528,11 @@ protected:
      The table holding the contaminant history of the component
      */
   static table_ptr gr_contaminant_table_;
+
+  /**
+     This table will hold the parameters that uniquely describe each component in the simulation. 
+    */
+  static table_ptr gr_components_table_;
 
 };
 

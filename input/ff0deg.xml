@@ -124,7 +124,7 @@
           <nuclidemodel>
             <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
+              <degradation>0</degradation>
             </DegRateNuclide>
           </nuclidemodel>
         </component>
