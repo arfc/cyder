@@ -641,11 +641,11 @@ void GenericRepository::transportNuclides(int the_time){
   if (NULL != far_field_){
     far_field_->transportNuclides(the_time);
   }
-  updateContaminantsTable(the_time);
+  updateContaminantTable(the_time);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::updateContaminantsTable(int the_time) {
+void GenericRepository::updateContaminantTable(int the_time) {
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       ++iter){

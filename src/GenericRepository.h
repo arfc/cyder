@@ -386,7 +386,7 @@ protected:
 
        @param the_time the timestep at which to record all states
        */
-    void updateContaminantsTable(int the_time) ;
+    void updateContaminantTable(int the_time) ;
 
     /**
        places the known variable names and types into member_types_ and member_refs_
