@@ -430,7 +430,6 @@ void GenericRepository::emplaceWaste(){
     for (int i=0; i < nwp; i++){
       ComponentPtr iter = current_waste_packages_.front();
       // try to load each package in the current buffer 
-      ComponentPtr current_buffer = buffers_.front();
       // if the package is full
       if ( iter->isFull()
           // and not too hot
@@ -522,20 +521,18 @@ ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   // figure out what buffer to put the waste package in
-  ComponentPtr chosen_buffer = buffers_.front();
-  if (NULL == chosen_buffer) {
-    std::string err_msg = "Buffers not yet loaded into Generic Repository.";
-    throw CycException(err_msg);
-  } else if ( chosen_buffer->isFull() && buffers_.size()*dx_ < x_ ) {
-    ComponentPtr new_buffer = ComponentPtr(new Component());
-    new_buffer->copy(chosen_buffer);
-    buffers_.push_back(buffers_.front());
-    buffers_.pop_front();
-    buffers_.push_front(new_buffer);
-  } else if ( buffers_.size()*dx_ >= x_ ) {
+  ComponentPtr chosen_buffer;
+  if (!buffers_.empty() && !buffers_.front()->isFull()) {
+    chosen_buffer = ComponentPtr(buffers_.front());
+  } else if ( buffers_.size()*dx_ < x_ ) { 
+    chosen_buffer = ComponentPtr(new Component());
+    chosen_buffer->copy(buffer_template_);
+    buffers_.push_front(chosen_buffer);
+  } else {
     // all buffers are now full, capacity reached
     is_full_=true;
-  }
+  } 
+  far_field_->load(FF, buffers_.front());
   setPlacement(buffers_.front());
   // and load in the waste package
   buffers_.front()->load(BUFFER, waste_package);
@@ -642,7 +639,7 @@ void GenericRepository::transportNuclides(int time){
   }
   if (NULL != far_field_){
     far_field_->transportNuclides(time);
-    (far_field_)->updateContaminantTable(time);
+    far_field_->updateContaminantTable(time);
   }
 }
 

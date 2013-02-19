@@ -398,7 +398,7 @@ public:
      
      @param parent is the component that should be set as the parent
    */
-  void setParent(ComponentPtr parent){parent_ = parent;};
+  void set_parent(ComponentPtr parent){parent_ = parent;};
 
   /**
      set the placement of the object

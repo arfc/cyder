@@ -249,7 +249,7 @@ void Component::transportNuclides(int the_time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
-  to_load->setParent(ComponentPtr(shared_from_this()));
+  to_load->set_parent(ComponentPtr(shared_from_this()));
   daughters_.push_back(to_load);
   return shared_from_this();
 }
