@@ -404,9 +404,9 @@ public:
      set the placement of the object
      
      @param centroid is the centroid position vector
+     @param length is the length of the object 
    */
-  void setPlacement(point_t centroid){
-    geom_->set_centroid(centroid);};
+  void setPlacement(point_t centroid, double length);
 
 protected:
   /** 

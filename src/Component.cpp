@@ -256,7 +256,23 @@ ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool Component::isFull() {
-  return true; // @TODO imperative, add logic here
+  // @TODO imperative, add better logic here 
+  bool to_ret;
+  double wp_len;
+  std::vector<ComponentPtr>::iterator it;
+  switch(type()) {
+    case BUFFER : 
+      for(it=daughters_.begin(); it!=daughters_.end(); ++it){
+        wp_len += (*it)->geom()->length();
+      }
+      to_ret = (wp_len >= geom()->length());
+      break;
+    default : 
+      to_ret=true;
+      break;
+  }
+  
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -548,4 +564,10 @@ NuclideModelPtr Component::nuclide_model(){return nuclide_model_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModelPtr Component::thermal_model(){return thermal_model_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void Component::setPlacement(point_t centroid, double length){
+  geom_->set_centroid(centroid);
+  geom_->set_length(length); 
+};
 

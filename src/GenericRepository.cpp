@@ -519,18 +519,19 @@ ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
 ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   // figure out what buffer to put the waste package in
   ComponentPtr chosen_buffer;
-  if (!buffers_.empty() && !buffers_.front()->isFull()) {
+  if ( !(buffers_.empty()) && !(buffers_.front()->isFull())) {
     chosen_buffer = ComponentPtr(buffers_.front());
   } else if ( buffers_.size()*dx_ < x_) { 
     chosen_buffer = ComponentPtr(new Component());
     chosen_buffer->copy(buffer_template_);
     buffers_.push_front(chosen_buffer);
     far_field_->load(FF, chosen_buffer);
+    setPlacement(buffers_.front());
   } else {
     // all buffers are now full, capacity reached
     is_full_=true;
+    return chosen_buffer;
   }
-  setPlacement(buffers_.front());
   // and load in the waste package
   buffers_.front()->load(BUFFER, waste_package);
   // put this on the stack of waste packages that have been emplaced
@@ -549,7 +550,7 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
-  double x,y,z;
+  double x,y,z, length;
   // figure out what type of component it is
   switch(comp->type()) 
   {
@@ -557,16 +558,19 @@ ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
       x = x_/2;
       y = y_/2;
       z = z_/2;
+      length = x_;
       break;
     case BUFFER :
-      x = (buffers_.size()- .5)*dx_ ;
-      y = y_/2 ; 
+      x = x_/2 ; 
+      y = (buffers_.size()- .5)*dy_ ;
       z = dz_ ; 
+      length = x_;
       break;
     case WP :
-      x = (comp->parent())->x();
-      y = (emplaced_waste_packages_.size()*dy_ - dy_/2) ; 
+      x = (emplaced_waste_packages_.size()*dx_ - dx_/2) ; // @TODO maxbe should be mod
+      y = (comp->parent())->y();
       z = dz_ ; 
+      length = dx_;
       break;
     case WF :
       x = (comp->parent())->x();
@@ -583,7 +587,7 @@ ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
   }
   // figure out what buffer to put the waste package in
   point_t point = {x,y,z};
-  comp->setPlacement(point);
+  comp->setPlacement(point, length);
   comp->addComponentToTable(comp);
   return comp; 
 }
