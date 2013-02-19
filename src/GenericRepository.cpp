@@ -532,8 +532,8 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
     // all buffers are now full, capacity reached
     is_full_=true;
   } 
-  far_field_->load(FF, buffers_.front());
-  setPlacement(buffers_.front());
+  far_field_->load(FF, chosen_buffer);
+  setPlacement(chosen_buffer);
   // and load in the waste package
   buffers_.front()->load(BUFFER, waste_package);
   // put this on the stack of waste packages that have been emplaced
