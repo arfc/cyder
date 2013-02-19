@@ -375,11 +375,18 @@ protected:
     void transportHeat(int time) ;
 
     /**
-       Do nuclide transport calculations
+       Do nuclide transport calculations for each component, radially outward
 
-       @param time the timestep at which to transport the nuclides
+       @param the_time the timestep at which to transport the nuclides
      */
-    void transportNuclides(int time) ;
+    void transportNuclides(int the_time) ;
+
+    /**
+       Record the state of each component, radially outward
+
+       @param the_time the timestep at which to record all states
+       */
+    void updateContaminantsTable(int the_time) ;
 
     /**
        places the known variable names and types into member_types_ and member_refs_
