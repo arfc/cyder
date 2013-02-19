@@ -17,13 +17,13 @@ using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide() : 
-  last_updated_(0),
   t_t_(0),
   Pe_(0),
   porosity_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
 
   t_t_ = 0;
   v_ = 0;
@@ -34,7 +34,6 @@ LumpedNuclide::LumpedNuclide() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
-  last_updated_(0),
   t_t_(0),
   Pe_(0),
   porosity_(0),
@@ -42,6 +41,7 @@ LumpedNuclide::LumpedNuclide(QueryEngine* qe):
 { 
 
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
 
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
@@ -303,7 +303,7 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair;
-  sum_pair = shared_from_this()->vec_hist(the_time);
+  sum_pair = vec_hist_[the_time];
   IsoConcMap C_0 = MatTools::comp_to_conc_map(sum_pair.first.comp(), sum_pair.second, V_f());
 
   switch(formulation_){

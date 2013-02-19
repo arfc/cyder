@@ -345,11 +345,11 @@ public:
     * @param last_updated the time to set last_updated_ to.
     */ 
   void set_last_updated(int new_last_updated){
-    if( last_updated() <= new_last_updated ){
+    if( last_updated_ <= new_last_updated ){
       last_updated_=new_last_updated;
     } else {
       std::stringstream msg_ss;
-      msg_ss << "The suggested last updated time is before the current last updated time.";
+      msg_ss << "The new update time " << new_last_updated << " is before the current update time " << last_updated_;
       LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
       throw CycRangeException(msg_ss.str());
     }

@@ -31,8 +31,10 @@ MixedCellNuclide::MixedCellNuclide():
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+  update(0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -47,8 +49,10 @@ MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) :
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+  update(0);
   initModuleMembers(qe);
 }
 
@@ -243,7 +247,7 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
   assert(last_degraded() <= the_time);
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist(the_time);
+  sum_pair = vec_hist_[the_time];
 
   IsoConcMap to_ret;
   int iso;

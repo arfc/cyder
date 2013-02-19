@@ -28,6 +28,7 @@ DegRateNuclide::DegRateNuclide():
   wastes_ = deque<mat_rsrc_ptr>();
 
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
 
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
@@ -45,6 +46,7 @@ DegRateNuclide::DegRateNuclide(QueryEngine* qe):
   conc_hist_ = ConcHist();
 
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
 
   initModuleMembers(qe);
 }
@@ -71,12 +73,13 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
 
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
+  set_last_updated(TI->time());
   geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid());
+  set_last_updated(TI->time());
 
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update(TI->time());
 
   return shared_from_this();
 }
@@ -215,11 +218,12 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_degraded() <= the_time);
+  assert(last_updated() <= the_time);
 
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist(the_time);
+  sum_pair = vec_hist_[the_time];
 
   int iso;
   double conc;

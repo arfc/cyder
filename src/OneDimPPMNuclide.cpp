@@ -19,7 +19,6 @@ using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::OneDimPPMNuclide():
-  last_updated_(0),
   Ci_(0),
   Co_(0),
   v_(0),
@@ -27,6 +26,7 @@ OneDimPPMNuclide::OneDimPPMNuclide():
   rho_(0)
 {
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
 
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
@@ -35,7 +35,6 @@ OneDimPPMNuclide::OneDimPPMNuclide():
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
-  last_updated_(0),
   Ci_(0),
   Co_(0),
   v_(0),
@@ -44,6 +43,7 @@ OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
   initModuleMembers(qe);

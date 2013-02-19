@@ -298,11 +298,6 @@ public:
   /// sets the v_ variable, the advective velocity through this component. 
   void set_v(double v);
 
-  /// @TODO verify whether last_updated is larger than last_updated, but less 
-  //than or equal to the current time.
-  void set_last_updated(int last_updated){last_updated_ = last_updated;};
-  int last_updated(){return last_updated_;};
-
   /// Gets the total fluid volume
   double V_T();
 
@@ -328,9 +323,6 @@ protected:
 
   /// The bulk (dry) density of the component matrix, in g/cm^3.
   double rho_;
-
-  /// The last time the concentration history was updated 
-  int last_updated_;
 
 };
 
