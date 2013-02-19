@@ -131,10 +131,10 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
 
   switch(comp_type) {
     case BUFFER:
-      buffer_template_ = toRet;
+      buffer_template_ = ComponentPtr(toRet);
       break;
     case FF:
-      far_field_ = toRet;
+      far_field_ = ComponentPtr(toRet);
       break;
     case WF:
       // get allowed waste commodities
@@ -531,7 +531,7 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   } else {
     // all buffers are now full, capacity reached
     is_full_=true;
-  } 
+  }
   far_field_->load(FF, chosen_buffer);
   setPlacement(chosen_buffer);
   // and load in the waste package
@@ -610,7 +610,7 @@ void GenericRepository::transportHeat(int time){
       iter++){
     (*iter)->transportHeat(time);
   }
-  if (NULL != far_field_){
+  if ( far_field_){
     far_field_->transportHeat(time);
   }
 }
@@ -637,7 +637,7 @@ void GenericRepository::transportNuclides(int time){
     (*iter)->transportNuclides(time);
     (*iter)->updateContaminantTable(time);
   }
-  if (NULL != far_field_){
+  if ( far_field_ ){
     far_field_->transportNuclides(time);
     far_field_->updateContaminantTable(time);
   }
