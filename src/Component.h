@@ -42,7 +42,7 @@ typedef double Temp;
 typedef double Power;
 
 /// Enum for type of engineered barrier component.
-enum ComponentType {BUFFER, ENV, FF, NF, WF, WP, LAST_EBS};
+enum ComponentType {BUFFER, FF, WF, WP, LAST_EBS};
 
 /// A shared pointer for the component object
 class Component;
@@ -398,7 +398,7 @@ public:
      
      @param parent is the component that should be set as the parent
    */
-  void setParent(ComponentPtr parent){parent_ = parent;};
+  void set_parent(ComponentPtr parent){parent_ = parent;};
 
   /**
      set the placement of the object

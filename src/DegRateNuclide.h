@@ -155,6 +155,13 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
+  /**
+     updates all the hists at the time
+
+     @param the_time at which to update everything
+    */
+  virtual void update(int the_time);
+
   /*----------------------------*/
   /* This NuclideModel class    */
   /* has the following members  */

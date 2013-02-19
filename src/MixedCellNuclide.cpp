@@ -31,8 +31,10 @@ MixedCellNuclide::MixedCellNuclide():
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+  update(0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -47,8 +49,10 @@ MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) :
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+  update(0);
   initModuleMembers(qe);
 }
 
@@ -85,10 +89,16 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update_vec_hist(TI->time());
-  update_conc_hist(TI->time());
+  update(TI->time());
 
   return shared_from_this();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclide::update(int the_time) {
+  update_vec_hist(the_time);
+  update_conc_hist(the_time);
+  set_last_updated(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -125,8 +135,7 @@ void MixedCellNuclide::transportNuclides(int the_time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   update_degradation(the_time, deg_rate());
-  update_vec_hist(the_time);
-  update_conc_hist(the_time);
+  update(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -240,7 +249,7 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
   assert(last_degraded() <= the_time);
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist(the_time);
+  sum_pair = vec_hist_[the_time];
 
   IsoConcMap to_ret;
   int iso;

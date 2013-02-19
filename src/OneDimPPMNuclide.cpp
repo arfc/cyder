@@ -19,7 +19,6 @@ using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::OneDimPPMNuclide():
-  last_updated_(0),
   Ci_(0),
   Co_(0),
   v_(0),
@@ -27,6 +26,7 @@ OneDimPPMNuclide::OneDimPPMNuclide():
   rho_(0)
 {
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
 
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
@@ -35,7 +35,6 @@ OneDimPPMNuclide::OneDimPPMNuclide():
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
-  last_updated_(0),
   Ci_(0),
   Co_(0),
   v_(0),
@@ -44,6 +43,7 @@ OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
   initModuleMembers(qe);
@@ -127,8 +127,14 @@ void OneDimPPMNuclide::transportNuclides(int the_time){
   // If these fluxes are negative, nuclides aphysically flow toward the waste package 
   // It will send the adjacent components information?
   // The OneDimPPMNuclide class should transport all nuclides
+  update(the_time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::update(int the_time){
   update_vec_hist(the_time);
   update_conc_hist(the_time, wastes_);
+  set_last_updated(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -321,3 +327,5 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
     }
   }
 }
+
+

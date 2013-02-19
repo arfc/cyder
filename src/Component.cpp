@@ -249,7 +249,7 @@ void Component::transportNuclides(int the_time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
-  to_load->setParent(ComponentPtr(shared_from_this()));
+  to_load->set_parent(ComponentPtr(shared_from_this()));
   daughters_.push_back(to_load);
   return shared_from_this();
 }
@@ -265,7 +265,7 @@ ComponentType Component::type(){return type_;}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentType Component::componentEnum(std::string type_name) {
   ComponentType toRet = LAST_EBS;
-  string component_type_names[] = {"BUFFER", "ENV", "FF", "NF", "WF", "WP"};
+  string component_type_names[] = {"BUFFER", "FF", "WF", "WP"};
   for(int type = 0; type < LAST_EBS; type++){
     if(component_type_names[type] == type_name){
       toRet = (ComponentType)type;
