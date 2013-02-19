@@ -193,9 +193,6 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   wf_templates_ = src->wf_templates_;
   wf_wp_map_ = src->wf_wp_map_;
   commod_wf_map_ = src->commod_wf_map_;
-  buffers_.push_front(ComponentPtr(new Component()));
-  buffers_.front()->copy(buffer_template_);
-  setPlacement(buffers_.front());
 
   // don't copy things that should start out empty
   // initialize empty structures instead
@@ -524,16 +521,16 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   ComponentPtr chosen_buffer;
   if (!buffers_.empty() && !buffers_.front()->isFull()) {
     chosen_buffer = ComponentPtr(buffers_.front());
-  } else if ( buffers_.size()*dx_ < x_ ) { 
+  } else if ( buffers_.size()*dx_ < x_) { 
     chosen_buffer = ComponentPtr(new Component());
     chosen_buffer->copy(buffer_template_);
     buffers_.push_front(chosen_buffer);
+    far_field_->load(FF, chosen_buffer);
   } else {
     // all buffers are now full, capacity reached
     is_full_=true;
   }
-  far_field_->load(FF, chosen_buffer);
-  setPlacement(chosen_buffer);
+  setPlacement(buffers_.front());
   // and load in the waste package
   buffers_.front()->load(BUFFER, waste_package);
   // put this on the stack of waste packages that have been emplaced
