@@ -132,11 +132,9 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
   switch(comp_type) {
     case BUFFER:
       buffer_template_ = toRet;
-      // do the buffers have allowed waste package types?
       break;
     case FF:
       far_field_ = toRet;
-      // does the far field have allowed buffer types?
       break;
     case WF:
       // get allowed waste commodities
@@ -428,14 +426,11 @@ void GenericRepository::emplaceWaste(){
       current_waste_forms_.pop_front();
     }
     int nwp = current_waste_packages_.size();
+    // for each current_waste_package
     for (int i=0; i < nwp; i++){
       ComponentPtr iter = current_waste_packages_.front();
       // try to load each package in the current buffer 
       ComponentPtr current_buffer = buffers_.front();
-      if (NULL == current_buffer) {
-        std::string err_msg = "Buffers not yet loaded into Generic Repository.";
-        throw CycException(err_msg);
-      }
       // if the package is full
       if ( iter->isFull()
           // and not too hot
@@ -445,16 +440,6 @@ void GenericRepository::emplaceWaste(){
           ) {
         // emplace it in the buffer
         loadBuffer(iter);
-        if ( current_buffer->isFull() ) {
-          buffers_.push_back(buffers_.front());
-          buffers_.pop_front();
-          if ( buffers_.front()->isFull()){
-            // all buffers are now full, capacity reached
-            is_full_ = true;
-          } else {
-            setPlacement(buffers_.front());
-          }
-        }
         // take the waste package out of the current packagess
         waste_packages_.push_back(iter);
         current_waste_packages_.pop_front();
@@ -538,6 +523,20 @@ ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
 ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   // figure out what buffer to put the waste package in
   ComponentPtr chosen_buffer = buffers_.front();
+  if (NULL == chosen_buffer) {
+    std::string err_msg = "Buffers not yet loaded into Generic Repository.";
+    throw CycException(err_msg);
+  } else if ( chosen_buffer->isFull() && buffers_.size()*dx_ < x_ ) {
+    ComponentPtr new_buffer = ComponentPtr(new Component());
+    new_buffer->copy(chosen_buffer);
+    buffers_.push_back(buffers_.front());
+    buffers_.pop_front();
+    buffers_.push_front(new_buffer);
+  } else if ( buffers_.size()*dx_ >= x_ ) {
+    // all buffers are now full, capacity reached
+    is_full_=true;
+  }
+  setPlacement(buffers_.front());
   // and load in the waste package
   buffers_.front()->load(BUFFER, waste_package);
   // put this on the stack of waste packages that have been emplaced

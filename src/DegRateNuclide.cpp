@@ -73,9 +73,8 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
 
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
-  set_last_updated(TI->time());
   geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid());
-  set_last_updated(TI->time());
+  update(TI->time());
 
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
