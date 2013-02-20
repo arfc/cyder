@@ -373,12 +373,22 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> d
       mixed.first=st.first;
       mixed.second=st.second;
     } else {
+      absorb(extractIntegratedMass(daughter));
       mixed.second +=st.second;
       mixed.first.mix(st.first,mixed.second/st.second);
     }
   }
   C_0_= MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
+
+  M = adv_vel()*porosity()*SA*C_0_;
+
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter){
+  IsoConcMap bc = daughter->dirichlet_bc();
+  double theta = daughter->V_ff();
+
 
 
 
