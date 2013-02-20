@@ -23,7 +23,7 @@ class ComponentTest : public ::testing::Test {
     NuclideModelPtr nuclide_model_;
 
     virtual void SetUp(){
-      test_component_ = ComponentPtr(new Component());
+      test_component_ = ComponentPtr(new Component(NULL));
       OneHundredCinK=373;
       name_ = "Test";
       infty_ = numeric_limits<double>::infinity();
@@ -74,7 +74,7 @@ TEST_F(ComponentTest, initFunctionNoXML) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, copy) {
-  ComponentPtr test_copy = ComponentPtr(new Component());
+  ComponentPtr test_copy = ComponentPtr(new Component(NULL));
   ASSERT_NO_THROW(test_copy->copy(test_copy));
   EXPECT_EQ("STUB_THERMAL", test_copy->thermal_model()->name());
   EXPECT_EQ("STUB_NUCLIDE", test_copy->nuclide_model()->name());

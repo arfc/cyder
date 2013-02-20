@@ -1,13 +1,14 @@
-/*! \file GenericRepository.h
-  \brief Declares the GenericRepository class, the central class of Cyder 
+/*! \file Cyder.h
+  \brief Declares the Cyder class, the central class of Cyder 
   \author Kathryn D. Huff
  */
-#if !defined(_GENERICREPOSITORY_H)
-#define _GENERICREPOSITORY_H
+#if !defined(_CYDER_H)
+#define _CYDER_H
 #include "Logger.h"
 #include <queue>
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include <boost/any.hpp>
 
 #include "FacilityModel.h"
 #include "Component.h"
@@ -17,15 +18,15 @@
  */
 typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
 
-/*! GenericRepository
+/*! Cyder
     This FacilityModel seeks to provide a generic disposal system model
    
-   The GenericRepository class inherits from the FacilityModel class and is 
+   The Cyder class inherits from the FacilityModel class and is 
    dynamically loaded by the Model class when requested.
    
    \section intro Introduction 
    
-   The GenericRepository is a facility type in *Cyclus* which represents a generic 
+   The Cyder is a facility type in *Cyclus* which represents a generic 
    disposal system. It continually requests wastes of all incoming commodities that
    it allows until the capacity has been reached. While there are new waste streams 
    in the stocks, they are conditioned into a waste form, packaged into a waste 
@@ -33,7 +34,7 @@ typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
    
    \section modelparams Model Parameters 
    
-   GenericRepository behavior is comprehensively defined by the following 
+   Cyder behavior is comprehensively defined by the following 
    parameters:
    - double capacity : The production capacity of the facility (units vary, but 
    typically kg/month). *Question:* Do we want to allow this to be infinite?  
@@ -47,19 +48,19 @@ typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
    
    \section optionalparams Optional Parameters  
    
-   GenericRepository behavior may also be specified with the following optional 
+   Cyder behavior may also be specified with the following optional 
    parameters which have default values listed here...  
    
    \section detailed Detailed Behavior 
    
-   The GenericRepository is under development at this time. 
+   The Cyder is under development at this time. 
    
    In general, it starts operation when the simulation reaches the month specified 
-   as the startDate. Each month, the GenericRepository makes a request for the 
+   as the startDate. Each month, the Cyder makes a request for the 
    inCommod commodity types at a rate corresponding to the calculated capacity less 
    the amount it currently has in its stocks (which begins the simulation empty). 
    
-   If a request is matched with an offer, the GenericRepository receives that 
+   If a request is matched with an offer, the Cyder receives that 
    order from the supplier and adds the quantity to its stocks. 
    
    At the end of the month, it then proceeds to condition, package, and load the 
@@ -72,19 +73,18 @@ typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
    ceases to operate. 
    
  */
-
-class GenericRepository : public FacilityModel  {
+class Cyder : public FacilityModel  {
 /* --------------------
  * all MODEL classes have these members
  * --------------------
  */
 
 public:
-  /// Default constructor for the GenericRepository class.
-  GenericRepository();
+  /// Default constructor for the Cyder class.
+  Cyder();
 
-  /// Destructor for the GenericRepository class. 
-  ~GenericRepository() {};
+  /// Destructor for the Cyder class. 
+  ~Cyder() {};
   
   /// initialize an object from QueryEngine input
   virtual void initModuleMembers(QueryEngine* qe);
@@ -141,7 +141,7 @@ public:
 public:
 
     /**
-       The handleTick function specific to the GenericRepository.
+       The handleTick function specific to the Cyder.
        At each tick, it requests as much raw inCommod as it can 
        process this * month and offers as much outCommod as it 
        will have in its inventory by the end of the month.
@@ -151,7 +151,7 @@ public:
     virtual void handleTick(int time);
 
     /**
-       The handleTick function specific to the GenericRepository.
+       The handleTick function specific to the Cyder.
        At each tock, it processes material and handles orders, and 
        records this month's actions.
        
@@ -174,21 +174,15 @@ protected:
      * This map holds the input name, a variable reference, and the
      * database datatype of each of the simple datamembers.
      */
-     std::map<std::string, std::string>member_types_ ;
+     std::map<std::string, boost::any> member_refs_ ;
 
     /**
-     * This map holds the input name, a variable reference, and the
-     * database datatype of each of the simple datamembers.
-     */
-     std::map<std::string, void*>member_refs_ ;
-
-    /**
-       The GenericRepository has many input commodities
+       The Cyder has many input commodities
      */
     std::deque<std::string> in_commods_;
 
     /**
-       A limit to how quickly the GenericRepository can accept waste.
+       A limit to how quickly the Cyder can accept waste.
        Units vary. It will be in the commodity unit per month.
      */
     double capacity_;
@@ -223,7 +217,7 @@ protected:
 
     /**
        The maximum size to which the inventory may grow..
-       The GenericRepository must stop processing the material in its stocks 
+       The Cyder must stop processing the material in its stocks 
        when its inventory is full. (YMRLegislative = 70,000tHM) 
      */
     double inventory_size_;
@@ -393,31 +387,18 @@ protected:
        maps
 
        @param name is the name given to this variable in the input grammar
-       @param type is the table data type for this column 
-       @param ref is the reference to the appropriate member variable
+       @param val is the val for the appropraite member variable
       */
-    void mapVars(std::string name, std::string type, void* ref);
-
-    /**
-       This creates and fills  table that will hold the parameters that uniquely
-       define all generic repository models in the simulation.
-    */
-    void defineParamsTable();
+    void mapVars(std::string name, boost::any val);
 
     /**
       This adds a row that uniquely defines this repository model
       */
     void addRowToParamsTable();
 
-    /**
-       This table will hold the parameters that uniquely define this generic
-       repository model.
-     */
-    static table_ptr gr_params_table_;
-
 public:
     /**
-       get the commodity-specific capacity of the GenericRepository
+       get the commodity-specific capacity of the Cyder
        
        @param commod the commodity
      */

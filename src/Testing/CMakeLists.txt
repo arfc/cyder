@@ -7,7 +7,7 @@ message("GENERATED TESTS ${GENERATED_FILTER_LIST}")
 set ( CYDER_TEST_CORE 
   ${CMAKE_CURRENT_SOURCE_DIR}/ComponentTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/DegRateNuclideTests.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepositoryTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/CyderTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/GeometryTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/LumpedNuclideTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MixedCellNuclideTests.cpp

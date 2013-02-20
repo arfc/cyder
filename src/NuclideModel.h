@@ -43,7 +43,7 @@ class NuclideModel;
 typedef boost::shared_ptr<NuclideModel> NuclideModelPtr;
 
 /** 
-   @brief Abstract interface for GenericRepository nuclide transport 
+   @brief Abstract interface for Cyder nuclide transport 
    
    NuclideModels such as MixedCell, OneDimPPM, etc., will share a 
    virtual interface defined here so that information passing concerning 
