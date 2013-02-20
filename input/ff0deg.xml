@@ -41,9 +41,9 @@
     <name>Repository</name>
     <model>
       <GenericRepository>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
+        <x>10000</x>
+        <y>10000</y>
+        <z>10000</z>
         <dx>100</dx>
         <dy>100</dy>
         <dz>100</dz>

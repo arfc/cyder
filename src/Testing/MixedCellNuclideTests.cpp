@@ -238,6 +238,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR0){
   // check the source term 
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
   // check the boundary concentration ?
+  // @TODO the following line throws a valgrind memcheck error.
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
   // check the boundary flux
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));

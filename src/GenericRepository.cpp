@@ -131,12 +131,10 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
 
   switch(comp_type) {
     case BUFFER:
-      buffer_template_ = toRet;
-      // do the buffers have allowed waste package types?
+      buffer_template_ = ComponentPtr(toRet);
       break;
     case FF:
-      far_field_ = toRet;
-      // does the far field have allowed buffer types?
+      far_field_ = ComponentPtr(toRet);
       break;
     case WF:
       // get allowed waste commodities
@@ -195,9 +193,6 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
   wf_templates_ = src->wf_templates_;
   wf_wp_map_ = src->wf_wp_map_;
   commod_wf_map_ = src->commod_wf_map_;
-  buffers_.push_front(ComponentPtr(new Component()));
-  buffers_.front()->copy(buffer_template_);
-  setPlacement(buffers_.front());
 
   // don't copy things that should start out empty
   // initialize empty structures instead
@@ -428,14 +423,10 @@ void GenericRepository::emplaceWaste(){
       current_waste_forms_.pop_front();
     }
     int nwp = current_waste_packages_.size();
+    // for each current_waste_package
     for (int i=0; i < nwp; i++){
       ComponentPtr iter = current_waste_packages_.front();
       // try to load each package in the current buffer 
-      ComponentPtr current_buffer = buffers_.front();
-      if (NULL == current_buffer) {
-        std::string err_msg = "Buffers not yet loaded into Generic Repository.";
-        throw CycException(err_msg);
-      }
       // if the package is full
       if ( iter->isFull()
           // and not too hot
@@ -445,16 +436,6 @@ void GenericRepository::emplaceWaste(){
           ) {
         // emplace it in the buffer
         loadBuffer(iter);
-        if ( current_buffer->isFull() ) {
-          buffers_.push_back(buffers_.front());
-          buffers_.pop_front();
-          if ( buffers_.front()->isFull()){
-            // all buffers are now full, capacity reached
-            is_full_ = true;
-          } else {
-            setPlacement(buffers_.front());
-          }
-        }
         // take the waste package out of the current packagess
         waste_packages_.push_back(iter);
         current_waste_packages_.pop_front();
@@ -537,7 +518,20 @@ ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   // figure out what buffer to put the waste package in
-  ComponentPtr chosen_buffer = buffers_.front();
+  ComponentPtr chosen_buffer;
+  if ( !(buffers_.empty()) && !(buffers_.front()->isFull())) {
+    chosen_buffer = ComponentPtr(buffers_.front());
+  } else if ( buffers_.size()*dx_ < x_) { 
+    chosen_buffer = ComponentPtr(new Component());
+    chosen_buffer->copy(buffer_template_);
+    buffers_.push_front(chosen_buffer);
+    far_field_->load(FF, chosen_buffer);
+    setPlacement(buffers_.front());
+  } else {
+    // all buffers are now full, capacity reached
+    is_full_=true;
+    return chosen_buffer;
+  }
   // and load in the waste package
   buffers_.front()->load(BUFFER, waste_package);
   // put this on the stack of waste packages that have been emplaced
@@ -556,7 +550,7 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
-  double x,y,z;
+  double x,y,z, length;
   // figure out what type of component it is
   switch(comp->type()) 
   {
@@ -564,16 +558,19 @@ ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
       x = x_/2;
       y = y_/2;
       z = z_/2;
+      length = x_;
       break;
     case BUFFER :
-      x = (buffers_.size()- .5)*dx_ ;
-      y = y_/2 ; 
+      x = x_/2 ; 
+      y = (buffers_.size()- .5)*dy_ ;
       z = dz_ ; 
+      length = x_;
       break;
     case WP :
-      x = (comp->parent())->x();
-      y = (emplaced_waste_packages_.size()*dy_ - dy_/2) ; 
+      x = (emplaced_waste_packages_.size()*dx_ - dx_/2) ; // @TODO maxbe should be mod
+      y = (comp->parent())->y();
       z = dz_ ; 
+      length = dx_;
       break;
     case WF :
       x = (comp->parent())->x();
@@ -590,7 +587,7 @@ ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
   }
   // figure out what buffer to put the waste package in
   point_t point = {x,y,z};
-  comp->setPlacement(point);
+  comp->setPlacement(point, length);
   comp->addComponentToTable(comp);
   return comp; 
 }
@@ -614,36 +611,55 @@ void GenericRepository::transportHeat(int time){
       iter++){
     (*iter)->transportHeat(time);
   }
-  if (NULL != far_field_){
+  if ( far_field_){
     far_field_->transportHeat(time);
   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::transportNuclides(int time){
+void GenericRepository::transportNuclides(int the_time){
   // update the nuclide transport BCs everywhere
   // pass the transport nuclides signal through the components, inner -> outer
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       ++iter){
-    (*iter)->transportNuclides(time);
-    (*iter)->updateContaminantTable(time);
+    (*iter)->transportNuclides(the_time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
       ++iter){
-    (*iter)->transportNuclides(time);
-    (*iter)->updateContaminantTable(time);
+    (*iter)->transportNuclides(the_time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
       ++iter){
-    (*iter)->transportNuclides(time);
-    (*iter)->updateContaminantTable(time);
+    (*iter)->transportNuclides(the_time);
   }
-  if (NULL != far_field_){
-    far_field_->transportNuclides(time);
-    (far_field_)->updateContaminantTable(time);
+  if (far_field_){
+    far_field_->transportNuclides(the_time);
+  }
+  updateContaminantTable(the_time);
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void GenericRepository::updateContaminantTable(int the_time) {
+  for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
+      iter != waste_forms_.end();
+      ++iter){
+    (*iter)->updateContaminantTable(the_time);
+  }
+  for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
+      iter != waste_packages_.end();
+      ++iter){
+    (*iter)->updateContaminantTable(the_time);
+  }
+  for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
+      iter != buffers_.end();
+      ++iter){
+    (*iter)->updateContaminantTable(the_time);
+  }
+  if (far_field_){
+    far_field_->updateContaminantTable(the_time);
   }
 }
 

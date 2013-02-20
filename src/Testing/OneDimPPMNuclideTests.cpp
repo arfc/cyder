@@ -2,6 +2,7 @@
 #include <deque>
 #include <map>
 #include <gtest/gtest.h>
+#include <boost/math/special_functions/erf.hpp>
 
 #include "OneDimPPMNuclideTests.h"
 #include "NuclideModelTests.h"
@@ -23,20 +24,21 @@ void OneDimPPMNuclideTest::SetUp(){
 
   // other vars
   theta_ = 0.3; // percent porosity
-  adv_vel_ = 1; // m/yr
+  v_ = 1; // m/yr
   time_ = 0;
   Ci_ = 1;
   Co_ = 2;
-  n_ = 3;
+  porosity_ = 0.1;
   D_ = 4;
   rho_ = 5;
   Kd_ = 6;
 
   // composition set up
   u235_=92235;
-  one_mol_=1.0;
+  am241_=95241;
+  one_kg_=1.0;
   test_comp_= CompMapPtr(new CompMap(MASS));
-  (*test_comp_)[u235_] = one_mol_;
+  (*test_comp_)[u235_] = one_kg_;
   test_size_=10.0;
 
   // material creation
@@ -44,8 +46,11 @@ void OneDimPPMNuclideTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_one_dim_ppm_nuclide model setup
+  mat_table_ = MDB->table("clay");
   one_dim_ppm_ptr_ = OneDimPPMNuclidePtr(initNuclideModel());
+  one_dim_ppm_ptr_->set_mat_table(mat_table_);
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(one_dim_ppm_ptr_);
+  nuc_model_ptr_->set_mat_table(mat_table_);
   default_one_dim_ppm_ptr_ = OneDimPPMNuclidePtr(OneDimPPMNuclide::create());
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_one_dim_ppm_ptr_);
 }
@@ -55,20 +60,48 @@ void OneDimPPMNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, double r, Iso iso, int dt) {
+  double D_L = mat_table_->D(iso/1000);
+  double pi = boost::math::constants::pi<double>();
+  double term_1_frac = (r-v_*dt)/2*pow(D_L*dt,0.5);
+  double term_1_scalar = boost::math::erfc(term_1_frac);
+  double term_2_radical = (pow(v_,2)*dt/pi/D_L);
+  double term_2_exp = exp( -pow(r-v_*dt,2)/(4*D_L*dt)); 
+  double term_2_scalar = 0.5*pow(term_2_radical,0.5)*term_2_exp;
+  double term_3_factor = 0.5*(1 + v_*r/D_L + pow(v_,2)*dt/D_L);
+  double term_3_exp = exp(v_*r/D_L);
+  double term_3_erfc = boost::math::erfc( (r - v_*dt) / (2*pow(D_L*dt,0.5)) );
+  double term_3_scalar = 0.5*term_3_factor*term_3_exp*term_3_erfc;
+  double scalar = term_1_scalar + term_2_scalar + term_3_scalar;
+  return C_0[iso]*0.5*scalar;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, double r, int the_time) {
+  IsoConcMap to_ret;
+  IsoConcMap::iterator it;
+  Iso iso;
+  for( it=C_0.begin(); it!=C_0.end(); ++it){
+    iso = (*it).first;
+    to_ret[iso] = calculate_conc(C_0, r, iso, the_time);
+  }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr OneDimPPMNuclideModelConstructor (){
   return boost::dynamic_pointer_cast<NuclideModel>(OneDimPPMNuclide::create());
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
-     << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
+     << "  <advective_velocity>" << v_ << "</advective_velocity>"
      << "  <initial_concentration>" << Ci_ << "</initial_concentration>"
      << "  <source_concentration>" << Co_ << "</source_concentration>"
-     << "  <porosity>" << n_ << "</porosity>"
-     << "  <diffusion_coeff>" << D_ << "</diffusion_coeff>"
+     << "  <porosity>" << porosity_ << "</porosity>"
      << "  <bulk_density>" << rho_ << "</bulk_density>"
-     << "  <partition_coeff>" << Kd_ << "</partition_coeff>"
      << "</start>";
 
   XMLParser parser(ss);
@@ -81,8 +114,11 @@ OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, initial_state) {
-  EXPECT_EQ(D_, one_dim_ppm_ptr_->D());
-  EXPECT_EQ(n_, one_dim_ppm_ptr_->n());
+  EXPECT_EQ(v_, one_dim_ppm_ptr_->v());
+  EXPECT_EQ(Ci_, one_dim_ppm_ptr_->Ci());
+  EXPECT_EQ(Co_, one_dim_ppm_ptr_->Co());
+  EXPECT_EQ(rho_, one_dim_ppm_ptr_->rho());
+  EXPECT_EQ(porosity_, one_dim_ppm_ptr_->porosity());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, defaultConstructor) {
@@ -92,19 +128,13 @@ TEST_F(OneDimPPMNuclideTest, defaultConstructor) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(OneDimPPMNuclideTest, initFunctionNoXML) { 
-  //EXPECT_NO_THROW(one_dim_ppm_ptr_->init(n_));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, copy) {
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->init(n_));
   OneDimPPMNuclidePtr test_copy = OneDimPPMNuclidePtr(OneDimPPMNuclide::create());
   OneDimPPMNuclidePtr one_dim_ppm_shared_ptr = OneDimPPMNuclidePtr(one_dim_ppm_ptr_);
   NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
   EXPECT_NO_THROW(test_copy->copy(*one_dim_ppm_shared_ptr));
   EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
-  //EXPECT_FLOAT_EQ(n_, test_copy->porosity());
+  EXPECT_FLOAT_EQ(porosity_, test_copy->porosity());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -114,8 +144,8 @@ TEST_F(OneDimPPMNuclideTest, absorb){
   for(int i=0; i<4; i++){
     ASSERT_EQ(i,time_);
     EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-    //EXPECT_NO_THROW(one_dim_ppm_ptr_->update_vec_hist(time_));
-    //EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), one_dim_ppm_ptr_->contained_mass(time_));
+    EXPECT_NO_THROW(one_dim_ppm_ptr_->update_vec_hist(time_));
+    EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), one_dim_ppm_ptr_->contained_mass(time_));
     time_++;
   }
 }
@@ -131,15 +161,15 @@ TEST_F(OneDimPPMNuclideTest, extract){
   ASSERT_EQ(0,time_);
   ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   EXPECT_NO_THROW(one_dim_ppm_ptr_->transportNuclides(time_));
-  //EXPECT_FLOAT_EQ(test_mat_->quantity(), one_dim_ppm_ptr_->contained_mass(time_));
-  //EXPECT_FLOAT_EQ(test_size_, one_dim_ppm_ptr_->contained_mass(time_));
+  EXPECT_FLOAT_EQ(test_mat_->quantity(), one_dim_ppm_ptr_->contained_mass(time_));
+  EXPECT_FLOAT_EQ(test_size_, one_dim_ppm_ptr_->contained_mass(time_));
 
   for(int i=1; i<4; i++){
     time_++;
     ASSERT_EQ(i,time_);
     EXPECT_NO_THROW(nuc_model_ptr_->extract(test_comp_, frac*test_size_));
     EXPECT_NO_THROW(one_dim_ppm_ptr_->transportNuclides(time_));
-    //EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, one_dim_ppm_ptr_->contained_mass(time_));
+    EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, one_dim_ppm_ptr_->contained_mass(time_));
   }
 
 }
@@ -147,45 +177,45 @@ TEST_F(OneDimPPMNuclideTest, extract){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, set_porosity){ 
   // the deg rate must be between 0 and 1, inclusive
-  n_=0;
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(n_));
-  //EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), n_);
-  n_=1;
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(n_));
-  //EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), n_);
+  porosity_=0;
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
+  porosity_=1;
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
   // it should accept floats
-  n_= 0.1;
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(n_));
-  //EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), n_);
+  porosity_= 0.1;
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
   // an exception should be thrown if it's set outside the bounds
-  n_= -1;
-  //EXPECT_THROW(one_dim_ppm_ptr_->set_porosity(n_), CycRangeException);
-  //EXPECT_NE(one_dim_ppm_ptr_->porosity(), n_);
-  n_= 2;
-  //EXPECT_THROW(one_dim_ppm_ptr_->set_porosity(n_), CycRangeException);
-  //EXPECT_NE(one_dim_ppm_ptr_->porosity(), n_);
+  porosity_= -1;
+  EXPECT_THROW(one_dim_ppm_ptr_->set_porosity(porosity_), CycRangeException);
+  EXPECT_NE(one_dim_ppm_ptr_->porosity(), porosity_);
+  porosity_= 2;
+  EXPECT_THROW(one_dim_ppm_ptr_->set_porosity(porosity_), CycRangeException);
+  EXPECT_NE(one_dim_ppm_ptr_->porosity(), porosity_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, transportNuclidesZero){ 
-  // for some setting, nothing should be released
-  n_=0;
+  // for some settings, nothing should be released
+  porosity_=0;
   EXPECT_NO_THROW(one_dim_ppm_ptr_->set_geom(geom_));
-  double expected_src = n_*test_size_;
+  double expected_src = porosity_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
   double radial_midpoint = outer_radius + (outer_radius - nuc_model_ptr_->geom()->inner_radius())/2;
 
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(n_));
-  //EXPECT_FLOAT_EQ(n_, one_dim_ppm_ptr_->porosity());
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(porosity_, one_dim_ppm_ptr_->porosity());
   // get the initial mass
-  //double initial_mass = one_dim_ppm_ptr_->contained_mass();
+  double initial_mass = one_dim_ppm_ptr_->contained_mass(time_);
   // transport the nuclides
-  //EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
   // check that the contained mass matches the initial mass
-  //EXPECT_FLOAT_EQ(initial_mass, one_dim_ppm_ptr_->contained_mass()); 
+  EXPECT_FLOAT_EQ(initial_mass, one_dim_ppm_ptr_->contained_mass(time_)); 
   // check the source term 
   EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
   // check the boundary concentration ?
@@ -199,18 +229,18 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesZero){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){ 
   // if the degradation rate is .5, everything should be released in two years
-  n_= 0.5;
+  porosity_= 0.5;
   EXPECT_NO_THROW(one_dim_ppm_ptr_->set_geom(geom_));
-  double expected_src = n_*test_size_;
+  double expected_src = porosity_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  double expected_conc_w_vel = theta_*adv_vel_*expected_conc; 
+  double expected_conc_w_vel = theta_*v_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
 
-  // set the degradation rate
-  //ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(n_));
-  //EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), n_);
+  // set the porosity
+  ASSERT_NO_THROW(one_dim_ppm_ptr_->set_porosity(porosity_));
+  EXPECT_FLOAT_EQ(one_dim_ppm_ptr_->porosity(), porosity_);
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
 
@@ -275,7 +305,7 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, contained_mass){ 
   time_++;
-  //EXPECT_FLOAT_EQ(0, one_dim_ppm_ptr_->contained_mass());
+  EXPECT_FLOAT_EQ(0, one_dim_ppm_ptr_->contained_mass(time_));
 
 }
 

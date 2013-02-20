@@ -69,7 +69,9 @@ mat_rsrc_ptr StubNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRSNuc") << "StubNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  return MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
+  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
+  update(TI->time());
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -81,6 +83,10 @@ void StubNuclide::transportNuclides(int time){
   // It will send the adjacent components information?
   // The StubNuclide class should transport all nuclides
 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void StubNuclide::update(int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

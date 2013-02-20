@@ -142,6 +142,13 @@ public:
   virtual std::string name(){return "LUMPED_NUCLIDE";};
 
   /**
+     Updates all the hists
+
+     @param the_time the time at which to update the history
+   */
+  virtual void update(int the_time);
+
+  /**
      returns the available material source term at the outer boundary of the 
      component
    
@@ -219,22 +226,6 @@ public:
   /// Gets the fluid volume, based on porosity
   double V_s();
 
-  /**
-     Converts a CompMap and associated total mass to an IsoConcMap for a Volume
-
-     @param comp the composition to convert, a CompMapPtr
-     @param mass the total mass of the composition [kg]
-     @param vol the total volume in which the concentration exists [m^3]
-
-     @return an IsoConcMap whose elements are comp[iso]*mass/volume
-     */
-  IsoConcMap comp_to_conc_map(CompMapPtr comp, double mass, double vol);
-
-  /// @TODO verify whether last_updated is larger than last_updated, but less 
-  //than or equal to the current time.
-  void set_last_updated(int last_updated){last_updated_ = last_updated;};
-  int last_updated(){return last_updated_;};
-
   /** 
      DM model concentration calculator
      @param C_0 the incoming concentration map
@@ -260,14 +251,6 @@ public:
      @return C_f the final concentration at the end of the timestep
     */
   IsoConcMap C_PFM(IsoConcMap C_0, int the_time);
-
-  /**
-    This is a helper function that scales an IsoConcMap with a scalar
-
-    @param C_0 the original IsoConcMap, to be scaled.
-    @param scalar the scalar by which to multiply each element of C_0 [-]
-    */
-  IsoConcMap scaleConcMap(IsoConcMap C_0, double scalar);
 
   /** 
      Determines what IsoVector to remove from the daughter nuclide models
@@ -321,9 +304,6 @@ protected:
 
   /// The porosity of the permeable porous medium
   double porosity_;
-
-  /// the time at which the conc hist was last updated
-  int last_updated_;
 
   /// the current conc map at the inner boundary
   IsoConcMap C_0_;

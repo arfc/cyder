@@ -23,47 +23,6 @@ enum NuclideModelType {
   STUB_NUCLIDE, 
   LAST_NUCLIDE};
 
-/**
-   type definition for radiotoxicity in Sv
-  */
-typedef double Tox;
-
-/**
-   type definition for Concentration Gradients in kg/m^o4
- */
-typedef double ConcGrad;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Concentration Gradients for each isotope
-  */
-typedef std::map<int, ConcGrad> ConcGradMap;
-
-/**
-   type definition for Concentrations in kg/m^3
- */
-typedef double Concentration;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Concentrations of each isotope [kg/m^3]
-  */
-typedef std::map<int, Concentration> IsoConcMap;
-
-/**
-   type definition for Fluxes in kg/m^2s
- */
-typedef double Flux;
-
-/**
-   type definition for a map from isotopes to concentrations
-   The keys are the isotope identifiers Z*1000 + A
-   The values are the Fluxes of each isotope [kg/m^2s]
-  */
-typedef std::map<int, Flux> IsoFluxMap;
-
 /** 
    type definition for a map from times to IsoConcMap
    The keys are timesteps, in the unit of the timesteps in the simulation.
@@ -164,6 +123,13 @@ public:
    */
   virtual std::string name() = 0;
 
+  /** 
+     Update the hists at a certain time
+
+     @param the_time the time at which to update the hists
+   */
+  virtual void update(int the_time) = 0;
+
   /**
      returns the available material source term at the outer boundary of the 
      component in kg
@@ -262,6 +228,9 @@ public:
      @return vec_hist_.at(time). If not found an empty pair is returned.
      */
   std::pair<IsoVector, double> vec_hist(int the_time){
+    if( last_updated() < the_time ){
+      update(the_time);
+    }
     std::pair<IsoVector, double> to_ret;
     VecHist::const_iterator it;
     if( !vec_hist_.empty() ) {
@@ -299,6 +268,9 @@ public:
      @return conc_hist_.at(time). If not found an empty IsoConcMap is return
     */
   IsoConcMap conc_hist(int the_time){
+    if( last_updated() < the_time ){
+      update(the_time);
+    }
     IsoConcMap to_ret;
     ConcHist::iterator it;
     it = conc_hist_.find(the_time);
@@ -364,6 +336,25 @@ public:
   /// Returns wastes_
   std::deque<mat_rsrc_ptr> wastes() {return wastes_;};
 
+  /// returns the time at which the vec_hist and conc_hist were updated
+  int last_updated(){return last_updated_;};
+
+  /** sets the last time that the vec_hist and conc_hist were updated,
+    * first verifying whether last_updated is larger than last_updated_ 
+    *
+    * @param last_updated the time to set last_updated_ to.
+    */ 
+  void set_last_updated(int new_last_updated){
+    if( last_updated_ <= new_last_updated ){
+      last_updated_=new_last_updated;
+    } else {
+      std::stringstream msg_ss;
+      msg_ss << "The new update time " << new_last_updated << " is before the current update time " << last_updated_;
+      LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
+      throw CycRangeException(msg_ss.str());
+    }
+  };
+
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};
@@ -380,5 +371,9 @@ protected:
 
   /// A shared pointer to this Component's material data table 
   MatDataTablePtr mat_table_;
+
+  /// the time at which the histories were last updated
+  int last_updated_;
+
 };
 #endif

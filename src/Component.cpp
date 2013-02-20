@@ -249,14 +249,30 @@ void Component::transportNuclides(int the_time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
-  to_load->setParent(ComponentPtr(shared_from_this()));
+  to_load->set_parent(ComponentPtr(shared_from_this()));
   daughters_.push_back(to_load);
   return shared_from_this();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool Component::isFull() {
-  return true; // @TODO imperative, add logic here
+  // @TODO imperative, add better logic here 
+  bool to_ret;
+  double wp_len;
+  std::vector<ComponentPtr>::iterator it;
+  switch(type()) {
+    case BUFFER : 
+      for(it=daughters_.begin(); it!=daughters_.end(); ++it){
+        wp_len += (*it)->geom()->length();
+      }
+      to_ret = (wp_len >= geom()->length());
+      break;
+    default : 
+      to_ret=true;
+      break;
+  }
+  
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -265,7 +281,7 @@ ComponentType Component::type(){return type_;}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentType Component::componentEnum(std::string type_name) {
   ComponentType toRet = LAST_EBS;
-  string component_type_names[] = {"BUFFER", "ENV", "FF", "NF", "WF", "WP"};
+  string component_type_names[] = {"BUFFER", "FF", "WF", "WP"};
   for(int type = 0; type < LAST_EBS; type++){
     if(component_type_names[type] == type_name){
       toRet = (ComponentType)type;
@@ -548,4 +564,10 @@ NuclideModelPtr Component::nuclide_model(){return nuclide_model_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModelPtr Component::thermal_model(){return thermal_model_;}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void Component::setPlacement(point_t centroid, double length){
+  geom_->set_centroid(centroid);
+  geom_->set_length(length); 
+};
 
