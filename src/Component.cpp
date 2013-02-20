@@ -169,7 +169,7 @@ void Component::updateContaminantTable(int the_time){
   std::map<int, double>::iterator entry;
 
   for( entry=comp->begin(); entry!=comp->end(); ++entry ){
-    EM->newEvent(creator_, "gen_repo_contaminants")
+    EM->newEvent(creator_, "contaminants")
       ->addVal( "CompID", ID())
       ->addVal( "Time", the_time)
       ->addVal( "IsoID", (*entry).first)
@@ -421,7 +421,7 @@ const std::vector<NuclideModelPtr> Component::nuclide_daughters(){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::addComponentToTable(ComponentPtr comp){
-  EM->newEvent(creator_, "gen_repo_components")
+  EM->newEvent(creator_, "components")
     ->addVal("compID", comp->ID())
     ->addVal("parentID", 0) // @TODO update with parent in setparent
     ->addVal("compType", int(comp->type()))
