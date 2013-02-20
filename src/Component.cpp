@@ -19,8 +19,8 @@
 #include "MixedCellNuclide.h"
 #include "OneDimPPMNuclide.h"
 #include "StubNuclide.h"
-#include "BookKeeper.h"
 #include "Logger.h"
+#include "EventManager.h"
 
 using namespace std;
 using boost::lexical_cast;
@@ -40,11 +40,8 @@ string Component::nuclide_type_names_[] = {
   "StubNuclide", 
 };
 
-table_ptr Component::gr_components_table_ = table_ptr(new Table("gen_repo_components"));
-table_ptr Component::gr_contaminant_table_ = table_ptr(new Table("gen_repo_contaminants"));
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Component::Component() :
+Component::Component(Model* creator) :
   name_(""),
   type_(LAST_EBS),
   thermal_model_(StubThermal::create()),
@@ -55,6 +52,7 @@ Component::Component() :
   temp_lim_(373),
   tox_lim_(10) {
 
+  creator_ = creator;
   set_geom(GeometryPtr(new Geometry()));
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -162,36 +160,7 @@ void Component::print(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::defineContaminantTable(){
-  std::vector<column> columns;
-  columns.push_back(std::make_pair( "CompID", "INTEGER"));
-  columns.push_back(std::make_pair( "Time", "INTEGER"));
-  columns.push_back(std::make_pair( "IsoID", "INTEGER"));
-  columns.push_back(std::make_pair( "MassKG", "REAL"));
-  columns.push_back(std::make_pair( "AvailConc", "REAL"));
-
-  primary_key pk;
-  pk.push_back("CompID");
-  pk.push_back("Time");
-  pk.push_back("IsoID");
-  gr_contaminant_table_->defineTable(columns,pk);
-
-  // add CompID in the GenRepoComponentsTable as a foriegn key
-  foreign_key_ref *fkref;
-  foreign_key *fk;
-  key mykey, theirkey;
-  theirkey.push_back("CompID");
-  fkref= new foreign_key_ref("GenRepoComponentsTable",theirkey);
-  mykey.push_back("CompID");
-  fk= new foreign_key(mykey, (*fkref));
-  gr_contaminant_table_->addForeignKey( (*fk) );
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::updateContaminantTable(int the_time){
-  if(!gr_contaminant_table_->defined()){
-    defineContaminantTable();
-  }
   // get the vec_hist
   std::pair<IsoVector, double> vec_pair = nuclide_model()->vec_hist(the_time);
   CompMapPtr comp = vec_pair.first.comp();
@@ -199,18 +168,14 @@ void Component::updateContaminantTable(int the_time){
   // iterate over the vec_hist IsoVector
   std::map<int, double>::iterator entry;
 
-  row a_row;
-  a_row.push_back(std::make_pair( "CompID", ID()));
-  a_row.push_back(std::make_pair( "Time", the_time));
-  a_row.push_back(std::make_pair( "IsoID", 92235));
-  a_row.push_back(std::make_pair( "MassKG", 0));
-  a_row.push_back(std::make_pair( "AvailConc", 0));
   for( entry=comp->begin(); entry!=comp->end(); ++entry ){
-    a_row[2] = std::make_pair( "IsoID", (*entry).first);
-    a_row[3] = std::make_pair( "MassKG", (*entry).second*mass);
-    a_row[4] = std::make_pair( "AvailConc", nuclide_model()->conc_hist(the_time, (*entry).first));
-
-    gr_contaminant_table_->addRow(a_row);
+    EM->newEvent(creator_, "gen_repo_contaminants")
+      ->addVal( "CompID", ID())
+      ->addVal( "Time", the_time)
+      ->addVal( "IsoID", (*entry).first)
+      ->addVal( "MassKG", (*entry).second*mass)
+      ->addVal( "AvailConc", nuclide_model()->conc_hist(the_time, (*entry).first))
+      ->record();
   }
 }
 
@@ -453,51 +418,23 @@ const std::vector<NuclideModelPtr> Component::nuclide_daughters(){
   }
   return to_ret;
 }
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::defineComponentsTable(){
-  // declare the table columns
-  std::vector<column> columns;
-  columns.push_back(std::make_pair("compID", "INTEGER"));
-  columns.push_back(std::make_pair("parentID", "INTEGER")); 
-  columns.push_back(std::make_pair("compType", "INTEGER"));
-  columns.push_back(std::make_pair("name", "VARCHAR(128)"));
-  columns.push_back(std::make_pair("material_data", "VARCHAR(128)"));
-  columns.push_back(std::make_pair("nuclidemodel", "VARCHAR(128)"));
-  columns.push_back(std::make_pair("thermalmodel", "VARCHAR(128)"));
-  columns.push_back(std::make_pair("innerradius", "REAL"));
-  columns.push_back(std::make_pair("outerradius", "REAL"));
-  columns.push_back(std::make_pair("x", "REAL"));
-  columns.push_back(std::make_pair("y", "REAL"));
-  columns.push_back(std::make_pair("z", "REAL"));
-
-  // declare the table's primary key
-  primary_key pk;
-  pk.push_back("compID");
-  gr_components_table_->defineTable(columns,pk);
-}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::addComponentToTable(ComponentPtr comp){
-  if( !gr_components_table_->defined() ){
-    defineComponentsTable();
-  }
-  // add a row
-  row a_row;
-  a_row.push_back(std::make_pair("compID", comp->ID()));
-  a_row.push_back(std::make_pair("parentID", 0)); // @TODO update with parent in setparent
-  a_row.push_back(std::make_pair("compType", int(comp->type())));
-  a_row.push_back(std::make_pair("name", comp->name()));
-  a_row.push_back(std::make_pair("material_data", comp->mat_table()->mat()));
-  a_row.push_back(std::make_pair("nuclidemodel", comp->nuclide_model()->name()));
-  a_row.push_back(std::make_pair("thermalmodel", comp->thermal_model()->name()));
-  a_row.push_back(std::make_pair("innerradius", comp->inner_radius()));
-  a_row.push_back(std::make_pair("outerradius", comp->outer_radius()));
-  a_row.push_back(std::make_pair("x", comp->x()));
-  a_row.push_back(std::make_pair("y", comp->y()));
-  a_row.push_back(std::make_pair("z", comp->z()));
-
-  gr_components_table_->addRow(a_row);
-
+  EM->newEvent(creator_, "gen_repo_components")
+    ->addVal("compID", comp->ID())
+    ->addVal("parentID", 0) // @TODO update with parent in setparent
+    ->addVal("compType", int(comp->type()))
+    ->addVal("name", comp->name())
+    ->addVal("material_data", comp->mat_table()->mat())
+    ->addVal("nuclidemodel", comp->nuclide_model()->name())
+    ->addVal("thermalmodel", comp->thermal_model()->name())
+    ->addVal("innerradius", comp->inner_radius())
+    ->addVal("outerradius", comp->outer_radius())
+    ->addVal("x", comp->x())
+    ->addVal("y", comp->y())
+    ->addVal("z", comp->z())
+    ->record();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

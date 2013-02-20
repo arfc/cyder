@@ -8,6 +8,7 @@
 #include <queue>
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include <boost/any.hpp>
 
 #include "FacilityModel.h"
 #include "Component.h"
@@ -72,7 +73,6 @@ typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
    ceases to operate. 
    
  */
-
 class GenericRepository : public FacilityModel  {
 /* --------------------
  * all MODEL classes have these members
@@ -174,13 +174,7 @@ protected:
      * This map holds the input name, a variable reference, and the
      * database datatype of each of the simple datamembers.
      */
-     std::map<std::string, std::string>member_types_ ;
-
-    /**
-     * This map holds the input name, a variable reference, and the
-     * database datatype of each of the simple datamembers.
-     */
-     std::map<std::string, void*>member_refs_ ;
+     std::map<std::string, boost::any> member_refs_ ;
 
     /**
        The GenericRepository has many input commodities
@@ -393,27 +387,14 @@ protected:
        maps
 
        @param name is the name given to this variable in the input grammar
-       @param type is the table data type for this column 
-       @param ref is the reference to the appropriate member variable
+       @param val is the val for the appropraite member variable
       */
-    void mapVars(std::string name, std::string type, void* ref);
-
-    /**
-       This creates and fills  table that will hold the parameters that uniquely
-       define all generic repository models in the simulation.
-    */
-    void defineParamsTable();
+    void mapVars(std::string name, boost::any val);
 
     /**
       This adds a row that uniquely defines this repository model
       */
     void addRowToParamsTable();
-
-    /**
-       This table will hold the parameters that uniquely define this generic
-       repository model.
-     */
-    static table_ptr gr_params_table_;
 
 public:
     /**

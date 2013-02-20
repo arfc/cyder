@@ -12,6 +12,8 @@
 #include "Timer.h"
 #include "Logger.h"
 #include "GenericRepository.h"
+#include "EventManager.h"
+
 
 
 /**
@@ -52,8 +54,6 @@
 
 using boost::lexical_cast;
 
-table_ptr GenericRepository::gr_params_table_ = table_ptr(new Table( "GenericRepositoryParams"));
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GenericRepository::GenericRepository() {
   // initialize things that don't depend on the input
@@ -61,35 +61,36 @@ GenericRepository::GenericRepository() {
   inventory_ = std::deque< WasteStream >();
   commod_wf_map_ = std::map< std::string, ComponentPtr >();
   wf_wp_map_ = std::map< std::string, ComponentPtr >();
-  far_field_ = ComponentPtr(new Component());
-  buffer_template_ =  ComponentPtr(new Component());
+  far_field_ = ComponentPtr(new Component(this));
+  buffer_template_ =  ComponentPtr(new Component(this));
 
   is_full_ = false;
-  mapVars("x", "REAL", &x_);
-  mapVars("y", "REAL", &y_);
-  mapVars("z", "REAL", &z_);
-  mapVars("dx", "REAL", &dx_);
-  mapVars("dy", "REAL", &dy_);
-  mapVars("dz", "REAL", &dz_);
-  mapVars("advective_velocity", "REAL", &adv_vel_);
-  mapVars("capacity", "REAL", &capacity_);
-  mapVars("inventorysize", "REAL", &inventory_size_);
-  mapVars("lifetime", "INTEGER", &lifetime_);
-  mapVars("startOperYear", "INTEGER", &start_op_yr_);
-  mapVars("startOperMonth", "INTEGER", &start_op_mo_);
+  mapVars("x", &x_);
+  mapVars("y", &y_);
+  mapVars("z", &z_);
+  mapVars("dx", &dx_);
+  mapVars("dy", &dy_);
+  mapVars("dz", &dz_);
+  mapVars("advective_velocity", &adv_vel_);
+  mapVars("capacity", &capacity_);
+  mapVars("inventorysize", &inventory_size_);
+  mapVars("lifetime", &lifetime_);
+  mapVars("startOperYear", &start_op_yr_);
+  mapVars("startOperMonth", &start_op_mo_);
 }
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::initModuleMembers(QueryEngine* qe) { 
   // initialize ordinary objects
-  std::map<std::string, std::string>::iterator item;
-  for (item = member_types_.begin(); item != member_types_.end(); item++) {
-    if (item->second =="INTEGER"){
-      *(static_cast<int*>(member_refs_[item->first])) = lexical_cast<int>(qe->getElementContent(item->first.c_str()));
-    } else if (item->second == "REAL") {
-      *(static_cast<double*>(member_refs_[item->first])) = lexical_cast<double>(qe->getElementContent(item->first.c_str()));
+  std::map<std::string, boost::any>::iterator item;
+  for (item = member_refs_.begin(); item != member_refs_.end(); item++) {
+    if (item->second.type() == typeid(int*)) {
+        (*boost::any_cast<int*>(item->second)) = lexical_cast<int>(qe->getElementContent(item->first.c_str()));
+    } else if (item->second.type() == typeid(double*)) {
+        (*boost::any_cast<double*>(item->second)) = lexical_cast<double>(qe->getElementContent(item->first.c_str()));
     } else {
       std::string err = "The ";
-      err += item->second;
+      err += item->second.type().name();
       err += " data type for variable: ";
       err += item->first;
       err += " is not yet supported by the GenericRepository.";
@@ -116,7 +117,7 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
-  ComponentPtr toRet = ComponentPtr(new Component());
+  ComponentPtr toRet = ComponentPtr(new Component(this));
   // the component class initialization function will pass down the queryengine pointer
   toRet->initModuleMembers(qe);
   // all components have a name and a type
@@ -469,7 +470,7 @@ ComponentPtr GenericRepository::conditionWaste(WasteStream waste_stream){
   // if there doesn't already exist a partially full one
   // @todo check for partially full wf's before creating new one (katyhuff)
   // create that waste form
-  current_waste_forms_.push_back(ComponentPtr(new Component()));
+  current_waste_forms_.push_back(ComponentPtr(new Component(this)));
   current_waste_forms_.back()->copy(chosen_wf_template);
   // and load in the waste stream
   current_waste_forms_.back()->absorb(waste_stream.first);
@@ -506,7 +507,7 @@ ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
         loaded = true;
       } }
     // if no currently unfilled waste packages match, create a new waste package
-    current_waste_packages_.push_back(ComponentPtr( new Component() ));
+    current_waste_packages_.push_back(ComponentPtr( new Component(this) ));
     current_waste_packages_.back()->copy(chosen_wp_template);
     // and load in the waste form
     toRet = current_waste_packages_.back()->load(WP, waste_form); 
@@ -522,7 +523,7 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
   if ( !(buffers_.empty()) && !(buffers_.front()->isFull())) {
     chosen_buffer = ComponentPtr(buffers_.front());
   } else if ( buffers_.size()*dx_ < x_) { 
-    chosen_buffer = ComponentPtr(new Component());
+    chosen_buffer = ComponentPtr(new Component(this));
     chosen_buffer->copy(buffer_template_);
     buffers_.push_front(chosen_buffer);
     far_field_->load(FF, chosen_buffer);
@@ -664,45 +665,24 @@ void GenericRepository::updateContaminantTable(int the_time) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::mapVars(std::string name, std::string type, void* ref) {
-  member_types_.insert(std::make_pair( name , type));
-  member_refs_.insert(std::make_pair( name , ref ));
-}
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::defineParamsTable(){
-  // declare the table columns
-  std::vector<column> columns;
-  std::string id_name("facID");
-  columns.push_back(std::make_pair(id_name, "INTEGER"));
-  std::map<std::string, std::string>::iterator item;
-  for (item = member_types_.begin(); item != member_types_.end(); item++){
-    columns.push_back(std::make_pair(item->first, item->second));
-  }
-  // declare the table's primary key
-  primary_key pk;
-  pk.push_back(id_name);
-  gr_params_table_->defineTable(columns,pk);
+void GenericRepository::mapVars(std::string name, boost::any val) {
+  member_refs_[name] = val;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void GenericRepository::addRowToParamsTable(){
-  if( !gr_params_table_->defined() ){
-    defineParamsTable();
-  }
-  // add a row
-  row a_row;
-  entry i("facID", data(ID()));
-  a_row.push_back(i);
-  std::map<std::string, std::string>::iterator item;
-  for (item = member_types_.begin(); item != member_types_.end(); item++){
-    if (item->second =="INTEGER"){
-      i = make_pair(item->first, *(static_cast<int*>(member_refs_[item->first]))) ;
-    } else if (item->second == "REAL") {
-      i = make_pair(item->first, *(static_cast<double*>(member_refs_[item->first]))) ;
+  event_ptr ev = EM->newEvent(this, "GenericRepositoryParams")
+                   ->addVal("facID", ID());
+
+  std::map<std::string, boost::any>::iterator item;
+  for (item = member_refs_.begin(); item != member_refs_.end(); item++) {
+    if (item->second.type() == typeid(int*)) {
+      ev->addVal(item->first, *boost::any_cast<int*>(item->second));
+    } else if (item->second.type() == typeid(double*)) {
+      ev->addVal(item->first, *boost::any_cast<double*>(item->second));
     }
-    a_row.push_back(i);
   }
-  gr_params_table_->addRow(a_row);
+  ev->record();
 }
 
 /* --------------------

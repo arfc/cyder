@@ -14,6 +14,7 @@
 #include "ThermalModel.h"
 #include "NuclideModel.h"
 #include "Geometry.h"
+#include "Model.h"
 
 /*!
 A map for storing the composition history of a material.
@@ -60,9 +61,9 @@ class Component : public boost::enable_shared_from_this<Component> {
 
 public:
   /**
-     Default constructor for the component class. Creates an empty component.
+     Creates an empty component.
    */
-  Component();
+  Component(Model* creator);
 
   /** 
      Default destructor does nothing.
@@ -102,11 +103,6 @@ public:
      standard verbose printer includes current temp and concentrations
    */
   void print(); 
-
-  /**
-     Defines the gen_repo_contaminant_table_
-    */
-  void defineContaminantTable();
 
   /**
      Updates the gen_repo_contaminant_table_ for this component.
@@ -231,16 +227,9 @@ public:
   const std::vector<NuclideModelPtr> nuclide_daughters();
 
   /**
-     This table will hold information about the component templates 
-     Each component template will have an EBS, a nuclide model ID, 
-     a thermal model ID, 
-   */
-  static void defineComponentsTable();
-
-  /**
      Adds a component to the components table.
    */
-  static void addComponentToTable(ComponentPtr comp);
+  void addComponentToTable(ComponentPtr comp);
 
   /**
      get the ID
@@ -524,15 +513,8 @@ protected:
    */
   ConcMap concentrations_;
 
-  /**
-     The table holding the contaminant history of the component
-     */
-  static table_ptr gr_contaminant_table_;
-
-  /**
-     This table will hold the parameters that uniquely describe each component in the simulation. 
-    */
-  static table_ptr gr_components_table_;
+  /// the genrepo that created/owns this component
+  Model* creator_;
 
 };
 
