@@ -307,19 +307,15 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_updated() <= the_time);
   IsoConcMap to_ret;
 
-  pair<IsoVector, double> sum_pair;
-  sum_pair = vec_hist_[the_time];
-  IsoConcMap C_0 = MatTools::comp_to_conc_map(sum_pair.first.comp(), sum_pair.second, V_f());
-
   switch(formulation_){
     case DM :
-      to_ret = C_DM(C_0, the_time);
+      to_ret = C_DM(C_0_, the_time);
       break;
     case EM :
-      to_ret = C_EM(C_0, the_time);
+      to_ret = C_EM(C_0_, the_time);
       break;
     case PFM :
-      to_ret = C_PFM(C_0, the_time);
+      to_ret = C_PFM(C_0_, the_time);
       break;
     default:
       string err = "The formulation type '"; 
