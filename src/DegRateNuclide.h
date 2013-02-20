@@ -267,6 +267,11 @@ public:
    */
   const int last_degraded() const {return last_degraded_;};
 
+  /**
+    Returns the last timestamp at which this component was last degraded [integer timestamp]
+   */
+  virtual double V_ff(){return MatTools::V_ff(geom_->volume(), 0, tot_deg());};
+
 protected:
   /**
     The advective velocity through this component [m/s]

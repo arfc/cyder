@@ -158,8 +158,7 @@ void LumpedNuclide::transportNuclides(int the_time){
   // If these fluxes are negative, nuclides aphysically flow toward the waste package 
   // It will send the adjacent components information?
   // The LumpedNuclide class should transport all nuclides
-  update_vec_hist(the_time);
-  update_conc_hist(the_time, wastes_);
+  update(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -286,6 +285,10 @@ void LumpedNuclide::set_porosity(double porosity){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double LumpedNuclide::V_ff(){
+  return V_f();
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double LumpedNuclide::V_f(){
   return MatTools::V_f(V_T(),porosity());
 }
@@ -326,7 +329,6 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       LOG(LEV_ERROR,"GRLNuc") << err;
       break;
   }
-  set_last_updated(the_time);
   conc_hist_[the_time] = to_ret;
 }
 
@@ -362,21 +364,24 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> d
 
   std::vector<NuclideModelPtr>::iterator daughter;
   
-  IsoConcMap conc;
+  pair<IsoVector, double> st;
+  pair<IsoVector, double> mixed;
   Volume vol;
-  double scaled_conc_sum;
   Volume vol_sum;
   
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    conc = (*daughter)->dirichlet_bc();
-    vol = (*daughter)->geom()->volume();
-    //scaled_conc_sum += conc * vol;
-    //vol_sum += vol;
-    //concMapToVec(scaleConcMap(conc, vol));
-    ///@TODO don't take everything!
+    st = (*daughter)->source_term_bc();
+    vol = (*daughter)->V_ff();
+    vol_sum += vol;
+    if(mixed.second==0){
+      mixed.first=st.first;
+      mixed.second=st.second;
+    } else {
+      mixed.second +=st.second;
+      mixed.first.mix(st.first,mixed.second/st.second);
+    }
   }
-  //C_0_= scaled_conc_sum/vol_sum; 
-  ///@TODO Divide by only the fluid volume. 
+  C_0_= MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
 }
 
 

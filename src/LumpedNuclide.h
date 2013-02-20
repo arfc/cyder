@@ -220,6 +220,9 @@ public:
   /// Gets the total volume
   double V_T();
 
+  /// Gets the free fluid volume. Same as V_f (no sorption or solubility)
+  virtual double V_ff();
+
   /// Gets the fluid volume, based on porosity
   double V_f();
 

@@ -323,7 +323,7 @@ public:
   double V_s();
 
   /// Gets the free fluid volume, based on porosity and degradation rate
-  double V_ff();
+  virtual double V_ff();
 
 protected:
   /**

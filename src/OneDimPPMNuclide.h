@@ -304,6 +304,9 @@ public:
   /// Gets the fluid volume, based on porosity
   double V_f();
 
+  /// Gets the fluid volume, based on porosity
+  virtual double V_ff(){return V_f();};
+
 protected:
   /**
     The advective velocity through the waste packages in units of m/s.

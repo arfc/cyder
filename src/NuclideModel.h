@@ -355,6 +355,8 @@ public:
     }
   };
 
+  virtual double V_ff()=0;
+
 protected:
   /// A vector of the wastes contained by this component
   ///wastes(){return component_->wastes();};

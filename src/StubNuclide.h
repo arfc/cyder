@@ -162,6 +162,11 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
+  /**
+    returns the fluid volume. 
+    Here, naively, it returns the total volume.
+    */
+  virtual double V_ff(){return geom_->volume();};
 
 };
 #endif
