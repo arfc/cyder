@@ -95,6 +95,16 @@ public:
   static IsoConcMap comp_to_conc_map(const CompMapPtr comp, double mass, double vol); 
 
   /**
+    Converts an IsoConcMap and Volume to CompMap and associated total mass
+
+    @param conc the IsoConcMap to convert
+    @param vol the total volume in which the concentration exists [m^3]
+
+    @return a CompMapPtr and associated mass 
+  */  
+  static IsoConcMap conc_to_comp_map(const IsoConcMap conc, double vol); 
+
+  /**
     Returns the fluid volume [m^3] based on the total volume and the porosity
 
     @param V_T the total volume [m^3]

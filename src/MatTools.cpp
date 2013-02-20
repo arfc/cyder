@@ -83,6 +83,30 @@ IsoConcMap MatTools::comp_to_conc_map(CompMapPtr comp, double mass, double vol){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol){
+  MatTools::validate_finite_pos(vol);
+
+  CompMapPtr comp = CompMapPtr(new CompMap(MASS));
+  double mass;
+  int iso;
+  double c_iso;
+  double m_iso;
+  CompMap::const_iterator it;
+  it=(*conc).begin();
+  while(it!= (*conc).end() ){
+    iso = (*it).first;
+    c_iso=((*it).second);
+    m_iso = c_iso*vol;
+    comp[iso] = m_iso;
+    mass+=m_iso;
+    ++it;
+  } 
+  comp.normalize();
+  pair<CompMapPtr, double> to_ret = make_pair(comp, mass);
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MatTools::V_f(double V_T, double theta){
   validate_percent(theta);
   validate_finite_pos(V_T);

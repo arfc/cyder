@@ -264,6 +264,17 @@ public:
     */
   void update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters); 
 
+  /**
+     Extracts one timestep's mass from the daughter nuclidemodel.
+
+     @param daughter the nuclide model from which to extract mass
+     @param dt the timestep length over which to integrate
+
+     @return the material that has been extracted from daughter
+     */
+  mat_rsrc_ptr extractIntegratedMass(NuclideModelPtr daughter, 
+      double dt);
+
   /** 
      Updates the contained vector
 
