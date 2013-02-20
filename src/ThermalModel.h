@@ -39,11 +39,11 @@ class ThermalModel;
 typedef boost::shared_ptr<ThermalModel> ThermalModelPtr;
 
 /** 
-   @brief Abstract interface for heat transport models to be used in the GenericRepository
+   @brief Abstract interface for heat transport models to be used in the Cyder
    
    ThermalModels such as Lumped, Stub etc,
    will share this virtual interface so that they can be interchanged within the  
-   GenericRepository.
+   Cyder.
  */
 class ThermalModel {
 

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- 1 SourceFacility Source, 1 GenericRepository Sink -->
+<!-- 1 SourceFacility Source, 1 Cyder Sink -->
 
 <simulation>
   <control>
@@ -40,7 +40,7 @@
   <facility>
     <name>Repository</name>
     <model>
-      <GenericRepository>
+      <Cyder>
         <x>10000</x>
         <y>10000</y>
         <z>10000</z>
@@ -140,7 +140,7 @@
             </MixedCellNuclide>
           </nuclidemodel>
         </component>
-      </GenericRepository>
+      </Cyder>
     </model>
     <incommodity>waste</incommodity>
   </facility>

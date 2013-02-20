@@ -93,7 +93,7 @@ You should see output like this::
     >> Scanning dependencies of target cyder
     ...
     ...
-    >> [100%] Building CXX object CMakeFiles/cyder.dir/GenericRepository.cpp.o
+    >> [100%] Building CXX object CMakeFiles/cyder.dir/Cyder.cpp.o
     >> Linking CXX executable cyder
     >> [100%] Built target cyder
 

@@ -50,7 +50,7 @@ class Component;
 typedef boost::shared_ptr<Component> ComponentPtr;
 
 /** 
-   @brief Defines interface for subcomponents of the GenericRepository
+   @brief Defines interface for subcomponents of the Cyder generic repository
    
    Components such as the Waste Form, Waste Package, Buffer, Near Field,
    Far Field, and Envrionment will share a universal interface so that 

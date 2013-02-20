@@ -98,13 +98,13 @@ ELSE (DOXYGEN_FOUND)
 ENDIF (DOXYGEN_FOUND)
 
 # ------------------------- Add the Models -----------------------------------
-SET(MODEL_PATH "/Models/Facility/GenericRepository")
+SET(MODEL_PATH "/Models/Facility/Cyder")
 
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${MODEL_PATH})
 
-SET(GenericRepository_SRC
-  ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepository.cpp 
+SET(Cyder_SRC
+  ${CMAKE_CURRENT_SOURCE_DIR}/Cyder.cpp 
   ${CMAKE_CURRENT_SOURCE_DIR}/Component.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Geometry.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/DegRateNuclide.cpp
@@ -120,36 +120,36 @@ SET(GenericRepository_SRC
 
 ADD_SUBDIRECTORY(Input)
 
-ADD_LIBRARY( GenericRepository ${GenericRepository_SRC})
+ADD_LIBRARY( Cyder ${Cyder_SRC})
 
-TARGET_LINK_LIBRARIES( GenericRepository dl ${CYDER_LIBRARIES} ${LIBS})
+TARGET_LINK_LIBRARIES( Cyder dl ${CYDER_LIBRARIES} ${LIBS})
 
-SET_TARGET_PROPERTIES( GenericRepository 
+SET_TARGET_PROPERTIES( Cyder 
   PROPERTIES INSTALL_NAME_DIR "${CYCLUS_ROOT_DIR}/lib${MODEL_PATH}"
   INSTALL_RPATH "${CYCLUS_ROOT_DIR}/lib${MODEL_PATH}"
   )
 
-SET(CYDER_LIBRARIES ${CYDER_LIBRARIES} GenericRepository )
+SET(CYDER_LIBRARIES ${CYDER_LIBRARIES} Cyder )
 
 CONFIGURE_FILE(
-  ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepository.rng
-  ${PROJECT_BINARY_DIR}/lib${MODEL_PATH}/GenericRepository.rng
+  ${CMAKE_CURRENT_SOURCE_DIR}/Cyder.rng
+  ${PROJECT_BINARY_DIR}/lib${MODEL_PATH}/Cyder.rng
   COPYONLY
   )
 
-install(TARGETS GenericRepository
+install(TARGETS Cyder
   LIBRARY DESTINATION cyclus/lib${MODEL_PATH}
   COMPONENT ${MODEL_PATH}
   )
 
-install(FILES "GenericRepository.rng"
+install(FILES "Cyder.rng"
   DESTINATION cyclus/lib${MODEL_PATH}
   COMPONENT "${MODEL_PATH}.rng"
   )
 
 SET(FacilityTestSource ${FacilityTestSource} 
-  ${CMAKE_CURRENT_SOURCE_DIR}/GenericRepositoryTests.cpp 
-  ${GenericRepository_SRC}
+  ${CMAKE_CURRENT_SOURCE_DIR}/CyderTests.cpp 
+  ${Cyder_SRC}
   )
 
 INCLUDE(CyclusModuleMacros)

@@ -1,5 +1,5 @@
-/*! \file GenericRepository.cpp
-    \brief Implements the GenericRepository class, the central class of Cyder 
+/*! \file Cyder.cpp
+    \brief Implements the Cyder class, the central class of Cyder 
     \author Kathryn D. Huff
  */
 
@@ -11,13 +11,13 @@
 #include "CycException.h"
 #include "Timer.h"
 #include "Logger.h"
-#include "GenericRepository.h"
+#include "Cyder.h"
 #include "EventManager.h"
 
 
 
 /**
- * The GenericRepository class inherits from the FacilityModel class and is 
+ * The Cyder class inherits from the FacilityModel class and is 
  * dynamically loaded by the Model class when requested.
  * 
  * This facility model is intended to calculate nuclide and heat metrics over
@@ -55,7 +55,7 @@
 using boost::lexical_cast;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-GenericRepository::GenericRepository() {
+Cyder::Cyder() {
   // initialize things that don't depend on the input
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
@@ -80,7 +80,7 @@ GenericRepository::GenericRepository() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::initModuleMembers(QueryEngine* qe) { 
+void Cyder::initModuleMembers(QueryEngine* qe) { 
   // initialize ordinary objects
   std::map<std::string, boost::any>::iterator item;
   for (item = member_refs_.begin(); item != member_refs_.end(); item++) {
@@ -93,7 +93,7 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
       err += item->second.type().name();
       err += " data type for variable: ";
       err += item->first;
-      err += " is not yet supported by the GenericRepository.";
+      err += " is not yet supported by the Cyder.";
       LOG(LEV_ERROR,"GenRepoFac")<<err;;
       throw CycException(err);
     }
@@ -116,7 +116,7 @@ void GenericRepository::initModuleMembers(QueryEngine* qe) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
+ComponentPtr Cyder::initComponent(QueryEngine* qe){
   ComponentPtr toRet = ComponentPtr(new Component(this));
   // the component class initialization function will pass down the queryengine pointer
   toRet->initModuleMembers(qe);
@@ -170,10 +170,10 @@ ComponentPtr GenericRepository::initComponent(QueryEngine* qe){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
+void Cyder::cloneModuleMembersFrom(FacilityModel* source)
 {
 
-  GenericRepository* src = dynamic_cast<GenericRepository*>(source);
+  Cyder* src = dynamic_cast<Cyder*>(source);
   // copy variables specific to this model
   x_= src->x_;
   y_= src->y_;
@@ -205,14 +205,14 @@ void GenericRepository::cloneModuleMembersFrom(FacilityModel* source)
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::copyFreshModel(Model* src)
+void Cyder::copyFreshModel(Model* src)
 {
-  copy(dynamic_cast<GenericRepository*>(src));
+  copy(dynamic_cast<Cyder*>(src));
 }
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-std::string GenericRepository::str() {
+std::string Cyder::str() {
  
   // this should ultimately print all of the components loaded into this repository.
   std::stringstream fac_model_ss;
@@ -245,25 +245,25 @@ std::string GenericRepository::str() {
 };
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::receiveMessage(msg_ptr msg)
+void Cyder::receiveMessage(msg_ptr msg)
 {
-  throw CycException("GenericRepository doesn't know what to do with a msg.");
+  throw CycException("Cyder doesn't know what to do with a msg.");
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
+void Cyder::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
   // grab each material object off of the manifest
   // and move it into the stocks.
   for (std::vector<rsrc_ptr>::iterator this_rsrc=manifest.begin();
        this_rsrc != manifest.end();
        this_rsrc++)
   {
-    LOG(LEV_DEBUG2, "GenRepoFac") <<"GenericRepository " << ID() << " is receiving material with mass "
+    LOG(LEV_DEBUG2, "GenRepoFac") <<"Cyder " << ID() << " is receiving material with mass "
         << (*this_rsrc)->quantity();
     if ((*this_rsrc)->type()==MATERIAL_RES){
       stocks_.push_front(std::make_pair(boost::dynamic_pointer_cast<Material>(*this_rsrc), trans.commod()));
     } else {
-      std::string err = "The GenericRepository only accepts Material-type Resources.";
+      std::string err = "The Cyder only accepts Material-type Resources.";
       throw CycException(err);
       LOG(LEV_ERROR, "GenRepoFac")<< err ;
     }
@@ -271,7 +271,7 @@ void GenericRepository::addResource(Transaction trans, std::vector<rsrc_ptr> man
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::handleTick(int time)
+void Cyder::handleTick(int time)
 {
   LOG(LEV_INFO3, "GenRepoFac") << facName() << " is ticking {";
   // if this is the first timestep, register the far field
@@ -285,7 +285,7 @@ void GenericRepository::handleTick(int time)
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::handleTock(int time) {
+void Cyder::handleTock(int time) {
 
   // emplace the waste that's ready
   emplaceWaste();
@@ -299,7 +299,7 @@ void GenericRepository::handleTock(int time) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::makeRequests(int time){
+void Cyder::makeRequests(int time){
 
   // should this model make requests for all of the commodities it accepts?
   // there should be a section of the repository for each accepted commodity
@@ -349,11 +349,11 @@ void GenericRepository::makeRequests(int time){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double GenericRepository::getCapacity(std::string commod){
+double Cyder::getCapacity(std::string commod){
   double toRet=0;
   // if the overall repo has a legislative limit, report it
   // eventually, this will report the commodity dependent capacity
-  // The GenericRepository should ask for material unless it's full
+  // The Cyder should ask for material unless it's full
   double inv = this->checkInventory();
   // including how much is already in its stocks
   double sto = this->checkStocks(); 
@@ -371,7 +371,7 @@ double GenericRepository::getCapacity(std::string commod){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double GenericRepository::checkInventory(){
+double Cyder::checkInventory(){
   double total = 0;
 
   // Iterate through the inventory and sum the amount of whatever
@@ -384,7 +384,7 @@ double GenericRepository::checkInventory(){
   return total;
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double GenericRepository::checkStocks(){
+double Cyder::checkStocks(){
   double total = 0;
 
   // Iterate through the stocks and sum the amount of whatever
@@ -400,7 +400,7 @@ double GenericRepository::checkStocks(){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::emplaceWaste(){
+void Cyder::emplaceWaste(){
   // if there's anything in the stocks, try to emplace it
   if (!stocks_.empty()) {
     // for each waste stream in the stocks
@@ -454,7 +454,7 @@ void GenericRepository::emplaceWaste(){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ComponentPtr GenericRepository::conditionWaste(WasteStream waste_stream){
+ComponentPtr Cyder::conditionWaste(WasteStream waste_stream){
   // figure out what waste form to put the waste stream in
   std::map<std::string, ComponentPtr>::iterator found_pair;
   found_pair= commod_wf_map_.find(waste_stream.second);
@@ -462,7 +462,7 @@ ComponentPtr GenericRepository::conditionWaste(WasteStream waste_stream){
   if (found_pair == commod_wf_map_.end()){
     std::string err_msg = "The commodity '";
     err_msg += waste_stream.second;
-    err_msg +="' does not have a matching WF in the GenericRepository.";
+    err_msg +="' does not have a matching WF in the Cyder.";
     throw CycException(err_msg);
   } else {
     chosen_wf_template = commod_wf_map_[waste_stream.second];
@@ -478,7 +478,7 @@ ComponentPtr GenericRepository::conditionWaste(WasteStream waste_stream){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
+ComponentPtr Cyder::packageWaste(ComponentPtr waste_form){
   // figure out what waste package to put the waste form in
   bool loaded = false;
   ComponentPtr chosen_wp_template;
@@ -487,7 +487,7 @@ ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
   if (chosen_wp_template == NULL){
     std::string err_msg = "The waste form '";
     err_msg += (waste_form)->name();
-    err_msg +="' does not have a matching WP in the GenericRepository.";
+    err_msg +="' does not have a matching WP in the Cyder.";
     throw CycException(err_msg);
   }
   ComponentPtr toRet;
@@ -517,7 +517,7 @@ ComponentPtr GenericRepository::packageWaste(ComponentPtr waste_form){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
+ComponentPtr Cyder::loadBuffer(ComponentPtr waste_package){
   // figure out what buffer to put the waste package in
   ComponentPtr chosen_buffer;
   if ( !(buffers_.empty()) && !(buffers_.front()->isFull())) {
@@ -550,7 +550,7 @@ ComponentPtr GenericRepository::loadBuffer(ComponentPtr waste_package){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
+ComponentPtr Cyder::setPlacement(ComponentPtr comp){
   double x,y,z, length;
   // figure out what type of component it is
   switch(comp->type()) 
@@ -594,7 +594,7 @@ ComponentPtr GenericRepository::setPlacement(ComponentPtr comp){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::transportHeat(int time){
+void Cyder::transportHeat(int time){
   // update the thermal BCs everywhere
   // pass the transport heat signal through the components, inner -> outer
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
@@ -618,7 +618,7 @@ void GenericRepository::transportHeat(int time){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::transportNuclides(int the_time){
+void Cyder::transportNuclides(int the_time){
   // update the nuclide transport BCs everywhere
   // pass the transport nuclides signal through the components, inner -> outer
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
@@ -643,7 +643,7 @@ void GenericRepository::transportNuclides(int the_time){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::updateContaminantTable(int the_time) {
+void Cyder::updateContaminantTable(int the_time) {
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
       ++iter){
@@ -665,13 +665,13 @@ void GenericRepository::updateContaminantTable(int the_time) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::mapVars(std::string name, boost::any val) {
+void Cyder::mapVars(std::string name, boost::any val) {
   member_refs_[name] = val;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void GenericRepository::addRowToParamsTable(){
-  event_ptr ev = EM->newEvent(this, "GenericRepositoryParams")
+void Cyder::addRowToParamsTable(){
+  event_ptr ev = EM->newEvent(this, "CyderParams")
                    ->addVal("facID", ID());
 
   std::map<std::string, boost::any>::iterator item;
@@ -690,11 +690,11 @@ void GenericRepository::addRowToParamsTable(){
  * --------------------
  */
 
-extern "C" Model* constructGenericRepository() {
-    return new GenericRepository();
+extern "C" Model* constructCyder() {
+    return new Cyder();
 }
 
-extern "C" void destructGenericRepository(Model* p) {
+extern "C" void destructCyder(Model* p) {
     delete p;
 }
 
