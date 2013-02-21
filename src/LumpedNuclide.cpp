@@ -394,7 +394,6 @@ mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter,
       dt*theta*v());
 
   pair<CompMapPtr, double> to_rem = MatTools::conc_to_comp_map(conc, daughter->V_ff());
-  return daughter->extract(to_rem.first, to_rem.second) 
-
+  return daughter->extract(to_rem.first, to_rem.second); 
 }
 

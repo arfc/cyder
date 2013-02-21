@@ -92,16 +92,16 @@ pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol)
   double c_iso;
   double m_iso;
   CompMap::const_iterator it;
-  it=(*conc).begin();
-  while(it!= (*conc).end() ){
+  it=conc.begin();
+  while(it!= conc.end() ){
     iso = (*it).first;
     c_iso=((*it).second);
     m_iso = c_iso*vol;
-    comp[iso] = m_iso;
+    (*comp)[iso] = m_iso;
     mass+=m_iso;
     ++it;
   } 
-  comp.normalize();
+  (*comp).normalize();
   pair<CompMapPtr, double> to_ret = make_pair(comp, mass);
   return to_ret;
 }

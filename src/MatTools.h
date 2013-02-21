@@ -80,8 +80,8 @@ public:
      @param mat_list the list of materials to remove that comp from
      @return the material extracted
     **/
-  static mat_rsrc_ptr extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
-      std::deque<mat_rsrc_ptr>& mat_list);
+  static mat_rsrc_ptr extract(const CompMapPtr comp_to_rem, 
+      double kg_to_rem, std::deque<mat_rsrc_ptr>& mat_list);
 
   /**
     Converts a CompMap and associated total mass to an IsoConcMap for a Volume
@@ -92,7 +92,8 @@ public:
 
     @return an IsoConcMap whose elements are comp[iso]*mass/volume
   */  
-  static IsoConcMap comp_to_conc_map(const CompMapPtr comp, double mass, double vol); 
+  static IsoConcMap comp_to_conc_map(const CompMapPtr comp, 
+      double mass, double vol); 
 
   /**
     Converts an IsoConcMap and Volume to CompMap and associated total mass
@@ -102,7 +103,8 @@ public:
 
     @return a CompMapPtr and associated mass 
   */  
-  static IsoConcMap conc_to_comp_map(const IsoConcMap conc, double vol); 
+  static std::pair<CompMapPtr, double> conc_to_comp_map(const 
+      IsoConcMap conc, double vol); 
 
   /**
     Returns the fluid volume [m^3] based on the total volume and the porosity
