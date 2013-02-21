@@ -88,6 +88,12 @@ class Query(object):
     Stores the axes formed when plotting the data in this Query.
     """
 
+    legend=None
+    """
+    Stores the legend formed if there is one.
+
+    """
+
     figure = None
     """
     Stores the figure formed by plotting the data in this Query.
@@ -825,7 +831,9 @@ class Query(object):
         self.ax.set_xlabel(self.data_axes[time_dim])
         #self.ax.set_xticks(indList, t)
         #self.ax.set_yticks(np.arange(0,max(run_sum)))
-        self.ax.legend(legend_items,legend_ids, title=self.data_axes[stream_dim])
+        self.legend = self.ax.legend(legend_items,legend_ids, 
+                title=self.data_axes[stream_dim], loc='upper right', 
+                bbox_to_anchor=(1.25,1)) 
 
         return self
 
@@ -911,8 +919,16 @@ class Query(object):
             raise QueryException(
                 "Error: please give filename for plot output.")
 
+
         fig = self.figure
-        pylab.savefig(filename)
+
+        if self.legend is not None : 
+            pylab.savefig(filename, bbox_extra_artists=(self.legend,), 
+                    bbox_inches='tight')
+        else :
+            pylab.savefig(filename)
+
+
         return self
 
 ###############################################################################
