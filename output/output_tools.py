@@ -821,7 +821,7 @@ class Query(object):
                                      width=1,
                                      bottom=run_sum[time], 
                                      color=cm.jet(float(ind/20.), alpha=0.5), 
-                                     label=str(indList[ind]))
+                                     label=str(ind))
               run_sum[time] += plot_data[time, ind]
             legend_items.append(the_plot[0])
             legend_ids.append(indList[ind])
