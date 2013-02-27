@@ -28,6 +28,7 @@ LumpedNuclide::LumpedNuclide() : t_t_(0),
   Pe_ = 0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+  C_0_ = IsoConcMap();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -43,6 +44,7 @@ LumpedNuclide::LumpedNuclide(QueryEngine* qe):
 
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
+  C_0_ = IsoConcMap();
   initModuleMembers(qe);
 }
 
@@ -102,6 +104,7 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   set_Pe(src_ptr->Pe());
   set_porosity(src_ptr->porosity());
   set_formulation(src_ptr->formulation());
+  set_C_0(IsoConcMap());
 
   // copy the geometry AND the centroid, it should be reset later.
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
@@ -381,7 +384,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
       mixed.first.mix(st.first,mixed.second/st.second);
     }
   }
-  C_0_= MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
+  set_C_0(MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum)); 
 
 }
 

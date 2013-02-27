@@ -178,6 +178,9 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
+  /// Returns the inner boundary condition 
+  const IsoConcMap C_0() const {return C_0_;};
+
   /// Returns the formulation of the concentration relationship
   const FormulationType formulation() const {return formulation_;};
 
@@ -187,6 +190,9 @@ public:
    * @return the formulation type corresponding to the string
    */
   FormulationType enumerateFormulation(std::string formulation);
+
+  /// Sets the internal boundary condition
+  void set_C_0(IsoConcMap C_0){C_0_ = C_0;};
 
   /// Sets the formulation of the concentration relationship
   void set_formulation(std::string formulation){formulation_ = enumerateFormulation(formulation);};
@@ -214,7 +220,7 @@ public:
    */
   const double v() const {return v_;};
 
-  /// The porosity of the permeable porous mediuam of theis component. [%]
+  /// The porosity of the permeable porous mediuam of this component. [%]
   const double porosity() const {return porosity_;};
 
   /// Gets the total volume

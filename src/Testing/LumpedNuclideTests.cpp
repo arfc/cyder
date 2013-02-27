@@ -42,6 +42,8 @@ void LumpedNuclideTest::SetUp(){
   test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
   test_mat_->setQuantity(test_size_);
 
+  // test_C_0
+  test_C_0_ = MatTools::comp_to_conc_map(test_comp_,test_size_,geom_->volume());
   // test_lumped_nuclide model setup
   mat_table_ = MDB->table("clay");
   lumped_ptr_=LumpedNuclidePtr(initNuclideModel());
@@ -194,11 +196,12 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(PFM));
   IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
+  zero_conc_map[u235_] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  lumped_ptr_->set_C_0(test_C_0_);
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
@@ -206,7 +209,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  double expected_conc = test_size_*exp(-time_)/lumped_ptr_->V_f();
+  double expected_conc = test_C_0_[u235_]*exp(-time_);
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
@@ -238,11 +241,12 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   lumped_ptr_->set_Pe(Pe);
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(DM));
   IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
+  zero_conc_map[u235_] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  lumped_ptr_->set_C_0(test_C_0_);
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
@@ -252,7 +256,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
   double pow_arg = (Pe/2)*(1-pow(1+4*time_/Pe, 0.5));
   double exponent = exp(pow_arg);
-  double expected_conc = (test_size_/lumped_ptr_->V_f())*exponent;
+  double expected_conc = (test_C_0_[u235_]*exponent);
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
@@ -282,11 +286,12 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(EM));
   IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
+  zero_conc_map[u235_] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  lumped_ptr_->set_C_0(test_C_0_);
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
@@ -294,7 +299,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  double expected_conc = (test_size_/lumped_ptr_->V_f())/(1+time_);
+  double expected_conc = (test_C_0_[u235_]/1+time_);
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
@@ -328,7 +333,15 @@ TEST_F(LumpedNuclideTest, updateVecHist){
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  lumped_ptr_->set_C_0(test_C_0_);
   EXPECT_NO_THROW(lumped_ptr_->update_vec_hist(time_));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(LumpedNuclideTest, setC_0){
+  EXPECT_NO_THROW(lumped_ptr_->set_C_0(test_C_0_));
+  IsoConcMap actual = lumped_ptr_->C_0();
+  EXPECT_FLOAT_EQ(test_C_0_[u235_], actual[u235_] );
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -362,17 +375,17 @@ TEST_F(LumpedNuclideTest, C_DM){
   lumped_ptr_->set_formulation(DM);
 
   IsoConcMap conc_map;
-  conc_map[92235] = 10;
+  conc_map[u235_] = 10;
   conc_map[95242] = 10;
 
   IsoConcMap expected;
-  expected[92235] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
+  expected[u235_] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
   expected[95242] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
 
 
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
-  EXPECT_FLOAT_EQ(expected[92235],  lumped_ptr_->C_DM( conc_map, time_ )[92235]);
+  EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_DM( conc_map, time_ )[u235_]);
   EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_DM( conc_map, time_ )[95242]);
   time_++;
 
@@ -385,16 +398,16 @@ TEST_F(LumpedNuclideTest, C_EM){
   lumped_ptr_->set_formulation(EM);
 
   IsoConcMap conc_map;
-  conc_map[92235] = 10;
+  conc_map[u235_] = 10;
   conc_map[95242] = 10;
 
   IsoConcMap expected;
-  expected[92235] = 10/(1+time_);
+  expected[u235_] = 10/(1+time_);
   expected[95242] = 10/(1+time_);
 
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
-  EXPECT_FLOAT_EQ(expected[92235],  lumped_ptr_->C_EM( conc_map, time_ )[92235]);
+  EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_EM( conc_map, time_ )[u235_]);
   EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_EM( conc_map, time_ )[95242]);
   time_++;
 }
@@ -406,16 +419,16 @@ TEST_F(LumpedNuclideTest, C_PFM){
   lumped_ptr_->set_formulation(PFM);
 
   IsoConcMap conc_map;
-  conc_map[92235] = 10;
+  conc_map[u235_] = 10;
   conc_map[95242] = 10;
 
   IsoConcMap expected;
-  expected[92235] = 10*exp(-time_);
+  expected[u235_] = 10*exp(-time_);
   expected[95242] = 10*exp(-time_);
 
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
-  EXPECT_FLOAT_EQ(expected[92235],  lumped_ptr_->C_PFM( conc_map, time_ )[92235]);
+  EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_PFM( conc_map, time_ )[u235_]);
   EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_PFM( conc_map, time_ )[95242]);
   time_++;
 }
