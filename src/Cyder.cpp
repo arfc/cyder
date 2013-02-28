@@ -671,7 +671,7 @@ void Cyder::mapVars(std::string name, boost::any val) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::addRowToParamsTable(){
-  event_ptr ev = EM->newEvent(this, "CyderParams")
+  event_ptr ev = EM->newEvent("CyderParams")
                    ->addVal("facID", ID());
 
   std::map<std::string, boost::any>::iterator item;
