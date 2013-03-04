@@ -312,16 +312,17 @@ double LumpedNuclide::V_T(){
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_updated() <= the_time);
   IsoConcMap to_ret;
+  int dt = max(the_time - last_updated(), 1);
 
   switch(formulation_){
     case DM :
-      to_ret = C_DM(C_0_, the_time);
+      to_ret = C_DM(C_0_, dt);
       break;
     case EM :
-      to_ret = C_EM(C_0_, the_time);
+      to_ret = C_EM(C_0_, dt);
       break;
     case PFM :
-      to_ret = C_PFM(C_0_, the_time);
+      to_ret = C_PFM(C_0_, dt);
       break;
     default:
       string err = "The formulation type '"; err += formulation_;
@@ -380,8 +381,8 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
       mixed.second=st.second;
     } else {
       absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
-      mixed.second +=st.second;
       mixed.first.mix(st.first,mixed.second/st.second);
+      mixed.second +=st.second;
     }
   }
   set_C_0(MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum)); 
@@ -391,10 +392,8 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
-  IsoConcMap bc = daughter->dirichlet_bc();
-  double theta = daughter->V_ff()/daughter->geom()->length();
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
-      dt*theta*v());
+      dt*v()*daughter->V_ff());
 
   pair<CompMapPtr, double> to_rem = MatTools::conc_to_comp_map(conc, daughter->V_ff());
   return daughter->extract(to_rem.first, to_rem.second); 
