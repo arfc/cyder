@@ -64,6 +64,49 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, d
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap MatTools::comp_to_conc_map(CompMapPtr comp, double mass, double vol){
+  MatTools::validate_finite_pos(vol);
+  MatTools::validate_finite_pos(mass);
+
+  IsoConcMap to_ret;
+  int iso;
+  double m_iso;
+  CompMap::const_iterator it;
+  it=(*comp).begin();
+  while(it!= (*comp).end() ){
+    iso = (*it).first;
+    m_iso=((*it).second)*mass;
+    to_ret.insert(make_pair(iso, m_iso/vol));
+    ++it;
+  } 
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol){
+  MatTools::validate_finite_pos(vol);
+
+  CompMapPtr comp = CompMapPtr(new CompMap(MASS));
+  double mass;
+  int iso;
+  double c_iso;
+  double m_iso;
+  CompMap::const_iterator it;
+  it=conc.begin();
+  while(it!= conc.end() ){
+    iso = (*it).first;
+    c_iso=((*it).second);
+    m_iso = c_iso*vol;
+    (*comp)[iso] = m_iso;
+    mass+=m_iso;
+    ++it;
+  } 
+  (*comp).normalize();
+  pair<CompMapPtr, double> to_ret = make_pair(comp, mass);
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MatTools::V_f(double V_T, double theta){
   validate_percent(theta);
   validate_finite_pos(V_T);
@@ -120,4 +163,13 @@ void MatTools::validate_finite_pos(double pos){
 
 }
 
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
+  double orig;
+  IsoConcMap::iterator it;
+  for(it = C_0.begin(); it != C_0.end(); ++it) { 
+    orig = C_0[(*it).first];
+    C_0[(*it).first] = orig*scalar;
+  }
+  return C_0;
+}

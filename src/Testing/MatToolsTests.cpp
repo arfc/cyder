@@ -26,6 +26,7 @@ class MatToolsTest : public ::testing::Test {
     virtual void SetUp(){
       // composition set up
       u235_=92235;
+      am241_=95241;
       one_mol_=1.0;
       test_comp_= CompMapPtr(new CompMap(MASS));
       (*test_comp_)[u235_] = one_mol_;
@@ -70,6 +71,28 @@ TEST_F(MatToolsTest, extract){
   //@TODO this is just a placeholder, to remind you to write a test.
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, convert_comp_to_conc){ 
+  IsoConcMap test_conc_map; 
+
+  // composition set up
+  CompMapPtr test_comp_map= CompMapPtr(new CompMap(MASS));
+  (*test_comp_map)[u235_] = 1.;
+  (*test_comp_map)[am241_] = 0.5;
+  test_comp_map->normalize();
+  double exp_u235_conc, exp_am241_conc;
+
+  for(int v=1; v<10; v++){
+    for(int m=1; m<10; m++){
+      EXPECT_NO_THROW(MatTools::comp_to_conc_map(test_comp_map, m, v));
+      test_conc_map=MatTools::comp_to_conc_map(test_comp_map, m, v);
+      exp_u235_conc = (*test_comp_map)[u235_]*m/v;
+      EXPECT_FLOAT_EQ(exp_u235_conc, test_conc_map[u235_]);
+      exp_am241_conc = (*test_comp_map)[am241_]*m/v;
+      EXPECT_FLOAT_EQ(exp_am241_conc, test_conc_map[am241_]);
+    }
+  }
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, V_f){
   double V_T = 10;

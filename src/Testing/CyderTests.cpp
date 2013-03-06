@@ -1,16 +1,16 @@
-// GenericRepositoryTests.cpp
+// CyderTests.cpp
 #include <gtest/gtest.h>
 #include <dlfcn.h>
 
-#include "GenericRepository.h"
-#include "GenericRepositoryTests.h"
+#include "Cyder.h"
+#include "CyderTests.h"
 #include "XMLQueryEngine.h"
 #include "Timer.h"
 
 using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void GenericRepositoryTest::SetUp(){
+void CyderTest::SetUp(){
   // initialize ordinary objects
   x_ = 10;
   y_ = 10;
@@ -34,13 +34,13 @@ void GenericRepositoryTest::SetUp(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void GenericRepositoryTest::TearDown() { 
+void CyderTest::TearDown() { 
   delete src_facility;
   delete incommod_market;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-GenericRepository* GenericRepositoryTest::initSrcFacility(){
+Cyder* CyderTest::initSrcFacility(){
 
       stringstream st("");
       st << "    <thermalmodel>" 
@@ -82,26 +82,26 @@ GenericRepository* GenericRepositoryTest::initSrcFacility(){
 
       XMLParser parser(ss);
       XMLQueryEngine* engine = new XMLQueryEngine(parser);
-      src_facility = new GenericRepository();
+      src_facility = new Cyder();
       src_facility->initModuleMembers(engine);
       delete engine;
       return src_facility;
     }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void GenericRepositoryTest::initWorld(){
+void CyderTest::initWorld(){
   incommod_market = new TestMarket();
   incommod_market->setCommodity(in_commod_);
   MarketModel::registerMarket(incommod_market);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(GenericRepositoryTest, initial_state) {
+TEST_F(CyderTest, initial_state) {
   EXPECT_EQ(capacity_, src_facility->getCapacity(in_commod_));
   EXPECT_EQ(adv_vel_, src_facility->adv_vel());
 }
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-INSTANTIATE_TEST_CASE_P(GenericRepositoryFac, FacilityModelTests, Values(&GenericRepositoryFacilityConstructor));
-INSTANTIATE_TEST_CASE_P(GenericRepositoryFac, ModelTests, Values(&GenericRepositoryModelConstructor));
+INSTANTIATE_TEST_CASE_P(CyderFac, FacilityModelTests, Values(&CyderFacilityConstructor));
+INSTANTIATE_TEST_CASE_P(CyderFac, ModelTests, Values(&CyderModelConstructor));
 

@@ -127,6 +127,13 @@ public:
   virtual std::string name(){return "STUB_NUCLIDE";}; 
 
   /**
+     Updates all the hists
+
+     @param the_time the time at which to update the history
+   */
+  virtual void update(int the_time);
+
+  /**
      returns the available material source term at the outer boundary of the 
      component
    
@@ -155,6 +162,11 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
+  /**
+    returns the fluid volume. 
+    Here, naively, it returns the total volume.
+    */
+  virtual double V_ff(){return geom_->volume();};
 
 };
 #endif

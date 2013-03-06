@@ -1,8 +1,8 @@
 <grammar xmlns="http://relaxng.org/ns/structure/1.0"
 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   
-  <define name="GenericRepository">
-     <element name="GenericRepository"> 
+  <define name="Cyder">
+     <element name="Cyder"> 
         <element name="x">
           <data type="double"/>
         </element>
@@ -95,20 +95,22 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="advective_velocity"/>
       <ref name="porosity"/>
       <ref name="transit_time"/>
-      <choice>
-        <element name="EM">
-          <text/>
-        </element>
-        <element name="PFM">
-          <text/>
-        </element>
-        <element name="EPM">
-          <ref name="eta_ratio"/>
-        </element>
-        <element name="DM">
-          <ref name="peclet"/>
-        </element>
-      </choice>
+      <element name="formulation">
+        <choice>
+          <element name="EM">
+            <text/>
+          </element>
+          <element name="PFM">
+            <text/>
+          </element>
+          <element name="EPM">
+            <ref name="eta_ratio"/>
+          </element>
+          <element name="DM">
+            <ref name="peclet"/>
+          </element>
+        </choice>
+      </element>
     </element>
   </define>
   
@@ -124,12 +126,11 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
   <define name="OneDimPPMNuclide">
     <element name="OneDimPPMNuclide">
+      <ref name="advective_velocity"/>
       <ref name="initial_concentration"/>
       <ref name="source_concentration"/>
       <ref name="porosity"/>
       <ref name="bulk_density"/>
-      <ref name="partition_coeff"/>
-      <ref name="retardation_coeff"/>
     </element>
   </define>
 

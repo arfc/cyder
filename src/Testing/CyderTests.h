@@ -1,16 +1,16 @@
-// GenericRepositoryTests.h
+// CyderTests.h
 #include <gtest/gtest.h>
 
-#include "GenericRepository.h"
+#include "Cyder.h"
 #include "FacilityModelTests.h"
 #include "ModelTests.h"
 #include <string>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class GenericRepositoryTest : public ::testing::Test {
+class CyderTest : public ::testing::Test {
 protected:
   
-  GenericRepository* src_facility;
+  Cyder* src_facility;
   int lifetime_,start_op_yr_,start_op_mo_;
   double innerradius_, outerradius_, x_,y_,z_,dx_,dy_,dz_,adv_vel_,capacity_,inventory_size_;
   std::string in_commod_, cname_, componenttype_;
@@ -18,19 +18,19 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  GenericRepository* initSrcFacility();
+  Cyder* initSrcFacility();
   void initWorld();
 
 public:
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Model* GenericRepositoryModelConstructor(){
-  return dynamic_cast<Model*>(new GenericRepository());
+Model* CyderModelConstructor(){
+  return dynamic_cast<Model*>(new Cyder());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-FacilityModel* GenericRepositoryFacilityConstructor(){
-  return dynamic_cast<FacilityModel*>(new GenericRepository());
+FacilityModel* CyderFacilityConstructor(){
+  return dynamic_cast<FacilityModel*>(new Cyder());
 }
 

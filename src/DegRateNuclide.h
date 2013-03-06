@@ -155,6 +155,13 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
+  /**
+     updates all the hists at the time
+
+     @param the_time at which to update everything
+    */
+  virtual void update(int the_time);
+
   /*----------------------------*/
   /* This NuclideModel class    */
   /* has the following members  */
@@ -259,6 +266,11 @@ public:
     Returns the last timestamp at which this component was last degraded [integer timestamp]
    */
   const int last_degraded() const {return last_degraded_;};
+
+  /**
+    Returns the last timestamp at which this component was last degraded [integer timestamp]
+   */
+  virtual double V_ff(){return MatTools::V_ff(geom_->volume(), 0, tot_deg());};
 
 protected:
   /**

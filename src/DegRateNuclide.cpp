@@ -28,6 +28,7 @@ DegRateNuclide::DegRateNuclide():
   wastes_ = deque<mat_rsrc_ptr>();
 
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
 
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
@@ -45,6 +46,7 @@ DegRateNuclide::DegRateNuclide(QueryEngine* qe):
   conc_hist_ = ConcHist();
 
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
 
   initModuleMembers(qe);
 }
@@ -72,14 +74,20 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
   geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid());
+  update(TI->time());
 
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update_vec_hist(TI->time());
-  update_conc_hist(TI->time());
 
   return shared_from_this();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::update(int the_time){
+  update_vec_hist(the_time);
+  update_conc_hist(the_time);
+  set_last_updated(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -106,7 +114,9 @@ mat_rsrc_ptr DegRateNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  return MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
+  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
+  update(last_updated());
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -114,8 +124,7 @@ void DegRateNuclide::transportNuclides(int the_time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   update_degradation(the_time, deg_rate());
-  update_vec_hist(the_time);
-  update_conc_hist(the_time);
+  update(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -210,11 +219,12 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_degraded() <= the_time);
+  assert(last_updated() <= the_time);
 
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist(the_time);
+  sum_pair = vec_hist_[the_time];
 
   int iso;
   double conc;

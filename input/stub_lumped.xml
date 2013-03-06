@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<!-- 1 SourceFacility Source, 1 Cyder Sink -->
+<!-- 1 SourceFacility Source, 1 GenericRepository Sink -->
 
 <simulation>
   <control>
-    <duration>100</duration>
+    <duration>10</duration>
     <startmonth>1</startmonth>
     <startyear>2000</startyear>
     <simstart>0</simstart>
@@ -40,10 +40,10 @@
   <facility>
     <name>Repository</name>
     <model>
-      <Cyder>
-        <x>10000</x>
-        <y>10000</y>
-        <z>10000</z>
+      <GenericRepository>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
         <dx>100</dx>
         <dy>100</dy>
         <dz>100</dz>
@@ -66,13 +66,14 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <MixedCellNuclide>
+            <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-              <kd_limited>1</kd_limited>
               <porosity>0.00001</porosity>
-              <sol_limited>1</sol_limited>
-            </MixedCellNuclide>
+              <transit_time>1</transit_time>
+              <formulation>
+                <EM/>
+              </formulation>
+            </LumpedNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
         </component>
@@ -88,13 +89,14 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <MixedCellNuclide>
+            <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-              <kd_limited>1</kd_limited>
               <porosity>0.00001</porosity>
-              <sol_limited>1</sol_limited>
-            </MixedCellNuclide>
+              <transit_time>1</transit_time>
+              <formulation>
+                <EM/>
+              </formulation>
+            </LumpedNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
         </component>
@@ -110,13 +112,14 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <MixedCellNuclide>
+            <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0</degradation>
-              <kd_limited>1</kd_limited>
               <porosity>0.00001</porosity>
-              <sol_limited>1</sol_limited>
-            </MixedCellNuclide>
+              <transit_time>1</transit_time>
+              <formulation>
+                <EM/>
+              </formulation>
+            </LumpedNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -131,16 +134,17 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <MixedCellNuclide>
+            <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-              <kd_limited>1</kd_limited>
               <porosity>0.00001</porosity>
-              <sol_limited>1</sol_limited>
-            </MixedCellNuclide>
+              <transit_time>1</transit_time>
+              <formulation>
+                <EM/>
+              </formulation>
+            </LumpedNuclide>
           </nuclidemodel>
         </component>
-      </Cyder>
+      </GenericRepository>
     </model>
     <incommodity>waste</incommodity>
   </facility>

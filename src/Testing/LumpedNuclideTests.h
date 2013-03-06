@@ -30,6 +30,7 @@ protected:
   point_t origin_;
   int time_;
   int some_param_;
+  IsoConcMap test_C_0_;
   
   virtual void SetUp();
   virtual void TearDown();
