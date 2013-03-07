@@ -86,8 +86,8 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
     default:
       string err = "The formulation type '"; err += formulation_;
       err += "' is not supported.";
-      throw CycException(err);
       LOG(LEV_ERROR,"GRLNuc") << err;
+      throw CycException(err);
       break;
   }
 
@@ -326,8 +326,8 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
     default:
       string err = "The formulation type '"; err += formulation_;
       err += "' is not supported.";
-      throw CycException(err);
       LOG(LEV_ERROR,"GRLNuc") << err;
+      throw CycException(err);
       break;
   }
   conc_hist_[the_time] = to_ret;
