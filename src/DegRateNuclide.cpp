@@ -233,7 +233,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
     it=(*curr_comp).begin();
     while(it != (*curr_comp).end() ) {
       int iso((*it).first);
-      conc((*it).second);
+      double conc((*it).second);
       to_ret.insert(make_pair(iso, conc*scale));
       ++it;
     }

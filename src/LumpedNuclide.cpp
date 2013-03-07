@@ -277,7 +277,7 @@ void LumpedNuclide::set_Pe(double Pe){
 void LumpedNuclide::set_porosity(double porosity){
   try {
     MatTools::validate_percent(porosity);
-  } catch (CycRangeException e) {
+  } catch (CycRangeException& e) {
     stringstream msg_ss;
     msg_ss << "The LumpedNuclide porosity range is 0 to 1, inclusive.";
     msg_ss << " The value provided was ";
