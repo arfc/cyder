@@ -143,14 +143,14 @@ class Query(object):
                          "Transactions.Time >= " + str(t0) + " AND " +
                          "Transactions.Time < " + str(tf)))
         elif 'contaminants' == queryType:
-            self.set_q_stmt(sql_stmt("cyder_6_contaminants.Time, " +
-                                     "cyder_6_contaminants.CompID, " +
-                                     "cyder_6_contaminants.IsoID, " +
-                                     "cyder_6_contaminants.MassKG",
-                                     "cyder_6_contaminants",
-                                     "cyder_6_contaminants.Time >= " +
+            self.set_q_stmt(sql_stmt("contaminants.Time, " +
+                                     "contaminants.CompID, " +
+                                     "contaminants.IsoID, " +
+                                     "contaminants.MassKG",
+                                     "contaminants",
+                                     "contaminants.Time >= " +
                                      str(t0) + " AND " +
-                                     "cyder_6_contaminants.Time < " +
+                                     "contaminants.Time < " +
                                      str(tf)))
 
         self.conn = sqlite3.connect(file)
@@ -445,8 +445,8 @@ class Query(object):
         c = self.conn.cursor()
 
         compTypes = {}
-        c.execute("SELECT cyder_6_components.CompID, " +
-                  "cyder_6_components.Type FROM cyder_6_components")
+        c.execute("SELECT components.CompID, " +
+                  "components.Type FROM components")
 
         for row in c:
             if row[0] not in compTypes:
@@ -464,8 +464,8 @@ class Query(object):
 
         compList = []
         c.execute(
-            "SELECT cyder_6_components.CompID FROM cyder_6_components, " +
-            "cyder_6_contaminants ")
+            "SELECT components.CompID FROM components, " +
+            "contaminants ")
 
         for row in c:
             if row[0] not in compList:
@@ -475,7 +475,7 @@ class Query(object):
         return compList
 
 ###############################################################################
-    def get_short_iso_list(self, table='cyder_6_contaminants'):
+    def get_short_iso_list(self, table='contaminants'):
         """
         Count and record how many IsoIDs exist in the table, and make a list
         """
@@ -650,7 +650,7 @@ class Query(object):
             # get the list of actors
             actList = self.get_comp_list()
             numActs = len(actList)
-            isos = self.get_short_iso_list('cyder_6_contaminants')
+            isos = self.get_short_iso_list('contaminants')
             for index, iso in enumerate(isos):
                 self.iso_to_ind[iso] = index
                 self.ind_to_iso[index] = iso
