@@ -391,7 +391,6 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
-  IsoConcMap bc = daughter->dirichlet_bc();
   double theta = daughter->V_ff()/daughter->geom()->length();
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
       dt*theta*v());
