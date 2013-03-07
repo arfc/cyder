@@ -49,6 +49,7 @@ void OneDimPPMNuclideTest::SetUp(){
   mat_table_ = MDB->table("clay");
   one_dim_ppm_ptr_ = OneDimPPMNuclidePtr(initNuclideModel());
   one_dim_ppm_ptr_->set_mat_table(mat_table_);
+  one_dim_ppm_ptr_->set_geom(geom_);
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(one_dim_ppm_ptr_);
   nuc_model_ptr_->set_mat_table(mat_table_);
   default_one_dim_ppm_ptr_ = OneDimPPMNuclidePtr(OneDimPPMNuclide::create());
@@ -122,9 +123,9 @@ TEST_F(OneDimPPMNuclideTest, initial_state) {
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, defaultConstructor) {
-  ASSERT_EQ("ONEDIMPPM_NUCLIDE", nuc_model_ptr_->name());
-  ASSERT_EQ(ONEDIMPPM_NUCLIDE, nuc_model_ptr_->type());
-  ASSERT_FLOAT_EQ(0, one_dim_ppm_ptr_->geom()->length());
+  ASSERT_EQ("ONEDIMPPM_NUCLIDE", default_one_dim_ppm_ptr_->name());
+  ASSERT_EQ(ONEDIMPPM_NUCLIDE, default_one_dim_ppm_ptr_->type());
+  ASSERT_FLOAT_EQ(0, default_one_dim_ppm_ptr_->geom()->length());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -200,7 +201,6 @@ TEST_F(OneDimPPMNuclideTest, set_porosity){
 TEST_F(OneDimPPMNuclideTest, transportNuclidesZero){ 
   // for some settings, nothing should be released
   porosity_=0;
-  EXPECT_NO_THROW(one_dim_ppm_ptr_->set_geom(geom_));
   double expected_src = porosity_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
   IsoConcMap zero_conc_map;
@@ -230,7 +230,6 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesZero){
 TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){ 
   // if the degradation rate is .5, everything should be released in two years
   porosity_= 0.5;
-  EXPECT_NO_THROW(one_dim_ppm_ptr_->set_geom(geom_));
   double expected_src = porosity_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
   double expected_conc_w_vel = theta_*v_*expected_conc; 
