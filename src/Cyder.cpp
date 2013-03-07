@@ -315,10 +315,6 @@ void Cyder::makeRequests(int time){
     in_commods_.push_back(in_commod);
     in_commods_.pop_front();
   
-    // It can accept amounts however small
-    double minAmt = 0;
-    // this will be a request for free stuff
-    double commod_price = 0;
     // It will need to figure out its capacity
     double requestAmt;
     // Perform the task of figuring out the capacity for this commod
@@ -328,6 +324,10 @@ void Cyder::makeRequests(int time){
     if (requestAmt == 0){
       // don't request anything
     } else {
+      // It can accept amounts however small
+      double minAmt = 0;
+      // this will be a request for free stuff
+      double commod_price = 0;
       MarketModel* market = MarketModel::marketForCommod(in_commod);
       Communicator* recipient = dynamic_cast<Communicator*>(market);
   
