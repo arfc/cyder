@@ -223,7 +223,7 @@ ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
 bool Component::isFull() {
   // @TODO imperative, add better logic here 
   bool to_ret;
-  double wp_len;
+  double wp_len(0);
   std::vector<ComponentPtr>::iterator it;
   switch(type()) {
     case BUFFER : 
