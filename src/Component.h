@@ -304,13 +304,6 @@ public:
   const Temp temp_lim();
 
   /**
-     get the maximum Toxicity this object allows at its boundaries 
-     
-     @return tox_lim_
-   */
-  const Tox tox_lim();
-
-  /**
      get the peak Temperature this object will experience during the simulation
      
      @param type indicates whether to return the inner or outer peak temp

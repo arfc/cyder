@@ -49,8 +49,9 @@ Component::Component(Model* creator) :
   mat_table_(),
   parent_(),
   temp_(0),
-  temp_lim_(373),
-  tox_lim_(10) {
+  peak_inner_temp_(0),
+  peak_outer_temp_(0),
+  temp_lim_(373){
 
   creator_ = creator;
   set_geom(GeometryPtr(new Geometry()));
@@ -141,7 +142,6 @@ void Component::copy(const ComponentPtr& src){
 
   temp_ = src->temp_;
   temp_lim_ = src->temp_lim_ ;
-  tox_lim_ = src->tox_lim_ ;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
@@ -467,9 +467,6 @@ const deque<mat_rsrc_ptr> Component::wastes(){return nuclide_model()->wastes();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Temp Component::temp_lim(){return temp_lim_;}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const Tox Component::tox_lim(){return tox_lim_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Temp Component::peak_temp(BoundaryType type) { 
