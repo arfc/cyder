@@ -16,11 +16,13 @@
 using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LumpedNuclide::LumpedNuclide() : t_t_(0),
+LumpedNuclide::LumpedNuclide() : 
+  t_t_(0),
   Pe_(0),
   porosity_(0),
-  formulation_(LAST_FORMULATION_TYPE)
-{ set_geom(GeometryPtr(new Geometry()));
+  formulation_(LAST_FORMULATION_TYPE) 
+{ 
+  set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
   t_t_ = 0;
@@ -99,7 +101,7 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   const LumpedNuclide* src_ptr = dynamic_cast<const LumpedNuclide*>(&src);
 
-  set_last_updated(TI->time());
+  set_last_updated(0);
   set_t_t(src_ptr->t_t());
   set_Pe(src_ptr->Pe());
   set_porosity(src_ptr->porosity());
@@ -112,13 +114,13 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update(TI->time());
 
   return shared_from_this();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::update(int the_time){
+  assert(last_updated() <= the_time);
   update_vec_hist(the_time);
   update_conc_hist(the_time);
   set_last_updated(the_time);
@@ -160,7 +162,7 @@ void LumpedNuclide::transportNuclides(int the_time){
   // flux.  The convention will be that flux is positive in the radial 
   // direction
   // If these fluxes are negative, nuclides aphysically flow toward the waste 
-  // package It will send the adjacent components information?
+  // package.
   // The LumpedNuclide class should transport all nuclides
   update(the_time);
 }
@@ -310,7 +312,6 @@ double LumpedNuclide::V_T(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
-  assert(last_updated() <= the_time);
 
   IsoConcMap to_ret;
 
@@ -394,22 +395,27 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
   pair<IsoVector, double> mixed;
   Volume vol(0);
   Volume vol_sum(0);
-  
-  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    st = (*daughter)->source_term_bc();
-    vol = (*daughter)->V_ff();
-    vol_sum += vol;
-    if(mixed.second==0){
-      mixed.first=st.first;
-      mixed.second=st.second;
-    } else {
-      absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
-      mixed.second +=st.second;
-      mixed.first.mix(st.first,mixed.second/st.second);
-    }
-  }
-  set_C_0(MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum)); 
+  IsoConcMap C_0;
 
+  if( daughters.empty() ){
+    C_0[92235] = 0;
+  } else {
+    for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+      st = (*daughter)->source_term_bc();
+      vol = (*daughter)->V_ff();
+      vol_sum += vol;
+      if(mixed.second==0){
+        mixed.first=st.first;
+        mixed.second=st.second;
+      } else {
+        absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
+        mixed.second +=st.second;
+        mixed.first.mix(st.first,mixed.second/st.second);
+      }
+    }
+    C_0 = MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
+  }
+  set_C_0(C_0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

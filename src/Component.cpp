@@ -431,6 +431,7 @@ void Component::addComponentToTable(ComponentPtr comp){
     ->addVal("thermalmodel", comp->thermal_model()->name())
     ->addVal("innerradius", comp->inner_radius())
     ->addVal("outerradius", comp->outer_radius())
+    ->addVal("length", comp->geom()->length())
     ->addVal("x", comp->x())
     ->addVal("y", comp->y())
     ->addVal("z", comp->z())
@@ -503,5 +504,6 @@ ThermalModelPtr Component::thermal_model(){return thermal_model_;}
 void Component::setPlacement(point_t centroid, double length){
   geom_->set_centroid(centroid);
   geom_->set_length(length); 
+  nuclide_model_->update(0);
 };
 

@@ -34,7 +34,6 @@ MixedCellNuclide::MixedCellNuclide():
   last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update(0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -52,7 +51,6 @@ MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) :
   last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update(0);
   initModuleMembers(qe);
 }
 
@@ -89,7 +87,6 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update(TI->time());
 
   return shared_from_this();
 }

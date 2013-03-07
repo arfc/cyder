@@ -167,6 +167,7 @@ void MatTools::validate_finite_pos(double pos){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
+  MatTools::validate_finite_pos(scalar);
   double orig;
   IsoConcMap::iterator it;
   for(it = C_0.begin(); it != C_0.end(); ++it) { 
