@@ -94,7 +94,7 @@ Cyder::Cyder() :
 void Cyder::initModuleMembers(QueryEngine* qe) { 
   // initialize ordinary objects
   std::map<std::string, boost::any>::iterator item;
-  for (item = member_refs_.begin(); item != member_refs_.end(); item++) {
+  for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
     if (item->second.type() == typeid(int*)) {
         (*boost::any_cast<int*>(item->second)) = lexical_cast<int>(qe->getElementContent(item->first.c_str()));
     } else if (item->second.type() == typeid(double*)) {
@@ -164,7 +164,7 @@ ComponentPtr Cyder::initComponent(QueryEngine* qe){
         //iterate through wf_templates_
         //for each wf_template
         for (std::deque< ComponentPtr >::iterator iter = wf_templates_.begin(); iter != 
-            wf_templates_.end(); iter ++){
+            wf_templates_.end(); ++iter){
           if ((*iter)->name() == allowed_wf_name){
             wf_wp_map_.insert(std::make_pair(allowed_wf_name, wp_templates_.back()));
           }
@@ -231,19 +231,19 @@ std::string Cyder::str() {
   gen_repo_msg += "}, wf {";
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
-      iter++){
+      ++iter){
     gen_repo_msg += (*iter)->name();
   }
   gen_repo_msg += "}, wp {";
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
-      iter++){
+      ++iter){
     gen_repo_msg += (*iter)->name();
   }
   gen_repo_msg += "}, buffer {";
   for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
-      iter++){
+      ++iter){
     gen_repo_msg += (*iter)->name();
   }
   if (NULL != far_field_){
@@ -265,7 +265,7 @@ void Cyder::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
   // and move it into the stocks.
   for (std::vector<rsrc_ptr>::iterator this_rsrc=manifest.begin();
        this_rsrc != manifest.end();
-       this_rsrc++)
+       ++this_rsrc)
   {
     LOG(LEV_DEBUG2, "GenRepoFac") <<"Cyder " << ID() << " is receiving material with mass "
         << (*this_rsrc)->quantity();
@@ -386,7 +386,7 @@ double Cyder::checkInventory(){
   // Iterate through the inventory and sum the amount of whatever
   // material unit is in each object.
   for (std::deque< WasteStream >::iterator iter = inventory_.begin(); iter != 
-      inventory_.end(); iter ++){
+      inventory_.end(); ++iter){
     total += iter->first->quantity();
   }
 
@@ -401,7 +401,7 @@ double Cyder::checkStocks(){
 
   if (!stocks_.empty()){
     for (std::deque< WasteStream >::iterator iter = stocks_.begin(); iter != 
-        stocks_.end(); iter ++) {
+        stocks_.end(); ++iter) {
         total += iter->first->quantity();
     };
   };
@@ -506,7 +506,7 @@ ComponentPtr Cyder::packageWaste(ComponentPtr waste_form){
     for (std::deque<ComponentPtr>::const_iterator iter= 
         current_waste_packages_.begin();
         iter != current_waste_packages_.end();
-        iter++){
+        ++iter){
       // if there already exists an only partially full one of the right kind
       if ( !(*iter)->isFull() && (*iter)->name() == 
           chosen_wp_template->name()){
@@ -552,7 +552,7 @@ ComponentPtr Cyder::loadBuffer(ComponentPtr waste_package){
   std::vector<ComponentPtr> daughters = waste_package->daughters();
   for (std::vector<ComponentPtr>::iterator iter = daughters.begin();  
       iter != daughters.end(); 
-      iter ++){
+      ++iter){
     setPlacement(*iter);
   }
   return buffers_.front();
@@ -608,17 +608,17 @@ void Cyder::transportHeat(int time){
   // pass the transport heat signal through the components, inner -> outer
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
-      iter++){
+      ++iter){
     (*iter)->transportHeat(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
-      iter++){
+      ++iter){
     (*iter)->transportHeat(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
-      iter++){
+      ++iter){
     (*iter)->transportHeat(time);
   }
   if ( far_field_){
@@ -684,7 +684,7 @@ void Cyder::addRowToParamsTable(){
                    ->addVal("facID", ID());
 
   std::map<std::string, boost::any>::iterator item;
-  for (item = member_refs_.begin(); item != member_refs_.end(); item++) {
+  for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
     if (item->second.type() == typeid(int*)) {
       ev->addVal(item->first, *boost::any_cast<int*>(item->second));
     } else if (item->second.type() == typeid(double*)) {
