@@ -125,8 +125,6 @@ ComponentPtr Cyder::initComponent(QueryEngine* qe){
 
   // they will have allowed subcomponents (think russian doll)
   int n_sub_components;
-  QueryEngine* allowed_commod;
-  QueryEngine* allowed_wf;
   std::string allowed_commod_name;
   std::string allowed_wf_name; 
 
