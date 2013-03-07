@@ -586,6 +586,7 @@ ComponentPtr Cyder::setPlacement(ComponentPtr comp){
       x = (comp->parent())->x();
       y = (comp->parent())->y();
       z = (comp->parent())->z();
+      length = dx_;
       break;
     default :
       std::string err = "ComponentType, '";

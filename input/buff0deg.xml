@@ -58,6 +58,7 @@
           <name>WF</name>
           <innerradius>0</innerradius>
           <outerradius>1</outerradius>
+          <length>1</length>
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
