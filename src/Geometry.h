@@ -138,7 +138,6 @@ public:
     **/
   const Radius radial_midpoint();
 
-protected:
   /**
      Returns the (solid) volume of a cylinder, not explicitly the one 
      represented by this geometry.
@@ -148,6 +147,8 @@ protected:
      @return the volume of a solid cylinder with radius=radius and length=length
     */
   Volume solid_volume(Radius radius, Length length); 
+
+protected:
 
   /**
      Radius of the inner surface. 0 for solid objects. [m]

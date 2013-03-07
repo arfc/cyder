@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "Geometry.h"
+#define _USE_MATH_DEFINES
 
 using namespace std;
 
@@ -69,3 +70,13 @@ TEST_F(GeometryTest, radial_midpoint ) {
   EXPECT_FLOAT_EQ( expected, test_geom_->radial_midpoint() ); 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(GeometryTest, solid_volume ){
+  for(int r=0; r < 10; ++r) {
+    double radius = r*0.5;
+    for( int l=0; l < 10; ++l) { 
+      double length = l*0.5;
+      EXPECT_FLOAT_EQ(M_PI*radius*radius*length, test_geom_->solid_volume(radius, length));
+    }
+  }
+}
