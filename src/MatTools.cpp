@@ -10,10 +10,11 @@
 
 
 #include "CycException.h"
-#include "Logger.h"
-#include "Timer.h"
+#include "CycLimits.h"
 #include "MatTools.h"
 #include "Material.h"
+#include "Logger.h"
+#include "Timer.h"
 
 using namespace std;
 
@@ -22,9 +23,8 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
   IsoVector vec;
   CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
   double kg = 0;
-  double mass_to_add;
 
-  if( mats.size() != 0 ){ 
+  if( !mats.empty() ){ 
     CompMapPtr comp_to_add;
     deque<mat_rsrc_ptr>::iterator mat;
     int iso;
@@ -59,7 +59,9 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, d
     mat_list.pop_back();
   }
   mat_rsrc_ptr to_ret = left_over->extract(comp_to_rem, kg_to_rem);
-  mat_list.push_back(left_over);
+  if(left_over->mass(KG) > cyclus::eps_rsrc()){ 
+    mat_list.push_back(left_over);
+  }
   return to_ret;
 }
 
@@ -87,7 +89,7 @@ pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol)
   MatTools::validate_finite_pos(vol);
 
   CompMapPtr comp = CompMapPtr(new CompMap(MASS));
-  double mass;
+  double mass(0);
   int iso;
   double c_iso;
   double m_iso;

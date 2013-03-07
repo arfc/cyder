@@ -55,16 +55,27 @@
 using boost::lexical_cast;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Cyder::Cyder() {
-  // initialize things that don't depend on the input
-  stocks_ = std::deque< WasteStream >();
-  inventory_ = std::deque< WasteStream >();
-  commod_wf_map_ = std::map< std::string, ComponentPtr >();
-  wf_wp_map_ = std::map< std::string, ComponentPtr >();
-  far_field_ = ComponentPtr(new Component(this));
-  buffer_template_ =  ComponentPtr(new Component(this));
+Cyder::Cyder() :
+  x_(0),
+  y_(0),
+  z_(0),
+  dx_(0),
+  dy_(0),
+  dz_(0),
+  adv_vel_(0),
+  capacity_(70000),
+  inventory_size_(70000),
+  lifetime_(10000),
+  start_op_yr_(2000),
+  start_op_mo_(1),
+  is_full_(false),
+  stocks_(std::deque< WasteStream >()), 
+  inventory_(std::deque< WasteStream >()),
+  commod_wf_map_(std::map< std::string, ComponentPtr >()),
+  wf_wp_map_(std::map< std::string, ComponentPtr >()),
+  far_field_(ComponentPtr(new Component(this))),
+  buffer_template_(ComponentPtr(new Component(this))) {
 
-  is_full_ = false;
   mapVars("x", &x_);
   mapVars("y", &y_);
   mapVars("z", &z_);
@@ -83,7 +94,7 @@ Cyder::Cyder() {
 void Cyder::initModuleMembers(QueryEngine* qe) { 
   // initialize ordinary objects
   std::map<std::string, boost::any>::iterator item;
-  for (item = member_refs_.begin(); item != member_refs_.end(); item++) {
+  for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
     if (item->second.type() == typeid(int*)) {
         (*boost::any_cast<int*>(item->second)) = lexical_cast<int>(qe->getElementContent(item->first.c_str()));
     } else if (item->second.type() == typeid(double*)) {
@@ -125,8 +136,6 @@ ComponentPtr Cyder::initComponent(QueryEngine* qe){
 
   // they will have allowed subcomponents (think russian doll)
   int n_sub_components;
-  QueryEngine* allowed_commod;
-  QueryEngine* allowed_wf;
   std::string allowed_commod_name;
   std::string allowed_wf_name; 
 
@@ -155,7 +164,7 @@ ComponentPtr Cyder::initComponent(QueryEngine* qe){
         //iterate through wf_templates_
         //for each wf_template
         for (std::deque< ComponentPtr >::iterator iter = wf_templates_.begin(); iter != 
-            wf_templates_.end(); iter ++){
+            wf_templates_.end(); ++iter){
           if ((*iter)->name() == allowed_wf_name){
             wf_wp_map_.insert(std::make_pair(allowed_wf_name, wp_templates_.back()));
           }
@@ -222,19 +231,19 @@ std::string Cyder::str() {
   gen_repo_msg += "}, wf {";
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
-      iter++){
+      ++iter){
     gen_repo_msg += (*iter)->name();
   }
   gen_repo_msg += "}, wp {";
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
-      iter++){
+      ++iter){
     gen_repo_msg += (*iter)->name();
   }
   gen_repo_msg += "}, buffer {";
   for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
-      iter++){
+      ++iter){
     gen_repo_msg += (*iter)->name();
   }
   if (NULL != far_field_){
@@ -256,7 +265,7 @@ void Cyder::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
   // and move it into the stocks.
   for (std::vector<rsrc_ptr>::iterator this_rsrc=manifest.begin();
        this_rsrc != manifest.end();
-       this_rsrc++)
+       ++this_rsrc)
   {
     LOG(LEV_DEBUG2, "GenRepoFac") <<"Cyder " << ID() << " is receiving material with mass "
         << (*this_rsrc)->quantity();
@@ -264,8 +273,8 @@ void Cyder::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
       stocks_.push_front(std::make_pair(boost::dynamic_pointer_cast<Material>(*this_rsrc), trans.commod()));
     } else {
       std::string err = "The Cyder only accepts Material-type Resources.";
-      throw CycException(err);
       LOG(LEV_ERROR, "GenRepoFac")<< err ;
+      throw CycException(err);
     }
   }
 }
@@ -315,10 +324,6 @@ void Cyder::makeRequests(int time){
     in_commods_.push_back(in_commod);
     in_commods_.pop_front();
   
-    // It can accept amounts however small
-    double minAmt = 0;
-    // this will be a request for free stuff
-    double commod_price = 0;
     // It will need to figure out its capacity
     double requestAmt;
     // Perform the task of figuring out the capacity for this commod
@@ -328,6 +333,10 @@ void Cyder::makeRequests(int time){
     if (requestAmt == 0){
       // don't request anything
     } else {
+      // It can accept amounts however small
+      double minAmt = 0;
+      // this will be a request for free stuff
+      double commod_price = 0;
       MarketModel* market = MarketModel::marketForCommod(in_commod);
       Communicator* recipient = dynamic_cast<Communicator*>(market);
   
@@ -377,7 +386,7 @@ double Cyder::checkInventory(){
   // Iterate through the inventory and sum the amount of whatever
   // material unit is in each object.
   for (std::deque< WasteStream >::iterator iter = inventory_.begin(); iter != 
-      inventory_.end(); iter ++){
+      inventory_.end(); ++iter){
     total += iter->first->quantity();
   }
 
@@ -392,7 +401,7 @@ double Cyder::checkStocks(){
 
   if (!stocks_.empty()){
     for (std::deque< WasteStream >::iterator iter = stocks_.begin(); iter != 
-        stocks_.end(); iter ++) {
+        stocks_.end(); ++iter) {
         total += iter->first->quantity();
     };
   };
@@ -497,7 +506,7 @@ ComponentPtr Cyder::packageWaste(ComponentPtr waste_form){
     for (std::deque<ComponentPtr>::const_iterator iter= 
         current_waste_packages_.begin();
         iter != current_waste_packages_.end();
-        iter++){
+        ++iter){
       // if there already exists an only partially full one of the right kind
       if ( !(*iter)->isFull() && (*iter)->name() == 
           chosen_wp_template->name()){
@@ -543,7 +552,7 @@ ComponentPtr Cyder::loadBuffer(ComponentPtr waste_package){
   std::vector<ComponentPtr> daughters = waste_package->daughters();
   for (std::vector<ComponentPtr>::iterator iter = daughters.begin();  
       iter != daughters.end(); 
-      iter ++){
+      ++iter){
     setPlacement(*iter);
   }
   return buffers_.front();
@@ -599,17 +608,17 @@ void Cyder::transportHeat(int time){
   // pass the transport heat signal through the components, inner -> outer
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
       iter != waste_forms_.end();
-      iter++){
+      ++iter){
     (*iter)->transportHeat(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
       iter != waste_packages_.end();
-      iter++){
+      ++iter){
     (*iter)->transportHeat(time);
   }
   for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
       iter != buffers_.end();
-      iter++){
+      ++iter){
     (*iter)->transportHeat(time);
   }
   if ( far_field_){
@@ -675,7 +684,7 @@ void Cyder::addRowToParamsTable(){
                    ->addVal("facID", ID());
 
   std::map<std::string, boost::any>::iterator item;
-  for (item = member_refs_.begin(); item != member_refs_.end(); item++) {
+  for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
     if (item->second.type() == typeid(int*)) {
       ev->addVal(item->first, *boost::any_cast<int*>(item->second));
     } else if (item->second.type() == typeid(double*)) {
