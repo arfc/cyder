@@ -250,6 +250,7 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
 
   pair<IsoVector, double> sum_pair; 
   sum_pair = vec_hist_[the_time];
+  IsoConcMap to_ret;
 
   if(sum_pair.second != 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
     int iso(0);
@@ -302,7 +303,6 @@ void MixedCellNuclide::update_vec_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
-  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
