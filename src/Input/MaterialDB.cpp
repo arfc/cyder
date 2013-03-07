@@ -23,8 +23,8 @@ MaterialDB* MaterialDB::Instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MaterialDB::MaterialDB() {
-  file_path_ = Env::getInstallPath() + "/share/mat_data.sqlite";
+MaterialDB::MaterialDB() 
+  file_path_(Env::getInstallPath() + "/share/mat_data.sqlite") {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
