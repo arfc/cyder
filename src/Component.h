@@ -304,13 +304,6 @@ public:
   const Temp temp_lim();
 
   /**
-     get the maximum Toxicity this object allows at its boundaries 
-     
-     @return tox_lim_
-   */
-  const Tox tox_lim();
-
-  /**
      get the peak Temperature this object will experience during the simulation
      
      @param type indicates whether to return the inner or outer peak temp
@@ -483,11 +476,6 @@ protected:
   Temp temp_lim_;
 
   /**
-     The toxlimit of this component 
-   */
-  Tox tox_lim_;
-
-  /**
      The peak temp achieved at the outer boundary 
    */
   Temp peak_outer_temp_;
@@ -496,11 +484,6 @@ protected:
      The peak temp achieved at the inner boundary 
    */
   Temp peak_inner_temp_;
-
-  /**
-     The peak tox achieved  
-   */
-  Tox peak_tox_;
 
   /**
      The temp taken to be the homogeneous temp of the whole 
