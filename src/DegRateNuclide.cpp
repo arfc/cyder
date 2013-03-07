@@ -226,16 +226,14 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
   pair<IsoVector, double> sum_pair; 
   sum_pair = vec_hist_[the_time];
 
-  int iso;
-  double conc;
   if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
     double scale = sum_pair.second/geom_->volume();
     CompMapPtr curr_comp = sum_pair.first.comp();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
     while(it != (*curr_comp).end() ) {
-      iso = (*it).first;
-      conc = (*it).second;
+      int iso((*it).first);
+      double conc((*it).second);
       to_ret.insert(make_pair(iso, conc*scale));
       ++it;
     }
