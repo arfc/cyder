@@ -55,7 +55,19 @@
 using boost::lexical_cast;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Cyder::Cyder() {
+Cyder::Cyder() :
+  x_(0),
+  y_(0),
+  z_(0),
+  dx_(0),
+  dy_(0),
+  dz_(0),
+  adv_vel_(0),
+  capacity_(70000),
+  inventory_size_(70000),
+  lifetime_(10000),
+  start_op_yr(2000),
+  start_op_mo(1) {
   // initialize things that don't depend on the input
   stocks_ = std::deque< WasteStream >();
   inventory_ = std::deque< WasteStream >();
