@@ -155,14 +155,11 @@ void MatTools::validate_percent(double per){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MatTools::validate_finite_pos(double pos){
-  if( pos >= 0 ){
-    return;
+  if ( pos >= numeric_limits<double>::infinity() ) {
+    throw CycRangeException("The value is not positive and finite. It is greater than infty.");
   } else if ( pos < 0) {
     throw CycRangeException("The value is not positive and finite. It is less than zero.");
-  } else if ( pos >= numeric_limits<double>::infinity() ) {
-    throw CycRangeException("The value is not positive and finite. It is greater than infty.");
   }
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

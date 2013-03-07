@@ -132,6 +132,14 @@ TEST_F(MatToolsTest, scale_zero_conc_map){
   EXPECT_THROW(MatTools::scaleConcMap(test_zero_map, numeric_limits<double>::infinity()), CycRangeException);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, validate_finite_pos){
+  for(int i; i<10; i++){
+    EXPECT_NO_THROW(MatTools::validate_finite_pos(i));
+  }
+  EXPECT_THROW(MatTools::validate_finite_pos(-1), CycRangeException);
+  EXPECT_THROW(MatTools::validate_finite_pos(numeric_limits<double>::infinity()), CycRangeException);
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, V_f){
   double V_T = 10;
   double theta;
