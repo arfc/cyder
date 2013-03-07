@@ -469,8 +469,8 @@ TEST_F(MixedCellNuclideTest, getVolume) {
   EXPECT_NEAR( vol , nuc_model_ptr_->geom()->volume(), 0.1);
   EXPECT_NO_THROW(mixed_cell_ptr_->geom()->set_radius(OUTER, r_four_));
   EXPECT_FLOAT_EQ( 0 , nuc_model_ptr_->geom()->volume());
-  EXPECT_NO_THROW(mixed_cell_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()));
-  EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), nuc_model_ptr_->geom()->volume());
+  EXPECT_THROW(mixed_cell_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()), CycRangeException);
+  EXPECT_NO_THROW(nuc_model_ptr_->geom()->volume());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
