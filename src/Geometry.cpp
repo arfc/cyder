@@ -16,7 +16,7 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Geometry::Geometry() {
   inner_radius_ = 0; // 0 indicates a solid
-  outer_radius_ = numeric_limits<double>::infinity(); // inf indicates an infinite object.
+  outer_radius_ = 0; // 0 indicates an uninitialized object.
   point_t origin = {0,0,0}; 
   centroid_ = origin; // by default, the origin is the centroid
   length_ = 0;
