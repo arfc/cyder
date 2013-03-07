@@ -19,6 +19,8 @@ class ComponentTest : public ::testing::Test {
     double infty_;
     ComponentType type_;
     Radius inner_radius_, outer_radius_;
+    double length_;
+    GeometryPtr geom_;
     ThermalModelPtr thermal_model_;
     NuclideModelPtr nuclide_model_;
 
@@ -31,6 +33,9 @@ class ComponentTest : public ::testing::Test {
       mat_ = "clay";
       inner_radius_ = 2;
       outer_radius_ = 10;
+      length_ = 100;
+      point_t origin = {0,0,0};
+      geom_ = GeometryPtr(new Geometry(inner_radius_, outer_radius_, origin, length_));
       thermal_model_ = StubThermal::create();
       nuclide_model_ = DegRateNuclide::create();
     }

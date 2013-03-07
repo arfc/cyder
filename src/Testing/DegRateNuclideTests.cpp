@@ -45,6 +45,7 @@ void DegRateNuclideTest::SetUp(){
   deg_rate_ptr_ = DegRateNuclidePtr(initNuclideModel()); //initializes deg_rate_ptr_
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(deg_rate_ptr_);
   deg_rate_ptr_->set_mat_table(mat_table_);
+  deg_rate_ptr_->set_geom(geom_);
   default_deg_rate_ptr_ = DegRateNuclidePtr(DegRateNuclide::create());
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_deg_rate_ptr_);
   default_deg_rate_ptr_->set_mat_table(mat_table_);
@@ -392,8 +393,8 @@ TEST_F(DegRateNuclideTest, getVolume) {
   EXPECT_NEAR( vol , nuc_model_ptr_->geom()->volume(), 0.1);
   EXPECT_NO_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, r_four_));
   EXPECT_FLOAT_EQ( 0 , nuc_model_ptr_->geom()->volume());
-  EXPECT_NO_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()));
-  EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), nuc_model_ptr_->geom()->volume());
+  EXPECT_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()), CycRangeException);
+  EXPECT_NO_THROW(nuc_model_ptr_->geom()->volume());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
