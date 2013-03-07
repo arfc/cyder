@@ -66,17 +66,16 @@ Cyder::Cyder() :
   capacity_(70000),
   inventory_size_(70000),
   lifetime_(10000),
-  start_op_yr(2000),
-  start_op_mo(1) {
-  // initialize things that don't depend on the input
-  stocks_ = std::deque< WasteStream >();
-  inventory_ = std::deque< WasteStream >();
-  commod_wf_map_ = std::map< std::string, ComponentPtr >();
-  wf_wp_map_ = std::map< std::string, ComponentPtr >();
-  far_field_ = ComponentPtr(new Component(this));
-  buffer_template_ =  ComponentPtr(new Component(this));
+  start_op_yr_(2000),
+  start_op_mo_(1),
+  is_full_(false),
+  stocks_(std::deque< WasteStream >()), 
+  inventory_(std::deque< WasteStream >()),
+  commod_wf_map_(std::map< std::string, ComponentPtr >()),
+  wf_wp_map_(std::map< std::string, ComponentPtr >()),
+  far_field_(ComponentPtr(new Component(this))),
+  buffer_template_(ComponentPtr(new Component(this))) {
 
-  is_full_ = false;
   mapVars("x", &x_);
   mapVars("y", &y_);
   mapVars("z", &z_);
