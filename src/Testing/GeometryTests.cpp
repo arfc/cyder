@@ -80,3 +80,9 @@ TEST_F(GeometryTest, solid_volume ){
     }
   }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(GeometryTest, volume){
+  EXPECT_FLOAT_EQ(0 , default_geom_->volume());
+  EXPECT_FLOAT_EQ(M_PI*(r_four_*r_four_*len_five_ - r_five_*r_five_*len_five_) , test_geom_->volume());
+}
