@@ -22,7 +22,6 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
   IsoVector vec;
   CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
   double kg = 0;
-  double mass_to_add;
 
   if( mats.size() != 0 ){ 
     CompMapPtr comp_to_add;
