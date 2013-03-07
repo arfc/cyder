@@ -303,6 +303,15 @@ public:
     */
   void update_conc_hist(int the_time, std::deque<mat_rsrc_ptr> mats);
 
+  /** 
+    concentration calculator for this->formulation_ model
+
+     @param C_0 the incoming concentration map
+     @param the_time the length of the timestep over which to calculate
+     @return C_f the final concentration at the end of the timestep
+    */
+  IsoConcMap C_t(IsoConcMap C_0, int the_time);
+
 
 protected:
   /**

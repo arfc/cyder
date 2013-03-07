@@ -311,17 +311,41 @@ double LumpedNuclide::V_T(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_updated() <= the_time);
+
   IsoConcMap to_ret;
 
+  pair<IsoVector, double> sum_pair; 
+  sum_pair = vec_hist_[the_time];
+
+  if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
+    double scale = sum_pair.second/geom_->volume();
+    CompMapPtr curr_comp = sum_pair.first.comp();
+    CompMap::const_iterator it;
+    it=(*curr_comp).begin();
+    while(it != (*curr_comp).end() ) {
+      int iso((*it).first);
+      double conc((*it).second);
+      to_ret.insert(make_pair(iso, conc*scale));
+      ++it;
+    }
+  } else {
+    to_ret[ 92235 ] = 0; 
+  }
+  conc_hist_[the_time] = C_t(to_ret, the_time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::C_t(IsoConcMap C_0, int the_time){
+  IsoConcMap to_ret;
   switch(formulation_){
     case DM :
-      to_ret = C_DM(C_0_, the_time);
+      to_ret = C_DM(C_0, the_time);
       break;
     case EM :
-      to_ret = C_EM(C_0_, the_time);
+      to_ret = C_EM(C_0, the_time);
       break;
     case PFM :
-      to_ret = C_PFM(C_0_, the_time);
+      to_ret = C_PFM(C_0, the_time);
       break;
     default:
       string err = "The formulation type '"; err += formulation_;
@@ -330,7 +354,7 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       throw CycException(err);
       break;
   }
-  conc_hist_[the_time] = to_ret;
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
