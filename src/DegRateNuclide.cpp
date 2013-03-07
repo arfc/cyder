@@ -233,14 +233,14 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
     it=(*curr_comp).begin();
     while(it != (*curr_comp).end() ) {
       int iso((*it).first);
-      double conc((*it).second);
+      conc((*it).second);
       to_ret.insert(make_pair(iso, conc*scale));
       ++it;
     }
   } else {
     to_ret[ 92235 ] = 0; 
   }
-  conc_hist_[the_time] = to_ret ;
+  conc_hist_[the_time] = to_ret;
   return to_ret;
 }
 
@@ -264,7 +264,6 @@ void DegRateNuclide::update_vec_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
-  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
