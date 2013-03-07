@@ -251,14 +251,11 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
   pair<IsoVector, double> sum_pair; 
   sum_pair = vec_hist_[the_time];
 
-  IsoConcMap to_ret;
-  int iso;
-  double mass;
-  double m_ff;
-  double m_aff;
-  double vol;
   if(sum_pair.second != 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
-    mass = sum_pair.second;
+    int iso(0);
+    double m_ff(0);
+    double m_aff(0);
+    double mass(sum_pair.second);
     CompMapPtr curr_comp = sum_pair.first.comp();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();

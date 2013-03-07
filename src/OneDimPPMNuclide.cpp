@@ -315,9 +315,9 @@ double OneDimPPMNuclide::V_f(){
   return MatTools::V_f(V_T(), porosity());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   /// @TODO use cauchy.
-  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
