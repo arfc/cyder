@@ -68,7 +68,7 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 
   QueryEngine* formulation_qe = qe->queryElement("formulation");
   string formulation_string;
-  for( it=choices.begin(); it!=choices.end(); it++){
+  for( it=choices.begin(); it!=choices.end(); ++it){
     if (formulation_qe->nElementsMatchingQuery(*it) == 1){
       formulation_=enumerateFormulation(*it);
       formulation_string=(*it);
@@ -86,8 +86,8 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
     default:
       string err = "The formulation type '"; err += formulation_;
       err += "' is not supported.";
-      throw CycException(err);
       LOG(LEV_ERROR,"GRLNuc") << err;
+      throw CycException(err);
       break;
   }
 
@@ -277,7 +277,7 @@ void LumpedNuclide::set_Pe(double Pe){
 void LumpedNuclide::set_porosity(double porosity){
   try {
     MatTools::validate_percent(porosity);
-  } catch (CycRangeException e) {
+  } catch (CycRangeException& e) {
     stringstream msg_ss;
     msg_ss << "The LumpedNuclide porosity range is 0 to 1, inclusive.";
     msg_ss << " The value provided was ";
@@ -326,8 +326,8 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
     default:
       string err = "The formulation type '"; err += formulation_;
       err += "' is not supported.";
-      throw CycException(err);
       LOG(LEV_ERROR,"GRLNuc") << err;
+      throw CycException(err);
       break;
   }
   conc_hist_[the_time] = to_ret;
@@ -368,8 +368,8 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
   
   pair<IsoVector, double> st;
   pair<IsoVector, double> mixed;
-  Volume vol;
-  Volume vol_sum;
+  Volume vol(0);
+  Volume vol_sum(0);
   
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
     st = (*daughter)->source_term_bc();
@@ -391,7 +391,6 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
-  IsoConcMap bc = daughter->dirichlet_bc();
   double theta = daughter->V_ff()/daughter->geom()->length();
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
       dt*theta*v());

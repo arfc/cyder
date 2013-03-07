@@ -22,9 +22,8 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
   IsoVector vec;
   CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
   double kg = 0;
-  double mass_to_add;
 
-  if( mats.size() != 0 ){ 
+  if( !mats.empty() ){ 
     CompMapPtr comp_to_add;
     deque<mat_rsrc_ptr>::iterator mat;
     int iso;
@@ -87,7 +86,7 @@ pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol)
   MatTools::validate_finite_pos(vol);
 
   CompMapPtr comp = CompMapPtr(new CompMap(MASS));
-  double mass;
+  double mass(0);
   int iso;
   double c_iso;
   double m_iso;

@@ -262,7 +262,7 @@ double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, double r, Iso iso, int d
 void OneDimPPMNuclide::set_porosity(double porosity){
   try { 
     MatTools::validate_percent(porosity);
-  } catch (CycRangeException e) {
+  } catch (CycRangeException& e) {
     stringstream msg_ss;
     msg_ss << "The OneDimPPMNuclide porosity range is 0 to 1, inclusive.";
     msg_ss << " The value provided was ";
@@ -278,7 +278,7 @@ void OneDimPPMNuclide::set_porosity(double porosity){
 void OneDimPPMNuclide::set_rho(double rho){
   try { 
     MatTools::validate_finite_pos(rho);
-  } catch (CycRangeException e) {
+  } catch (CycRangeException& e) {
     stringstream msg_ss;
     msg_ss << "The OneDimPPMNuclide bulk density (rho) range must be positive and finite";
     msg_ss << " The value provided was ";
@@ -315,9 +315,9 @@ double OneDimPPMNuclide::V_f(){
   return MatTools::V_f(V_T(), porosity());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   /// @TODO use cauchy.
-  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
