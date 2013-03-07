@@ -86,7 +86,7 @@ pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol)
   MatTools::validate_finite_pos(vol);
 
   CompMapPtr comp = CompMapPtr(new CompMap(MASS));
-  double mass;
+  double mass(0);
   int iso;
   double c_iso;
   double m_iso;
