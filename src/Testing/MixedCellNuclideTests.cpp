@@ -50,6 +50,7 @@ void MixedCellNuclideTest::SetUp(){
   mixed_cell_ptr_ = MixedCellNuclidePtr(initNuclideModel());
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(mixed_cell_ptr_);
   mixed_cell_ptr_->set_mat_table(mat_table_);
+  mixed_cell_ptr_->set_geom(geom_);
   default_mixed_cell_ptr_ = MixedCellNuclidePtr(MixedCellNuclide::create());
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_mixed_cell_ptr_);
   default_mixed_cell_ptr_->set_mat_table(mat_table_);
@@ -135,7 +136,7 @@ TEST_F(MixedCellNuclideTest, extract){
   // you shouldn't extract more material than you have how much is that?
 
   ASSERT_EQ(0,time_);
-  ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
+  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   EXPECT_NO_THROW(mixed_cell_ptr_->transportNuclides(time_));
   EXPECT_FLOAT_EQ(test_mat_->quantity(), mixed_cell_ptr_->contained_mass());
   EXPECT_FLOAT_EQ(test_size_, nuc_model_ptr_->contained_mass(time_));
@@ -219,7 +220,6 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR0){
   // if the degradation rate is zero, nothing should be released
   // set the degradation rate
   deg_rate_=0;
-  EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
   double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
   IsoConcMap zero_conc_map;
@@ -253,8 +253,6 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   // set the degradation rate
   ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(mixed_cell_ptr_->deg_rate(), deg_rate_);
-  // set geometry
-  EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   double expected_src = deg_rate_*test_size_;
@@ -343,8 +341,6 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
   // set the degradation rate
   ASSERT_NO_THROW(mixed_cell_ptr_->set_deg_rate(deg_rate_));
   EXPECT_FLOAT_EQ(mixed_cell_ptr_->deg_rate(), deg_rate_);
-  // set geometry
-  EXPECT_NO_THROW(mixed_cell_ptr_->set_geom(geom_));
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   double expected_src = deg_rate_*test_size_;
