@@ -264,8 +264,8 @@ void Cyder::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
       stocks_.push_front(std::make_pair(boost::dynamic_pointer_cast<Material>(*this_rsrc), trans.commod()));
     } else {
       std::string err = "The Cyder only accepts Material-type Resources.";
-      throw CycException(err);
       LOG(LEV_ERROR, "GenRepoFac")<< err ;
+      throw CycException(err);
     }
   }
 }
