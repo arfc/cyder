@@ -8,6 +8,7 @@
 #include <boost/math/constants/constants.hpp>
 
 #include "Geometry.h"
+#include "MatTools.h"
 #include "CycException.h"
 
 using namespace std;
@@ -43,6 +44,7 @@ GeometryPtr Geometry::copy(GeometryPtr src, point_t centroid){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void Geometry::set_radius(BoundaryType boundary, Radius radius) { 
+  MatTools::validate_finite_pos(radius);
   switch(boundary){
     case INNER:
       inner_radius_ = radius;
@@ -88,13 +90,9 @@ const double Geometry::z(){return (centroid()).z_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Volume Geometry::volume(){
-  // infinite until proven finite
-  double infty = numeric_limits<double>::infinity(); 
-  Volume to_ret = infty; 
-  if( outer_radius() != infty ) { 
-    to_ret = solid_volume( outer_radius(), length() )
-           - solid_volume( inner_radius(), length() );
-  }
+  MatTools::validate_finite_pos(outer_radius());
+  Volume to_ret = solid_volume( outer_radius(), length() )
+    - solid_volume( inner_radius(), length() );
   return to_ret;
 }
 

@@ -63,8 +63,8 @@ TEST_P(NuclideModelTests, getVolume) {
   EXPECT_NEAR( vol , nuclide_model_->geom()->volume(), 0.1);
   EXPECT_NO_THROW(nuclide_model_->geom()->set_radius(OUTER, r_four_));
   EXPECT_FLOAT_EQ( 0 , nuclide_model_->geom()->volume());
-  EXPECT_NO_THROW(nuclide_model_->geom()->set_radius(OUTER, std::numeric_limits<double>::infinity()));
-  EXPECT_FLOAT_EQ( std::numeric_limits<double>::infinity(), nuclide_model_->geom()->volume());
+  EXPECT_THROW(nuclide_model_->geom()->set_radius(OUTER, std::numeric_limits<double>::infinity()), CycRangeException);
+  EXPECT_NO_THROW(nuclide_model_->geom()->volume());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_P(NuclideModelTests, crude_source_term){
