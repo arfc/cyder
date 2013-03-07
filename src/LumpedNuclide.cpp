@@ -68,7 +68,7 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 
   QueryEngine* formulation_qe = qe->queryElement("formulation");
   string formulation_string;
-  for( it=choices.begin(); it!=choices.end(); it++){
+  for( it=choices.begin(); it!=choices.end(); ++it){
     if (formulation_qe->nElementsMatchingQuery(*it) == 1){
       formulation_=enumerateFormulation(*it);
       formulation_string=(*it);
