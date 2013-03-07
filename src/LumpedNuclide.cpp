@@ -368,8 +368,8 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
   
   pair<IsoVector, double> st;
   pair<IsoVector, double> mixed;
-  Volume vol;
-  Volume vol_sum;
+  Volume vol(0);
+  Volume vol_sum(0);
   
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
     st = (*daughter)->source_term_bc();
