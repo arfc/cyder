@@ -173,12 +173,16 @@ TEST_F(CyderTest, assess_capacity_crude){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, reject_hot_mat){
-  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat_, near_r_lim_, low_t_lim_));
+  EXPECT_NO_THROW(src_facility->set_r_lim(near_r_lim_));
+  EXPECT_NO_THROW(src_facility->set_t_lim(low_t_lim_));
+  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, accept_cold_mat){
-  EXPECT_EQ(true, src_facility->mat_acceptable(cold_mat_, far_r_lim_, high_t_lim_));
+  EXPECT_NO_THROW(src_facility->set_r_lim(far_r_lim_));
+  EXPECT_NO_THROW(src_facility->set_t_lim(high_t_lim_));
+  EXPECT_EQ(true, src_facility->mat_acceptable(cold_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -201,14 +205,18 @@ TEST_F(CyderTest, set_r_lim){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, reject_all_0_thermal_lim){
-  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat_, 0.2, 0));
-  EXPECT_EQ(false, src_facility->mat_acceptable(cold_mat_, 0.2, 0));
+  EXPECT_NO_THROW(src_facility->set_r_lim(0.2));
+  EXPECT_NO_THROW(src_facility->set_t_lim(0));
+  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat_));
+  EXPECT_EQ(false, src_facility->mat_acceptable(cold_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, accept_all_high_thermal_lim){
-  EXPECT_EQ(true, src_facility->mat_acceptable(hot_mat_, far_r_lim_, high_t_lim_));
-  EXPECT_EQ(true, src_facility->mat_acceptable(cold_mat_, far_r_lim_, high_t_lim_));
+  EXPECT_NO_THROW(src_facility->set_r_lim(far_r_lim_));
+  EXPECT_NO_THROW(src_facility->set_t_lim(high_t_lim_));
+  EXPECT_EQ(true, src_facility->mat_acceptable(hot_mat_));
+  EXPECT_EQ(true, src_facility->mat_acceptable(cold_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

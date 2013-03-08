@@ -101,6 +101,18 @@ public:
      @return impl_name_ the name of the ThermalModel implementation 
    */
   virtual std::string name(){return "STUB_THERMAL";}; 
+
+  /**
+     This function says whether or not the material is acceptable to 
+     this repository at r_lim for the limit t_lim
+
+     @param mat the material whose whose contribution to query 
+     @param r_lim the limiting radius
+     @param t_lim the limiting temperature  
+
+     @return mat_acceptable (true when acceptable, false otherwise)  
+    */
+  virtual bool mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim);
   
   /**
      gets the peak temperature that this component will experience on the 

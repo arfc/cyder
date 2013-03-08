@@ -50,6 +50,12 @@ Temp LumpedThermal::peak_temp(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+bool LumpedThermal::mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim){
+  /// @TODO obviously, put some logic here.
+  return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Temp LumpedThermal::temp(){
   return temperature_;
 }

@@ -602,6 +602,10 @@ ComponentPtr Cyder::setPlacement(ComponentPtr comp){
   comp->addComponentToTable(comp);
   return comp; 
 }
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool Cyder::mat_acceptable(mat_rsrc_ptr mat){
+  return thermal_model_->mat_acceptable(mat, r_lim_, t_lim_);
+}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::transportHeat(int time){

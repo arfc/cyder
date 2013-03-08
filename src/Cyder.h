@@ -182,6 +182,12 @@ protected:
     std::deque<std::string> in_commods_;
 
     /**
+       This thermal model determines the acceptability of a material
+       at radius r_lim_ due to temperature limit t_lim_
+     */
+    ThermalModelPtr thermal_model_;
+
+    /**
        A limit to how quickly the Cyder can accept waste.
        Units vary. It will be in the commodity unit per month.
      */
@@ -407,19 +413,17 @@ public:
        Returns a boolean confirming whether the mat can be accepted at this time.
 
        @param mat the material whose acceptability is in question.
-       @param r_lim the thermally limiting radius [m]
-       @param t_lim the temperature limit [K]
 
        @return mat_acceptable (true if acceptable, false otherwise.)
       */
-    bool mat_acceptable(mat_rsrc_ptr mat, Radius r_lim,  Temp t_lim);
+    bool mat_acceptable(mat_rsrc_ptr mat);
 
     /**
        Sets t_lim_ the thermal limiting temperature [K]
 
        @param t_lim the temperature limit [K]
       */
-    void set_t_lim( Temp t_lim);
+    void set_t_lim(Temp t_lim) {t_lim_=t_lim;};
 
     /**
        Returns the thermally limiting temperature [K]
@@ -433,8 +437,8 @@ public:
 
        @param r_lim the limiting radius [m]
       */
-    void set_r_lim(Radius r_lim);
-
+    void set_r_lim(Radius r_lim) {r_lim_=r_lim;};
+ 
     /**
        Returns the thermally limiting temperature [K]
 

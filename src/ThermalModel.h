@@ -89,13 +89,23 @@ public:
      get the name of the thermal model implementation type
    */
   virtual std::string name()=0;
+   /**
+      get the peak Temperature this object will experience during the 
+      simulation
+    */
+  virtual Temp peak_temp() = 0;
 
   /**
-     get the peak Temperature this object will experience during the simulation
-     
-     
+     This function says whether or not the material is acceptable to 
+     this repository at r_lim for the limit t_lim
+
+     @param mat the material whose whose contribution to query 
+     @param r_lim the limiting radius
+     @param t_lim the limiting temperature  
+
+     @return mat_acceptable (true when acceptable, false otherwise)
    */
-  virtual Temp peak_temp() = 0;
+  virtual bool mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim) = 0;
 
   /**
      get the Temperature

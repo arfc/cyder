@@ -51,6 +51,12 @@ Temp StubThermal::peak_temp(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+bool StubThermal::mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim){
+  /// @TODO obviously, put some logic here.
+  return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Temp StubThermal::temp(){
   return temperature_;
 }
