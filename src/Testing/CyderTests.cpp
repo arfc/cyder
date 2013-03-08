@@ -12,6 +12,7 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void CyderTest::SetUp(){
   // initialize ordinary objects
+  time_ = 0;
   x_ = 10;
   y_ = 10;
   z_ = 10;
@@ -44,10 +45,20 @@ void CyderTest::SetUp(){
   src_facility = initSrcFacility();
   initWorld();
 
-  hot_comp_ = CompMapPtr(new CompMap(MASS));
-  cold_comp_ = CompMapPtr(new CompMap(MASS));
+  Cs135_ = 55135;
+  Cs137_ = 55137;
+  high_t_lim_ = numeric_limits<double>::infinity();
+  far_r_lim_ = 200;
+  low_t_lim_ = 1;
+  near_r_lim_ = 1;
 
-  hot_mat _ =mat_rsrc_ptr(new Material(hot_comp_));
+  hot_comp_ = CompMapPtr(new CompMap(MASS));
+  (*hot_comp_)[Cs135_] = 1000;
+  (*hot_comp_)[Cs137_] = 1000;
+  cold_comp_ = CompMapPtr(new CompMap(MASS));
+  (*cold_comp_)[Cs135_] = 1;
+
+  hot_mat_ =mat_rsrc_ptr(new Material(hot_comp_));
   cold_mat_ =mat_rsrc_ptr(new Material(cold_comp_));
 }
 
@@ -127,7 +138,10 @@ Cyder* CyderTest::initSrcFacility(){
          << "  <lifetime>" << lifetime_ << "</lifetime>"
          << "  <startOperMonth>" << start_op_mo_ << "</startOperMonth>"
          << "  <startOperYear>" << start_op_yr_ << "</startOperYear>"
-         << cs  
+         << wfs 
+         << wps 
+         << bs 
+         << ffs 
          << "</start>";
 
       XMLParser parser(ss);
@@ -153,44 +167,48 @@ TEST_F(CyderTest, initial_state) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, assess_capacity_crude){
   // after stuff is absorbed, the capacity should be lower than before.
-  EXPECT_NO_THROW(src_facility->emplaceWaste());
-  EXPECT_NO_THROW(src_facility->handleTick(time));
+  EXPECT_NO_THROW(src_facility->handleTick(time_));
+  EXPECT_NO_THROW(src_facility->handleTock(time_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, reject_hot_mat){
-  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat));
+  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat_, near_r_lim_, low_t_lim_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, accept_cold_mat){
-  EXPECT_EQ(true, src_facility->mat_acceptable());
+  EXPECT_EQ(true, src_facility->mat_acceptable(cold_mat_, far_r_lim_, high_t_lim_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-TEST_F(CyderTest, set_thermal_limit){
-  double radius = 3;
+TEST_F(CyderTest, set_t_lim){
   double temp = 100; // kelvin?
-  EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(radius));
-  EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(temp));
-  EXPECT_FLOAT_EQ(radius, src_facility->thermal_limit_radius());
-  EXPECT_FLOAT_EQ(temp, src_facility->thermal_limit_temp());
+  EXPECT_NO_THROW(src_facility->set_t_lim(temp));
+  EXPECT_FLOAT_EQ(temp, src_facility->t_lim());
+
+  EXPECT_THROW(src_facility->set_t_lim(-1), CycRangeException);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+TEST_F(CyderTest, set_r_lim){
+  double radius = 3;
+  EXPECT_NO_THROW(src_facility->set_r_lim(radius));
+  EXPECT_FLOAT_EQ(radius, src_facility->r_lim());
+
+  EXPECT_THROW(src_facility->set_r_lim(-1), CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, reject_all_0_thermal_lim){
-  EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(0))
-  EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(0.2))
-  EXPECT_BOOL_EQ(false, src_facility->mat_acceptable(hot_mat));
-  EXPECT_BOOL_EQ(false, src_facility->mat_acceptable(cold_mat));
+  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat_, 0.2, 0));
+  EXPECT_EQ(false, src_facility->mat_acceptable(cold_mat_, 0.2, 0));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, accept_all_high_thermal_lim){
-  EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(numeric_limits<double>::infinity()))
-  EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(0.2))
-  EXPECT_BOOL_EQ(true, src_facility->mat_acceptable(hot_mat));
-  EXPECT_BOOL_EQ(true, src_facility->mat_acceptable(cold_mat));
+  EXPECT_EQ(true, src_facility->mat_acceptable(hot_mat_, far_r_lim_, high_t_lim_));
+  EXPECT_EQ(true, src_facility->mat_acceptable(cold_mat_, far_r_lim_, high_t_lim_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

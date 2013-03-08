@@ -11,7 +11,7 @@ class CyderTest : public ::testing::Test {
 protected:
   
   Cyder* src_facility;
-  int lifetime_,start_op_yr_,start_op_mo_;
+  int lifetime_,start_op_yr_,start_op_mo_, time_;
   double wfinnerradius_, wfouterradius_;
   double wpinnerradius_, wpouterradius_; 
   double binnerradius_, bouterradius_;
@@ -23,8 +23,14 @@ protected:
   std::string bname_, btype_;
   std::string ffname_, fftype_;
   TestMarket* incommod_market;
+
+  Temp high_t_lim_, low_t_lim_;
+  Radius far_r_lim_, near_r_lim_;
+  int Cs135_, Cs137_;
+
   CompMapPtr hot_comp_;
   CompMapPtr cold_comp_;
+
   mat_rsrc_ptr hot_mat_;
   mat_rsrc_ptr cold_mat_;
   
