@@ -95,8 +95,8 @@ void Component::init(string name, ComponentType type, string mat,
     string err = "The thermal or nuclide model provided is null " ;
     throw CycException(err);
   } else { 
-    thermal_model->set_geom(geom_);
-    nuclide_model->set_geom(geom_);
+    thermal_model->set_geom(GeometryPtr(geom()));
+    nuclide_model->set_geom(GeometryPtr(geom()));
 
     set_thermal_model(thermal_model);
     set_nuclide_model(nuclide_model);
@@ -498,9 +498,11 @@ NuclideModelPtr Component::nuclide_model(){return nuclide_model_;}
 ThermalModelPtr Component::thermal_model(){return thermal_model_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void Component::setPlacement(point_t centroid, double length){
-  geom_->set_centroid(centroid);
-  geom_->set_length(length); 
+void Component::setPlacement(point_t centroid, double the_length){
+  geom()->set_centroid(centroid);
+  geom()->set_length(the_length); 
+  assert(geom()->length()==the_length);
+  assert(nuclide_model_->geom()->length()==the_length);
   nuclide_model_->update(0);
 };
 

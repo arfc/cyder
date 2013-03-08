@@ -163,6 +163,12 @@ void MatTools::validate_finite_pos(double pos){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MatTools::validate_nonzero(double nonzero){
+  if ( nonzero == 0 )
+    throw CycRangeException("The value is zero.");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
   MatTools::validate_finite_pos(scalar);
   double orig;
@@ -173,3 +179,5 @@ IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
   }
   return C_0;
 }
+
+

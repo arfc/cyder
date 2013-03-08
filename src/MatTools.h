@@ -189,6 +189,13 @@ public:
     */
   static void validate_finite_pos(double pos);
 
+  /**
+     Confirms whether or not the provided value is zero 
+
+     @param nonzero the value to test
+     @throws CycRangeException
+    */
+  static void validate_nonzero(double nonzero);
 
   /**
     This is a helper function that scales an IsoConcMap with a scalar
