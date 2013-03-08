@@ -325,6 +325,7 @@ ThermalModelPtr Component::thermal_model(QueryEngine* qe){
       throw CycException("Unknown thermal model enum value encountered."); 
   }
   toRet->set_mat_table(mat_table());
+  toRet->set_geom(geom());
   return toRet;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -355,6 +356,7 @@ NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
       throw CycException("Unknown nuclide model enum value encountered."); 
   }
   toRet->set_mat_table(mat_table());
+  toRet->set_geom(geom());
   return toRet;
 }
 
@@ -375,6 +377,7 @@ ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
   }      
   toRet->copy(src);
   toRet->set_mat_table(mat_table());
+  toRet->set_geom(geom());
   return toRet;
 }
 
@@ -403,6 +406,7 @@ NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
   }      
   toRet->copy(*src);
   toRet->set_mat_table(mat_table());
+  toRet->set_geom(geom());
   return toRet;
 }
 
