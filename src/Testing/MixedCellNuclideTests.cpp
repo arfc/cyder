@@ -271,6 +271,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
 
   // TRANSPORT NUCLIDES 
   ASSERT_EQ(0, time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
@@ -359,6 +360,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
 
   // TRANSPORT NUCLIDES 
   ASSERT_EQ(0, time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
@@ -438,9 +440,9 @@ TEST_F(MixedCellNuclideTest, updateDegradation){
   double deg_rate=0.1;
    
   for(int i=0; i<5; i++){
-    time_++;
     EXPECT_NO_THROW(mixed_cell_ptr_->update_degradation(time_, deg_rate));
     EXPECT_EQ(time_*deg_rate,mixed_cell_ptr_->tot_deg());
+    time_++;
   }
   EXPECT_NO_THROW(mixed_cell_ptr_->update_degradation(time_, deg_rate));
   EXPECT_EQ(time_*deg_rate,mixed_cell_ptr_->tot_deg());
