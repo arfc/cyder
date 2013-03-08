@@ -151,24 +151,24 @@ TEST_F(CyderTest, initial_state) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-TEST_F(GenericRepositoryTest, assess_capacity_crude){
+TEST_F(CyderTest, assess_capacity_crude){
   // after stuff is absorbed, the capacity should be lower than before.
   EXPECT_NO_THROW(src_facility->emplaceWaste());
   EXPECT_NO_THROW(src_facility->handleTick(time));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-TEST_F(GenericRepositoryTest, reject_hot_mat){
+TEST_F(CyderTest, reject_hot_mat){
   EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-TEST_F(GenericRepositoryTest, accept_cold_mat){
+TEST_F(CyderTest, accept_cold_mat){
   EXPECT_EQ(true, src_facility->mat_acceptable());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-TEST_F(GenericRepositoryTest, set_thermal_limit){
+TEST_F(CyderTest, set_thermal_limit){
   double radius = 3;
   double temp = 100; // kelvin?
   EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(radius));
@@ -178,7 +178,7 @@ TEST_F(GenericRepositoryTest, set_thermal_limit){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-TEST_F(GenericRepositoryTest, reject_all_0_thermal_lim){
+TEST_F(CyderTest, reject_all_0_thermal_lim){
   EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(0))
   EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(0.2))
   EXPECT_BOOL_EQ(false, src_facility->mat_acceptable(hot_mat));
@@ -186,7 +186,7 @@ TEST_F(GenericRepositoryTest, reject_all_0_thermal_lim){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-TEST_F(GenericRepositoryTest, accept_all_high_thermal_lim){
+TEST_F(CyderTest, accept_all_high_thermal_lim){
   EXPECT_NO_THROW(src_facility->set_thermal_limit_temp(numeric_limits<double>::infinity()))
   EXPECT_NO_THROW(src_facility->set_thermal_limit_radius(0.2))
   EXPECT_BOOL_EQ(true, src_facility->mat_acceptable(hot_mat));
