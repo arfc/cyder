@@ -88,6 +88,12 @@ class Query(object):
     Stores the axes formed when plotting the data in this Query.
     """
 
+    legend=None
+    """
+    Stores the legend formed if there is one.
+
+    """
+
     figure = None
     """
     Stores the figure formed by plotting the data in this Query.
@@ -137,14 +143,14 @@ class Query(object):
                          "Transactions.Time >= " + str(t0) + " AND " +
                          "Transactions.Time < " + str(tf)))
         elif 'contaminants' == queryType:
-            self.set_q_stmt(sql_stmt("gen_repo_contaminants.Time, " +
-                                     "gen_repo_contaminants.CompID, " +
-                                     "gen_repo_contaminants.IsoID, " +
-                                     "gen_repo_contaminants.MassKG",
-                                     "gen_repo_contaminants",
-                                     "gen_repo_contaminants.Time >= " +
+            self.set_q_stmt(sql_stmt("contaminants.Time, " +
+                                     "contaminants.CompID, " +
+                                     "contaminants.IsoID, " +
+                                     "contaminants.MassKG",
+                                     "contaminants",
+                                     "contaminants.Time >= " +
                                      str(t0) + " AND " +
-                                     "gen_repo_contaminants.Time < " +
+                                     "contaminants.Time < " +
                                      str(tf)))
 
         self.conn = sqlite3.connect(file)
@@ -439,8 +445,8 @@ class Query(object):
         c = self.conn.cursor()
 
         compTypes = {}
-        c.execute("SELECT gen_repo_components.CompID, " +
-                  "gen_repo_components.Type FROM gen_repo_components")
+        c.execute("SELECT components.CompID, " +
+                  "components.Type FROM components")
 
         for row in c:
             if row[0] not in compTypes:
@@ -458,8 +464,8 @@ class Query(object):
 
         compList = []
         c.execute(
-            "SELECT gen_repo_components.CompID FROM gen_repo_components, " +
-            "gen_repo_contaminants ")
+            "SELECT components.CompID FROM components, " +
+            "contaminants ")
 
         for row in c:
             if row[0] not in compList:
@@ -469,7 +475,7 @@ class Query(object):
         return compList
 
 ###############################################################################
-    def get_short_iso_list(self, table='gen_repo_contaminants'):
+    def get_short_iso_list(self, table='contaminants'):
         """
         Count and record how many IsoIDs exist in the table, and make a list
         """
@@ -644,7 +650,7 @@ class Query(object):
             # get the list of actors
             actList = self.get_comp_list()
             numActs = len(actList)
-            isos = self.get_short_iso_list('gen_repo_contaminants')
+            isos = self.get_short_iso_list('contaminants')
             for index, iso in enumerate(isos):
                 self.iso_to_ind[iso] = index
                 self.ind_to_iso[index] = iso
@@ -790,10 +796,11 @@ class Query(object):
 
         self.set_up_figure()
 
-        self.ax.set_title(self.data_axes[select_dim] + " = " + str(selectItem))
+        self.ax.set_title(self.data_axes[select_dim] + " = " + 
+            str(self.data_labels[select_dim].index(selectItem)))
 
         # For RANDOM colors:
-        colors = pylab.rand(len(stream_list),len(stream_list))
+        #colors = pylab.rand(len(stream_list),len(stream_list))
 
         # get time dimension labels
         t = self.data_labels[time_dim]  
@@ -804,21 +811,30 @@ class Query(object):
         for i, s in enumerate(stream_list):
             indList[i] = self.data_labels[stream_dim].index(s)
         # Iterate through the streams and add them to the plot.
-        p=[]
+        legend_items=[]
+        legend_ids=[]
         for ind in indList:
+          if(max(plot_data[:, ind] > 0)):
             for time in t :
-                the_plot = self.ax.bar(time, 
-                          plot_data[time, ind], 
-                          width=1,
-                          bottom=run_sum[time], 
-                          color=colors[ind], alpha=0.9, label=str(ind))
-                run_sum[time] += plot_data[time, ind]
-            p.append(the_plot)
+              time-=self.t0
+              the_plot = self.ax.bar(time,
+                                     plot_data[time, ind], 
+                                     width=1,
+                                     bottom=run_sum[time], 
+                                     color=cm.jet(float(ind/20.), alpha=0.5), 
+                                     label=str(ind))
+              run_sum[time] += plot_data[time, ind]
+            legend_items.append(the_plot[0])
+            legend_ids.append(indList[ind])
 
-        self.ax.set_ylabel(self.data_axes[stream_dim])
+        self.ax.set_xlim(left=0)
+        self.ax.set_ylabel(self.data_units[3])
+        self.ax.set_xlabel(self.data_axes[time_dim])
         #self.ax.set_xticks(indList, t)
         #self.ax.set_yticks(np.arange(0,max(run_sum)))
-        self.ax.legend( (p,stream_list) )
+        self.legend = self.ax.legend(legend_items,legend_ids, 
+                title=self.data_axes[stream_dim], loc='upper right', 
+                bbox_to_anchor=(1.25,1)) 
 
         return self
 
@@ -904,8 +920,16 @@ class Query(object):
             raise QueryException(
                 "Error: please give filename for plot output.")
 
+
         fig = self.figure
-        pylab.savefig(filename)
+
+        if self.legend is not None : 
+            pylab.savefig(filename, bbox_extra_artists=(self.legend,), 
+                    bbox_inches='tight')
+        else :
+            pylab.savefig(filename)
+
+
         return self
 
 ###############################################################################

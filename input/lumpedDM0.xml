@@ -66,10 +66,16 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0</degradation>
-            </DegRateNuclide>
+              <porosity>0</porosity>
+              <transit_time>10</transit_time>
+              <formulation>
+                <DM>
+                  <peclet>0.1</peclet>
+                </DM>
+              </formulation>
+            </LumpedNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
         </component>
@@ -85,10 +91,16 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-            </DegRateNuclide>
+              <porosity>0</porosity>
+              <transit_time>10</transit_time>
+              <formulation>
+                <DM>
+                  <peclet>0.1</peclet>
+                </DM>
+              </formulation>
+            </LumpedNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
         </component>
@@ -104,10 +116,16 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-            </DegRateNuclide>
+              <porosity>0</porosity>
+              <transit_time>10</transit_time>
+              <formulation>
+                <DM>
+                  <peclet>0.1</peclet>
+                </DM>
+              </formulation>
+            </LumpedNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -122,10 +140,16 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-            </DegRateNuclide>
+              <porosity>0</porosity>
+              <transit_time>10</transit_time>
+              <formulation>
+                <DM>
+                  <peclet>0.1</peclet>
+                </DM>
+              </formulation>
+            </LumpedNuclide>
           </nuclidemodel>
         </component>
       </Cyder>

@@ -10,10 +10,11 @@
 
 
 #include "CycException.h"
-#include "Logger.h"
-#include "Timer.h"
+#include "CycLimits.h"
 #include "MatTools.h"
 #include "Material.h"
+#include "Logger.h"
+#include "Timer.h"
 
 using namespace std;
 
@@ -22,9 +23,8 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
   IsoVector vec;
   CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
   double kg = 0;
-  double mass_to_add;
 
-  if( mats.size() != 0 ){ 
+  if( !mats.empty() ){ 
     CompMapPtr comp_to_add;
     deque<mat_rsrc_ptr>::iterator mat;
     int iso;
@@ -59,7 +59,52 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, d
     mat_list.pop_back();
   }
   mat_rsrc_ptr to_ret = left_over->extract(comp_to_rem, kg_to_rem);
-  mat_list.push_back(left_over);
+  if(left_over->mass(KG) > cyclus::eps_rsrc()){ 
+    mat_list.push_back(left_over);
+  }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap MatTools::comp_to_conc_map(CompMapPtr comp, double mass, double vol){
+  MatTools::validate_finite_pos(vol);
+  MatTools::validate_finite_pos(mass);
+
+  IsoConcMap to_ret;
+  int iso;
+  double m_iso;
+  CompMap::const_iterator it;
+  it=(*comp).begin();
+  while(it!= (*comp).end() ){
+    iso = (*it).first;
+    m_iso=((*it).second)*mass;
+    to_ret.insert(make_pair(iso, m_iso/vol));
+    ++it;
+  } 
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol){
+  MatTools::validate_finite_pos(vol);
+
+  CompMapPtr comp = CompMapPtr(new CompMap(MASS));
+  double mass(0);
+  int iso;
+  double c_iso;
+  double m_iso;
+  CompMap::const_iterator it;
+  it=conc.begin();
+  while(it!= conc.end() ){
+    iso = (*it).first;
+    c_iso=((*it).second);
+    m_iso = c_iso*vol;
+    (*comp)[iso] = m_iso;
+    mass+=m_iso;
+    ++it;
+  } 
+  (*comp).normalize();
+  pair<CompMapPtr, double> to_ret = make_pair(comp, mass);
   return to_ret;
 }
 
@@ -110,14 +155,49 @@ void MatTools::validate_percent(double per){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MatTools::validate_finite_pos(double pos){
-  if( pos >= 0 ){
-    return;
+  if ( pos >= numeric_limits<double>::infinity() ) {
+    throw CycRangeException("The value is not positive and finite. It is infinite.");
   } else if ( pos < 0) {
     throw CycRangeException("The value is not positive and finite. It is less than zero.");
-  } else if ( pos >= numeric_limits<double>::infinity() ) {
-    throw CycRangeException("The value is not positive and finite. It is greater than infty.");
   }
-
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MatTools::validate_nonzero(double nonzero){
+  if ( nonzero == 0 )
+    throw CycRangeException("The value is zero.");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
+  MatTools::validate_finite_pos(scalar);
+  double orig;
+  IsoConcMap::iterator it;
+  for(it = C_0.begin(); it != C_0.end(); ++it) { 
+    orig = C_0[(*it).first];
+    C_0[(*it).first] = orig*scalar;
+  }
+  return C_0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
+  IsoConcMap to_ret;
+  IsoConcMap::iterator it;
+  for(it = orig.begin(); it != orig.end(); ++it) {
+    Iso iso=(*it).first;
+    if(to_add.find(iso) != to_add.end()) {
+      to_ret[iso] = (*it).second + to_add[iso];
+    } else {
+      to_ret[iso] = (*it).second;
+    }
+  }
+  for(it = to_add.begin(); it != to_add.end(); ++it) {
+    Iso iso=(*it).first;
+    if(orig.find(iso) == orig.end()) {
+      to_ret[iso] = (*it).second;
+    }
+  }
+  return to_ret;
+}
 

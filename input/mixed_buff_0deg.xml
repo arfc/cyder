@@ -66,10 +66,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0</degradation>
-            </DegRateNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>1</kd_limited>
+              <porosity>0.00001</porosity>
+              <sol_limited>1</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
         </component>
@@ -85,10 +88,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-            </DegRateNuclide>
+              <kd_limited>1</kd_limited>
+              <porosity>0.00001</porosity>
+              <sol_limited>1</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
         </component>
@@ -104,10 +110,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
-            </DegRateNuclide>
+              <degradation>0</degradation>
+              <kd_limited>1</kd_limited>
+              <porosity>0.00001</porosity>
+              <sol_limited>1</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -122,10 +131,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <DegRateNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-            </DegRateNuclide>
+              <kd_limited>1</kd_limited>
+              <porosity>0.00001</porosity>
+              <sol_limited>1</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
       </Cyder>

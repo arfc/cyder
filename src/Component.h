@@ -14,6 +14,7 @@
 #include "ThermalModel.h"
 #include "NuclideModel.h"
 #include "Geometry.h"
+#include "Model.h"
 
 /*!
 A map for storing the composition history of a material.
@@ -42,14 +43,14 @@ typedef double Temp;
 typedef double Power;
 
 /// Enum for type of engineered barrier component.
-enum ComponentType {BUFFER, ENV, FF, NF, WF, WP, LAST_EBS};
+enum ComponentType {BUFFER, FF, WF, WP, LAST_EBS};
 
 /// A shared pointer for the component object
 class Component;
 typedef boost::shared_ptr<Component> ComponentPtr;
 
 /** 
-   @brief Defines interface for subcomponents of the GenericRepository
+   @brief Defines interface for subcomponents of the Cyder generic repository
    
    Components such as the Waste Form, Waste Package, Buffer, Near Field,
    Far Field, and Envrionment will share a universal interface so that 
@@ -60,9 +61,9 @@ class Component : public boost::enable_shared_from_this<Component> {
 
 public:
   /**
-     Default constructor for the component class. Creates an empty component.
+     Creates an empty component.
    */
-  Component();
+  Component(Model* creator);
 
   /** 
      Default destructor does nothing.
@@ -102,11 +103,6 @@ public:
      standard verbose printer includes current temp and concentrations
    */
   void print(); 
-
-  /**
-     Defines the gen_repo_contaminant_table_
-    */
-  void defineContaminantTable();
 
   /**
      Updates the gen_repo_contaminant_table_ for this component.
@@ -231,16 +227,9 @@ public:
   const std::vector<NuclideModelPtr> nuclide_daughters();
 
   /**
-     This table will hold information about the component templates 
-     Each component template will have an EBS, a nuclide model ID, 
-     a thermal model ID, 
-   */
-  static void defineComponentsTable();
-
-  /**
      Adds a component to the components table.
    */
-  static void addComponentToTable(ComponentPtr comp);
+  void addComponentToTable(ComponentPtr comp);
 
   /**
      get the ID
@@ -313,13 +302,6 @@ public:
      @return temp_lim_
    */
   const Temp temp_lim();
-
-  /**
-     get the maximum Toxicity this object allows at its boundaries 
-     
-     @return tox_lim_
-   */
-  const Tox tox_lim();
 
   /**
      get the peak Temperature this object will experience during the simulation
@@ -398,15 +380,15 @@ public:
      
      @param parent is the component that should be set as the parent
    */
-  void setParent(ComponentPtr parent){parent_ = parent;};
+  void set_parent(ComponentPtr parent){parent_ = parent;};
 
   /**
      set the placement of the object
      
      @param centroid is the centroid position vector
+     @param length is the length of the object 
    */
-  void setPlacement(point_t centroid){
-    geom_->set_centroid(centroid);};
+  void setPlacement(point_t centroid, double length);
 
 protected:
   /** 
@@ -494,11 +476,6 @@ protected:
   Temp temp_lim_;
 
   /**
-     The toxlimit of this component 
-   */
-  Tox tox_lim_;
-
-  /**
      The peak temp achieved at the outer boundary 
    */
   Temp peak_outer_temp_;
@@ -507,11 +484,6 @@ protected:
      The peak temp achieved at the inner boundary 
    */
   Temp peak_inner_temp_;
-
-  /**
-     The peak tox achieved  
-   */
-  Tox peak_tox_;
 
   /**
      The temp taken to be the homogeneous temp of the whole 
@@ -524,15 +496,8 @@ protected:
    */
   ConcMap concentrations_;
 
-  /**
-     The table holding the contaminant history of the component
-     */
-  static table_ptr gr_contaminant_table_;
-
-  /**
-     This table will hold the parameters that uniquely describe each component in the simulation. 
-    */
-  static table_ptr gr_components_table_;
+  /// the genrepo that created/owns this component
+  Model* creator_;
 
 };
 

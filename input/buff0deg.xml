@@ -58,6 +58,7 @@
           <name>WF</name>
           <innerradius>0</innerradius>
           <outerradius>1</outerradius>
+          <length>1</length>
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
@@ -68,7 +69,7 @@
           <nuclidemodel>
             <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0</degradation>
+              <degradation>0.1</degradation>
             </DegRateNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
@@ -106,7 +107,7 @@
           <nuclidemodel>
             <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
+              <degradation>0</degradation>
             </DegRateNuclide>
           </nuclidemodel>
         </component>

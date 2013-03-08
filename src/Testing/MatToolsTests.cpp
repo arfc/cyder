@@ -3,10 +3,11 @@
 #include <map>
 #include <gtest/gtest.h>
 
-#include "MatTools.h"
-#include "NuclideModel.h"
+#include "CycLimits.h"
 #include "CycException.h"
 #include "Material.h"
+#include "MatTools.h"
+#include "NuclideModel.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ class MatToolsTest : public ::testing::Test {
     virtual void SetUp(){
       // composition set up
       u235_=92235;
+      am241_=95241;
       one_mol_=1.0;
       test_comp_= CompMapPtr(new CompMap(MASS));
       (*test_comp_)[u235_] = one_mol_;
@@ -70,6 +72,73 @@ TEST_F(MatToolsTest, extract){
   //@TODO this is just a placeholder, to remind you to write a test.
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, convert_comp_to_conc){ 
+  IsoConcMap test_conc_map; 
+
+  // composition set up
+  CompMapPtr test_comp_map= CompMapPtr(new CompMap(MASS));
+  (*test_comp_map)[u235_] = 1.;
+  (*test_comp_map)[am241_] = 0.5;
+  test_comp_map->normalize();
+  double exp_u235_conc, exp_am241_conc;
+
+  for(int v=1; v<10; v++){
+    for(int m=1; m<10; m++){
+      EXPECT_NO_THROW(MatTools::comp_to_conc_map(test_comp_map, m, v));
+      test_conc_map=MatTools::comp_to_conc_map(test_comp_map, m, v);
+      exp_u235_conc = (*test_comp_map)[u235_]*m/v;
+      EXPECT_FLOAT_EQ(exp_u235_conc, test_conc_map[u235_]);
+      exp_am241_conc = (*test_comp_map)[am241_]*m/v;
+      EXPECT_FLOAT_EQ(exp_am241_conc, test_conc_map[am241_]);
+    }
+  }
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, scale_conc_map){
+  double scale;
+  IsoConcMap test_conc_map;
+  IsoConcMap scaled_map;
+  test_conc_map[u235_]=test_size_;
+  test_conc_map[am241_]=2*test_size_;
+  for(int i = 1; i<10; i++){
+    scale = i*0.5;
+    EXPECT_NO_THROW(MatTools::scaleConcMap(test_conc_map,scale));
+    scaled_map = MatTools::scaleConcMap(test_conc_map,scale);
+    EXPECT_FLOAT_EQ(scale*test_conc_map[u235_], scaled_map[u235_]);
+    EXPECT_FLOAT_EQ(scale*test_conc_map[am241_], scaled_map[am241_]);
+  }
+
+  EXPECT_THROW(MatTools::scaleConcMap(test_conc_map, -1), CycRangeException);
+  EXPECT_THROW(MatTools::scaleConcMap(test_conc_map, numeric_limits<double>::infinity()), CycRangeException);
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, scale_zero_conc_map){
+  double scale;
+  IsoConcMap scaled_map;
+  IsoConcMap test_zero_map;
+  test_zero_map[u235_]=0;
+  test_zero_map[am241_]=0;
+  for(int i = 1; i<10; i++){
+    scale = i*0.5;
+    EXPECT_NO_THROW(MatTools::scaleConcMap(test_zero_map,scale));
+    scaled_map = MatTools::scaleConcMap(test_zero_map,scale);
+    EXPECT_FLOAT_EQ(0, scale*test_zero_map[u235_]);
+    EXPECT_FLOAT_EQ(scale*test_zero_map[u235_], scaled_map[u235_]);
+    EXPECT_FLOAT_EQ(scale*test_zero_map[am241_], scaled_map[am241_]);
+  }
+
+  EXPECT_THROW(MatTools::scaleConcMap(test_zero_map, -1), CycRangeException);
+  EXPECT_THROW(MatTools::scaleConcMap(test_zero_map, numeric_limits<double>::infinity()), CycRangeException);
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, validate_finite_pos){
+  for(int i; i<10; i++){
+    EXPECT_NO_THROW(MatTools::validate_finite_pos(i));
+  }
+  EXPECT_THROW(MatTools::validate_finite_pos(-1), CycRangeException);
+  EXPECT_THROW(MatTools::validate_finite_pos(numeric_limits<double>::infinity()), CycRangeException);
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, V_f){
   double V_T = 10;

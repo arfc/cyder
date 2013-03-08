@@ -23,7 +23,7 @@ using boost::lexical_cast;
 MixedCellNuclide::MixedCellNuclide():
   deg_rate_(0),
   tot_deg_(0),
-  last_degraded_(0),
+  last_degraded_(-1),
   v_(0),
   porosity_(0),
   sol_limited_(true),
@@ -31,6 +31,7 @@ MixedCellNuclide::MixedCellNuclide():
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
@@ -39,7 +40,7 @@ MixedCellNuclide::MixedCellNuclide():
 MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) : 
   deg_rate_(0),
   tot_deg_(0),
-  last_degraded_(0),
+  last_degraded_(-1),
   v_(0),
   porosity_(0),
   sol_limited_(true),
@@ -47,6 +48,7 @@ MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) :
 {
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
+  last_updated_=0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
   initModuleMembers(qe);
@@ -76,7 +78,7 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   set_porosity(src_ptr->porosity());
   set_sol_limited(src_ptr->sol_limited());
   set_tot_deg(0);
-  set_last_degraded(TI->time());
+  set_last_degraded(-1);
 
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
@@ -85,10 +87,15 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update_vec_hist(TI->time());
-  update_conc_hist(TI->time());
 
   return shared_from_this();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclide::update(int the_time) {
+  update_vec_hist(the_time);
+  update_conc_hist(the_time);
+  set_last_updated(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -115,7 +122,9 @@ mat_rsrc_ptr MixedCellNuclide::extract(const CompMapPtr comp_to_rem, double kg_t
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "MixedCellNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  return MatTools::extract(comp_to_rem, kg_to_rem, wastes_);
+  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
+  update(last_updated());
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -123,8 +132,7 @@ void MixedCellNuclide::transportNuclides(int the_time){
   // This should transport the nuclides through the component.
   // It will likely rely on the internal flux and will produce an external flux. 
   update_degradation(the_time, deg_rate());
-  update_vec_hist(the_time);
-  update_conc_hist(the_time);
+  update(the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -238,16 +246,14 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
   assert(last_degraded() <= the_time);
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist(the_time);
-
+  sum_pair = vec_hist_[the_time];
   IsoConcMap to_ret;
-  int iso;
-  double mass;
-  double m_ff;
-  double m_aff;
-  double vol;
+
   if(sum_pair.second != 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
-    mass = sum_pair.second;
+    int iso(0);
+    double m_ff(0);
+    double m_aff(0);
+    double mass(sum_pair.second);
     CompMapPtr curr_comp = sum_pair.first.comp();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
@@ -277,11 +283,16 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::update_degradation(int the_time, double cur_rate){
   assert(last_degraded() <= the_time);
-  if(cur_rate != deg_rate()){
-    set_deg_rate(cur_rate);
-  };
-  double total = tot_deg() + deg_rate()*(the_time - last_degraded());
-  set_tot_deg(min(1.0, total));
+  if(last_degraded() == -1 ) { 
+    // do nothing, this is the first timestep
+    set_tot_deg(0);
+  } else {
+    if(cur_rate != deg_rate()){
+      set_deg_rate(cur_rate);
+    };
+    double total = tot_deg() + deg_rate()*(the_time - last_degraded());
+    set_tot_deg(min(1.0, total));
+  }
   set_last_degraded(the_time);
 
   return tot_deg_;
@@ -294,7 +305,6 @@ void MixedCellNuclide::update_vec_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
-  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){

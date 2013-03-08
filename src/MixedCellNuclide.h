@@ -127,6 +127,13 @@ public:
   virtual std::string name(){return "MIXEDCELL_NUCLIDE";};
 
   /**
+     Updates all the hists
+
+     @param the_time the time at which to update the history
+   */
+  virtual void update(int the_time);
+
+  /**
      returns the available material source term at the outer boundary of the 
      component
    *
@@ -316,7 +323,7 @@ public:
   double V_s();
 
   /// Gets the free fluid volume, based on porosity and degradation rate
-  double V_ff();
+  virtual double V_ff();
 
 protected:
   /**
