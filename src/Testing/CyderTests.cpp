@@ -34,7 +34,7 @@ void CyderTest::SetUp(){
   wpinnerradius_ = 1;
   wpouterradius_ = 2;
   wptype_ = "WP";
-  bname_ = "wp_name";
+  bname_ = "buffer_name";
   binnerradius_ = 2;
   bouterradius_ = 20;
   btype_ = "BUFFER";
@@ -58,8 +58,8 @@ void CyderTest::SetUp(){
   cold_comp_ = CompMapPtr(new CompMap(MASS));
   (*cold_comp_)[Cs135_] = 1;
 
-  hot_mat_ =mat_rsrc_ptr(new Material(hot_comp_));
-  cold_mat_ =mat_rsrc_ptr(new Material(cold_comp_));
+  hot_mat_ = mat_rsrc_ptr(new Material(hot_comp_));
+  cold_mat_ = mat_rsrc_ptr(new Material(cold_comp_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -80,16 +80,22 @@ Cyder* CyderTest::initSrcFacility(){
       sn << "    <nuclidemodel>" 
          << "      <StubNuclide/>"
          << "    </nuclidemodel>";
+
+      stringstream md("");
+      md << "    <materialdata>"
+         << "      <clay/>"
+         << "    </materialdata>";
       
       stringstream wfs("");
       wfs << "  <component>"
          << "    <name>" << wfname_ << "</name>" 
          << "    <innerradius>" << wfinnerradius_ << "</innerradius>" 
          << "    <outerradius>" << wfouterradius_ << "</outerradius>" 
-         << "    <type>" << wftype_ << "</type>" 
-         << "    <allowedcommod>" << in_commod_ << "</allowedcommod>" 
+         << "    <componenttype>" << wftype_ << "</componenttype>" 
+         << md
          << st
          << sn
+         << "    <allowedcommod>" << in_commod_ << "</allowedcommod>" 
          << "  </component>";
 
       stringstream wps("");
@@ -97,10 +103,11 @@ Cyder* CyderTest::initSrcFacility(){
          << "    <name>" << wpname_ << "</name>" 
          << "    <innerradius>" << wpinnerradius_ << "</innerradius>" 
          << "    <outerradius>" << wpouterradius_ << "</outerradius>" 
-         << "    <wptype>" << wptype_ << "</wptype>" 
-         << "    <allowedwf>" << wfname_ << "</allowedwf>" 
+         << "    <componenttype>" << wptype_ << "</componenttype>" 
+         << md
          << st
          << sn
+         << "    <allowedwf>" << wfname_ << "</allowedwf>" 
          << "  </component>";
 
       stringstream bs("");
@@ -108,7 +115,8 @@ Cyder* CyderTest::initSrcFacility(){
          << "    <name>" << bname_ << "</name>" 
          << "    <innerradius>" << binnerradius_ << "</innerradius>" 
          << "    <outerradius>" << bouterradius_ << "</outerradius>" 
-         << "    <type>" << btype_ << "</type>" 
+         << "    <componenttype>" << btype_ << "</componenttype>" 
+         << md
          << st
          << sn
          << "  </component>";
@@ -118,7 +126,8 @@ Cyder* CyderTest::initSrcFacility(){
          << "    <name>" << ffname_ << "</name>" 
          << "    <innerradius>" << ffinnerradius_ << "</innerradius>" 
          << "    <outerradius>" << ffouterradius_ << "</outerradius>" 
-         << "    <type>" << fftype_ << "</type>" 
+         << "    <componenttype>" << fftype_ << "</componenttype>" 
+         << md
          << st
          << sn
          << "  </component>";
@@ -167,7 +176,9 @@ TEST_F(CyderTest, initial_state) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, assess_capacity_crude){
   // after stuff is absorbed, the capacity should be lower than before.
-  EXPECT_NO_THROW(src_facility->handleTick(time_));
+  //EXPECT_NO_THROW(
+      src_facility->handleTick(time_);
+     // i);
   EXPECT_NO_THROW(src_facility->handleTock(time_));
 }
 
