@@ -18,7 +18,7 @@ def print_contaminants(dbname):
 
 
 def query_contaminants(dbname):
-    return Query(dbname, 'contaminants', t0=0, tf=100)
+    return Query(dbname, 'contaminants', t0=9900, tf=10000)
 
 
 def plot_contaminants(dbname, plttype, pltname, stream_dim='IsoID', select_dim=None,
@@ -53,8 +53,8 @@ def stack_comps(dbname, plttype, pltroot):
     plot_contaminants(dbname, plttype, pltroot, stream_dim='CompID', select_dim='IsoID',
                       select_item=92235)
 
-def plot_dir(dir_path=".") :
-    dir_list = os.listdir(dir_path)
+def plot_this_dir() :
+    dir_list = os.listdir(".")
     for fname in dir_list :
       if ".sqlite" in fname : 
         plot_all(fname)

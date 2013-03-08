@@ -816,6 +816,7 @@ class Query(object):
         for ind in indList:
           if(max(plot_data[:, ind] > 0)):
             for time in t :
+              time-=self.t0
               the_plot = self.ax.bar(time,
                                      plot_data[time, ind], 
                                      width=1,

@@ -23,7 +23,7 @@ DegRateNuclide::DegRateNuclide():
   deg_rate_(0),
   v_(0),
   tot_deg_(0),
-  last_degraded_(0)
+  last_degraded_(-1)
 {
   wastes_ = deque<mat_rsrc_ptr>();
 
@@ -39,7 +39,7 @@ DegRateNuclide::DegRateNuclide(QueryEngine* qe):
   deg_rate_(0),
   v_(0),
   tot_deg_(0),
-  last_degraded_(0)
+  last_degraded_(-1)
 {
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
@@ -66,10 +66,10 @@ void DegRateNuclide::initModuleMembers(QueryEngine* qe){
 NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
   const DegRateNuclide* src_ptr = dynamic_cast<const DegRateNuclide*>(&src);
 
-  set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());
+  set_v(src_ptr->v());
   set_tot_deg(0);
-  set_last_degraded(TI->time());
+  set_last_degraded(-1);
 
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
@@ -246,9 +246,12 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::update_degradation(int the_time, double cur_rate){
   assert(last_degraded() <= the_time);
+  if( last_degraded() == -1 ){ 
+    set_last_degraded(the_time);
+  } 
   if(cur_rate != deg_rate()){
     set_deg_rate(cur_rate);
-  };
+  }
   double total = tot_deg() + deg_rate()*(the_time - last_degraded());
   set_tot_deg(min(1.0, total));
   set_last_degraded(the_time);

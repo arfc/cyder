@@ -23,7 +23,7 @@ using boost::lexical_cast;
 MixedCellNuclide::MixedCellNuclide():
   deg_rate_(0),
   tot_deg_(0),
-  last_degraded_(0),
+  last_degraded_(-1),
   v_(0),
   porosity_(0),
   sol_limited_(true),
@@ -40,7 +40,7 @@ MixedCellNuclide::MixedCellNuclide():
 MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) : 
   deg_rate_(0),
   tot_deg_(0),
-  last_degraded_(0),
+  last_degraded_(-1),
   v_(0),
   porosity_(0),
   sol_limited_(true),
@@ -78,7 +78,7 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   set_porosity(src_ptr->porosity());
   set_sol_limited(src_ptr->sol_limited());
   set_tot_deg(0);
-  set_last_degraded(TI->time());
+  set_last_degraded(-1);
 
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
@@ -283,11 +283,16 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::update_degradation(int the_time, double cur_rate){
   assert(last_degraded() <= the_time);
-  if(cur_rate != deg_rate()){
-    set_deg_rate(cur_rate);
-  };
-  double total = tot_deg() + deg_rate()*(the_time - last_degraded());
-  set_tot_deg(min(1.0, total));
+  if(last_degraded() == -1 ) { 
+    // do nothing, this is the first timestep
+    set_tot_deg(0);
+  } else {
+    if(cur_rate != deg_rate()){
+      set_deg_rate(cur_rate);
+    };
+    double total = tot_deg() + deg_rate()*(the_time - last_degraded());
+    set_tot_deg(min(1.0, total));
+  }
   set_last_degraded(the_time);
 
   return tot_deg_;

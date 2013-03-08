@@ -180,4 +180,24 @@ IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
   return C_0;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
+  IsoConcMap to_ret;
+  IsoConcMap::iterator it;
+  for(it = orig.begin(); it != orig.end(); ++it) {
+    Iso iso=(*it).first;
+    if(to_add.find(iso) != to_add.end()) {
+      to_ret[iso] = (*it).second + to_add[iso];
+    } else {
+      to_ret[iso] = (*it).second;
+    }
+  }
+  for(it = to_add.begin(); it != to_add.end(); ++it) {
+    Iso iso=(*it).first;
+    if(orig.find(iso) == orig.end()) {
+      to_ret[iso] = (*it).second;
+    }
+  }
+  return to_ret;
+}
 
