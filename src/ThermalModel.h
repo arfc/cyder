@@ -32,6 +32,7 @@ typedef double Power;
 enum ThermalModelType{
   LUMPED_THERMAL,
   STUB_THERMAL, 
+  STC_THERMAL, 
   LAST_THERMAL};  
 
 /// A shared pointer for the abstract ThermalModel class
