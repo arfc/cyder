@@ -86,7 +86,7 @@ Cyder* CyderTest::initSrcFacility(){
          << "        <clay/>"
          << "      </material_data>";
       
-
+      stringstream ss("");
       ss << "<start>"
          << "  <x>" << x_ << "</x>"
          << "  <y>" << y_ << "</y>"
