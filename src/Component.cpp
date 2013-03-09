@@ -30,6 +30,7 @@ int Component::nextID_ = 0;
 
 string Component::thermal_type_names_[] = {
   "LumpedThermal",
+  "STCThermal",
   "StubThermal"
 };
 string Component::nuclide_type_names_[] = {
@@ -322,6 +323,9 @@ ThermalModelPtr Component::thermal_model(QueryEngine* qe){
     case STUB_THERMAL:
       toRet = ThermalModelPtr(StubThermal::create(qe));
       break;
+    case STC_THERMAL:
+      toRet = ThermalModelPtr(LumpedThermal::create(qe));
+      break;
     default:
       throw CycException("Unknown thermal model enum value encountered."); 
   }
@@ -372,6 +376,9 @@ ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
       break;
     case STUB_THERMAL:
       toRet = ThermalModelPtr(StubThermal::create());
+      break;
+    case STC_THERMAL; 
+      toRet = ThermalModelPtr(LumpedThermal::create());
       break;
     default:
       throw CycException("Unknown thermal model enum value encountered when copying."); 

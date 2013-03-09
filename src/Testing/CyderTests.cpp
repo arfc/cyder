@@ -178,10 +178,7 @@ TEST_F(CyderTest, initial_state) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, assess_capacity_crude){
-  // after stuff is absorbed, the capacity should be lower than before.
-  //EXPECT_NO_THROW(
-      src_facility_->handleTick(time_);
-     // i);
+  EXPECT_NO_THROW(src_facility_->handleTick(time_));
   EXPECT_NO_THROW(src_facility_->handleTock(time_));
 }
 
