@@ -72,20 +72,9 @@ void CyderTest::TearDown() {
 Cyder* CyderTest::initSrcFacility(){
 
       stringstream st("");
-      st << "    <thermalmodel>" 
-         << "      <StubThermal/>"
-         << "    </thermalmodel>";
 
       stringstream sn("");
-      sn << "    <nuclidemodel>" 
-         << "      <StubNuclide/>"
-         << "    </nuclidemodel>";
 
-      stringstream md("");
-      md << "      <material_data>"
-         << "        <clay/>"
-         << "      </material_data>";
-      
       stringstream ss("");
       ss << "<start>"
          << "  <x>" << x_ << "</x>"
@@ -106,9 +95,15 @@ Cyder* CyderTest::initSrcFacility(){
          << "    <innerradius>" << wfinnerradius_ << "</innerradius>" 
          << "    <outerradius>" << wfouterradius_ << "</outerradius>" 
          << "    <componenttype>" << wftype_ << "</componenttype>" 
-         << md
-         << st
-         << sn
+         << "    <material_data>"
+         << "      <clay/>"
+         << "    </material_data>"
+         << "    <thermalmodel>" 
+         << "      <StubThermal/>"
+         << "    </thermalmodel>"
+         << "    <nuclidemodel>" 
+         << "      <StubNuclide/>"
+         << "    </nuclidemodel>"
          << "    <allowedcommod>" << in_commod_ << "</allowedcommod>" 
          << "  </component>"
          << "  <component>"
@@ -116,9 +111,15 @@ Cyder* CyderTest::initSrcFacility(){
          << "    <innerradius>" << wpinnerradius_ << "</innerradius>" 
          << "    <outerradius>" << wpouterradius_ << "</outerradius>" 
          << "    <componenttype>" << wptype_ << "</componenttype>" 
-         << md
-         << st
-         << sn
+         << "    <material_data>"
+         << "      <clay/>"
+         << "    </material_data>"
+         << "    <thermalmodel>" 
+         << "      <StubThermal/>"
+         << "    </thermalmodel>"
+         << "    <nuclidemodel>" 
+         << "      <StubNuclide/>"
+         << "    </nuclidemodel>"
          << "    <allowedwf>" << wfname_ << "</allowedwf>" 
          << "  </component>"
          << "  <component>"
@@ -126,18 +127,30 @@ Cyder* CyderTest::initSrcFacility(){
          << "    <innerradius>" << binnerradius_ << "</innerradius>" 
          << "    <outerradius>" << bouterradius_ << "</outerradius>" 
          << "    <componenttype>" << btype_ << "</componenttype>" 
-         << md
-         << st
-         << sn
+         << "    <material_data>"
+         << "      <clay/>"
+         << "    </material_data>"
+         << "    <thermalmodel>" 
+         << "      <StubThermal/>"
+         << "    </thermalmodel>"
+         << "    <nuclidemodel>" 
+         << "      <StubNuclide/>"
+         << "    </nuclidemodel>"
          << "  </component>"
          << "  <component>"
          << "    <name>" << ffname_ << "</name>" 
          << "    <innerradius>" << ffinnerradius_ << "</innerradius>" 
          << "    <outerradius>" << ffouterradius_ << "</outerradius>" 
          << "    <componenttype>" << fftype_ << "</componenttype>" 
-         << md
-         << st
-         << sn
+         << "    <material_data>"
+         << "      <clay/>"
+         << "    </material_data>"
+         << "    <thermalmodel>" 
+         << "      <StubThermal/>"
+         << "    </thermalmodel>"
+         << "    <nuclidemodel>" 
+         << "      <StubNuclide/>"
+         << "    </nuclidemodel>"
          << "  </component>"
          << "</start>";
 
