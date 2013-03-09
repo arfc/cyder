@@ -42,7 +42,7 @@ void CyderTest::SetUp(){
   ffinnerradius_ = 20;
   ffouterradius_ = 100;
   fftype_ = "FF";
-  src_facility = initSrcFacility();
+  src_facility_ = initSrcFacility();
   initWorld();
 
   Cs135_ = 55135;
@@ -64,7 +64,7 @@ void CyderTest::SetUp(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void CyderTest::TearDown() { 
-  delete src_facility;
+  delete src_facility_;
   delete incommod_market;
 }
 
@@ -82,57 +82,11 @@ Cyder* CyderTest::initSrcFacility(){
          << "    </nuclidemodel>";
 
       stringstream md("");
-      md << "    <materialdata>"
-         << "      <clay/>"
-         << "    </materialdata>";
+      md << "      <material_data>"
+         << "        <clay/>"
+         << "      </material_data>";
       
-      stringstream wfs("");
-      wfs << "  <component>"
-         << "    <name>" << wfname_ << "</name>" 
-         << "    <innerradius>" << wfinnerradius_ << "</innerradius>" 
-         << "    <outerradius>" << wfouterradius_ << "</outerradius>" 
-         << "    <componenttype>" << wftype_ << "</componenttype>" 
-         << md
-         << st
-         << sn
-         << "    <allowedcommod>" << in_commod_ << "</allowedcommod>" 
-         << "  </component>";
 
-      stringstream wps("");
-      wps << "  <component>"
-         << "    <name>" << wpname_ << "</name>" 
-         << "    <innerradius>" << wpinnerradius_ << "</innerradius>" 
-         << "    <outerradius>" << wpouterradius_ << "</outerradius>" 
-         << "    <componenttype>" << wptype_ << "</componenttype>" 
-         << md
-         << st
-         << sn
-         << "    <allowedwf>" << wfname_ << "</allowedwf>" 
-         << "  </component>";
-
-      stringstream bs("");
-      bs << "  <component>"
-         << "    <name>" << bname_ << "</name>" 
-         << "    <innerradius>" << binnerradius_ << "</innerradius>" 
-         << "    <outerradius>" << bouterradius_ << "</outerradius>" 
-         << "    <componenttype>" << btype_ << "</componenttype>" 
-         << md
-         << st
-         << sn
-         << "  </component>";
-
-      stringstream ffs("");
-      ffs << "  <component>"
-         << "    <name>" << ffname_ << "</name>" 
-         << "    <innerradius>" << ffinnerradius_ << "</innerradius>" 
-         << "    <outerradius>" << ffouterradius_ << "</outerradius>" 
-         << "    <componenttype>" << fftype_ << "</componenttype>" 
-         << md
-         << st
-         << sn
-         << "  </component>";
-    
-      stringstream ss("");
       ss << "<start>"
          << "  <x>" << x_ << "</x>"
          << "  <y>" << y_ << "</y>"
@@ -147,18 +101,52 @@ Cyder* CyderTest::initSrcFacility(){
          << "  <lifetime>" << lifetime_ << "</lifetime>"
          << "  <startOperMonth>" << start_op_mo_ << "</startOperMonth>"
          << "  <startOperYear>" << start_op_yr_ << "</startOperYear>"
-         << wfs 
-         << wps 
-         << bs 
-         << ffs 
+         << "  <component>"
+         << "    <name>" << wfname_ << "</name>" 
+         << "    <innerradius>" << wfinnerradius_ << "</innerradius>" 
+         << "    <outerradius>" << wfouterradius_ << "</outerradius>" 
+         << "    <componenttype>" << wftype_ << "</componenttype>" 
+         << md
+         << st
+         << sn
+         << "    <allowedcommod>" << in_commod_ << "</allowedcommod>" 
+         << "  </component>"
+         << "  <component>"
+         << "    <name>" << wpname_ << "</name>" 
+         << "    <innerradius>" << wpinnerradius_ << "</innerradius>" 
+         << "    <outerradius>" << wpouterradius_ << "</outerradius>" 
+         << "    <componenttype>" << wptype_ << "</componenttype>" 
+         << md
+         << st
+         << sn
+         << "    <allowedwf>" << wfname_ << "</allowedwf>" 
+         << "  </component>"
+         << "  <component>"
+         << "    <name>" << bname_ << "</name>" 
+         << "    <innerradius>" << binnerradius_ << "</innerradius>" 
+         << "    <outerradius>" << bouterradius_ << "</outerradius>" 
+         << "    <componenttype>" << btype_ << "</componenttype>" 
+         << md
+         << st
+         << sn
+         << "  </component>"
+         << "  <component>"
+         << "    <name>" << ffname_ << "</name>" 
+         << "    <innerradius>" << ffinnerradius_ << "</innerradius>" 
+         << "    <outerradius>" << ffouterradius_ << "</outerradius>" 
+         << "    <componenttype>" << fftype_ << "</componenttype>" 
+         << md
+         << st
+         << sn
+         << "  </component>"
          << "</start>";
 
       XMLParser parser(ss);
       XMLQueryEngine* engine = new XMLQueryEngine(parser);
-      src_facility = new Cyder();
-      src_facility->initModuleMembers(engine);
+      src_facility_ = new Cyder();
+      src_facility_->initModuleMembers(engine);
       delete engine;
-      return src_facility;
+      return src_facility_;
     }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void CyderTest::initWorld(){
@@ -169,65 +157,67 @@ void CyderTest::initWorld(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(CyderTest, initial_state) {
-  EXPECT_EQ(capacity_, src_facility->getCapacity(in_commod_));
-  EXPECT_EQ(adv_vel_, src_facility->adv_vel());
+  EXPECT_EQ(0, src_facility_->checkStocks());
+  EXPECT_EQ(0, src_facility_->checkInventory());
+  EXPECT_EQ(capacity_, src_facility_->getCapacity(in_commod_));
+  EXPECT_EQ(adv_vel_, src_facility_->adv_vel());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, assess_capacity_crude){
   // after stuff is absorbed, the capacity should be lower than before.
   //EXPECT_NO_THROW(
-      src_facility->handleTick(time_);
+      src_facility_->handleTick(time_);
      // i);
-  EXPECT_NO_THROW(src_facility->handleTock(time_));
+  EXPECT_NO_THROW(src_facility_->handleTock(time_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, reject_hot_mat){
-  EXPECT_NO_THROW(src_facility->set_r_lim(near_r_lim_));
-  EXPECT_NO_THROW(src_facility->set_t_lim(low_t_lim_));
-  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat_));
+  EXPECT_NO_THROW(src_facility_->set_r_lim(near_r_lim_));
+  EXPECT_NO_THROW(src_facility_->set_t_lim(low_t_lim_));
+  EXPECT_EQ(false, src_facility_->mat_acceptable(hot_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, accept_cold_mat){
-  EXPECT_NO_THROW(src_facility->set_r_lim(far_r_lim_));
-  EXPECT_NO_THROW(src_facility->set_t_lim(high_t_lim_));
-  EXPECT_EQ(true, src_facility->mat_acceptable(cold_mat_));
+  EXPECT_NO_THROW(src_facility_->set_r_lim(far_r_lim_));
+  EXPECT_NO_THROW(src_facility_->set_t_lim(high_t_lim_));
+  EXPECT_EQ(true, src_facility_->mat_acceptable(cold_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, set_t_lim){
   double temp = 100; // kelvin?
-  EXPECT_NO_THROW(src_facility->set_t_lim(temp));
-  EXPECT_FLOAT_EQ(temp, src_facility->t_lim());
+  EXPECT_NO_THROW(src_facility_->set_t_lim(temp));
+  EXPECT_FLOAT_EQ(temp, src_facility_->t_lim());
 
-  EXPECT_THROW(src_facility->set_t_lim(-1), CycRangeException);
+  EXPECT_THROW(src_facility_->set_t_lim(-1), CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, set_r_lim){
   double radius = 3;
-  EXPECT_NO_THROW(src_facility->set_r_lim(radius));
-  EXPECT_FLOAT_EQ(radius, src_facility->r_lim());
+  EXPECT_NO_THROW(src_facility_->set_r_lim(radius));
+  EXPECT_FLOAT_EQ(radius, src_facility_->r_lim());
 
-  EXPECT_THROW(src_facility->set_r_lim(-1), CycRangeException);
+  EXPECT_THROW(src_facility_->set_r_lim(-1), CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, reject_all_0_thermal_lim){
-  EXPECT_NO_THROW(src_facility->set_r_lim(0.2));
-  EXPECT_NO_THROW(src_facility->set_t_lim(0));
-  EXPECT_EQ(false, src_facility->mat_acceptable(hot_mat_));
-  EXPECT_EQ(false, src_facility->mat_acceptable(cold_mat_));
+  EXPECT_NO_THROW(src_facility_->set_r_lim(0.2));
+  EXPECT_NO_THROW(src_facility_->set_t_lim(0));
+  EXPECT_EQ(false, src_facility_->mat_acceptable(hot_mat_));
+  EXPECT_EQ(false, src_facility_->mat_acceptable(cold_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, accept_all_high_thermal_lim){
-  EXPECT_NO_THROW(src_facility->set_r_lim(far_r_lim_));
-  EXPECT_NO_THROW(src_facility->set_t_lim(high_t_lim_));
-  EXPECT_EQ(true, src_facility->mat_acceptable(hot_mat_));
-  EXPECT_EQ(true, src_facility->mat_acceptable(cold_mat_));
+  EXPECT_NO_THROW(src_facility_->set_r_lim(far_r_lim_));
+  EXPECT_NO_THROW(src_facility_->set_t_lim(high_t_lim_));
+  EXPECT_EQ(true, src_facility_->mat_acceptable(hot_mat_));
+  EXPECT_EQ(true, src_facility_->mat_acceptable(cold_mat_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
