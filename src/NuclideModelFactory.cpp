@@ -58,7 +58,7 @@ NuclideModelPtr NuclideModelFactory::nuclideModel(QueryEngine* qe){
   }
 
   return to_ret;
-};
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr NuclideModelFactory::nuclideModel(QueryEngine* qe, MatDataTablePtr 
@@ -67,7 +67,7 @@ NuclideModelPtr NuclideModelFactory::nuclideModel(QueryEngine* qe, MatDataTableP
     to_ret->set_mat_table(mat_table);
     to_ret->set_geom(geom);
     return to_ret;
-};
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr NuclideModelFactory::nuclideModel(NuclideModelPtr src, 
@@ -97,7 +97,7 @@ NuclideModelPtr NuclideModelFactory::nuclideModel(NuclideModelPtr src,
   to_ret->set_mat_table(mat_table);
   to_ret->set_geom(geom);
   return to_ret;
-};
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelType NuclideModelFactory::nuclideEnum(std::string type_name) {

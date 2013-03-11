@@ -190,6 +190,14 @@ public:
   static void validate_finite_pos(double pos);
 
   /**
+     Confirms whether or not the provided value is positive(0<=pos)
+
+     @param pos the value to test
+     @throws CycRangeException if pos<0
+    */
+  static void validate_pos(double pos);
+
+  /**
      Confirms whether or not the provided value is zero 
 
      @param nonzero the value to test

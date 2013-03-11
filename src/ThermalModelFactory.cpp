@@ -44,7 +44,7 @@ ThermalModelPtr ThermalModelFactory::thermalModel(QueryEngine* qe){
       throw CycException("Unknown thermal model enum value encountered."); 
   }
   return to_ret;
-};
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ThermalModelPtr ThermalModelFactory::thermalModel(QueryEngine* qe, MatDataTablePtr 
@@ -53,7 +53,7 @@ ThermalModelPtr ThermalModelFactory::thermalModel(QueryEngine* qe, MatDataTableP
     to_ret->set_mat_table(mat_table);
     to_ret->set_geom(geom);
     return to_ret;
-};
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ThermalModelPtr ThermalModelFactory::thermalModel(ThermalModelPtr src, 
@@ -78,7 +78,7 @@ ThermalModelPtr ThermalModelFactory::thermalModel(ThermalModelPtr src,
   to_ret->set_mat_table(mat_table);
   to_ret->set_geom(geom);
   return to_ret;
-};
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ThermalModelType ThermalModelFactory::thermalEnum(std::string type_name) {

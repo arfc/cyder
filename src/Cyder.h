@@ -423,7 +423,7 @@ public:
 
        @param t_lim the temperature limit [K]
       */
-    void set_t_lim(Temp t_lim) {t_lim_=t_lim;};
+    void set_t_lim(Temp t_lim);
 
     /**
        Returns the thermally limiting temperature [K]
@@ -437,7 +437,7 @@ public:
 
        @param r_lim the limiting radius [m]
       */
-    void set_r_lim(Radius r_lim) {r_lim_=r_lim;};
+    void set_r_lim(Radius r_lim);
  
     /**
        Returns the thermally limiting temperature [K]

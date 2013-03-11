@@ -691,6 +691,18 @@ void Cyder::mapVars(std::string name, boost::any val) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Cyder::set_r_lim(Radius r_lim){
+  MatTools::validate_pos(r_lim);
+  r_lim_=r_lim;
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Cyder::set_t_lim(Temp t_lim){
+  MatTools::validate_pos(t_lim);
+  t_lim_=t_lim;
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::addRowToParamsTable(){
   event_ptr ev = EM->newEvent("CyderParams")
                    ->addVal("facID", ID());
