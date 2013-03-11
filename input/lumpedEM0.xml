@@ -54,6 +54,9 @@
         <lifetime>1000</lifetime>
         <startOperMonth>1</startOperMonth>
         <startOperYear>2000</startOperYear>
+        <thermalmodel>
+          <StubThermal/>
+        </thermalmodel>
         <component>
           <name>WF</name>
           <innerradius>0</innerradius>

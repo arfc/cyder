@@ -30,6 +30,14 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
         <ref name="lifetime"/>
         <ref name="startOperMonth"/>
         <ref name="startOperYear"/>
+        <element name="thermalmodel">
+          <choice>
+            <ref name="LumpedThermal"/>
+            <ref name="STCThermal"/>
+            <ref name="StubThermal"/>
+            <!-- insert ref to new potential thermal models here -->
+          </choice>
+        </element>
         <oneOrMore>
           <element name="component">
             <ref name="name"/>
@@ -39,6 +47,8 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
             <ref name="material_data"/>
             <element name="thermalmodel">
               <choice>
+                <ref name="LumpedThermal"/>
+                <ref name="STCThermal"/>
                 <ref name="StubThermal"/>
                 <!-- insert ref to new potential thermal models here -->
               </choice>
