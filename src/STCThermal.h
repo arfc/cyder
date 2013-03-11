@@ -124,11 +124,11 @@ public:
   virtual Temp temp();
 
   /// sets alpha_th_, the thermal diffusivity []
-  void set_alpha_th(double alpha_th){alpha_th_=alpha_th;};
+  void set_alpha_th(double alpha_th);
   /// sets k_th_, the thermal conductivity[]
-  void set_k_th(double k_th){k_th_=k_th;};
+  void set_k_th(double k_th);
   /// sets spacing_, the spacing between waste packages (uniform grid) [m]
-  void set_spacing(double spacing){spacing_=spacing;};
+  void set_spacing(double spacing);
   /// sets mat_, the material through which to transport heat
   void set_mat(std::string mat){mat_=mat;};
   /// returns alpha_th_, the thermal diffusivity []

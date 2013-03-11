@@ -10,6 +10,7 @@
 #include <time.h>
 
 #include "CycException.h"
+#include "MatTools.h"
 #include "STCThermal.h"
 
 using namespace std;
@@ -79,3 +80,23 @@ bool STCThermal::mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim){
 Temp STCThermal::temp(){
   return temperature_;
 }
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void STCThermal::set_alpha_th(double alpha_th){
+  MatTools::validate_finite_pos(alpha_th);
+  alpha_th_=alpha_th;
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void STCThermal::set_k_th(double k_th){
+  MatTools::validate_finite_pos(k_th);
+  k_th_=k_th;
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void STCThermal::set_spacing(double spacing){
+  MatTools::validate_finite_pos(spacing);
+  spacing_=spacing;
+};
+
