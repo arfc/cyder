@@ -77,7 +77,7 @@ public:
      
      @param src is the component being copied
    */
-  virtual void copy(ThermalModelPtr src); 
+  virtual void copy(const ThermalModelPtr& src); 
 
   /**
      standard verbose printer includes current temp and concentrations

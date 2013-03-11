@@ -46,7 +46,7 @@ typedef boost::shared_ptr<ThermalModel> ThermalModelPtr;
    will share this virtual interface so that they can be interchanged within the  
    Cyder.
  */
-class ThermalModel {
+class ThermalModel :public boost::enable_shared_from_this<ThermalModel> {
 
 public:
 
@@ -67,7 +67,7 @@ public:
      
      @param src is the component being copied
    */
-  virtual void copy(ThermalModelPtr src)=0; 
+  virtual void copy(const ThermalModelPtr& src)=0; 
 
   /**
      standard verbose printer should include current temp and concentrations

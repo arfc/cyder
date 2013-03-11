@@ -26,7 +26,7 @@ LumpedThermalPtr LumpedThermal::deepCopy(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void LumpedThermal::copy(ThermalModelPtr src){
+void LumpedThermal::copy(const ThermalModelPtr& src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

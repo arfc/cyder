@@ -26,7 +26,7 @@ STCThermalPtr STCThermal::deepCopy(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void STCThermal::copy(ThermalModelPtr src){
+void STCThermal::copy(const ThermalModelPtr& src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

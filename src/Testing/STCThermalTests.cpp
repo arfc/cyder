@@ -3,7 +3,6 @@
 #include <map>
 #include <gtest/gtest.h>
 
-#include "STCThermal.h"
 #include "STCThermalTests.h"
 #include "ThermalModelTests.h"
 #include "ThermalModel.h"
