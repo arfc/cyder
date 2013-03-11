@@ -1,7 +1,7 @@
-// NuclideModelTests.h
+// ThermalModelTests.h
 #include <gtest/gtest.h>
 
-#include "NuclideModel.h"
+#include "ThermalModel.h"
 #include "suffix.h"
 #include "TestInst.h"
 #include "TestMarket.h"
@@ -15,22 +15,22 @@ using ::testing::Values;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Inside the test body, fixture constructor, SetUp(), and TearDown() we
 // can refer to the test parameter by GetParam().  In this case, the test
-// parameter is a pointer to a concrete NuclideModel instance 
-typedef NuclideModelPtr NuclideModelConstructor();
+// parameter is a pointer to a concrete ThermalModel instance 
+typedef ThermalModelPtr ThermalModelConstructor();
 
-class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
+class ThermalModelTests : public TestWithParam<ThermalModelConstructor*> {
  public:
   virtual void SetUp() { 
-    nuclide_model_ = (*GetParam())();
+    thermal_model_ = (*GetParam())();
     mat_table_ = MDB->table("clay");
-    nuclide_model_->set_mat_table(mat_table_);
+    thermal_model_->set_mat_table(mat_table_);
     // set up geometry. this usually happens in the component init
     r_four_ = 4;
     r_five_ = 5;
     point_t origin_ = {0,0,0}; 
     len_five_ = 5;
     geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
-    nuclide_model_->set_geom(geom_);
+    thermal_model_->set_geom(geom_);
 
     // other vars
     time_ = 0;
@@ -50,7 +50,7 @@ class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
   }
     
  protected:
-  NuclideModelPtr nuclide_model_;
+  ThermalModelPtr thermal_model_;
   MatDataTablePtr mat_table_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
