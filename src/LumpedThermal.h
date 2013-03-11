@@ -46,14 +46,14 @@ public:
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
     */
-  static ThermalModelPtr create(){ return ThermalModelPtr(new LumpedThermal()); };
+  static LumpedThermalPtr create(){ return LumpedThermalPtr(new LumpedThermal()); };
 
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
 
      @param qe is the QueryEngine object containing intialization info
     */
-  static ThermalModelPtr create(QueryEngine* qe){ return ThermalModelPtr(new LumpedThermal(qe)); };
+  static LumpedThermalPtr create(QueryEngine* qe){ return LumpedThermalPtr(new LumpedThermal(qe)); };
 
   /** 
      Default destructor does nothing.
@@ -77,7 +77,7 @@ public:
      
      @param src is the component being copied
    */
-  virtual void copy(const ThermalModelPtr& src); 
+  virtual void copy(const ThermalModel& src); 
 
   /**
      standard verbose printer includes current temp and concentrations

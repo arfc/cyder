@@ -45,14 +45,14 @@ public:
   /**
      A constructor for the STC Nuclide Model that returns a shared pointer.
     */
-  static ThermalModelPtr create(){ return ThermalModelPtr(new STCThermal()); };
+  static STCThermalPtr create(){ return STCThermalPtr(new STCThermal()); };
 
   /**
      A constructor for the STC Nuclide Model that returns a shared pointer.
 
      @param qe is the QueryEngine object containing intialization info
     */
-  static ThermalModelPtr create(QueryEngine* qe){ return ThermalModelPtr(new STCThermal(qe)); };
+  static STCThermalPtr create(QueryEngine* qe){ return STCThermalPtr(new STCThermal(qe)); };
 
   /** 
      Default destructor does nothing.
@@ -76,7 +76,7 @@ public:
      
      @param src is the component being copied
    */
-  virtual void copy(const ThermalModelPtr& src); 
+  virtual void copy(const ThermalModel& src); 
 
   /**
      standard verbose printer includes current temp and concentrations

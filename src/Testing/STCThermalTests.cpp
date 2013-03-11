@@ -5,14 +5,12 @@
 
 #include "STCThermalTests.h"
 #include "ThermalModelTests.h"
-#include "ThermalModel.h"
 #include "CycException.h"
 #include "Material.h"
 #include "MaterialDB.h"
 #include "XMLQueryEngine.h"
 
 using namespace std;
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void STCThermalTest::SetUp(){
   // set up geometry. this usually happens in the component init

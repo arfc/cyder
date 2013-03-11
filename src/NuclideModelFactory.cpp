@@ -14,12 +14,11 @@
 #include "Logger.h"
 #include "EventManager.h"
 
-using namespace std;
 using boost::lexical_cast;
 
 // Static variables to be initialized.
 
-string NuclideModelFactory::nuclide_type_names_[] = {
+std::string NuclideModelFactory::nuclide_type_names_[] = {
   "DegRateNuclide",
   "LumpedNuclide",
   "MixedCellNuclide",
@@ -33,7 +32,7 @@ NuclideModelPtr NuclideModelFactory::nuclideModel(QueryEngine* qe){
   NuclideModelPtr to_ret;
 
 
-  string model_name = qe->getElementName();;
+  std::string model_name = qe->getElementName();;
   QueryEngine* input = qe->queryElement(model_name);
 
   switch(nuclideEnum(model_name))
@@ -108,7 +107,7 @@ NuclideModelType NuclideModelFactory::nuclideEnum(std::string type_name) {
     }
   }
   if (to_ret == LAST_NUCLIDE){
-    string err_msg ="'";
+    std::string err_msg ="'";
     err_msg += type_name;
     err_msg += "' does not name a valid NuclideModelType.\n";
     err_msg += "Options are:\n";

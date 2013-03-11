@@ -12,12 +12,11 @@
 #include "Logger.h"
 #include "EventManager.h"
 
-using namespace std;
 using boost::lexical_cast;
 
 // Static variables to be initialized.
 
-string ThermalModelFactory::thermal_type_names_[] = {
+std::string ThermalModelFactory::thermal_type_names_[] = {
   "LumpedThermal",
   "STCThermal",
   "StubThermal"
@@ -27,7 +26,7 @@ string ThermalModelFactory::thermal_type_names_[] = {
 ThermalModelPtr ThermalModelFactory::thermalModel(QueryEngine* qe){
   ThermalModelPtr to_ret;
 
-  string model_name = qe->getElementName();;
+  std::string model_name = qe->getElementName();;
   
   switch(thermalEnum(model_name))
   {
@@ -89,7 +88,7 @@ ThermalModelType ThermalModelFactory::thermalEnum(std::string type_name) {
     } 
   }
   if (toRet == LAST_THERMAL){
-    string err_msg ="'";
+    std::string err_msg ="'";
     err_msg += type_name;
     err_msg += "' does not name a valid ThermalModelType.\n";
     err_msg += "Options are:\n";
