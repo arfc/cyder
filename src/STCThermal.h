@@ -86,6 +86,14 @@ public:
   virtual void transportHeat(int time);
 
   /**
+     Returns the temperature change due to a material
+
+     @param mat the material which is responsible for heating
+     @return the temperature change in this medium due to mat [K]
+   */
+  Temp getTempChange(mat_rsrc_ptr mat){};
+
+  /**
      return the thermal model implementation type
      
      @return impl_name_ the name of the ThermalModel implementation 

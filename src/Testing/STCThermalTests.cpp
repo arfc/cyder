@@ -37,8 +37,17 @@ void STCThermalTest::SetUp(){
   test_size_=10.0;
 
   // material creation
-  test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
-  test_mat_->setQuantity(test_size_);
+  Cs135_ = 55135;
+  Cs137_ = 55137;
+
+  hot_comp_ = CompMapPtr(new CompMap(MASS));
+  (*hot_comp_)[Cs135_] = 1000;
+  (*hot_comp_)[Cs137_] = 1000;
+  cold_comp_ = CompMapPtr(new CompMap(MASS));
+  (*cold_comp_)[Cs135_] = 1;
+
+  hot_mat_ = mat_rsrc_ptr(new Material(hot_comp_));
+  cold_mat_ = mat_rsrc_ptr(new Material(cold_comp_));
 
   // test_stc_thermal model setup
   stc_ptr_ = STCThermalPtr(initThermalModel()); //initializes stc_ptr_
@@ -156,9 +165,29 @@ TEST_F(STCThermalTest, set_spacing){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, get_heat_contributors_disabled){
+  EXPECT_NO_THROW(stc_ptr_->getHeatContributors(hot_mat_));
+  list<int> hot_isos = stc_ptr_->getHeatContributors(hot_mat_);
+  EXPECT_FALSE(hot_isos_.empty());
+  list<int>::iterator iso;
+  for(iso=hot_isos.begin(); iso!=hot_isos.end(); ++iso){
+    EXPECT_TRUE(hot_mat_.find(*iso) != hot_mat_.end());
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, get_stc){
+  EXPECT_NO_THROW(stc_ptr_->getTempChange(hot_mat_));
+  EXPECT_GT(0, stc_ptr_->getTempChange(hot_mat_));
+  EXPECT_NO_THROW(stc_ptr_->getTempChange(cold_mat_));
+  EXPECT_GT(stc_ptr_->getTempChange(cold_mat_), stc_ptr_->getTempChange(hot_mat_));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, transportHeatClay){ 
   EXPECT_NO_THROW(stc_ptr_->set_geom(geom_));
   /// @TODO set up a clay object
+  EXPECT_NO_THROW(stc_ptr_->set_mat("clay"));
   // transport the heat
   EXPECT_NO_THROW(therm_model_ptr_->transportHeat(time_++));
   /// @TODO add checks and expectiations
@@ -167,7 +196,8 @@ TEST_F(STCThermalTest, transportHeatClay){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, transportHeatGranite){ 
   EXPECT_NO_THROW(stc_ptr_->set_geom(geom_));
-  /// @TODO set up a salt object
+  /// @TODO set up a granite object
+  EXPECT_NO_THROW(stc_ptr_->set_mat("granite"));
   // transport the heat
   EXPECT_NO_THROW(therm_model_ptr_->transportHeat(time_++));
   /// @TODO add checks and expectiations
@@ -177,6 +207,7 @@ TEST_F(STCThermalTest, transportHeatGranite){
 TEST_F(STCThermalTest, transportHeatSalt){ 
   EXPECT_NO_THROW(stc_ptr_->set_geom(geom_));
   /// @TODO set up a salt object
+  EXPECT_NO_THROW(stc_ptr_->set_mat("salt"));
   // transport the heat
   EXPECT_NO_THROW(therm_model_ptr_->transportHeat(time_++));
   /// @TODO add checks and expectiations

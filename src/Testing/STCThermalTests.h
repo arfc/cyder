@@ -31,6 +31,14 @@ protected:
   Length len_five_;
   point_t origin_;
   int time_;
+
+  int Cs135_, Cs137_;
+
+  CompMapPtr hot_comp_;
+  CompMapPtr cold_comp_;
+
+  mat_rsrc_ptr hot_mat_;
+  mat_rsrc_ptr cold_mat_;
   
   virtual void SetUp();
   virtual void TearDown();
