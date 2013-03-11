@@ -19,14 +19,7 @@ void STCThermal::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCThermalPtr STCThermal::deepCopy(){
-  STCThermalPtr toRet = STCThermalPtr(new STCThermal());
-  toRet->copy(STCThermalPtr(this));
-  return toRet;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void STCThermal::copy(const ThermalModelPtr& src){
+void STCThermal::copy(const ThermalModel& src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

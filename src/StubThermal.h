@@ -65,11 +65,6 @@ public:
   virtual void initModuleMembers(QueryEngine* qe); 
 
   /**
-     A function that copies deeply.
-   */
-  StubThermalPtr deepCopy();
-
-  /**
      copies a component and its parameters from another
      
      @param src is the component being copied

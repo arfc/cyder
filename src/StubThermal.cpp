@@ -21,14 +21,7 @@ void StubThermal::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-StubThermalPtr StubThermal::deepCopy(){
-  StubThermalPtr toRet = StubThermalPtr(new StubThermal());
-  toRet->copy(StubThermalPtr(this));
-  return toRet;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void StubThermal::copy(const ThermalModelPtr& src){
+void StubThermal::copy(const ThermalModel& src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
