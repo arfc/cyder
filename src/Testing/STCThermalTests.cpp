@@ -26,7 +26,7 @@ void STCThermalTest::SetUp(){
   // other vars
   k_th_ = .1; // ___  @TODO worry about units
   spacing_ = .1; // ___ @TODO worry about units
-  alpha_th = .1; // ___ @TODO worry about units
+  alpha_th_ = .1; // ___ @TODO worry about units
   time_ = 0;
   mat_ = "clay";
   mat_table_=MDB->table(mat_);
