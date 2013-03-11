@@ -165,17 +165,6 @@ TEST_F(STCThermalTest, set_spacing){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, get_heat_contributors_disabled){
-  EXPECT_NO_THROW(stc_ptr_->getHeatContributors(hot_mat_));
-  list<int> hot_isos = stc_ptr_->getHeatContributors(hot_mat_);
-  EXPECT_FALSE(hot_isos_.empty());
-  list<int>::iterator iso;
-  for(iso=hot_isos.begin(); iso!=hot_isos.end(); ++iso){
-    EXPECT_TRUE(hot_mat_.find(*iso) != hot_mat_.end());
-  }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, get_stc){
   EXPECT_NO_THROW(stc_ptr_->getTempChange(hot_mat_));
   EXPECT_GT(0, stc_ptr_->getTempChange(hot_mat_));
