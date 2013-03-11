@@ -130,21 +130,21 @@ public:
   virtual Temp temp();
 
   /// sets alpha_th_, the thermal diffusivity []
-  void set_alpha_th(double alpha_th){};
-  /// sets alpha_th_, the thermal conductivity[]
-  void set_k_th(double k_th){};
-  /// sets alpha_th_, the spacing between waste packages (uniform grid) [m]
-  void set_spacing(double spacing){};
-  /// sets alpha_th_, the material through which to transport heat
-  void set_mat(std::string mat){};
+  void set_alpha_th(double alpha_th){alpha_th_=alpha_th;};
+  /// sets k_th_, the thermal conductivity[]
+  void set_k_th(double k_th){k_th_=k_th;};
+  /// sets spacing_, the spacing between waste packages (uniform grid) [m]
+  void set_spacing(double spacing){spacing_=spacing;};
+  /// sets mat_, the material through which to transport heat
+  void set_mat(std::string mat){mat_=mat;};
   /// returns alpha_th_, the thermal diffusivity []
-  double alpha_th(){};
-  /// returns alpha_th_, the thermal conductivity []
-  double k_th(){};
-  /// returns alpha_th_, the spacing between waste packages (uniform grid) [m]
-  double spacing(){};
-  /// returns alpha_th_, the material through which to transport heat
-  double mat(){};
+  double alpha_th(){return alpha_th_;};
+  /// returns k_th_, the thermal conductivity []
+  double k_th(){return k_th_;};
+  /// returns spacing_, the spacing between waste packages (uniform grid) [m]
+  double spacing(){return spacing_;};
+  /// returns mat_, the material through which to transport heat
+  double mat(){return mat_};
 
 protected:
   /// the thermal diffusivity []
