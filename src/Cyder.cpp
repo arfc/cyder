@@ -118,9 +118,9 @@ void Cyder::initModuleMembers(QueryEngine* qe) {
   }
 
   // get thermal_model_ for capacity estimation
-  thermal_model_ = 
   QueryEngine* thermal_model_input;
   thermal_model_input = qe->queryElement("thermalmodel");
+  thermal_model_ = ThermalModelFactory::thermalModel(thermal_model_input); /// @TODO has no geom
   thermal_model_->initModuleMembers(thermal_model_input);
 
   // get components

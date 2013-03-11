@@ -11,7 +11,7 @@
 
 #include "Material.h"
 #include "MaterialDB.h"
-#include "ThermalModel.h"
+#include "ThermalModelFactory.h"
 #include "NuclideModel.h"
 #include "Geometry.h"
 #include "Model.h"
@@ -178,13 +178,6 @@ public:
    */
   ComponentType componentEnum(std::string type);
   
-  /**
-     Enumerates a string if it is one of the named ThermalModelTypes
-     
-     @param type the name of the ThermalModelType (i.e. StubThermal)
-   */
-  ThermalModelType thermalEnum(std::string type);
-
   /** 
      Enumerates a string if it is one of the named NuclideModelTypes
      
@@ -400,9 +393,6 @@ protected:
      Stores the next available component ID
    */
   static int nextID_;
-
-  /// ThermalModleType names list
-  static std::string thermal_type_names_[LAST_THERMAL];
 
   /// NuclideModelType names list
   static std::string nuclide_type_names_[LAST_NUCLIDE];
