@@ -104,7 +104,7 @@ void Cyder::initModuleMembers(QueryEngine* qe) {
       err += item->second.type().name();
       err += " data type for variable: ";
       err += item->first;
-      err += " is not yet supported by the Cyder.";
+      err += " is not yet supported by Cyder.";
       LOG(LEV_ERROR,"GenRepoFac")<<err;;
       throw CycException(err);
     }
@@ -118,9 +118,10 @@ void Cyder::initModuleMembers(QueryEngine* qe) {
   }
 
   // get thermal_model_ for capacity estimation
+  thermal_model_ = 
   QueryEngine* thermal_model_input;
   thermal_model_input = qe->queryElement("thermalmodel");
-  thermal_model_->initThermalModel(thermal_model_input);
+  thermal_model_->initModuleMembers(thermal_model_input);
 
   // get components
   int n_components = qe->nElementsMatchingQuery("component");
@@ -477,7 +478,7 @@ ComponentPtr Cyder::conditionWaste(WasteStream waste_stream){
   if (found_pair == commod_wf_map_.end()){
     std::string err_msg = "The commodity '";
     err_msg += waste_stream.second;
-    err_msg +="' does not have a matching WF in the Cyder.";
+    err_msg +="' does not have a matching WF in Cyder.";
     throw CycException(err_msg);
   } else {
     chosen_wf_template = commod_wf_map_[waste_stream.second];
@@ -502,7 +503,7 @@ ComponentPtr Cyder::packageWaste(ComponentPtr waste_form){
   if (chosen_wp_template == NULL){
     std::string err_msg = "The waste form '";
     err_msg += (waste_form)->name();
-    err_msg +="' does not have a matching WP in the Cyder.";
+    err_msg +="' does not have a matching WP in Cyder.";
     throw CycException(err_msg);
   }
   ComponentPtr toRet;

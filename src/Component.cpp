@@ -377,7 +377,7 @@ ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
     case STUB_THERMAL:
       toRet = ThermalModelPtr(StubThermal::create());
       break;
-    case STC_THERMAL; 
+    case STC_THERMAL: 
       toRet = ThermalModelPtr(LumpedThermal::create());
       break;
     default:
