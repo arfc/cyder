@@ -144,7 +144,7 @@ public:
   /// returns spacing_, the spacing between waste packages (uniform grid) [m]
   double spacing(){return spacing_;};
   /// returns mat_, the material through which to transport heat
-  double mat(){return mat_};
+  double mat(){return mat_;};
 
 protected:
   /// the thermal diffusivity []
