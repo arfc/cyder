@@ -73,7 +73,7 @@ ThermalModelPtr ThermalModelFactory::thermalModel(ThermalModelPtr src,
     default:
       throw CycException("Unknown thermal model enum value encountered when copying."); 
   }      
-  to_ret->copy(src);
+  to_ret->copy(*src);
   to_ret->set_mat_table(mat_table);
   to_ret->set_geom(geom);
   return to_ret;
