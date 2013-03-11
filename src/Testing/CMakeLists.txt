@@ -18,6 +18,7 @@ set ( CYDER_TEST_CORE
   ${CMAKE_CURRENT_SOURCE_DIR}/MatToolsTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/SolLimTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/NuclideModelTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ThermalModelTests.cpp
   ${CYCLUS_CORE_INCLUDE_DIR}/FacilityModelTests.cpp
   ${CYCLUS_CORE_INCLUDE_DIR}/ModelTests.cpp
   PARENT_SCOPE)

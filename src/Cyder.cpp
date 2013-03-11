@@ -203,7 +203,7 @@ void Cyder::cloneModuleMembersFrom(FacilityModel* source)
   start_op_yr_ = src->start_op_yr_;
   start_op_mo_ = src->start_op_mo_;
   in_commods_ = src->in_commods_;
-  thermal_model_->copy(src->thermal_model_);
+  thermal_model_->copy(*(src->thermal_model_));
   far_field_->copy(src->far_field_);
   buffer_template_ = src->buffer_template_;
   wp_templates_ = src->wp_templates_;
