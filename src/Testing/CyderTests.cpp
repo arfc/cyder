@@ -91,7 +91,7 @@ Cyder* CyderTest::initSrcFacility(){
          << "  <startOperMonth>" << start_op_mo_ << "</startOperMonth>"
          << "  <startOperYear>" << start_op_yr_ << "</startOperYear>"
          << "  <thermalmodel>"
-         << "    <STCthermal/>"
+         << "    <STCThermal/>"
          << "  </thermalmodel>"
          << "  <component>"
          << "    <name>" << wfname_ << "</name>" 
