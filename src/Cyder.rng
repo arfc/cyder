@@ -86,6 +86,21 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
+  <define name="LumpedThermal">
+    <element name="LumpedThermal">
+      <text/>
+    </element>
+  </define>
+
+  <define name="STCThermal">
+    <element name="STCThermal">
+      <ref name="alpha_th"/>
+      <ref name="k_th"/>
+      <ref name="material_data"/>
+      <ref name="spacing"/>
+    </element>
+  </define>
+
   <!-- begin section for nuclidemodels -->
   <define name="StubNuclide">
     <element name="StubNuclide">
@@ -154,6 +169,14 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
+  <define name="alpha_th">
+    <element name="alpha_th">
+      <data type="double">
+        <param name="minInclusive">0</param>
+      </data>
+    </element>
+  </define>
+
   <define name="bulk_density">
     <element name="bulk_density">
       <data type="double">
@@ -172,15 +195,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
-  <define name ="peclet">
-    <element name="peclet">
-      <data type="double">
-        <param name="minInclusive">0</param>
-        <param name="maxInclusive">20</param>
-      </data>
-    </element>
-  </define>
-
   <define name ="eta_ratio">
     <element name="eta_ratio">
       <data type="double">
@@ -193,6 +207,30 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="initial_concentration">
       <data type="double">
         <param name="minInclusive">0</param>
+      </data>
+    </element>
+  </define>
+
+  <define name="kd_limited">
+    <element name="kd_limited">
+      <data type="boolean">
+      </data>
+    </element>
+  </define>
+
+  <define name="k_th">
+    <element name="k_th">
+      <data type="double">
+        <param name="minInclusive">0</param>
+      </data>
+    </element>
+  </define>
+
+  <define name ="peclet">
+    <element name="peclet">
+      <data type="double">
+        <param name="minInclusive">0</param>
+        <param name="maxInclusive">20</param>
       </data>
     </element>
   </define>
@@ -239,12 +277,14 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
-  <define name="kd_limited">
-    <element name="kd_limited">
-      <data type="boolean">
+  <define name="spacing">
+    <element name="spacing">
+      <data type="double">
+        <param name="minInclusive">0</param>
       </data>
     </element>
   </define>
+
 
   <define name="transit_time">
     <element name="transit_time">
@@ -253,7 +293,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       </data>
     </element>
   </define>
-
 
   <define name="material_data">
     <element name="material_data">

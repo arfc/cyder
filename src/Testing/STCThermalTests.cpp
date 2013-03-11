@@ -62,9 +62,9 @@ ThermalModelPtr STCThermalModelConstructor(){
 STCThermalPtr STCThermalTest::initThermalModel(){
   stringstream ss("");
   ss << "<start>"
-     << "  <material>" << mat_ << "</material>"
      << "  <alpha_th>" << alpha_th_ << "</alpha_th>"
      << "  <k_th>" << k_th_ << "</k_th>"
+     << "  <material_data>" << mat_ << "</material_data>"
      << "  <spacing>" << spacing_ << "</spacing>"
      << "</start>";
 

@@ -31,14 +31,14 @@ private:
   /**
      Default constructor for the component class. Creates an empty component.
    */
-  STCThermal(){}; 
+  STCThermal(); 
 
   /**
      primary constructor reads input from XML node
      
      @param qe is the QueryEngine object containing intialization info
    */
-  STCThermal(QueryEngine* qe){};
+  STCThermal(QueryEngine* qe);
 
 public:
 
