@@ -165,7 +165,7 @@ TEST_F(STCThermalTest, set_spacing){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, get_stc){
+TEST_F(STCThermalTest, get_temp_change){
   EXPECT_NO_THROW(stc_ptr_->getTempChange(hot_mat_));
   EXPECT_GT(0, stc_ptr_->getTempChange(hot_mat_));
   EXPECT_NO_THROW(stc_ptr_->getTempChange(cold_mat_));
