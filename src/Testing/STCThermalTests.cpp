@@ -24,9 +24,12 @@ void STCThermalTest::SetUp(){
   geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
 
   // other vars
-  adv_vel_ = .1; // m/yr @TODO worry about units
+  k_th_ = .1; // ___  @TODO worry about units
+  spacing_ = .1; // ___ @TODO worry about units
+  alpha_th = .1; // ___ @TODO worry about units
   time_ = 0;
-  mat_table_=MDB->table("clay");
+  mat_ = "clay";
+  mat_table_=MDB->table(mat_);
 
   // composition set up
   u235_=92235;
@@ -40,15 +43,15 @@ void STCThermalTest::SetUp(){
   test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
   test_mat_->setQuantity(test_size_);
 
-  // test_deg_rate_nuclide model setup
+  // test_stc_thermal model setup
   deg_rate_ = 0.1;
-  deg_rate_ptr_ = STCThermalPtr(initThermalModel()); //initializes deg_rate_ptr_
-  nuc_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(deg_rate_ptr_);
-  deg_rate_ptr_->set_mat_table(mat_table_);
-  deg_rate_ptr_->set_geom(geom_);
-  default_deg_rate_ptr_ = STCThermalPtr(STCThermal::create());
-  default_nuc_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(default_deg_rate_ptr_);
-  default_deg_rate_ptr_->set_mat_table(mat_table_);
+  stc_ptr_ = STCThermalPtr(initThermalModel()); //initializes stc_ptr_
+  therm_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(stc_ptr_);
+  stc_ptr_->set_mat_table(mat_table_);
+  stc_ptr_->set_geom(geom_);
+  default_stc_ptr_ = STCThermalPtr(STCThermal::create());
+  default_therm_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(default_stc_ptr_);
+  default_stc_ptr_->set_mat_table(mat_table_);
 
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -63,355 +66,146 @@ ThermalModelPtr STCThermalModelConstructor(){
 STCThermalPtr STCThermalTest::initThermalModel(){
   stringstream ss("");
   ss << "<start>"
-     << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
-     << "  <degradation>" << deg_rate_ << "</degradation>"
+     << "  <material>" << mat_ << "</material>"
+     << "  <alpha_th>" << alpha_th_ << "</alpha_th>"
+     << "  <k_th>" << k_th_ << "</k_th>"
+     << "  <spacing>" << spacing_ << "</spacing>"
      << "</start>";
 
   XMLParser parser(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
-  deg_rate_ptr_ = STCThermalPtr(STCThermal::create());
-  deg_rate_ptr_->initModuleMembers(engine);
+  stc_ptr_ = STCThermalPtr(STCThermal::create());
+  stc_ptr_->initModuleMembers(engine);
   delete engine;
-  return deg_rate_ptr_;
+  return stc_ptr_;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, initial_state){
-  EXPECT_EQ(deg_rate_, deg_rate_ptr_->deg_rate());
+  EXPECT_EQ(alpha_th_, stc_ptr_->alpha_th());
+  EXPECT_EQ(k_th_, stc_ptr_->k_th());
+  EXPECT_EQ(spacing_, stc_ptr_->spacing());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, defaultConstructor) {
-  ASSERT_EQ("DEGRATE_NUCLIDE", default_nuc_model_ptr_->name());
-  ASSERT_EQ(DEGRATE_NUCLIDE, default_nuc_model_ptr_->type());
-  ASSERT_FLOAT_EQ(0, default_deg_rate_ptr_->deg_rate());
-  ASSERT_FLOAT_EQ(0, default_deg_rate_ptr_->geom()->length());
-  EXPECT_FLOAT_EQ(0, default_nuc_model_ptr_->contained_mass(time_));
-  EXPECT_FLOAT_EQ(default_nuc_model_ptr_->contained_mass(0), default_deg_rate_ptr_->contained_mass());
+  ASSERT_EQ("STC_THERMAL", default_therm_model_ptr_->name());
+  ASSERT_EQ(STC_THERMAL, default_therm_model_ptr_->type());
+  ASSERT_FLOAT_EQ(0, default_stc_ptr_->alpha_th());
+  ASSERT_FLOAT_EQ(0, default_stc_ptr_->k_th());
+  ASSERT_FLOAT_EQ(0, default_stc_ptr_->spacing());
+  ASSERT_FLOAT_EQ(0, default_stc_ptr_->geom()->length());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, copy) {
   STCThermalPtr test_copy = STCThermalPtr(STCThermal::create());
-  STCThermalPtr deg_rate_shared_ptr = STCThermalPtr(deg_rate_ptr_);
-  ThermalModelPtr nuc_model_shared_ptr = ThermalModelPtr(nuc_model_ptr_);
-  EXPECT_NO_THROW(test_copy->copy(*deg_rate_shared_ptr));
-  EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
-  EXPECT_FLOAT_EQ(deg_rate_, test_copy->deg_rate());
+  STCThermalPtr stc_shared_ptr = STCThermalPtr(stc_ptr_);
+  ThermalModelPtr therm_model_shared_ptr = ThermalModelPtr(therm_model_ptr_);
+  EXPECT_NO_THROW(test_copy->copy(*stc_shared_ptr));
+  EXPECT_NO_THROW(test_copy->copy(*therm_model_shared_ptr));
+  EXPECT_FLOAT_EQ(alpha_th_, stc_ptr_->alpha_th());
+  EXPECT_FLOAT_EQ(k_th_, stc_ptr_->k_th());
+  EXPECT_FLOAT_EQ(spacing_, stc_ptr_->spacing());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, absorb){
-  //@TODO tests like this should be interface tests for the ThermalModel class concrete instances.
-  // if you absorb a material, the conc_map should reflect that
-  // you shouldn't absorb more material than you can handle. how much is that?
-  for(int i=0; i<4; i++){
-    ASSERT_EQ(i,time_);
-    EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-    EXPECT_NO_THROW(deg_rate_ptr_->update_vec_hist(time_));
-    EXPECT_FLOAT_EQ((1+time_)*test_mat_->quantity(), nuc_model_ptr_->contained_mass(time_));
-    time_++;
+TEST_F(STCThermalTest, set_alpha_th){ 
+  for( alpha_th_=0; alpha_th_<10; ++alpha_th_){ 
+    // it should accept positive floats
+    alpha_th_*=0.2;
+    ASSERT_NO_THROW(stc_ptr_->set_alpha_th(alpha_th_));
+    EXPECT_FLOAT_EQ(stc_ptr_->alpha_th(), alpha_th_);
   }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, extract){ 
-  //@TODO tests like this should be interface tests for the ThermalModel class concrete instances.
-  // it should be able to extract all of the material it absorbed
-  double frac = 0.2;
-  
-  // if you extract a material, the conc_map should reflect that
-  // you shouldn't extract more material than you have how much is that?
-
-  ASSERT_EQ(0,time_);
-  ASSERT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  EXPECT_NO_THROW(deg_rate_ptr_->transportNuclides(time_));
-  EXPECT_FLOAT_EQ(test_mat_->quantity(), nuc_model_ptr_->contained_mass(time_));
-  EXPECT_FLOAT_EQ(test_size_, nuc_model_ptr_->contained_mass(time_));
-
-  for(int i=1; i<4; i++){
-    time_++;
-    ASSERT_EQ(i,time_);
-    EXPECT_NO_THROW(nuc_model_ptr_->extract(test_comp_, frac*test_size_));
-    EXPECT_NO_THROW(deg_rate_ptr_->transportNuclides(time_));
-    EXPECT_FLOAT_EQ((1 - frac*time_)*test_size_, nuc_model_ptr_->contained_mass(time_));
-  }
-
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, set_deg_rate){ 
-  // the deg rate must be between 0 and 1, inclusive
-  deg_rate_=0;
-  ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
-  EXPECT_FLOAT_EQ(deg_rate_ptr_->deg_rate(), deg_rate_);
-  deg_rate_=1;
-  ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
-  EXPECT_FLOAT_EQ(deg_rate_ptr_->deg_rate(), deg_rate_);
-  // it should accept floats
-  deg_rate_= 0.1;
-  ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
-  EXPECT_FLOAT_EQ(deg_rate_ptr_->deg_rate(), deg_rate_);
   // an exception should be thrown if it's set outside the bounds
-  deg_rate_= -1;
-  EXPECT_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_), CycRangeException);
-  EXPECT_NE(deg_rate_ptr_->deg_rate(), deg_rate_);
-  deg_rate_= 2;
-  EXPECT_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_), CycRangeException);
-  EXPECT_NE(deg_rate_ptr_->deg_rate(), deg_rate_);
+  alpha_th_= -1;
+  EXPECT_THROW(stc_ptr_->set_alpha_th(alpha_th_), CycRangeException);
+  EXPECT_NE(stc_ptr_->alpha_th(), alpha_th_);
+  alpha_th_= std::numeric_limits<double>::infinity();
+  EXPECT_THROW(stc_ptr_->set_alpha_th(alpha_th_), CycRangeException);
+  EXPECT_NE(stc_ptr_->alpha_th(), alpha_th_);
 }
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, total_degradation){
-  deg_rate_=0.3;
-  int max_degs = 1.0/deg_rate_;
-  // Check deg rate
-  ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
-  ASSERT_FLOAT_EQ(deg_rate_ptr_->deg_rate(), deg_rate_);
 
-  for(int i=0; i<4; i++){
-    ASSERT_EQ(i, time_);
-    ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-    EXPECT_FLOAT_EQ(deg_rate_*time_++, deg_rate_ptr_->tot_deg());
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, set_k_th){ 
+  for( k_th_=0; k_th_<10; ++k_th_){ 
+    // it should accept positive floats
+    k_th_*=0.2;
+    ASSERT_NO_THROW(stc_ptr_->set_k_th(k_th_));
+    EXPECT_FLOAT_EQ(stc_ptr_->k_th(), k_th_);
   }
-
-  ASSERT_EQ(4, time_);
-  ASSERT_TRUE(time_ > max_degs);
-  ASSERT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  EXPECT_FLOAT_EQ(1, deg_rate_ptr_->tot_deg());
+  // an exception should be thrown if it's set outside the bounds
+  k_th_= -1;
+  EXPECT_THROW(stc_ptr_->set_k_th(k_th_), CycRangeException);
+  EXPECT_NE(stc_ptr_->k_th(), k_th_);
+  k_th_= std::numeric_limits<double>::infinity();
+  EXPECT_THROW(stc_ptr_->set_k_th(k_th_), CycRangeException);
+  EXPECT_NE(stc_ptr_->k_th(), k_th_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, transportNuclidesDR0){ 
-  // if the degradation rate is zero, nothing should be released
-  // set the degradation rate
-  deg_rate_=0;
-  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
-  double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
-  double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-  double radial_midpoint = outer_radius + (outer_radius - nuc_model_ptr_->geom()->inner_radius())/2;
-
-  ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
-  EXPECT_FLOAT_EQ(deg_rate_, deg_rate_ptr_->deg_rate());
-  // get the initial mass
-  double initial_mass = deg_rate_ptr_->contained_mass();
-  // transport the nuclides
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_++));
-  // check that the contained mass matches the initial mass
-  EXPECT_FLOAT_EQ(initial_mass, deg_rate_ptr_->contained_mass()); 
-  // check the source term 
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
-  // check the boundary concentration ?
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
-  // check the boundary flux
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
-  // check the neumann bc
-  EXPECT_FLOAT_EQ(0 , nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, transportNuclidesDRhalf){ 
-  // if the degradation rate is .5, everything should be released in two years
-  deg_rate_= 0.5;
-  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
-  double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  double expected_conc_w_vel = adv_vel_*expected_conc; 
-  IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
-  double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-
-  // set the degradation rate
-  ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
-  EXPECT_FLOAT_EQ(deg_rate_ptr_->deg_rate(), deg_rate_);
-  // fill it with some material
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-
-  // TRANSPORT NUCLIDES 
-  ASSERT_EQ(0, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  time_++;
-  ASSERT_EQ(1, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // check that half that material is offered as the source term in one year
-  // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
-  // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Neumann
-  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
-  EXPECT_GT(expected_conc, 0);
-  EXPECT_GT(outer_radius, deg_rate_ptr_->geom()->radial_midpoint());
-  EXPECT_GT(deg_rate_ptr_->geom()->radial_midpoint(), 0);
-  EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
-  // Cauchy
-  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
-
-  // remove the source term offered
-  CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
-  double extract_mass = nuc_model_ptr_->source_term_bc().second;
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
-  // TRANSPORT NUCLIDES 
-  time_++;
-  ASSERT_EQ(2, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // check that the remaining half is offered as the source term in year two
-  // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
-  // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Neumann 
-  expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
-  EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
-  // Cauchy
-  expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
-
-  // remove the source term offered
-  extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
-  extract_mass = nuc_model_ptr_->source_term_bc().second;
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
-  // TRANSPORT NUCLIDES 
-  time_++;
-  ASSERT_EQ(3, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // check that timestep 3 doesn't crash or offer material it doesn't have
-  // Source Term
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
-  // Dirichlet
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Cauchy
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
-  // Neumann
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, transportNuclidesDR1){ 
-  // if the degradation rate is one, everything should be released in a timestep
-  deg_rate_= 1;
-  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
-  double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
-  double expected_conc_w_vel = adv_vel_*expected_conc; 
-  IsoConcMap zero_conc_map;
-  zero_conc_map[92235] = 0;
-  double outer_radius = nuc_model_ptr_->geom()->outer_radius();
-
-  // set the degradation rate
-  ASSERT_NO_THROW(deg_rate_ptr_->set_deg_rate(deg_rate_));
-  EXPECT_FLOAT_EQ(deg_rate_ptr_->deg_rate(), deg_rate_);
-  // fill it with some material
-  EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-
-  // check that half that material is offered as the source term in one timestep
-  // TRANSPORT NUCLIDES
-  ASSERT_EQ(0, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  time_++;
-  ASSERT_EQ(1, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // Source Term
-  EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
-  // Dirichlet
-  EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
-  // Neumann 
-  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
-  EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
-  // Cauchy
-  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
-  EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
-
-  // remove the source term offered
-  CompMapPtr extract_comp = nuc_model_ptr_->source_term_bc().first.comp();
-  double extract_mass = nuc_model_ptr_->source_term_bc().second;
-  EXPECT_NO_THROW(nuc_model_ptr_->extract(extract_comp, extract_mass));
-  // TRANSPORT NUCLIDES
-  time_++;
-  ASSERT_EQ(2, time_);
-  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-
-  // check that nothing more is offered in time step 2
-  EXPECT_FLOAT_EQ(0, nuc_model_ptr_->source_term_bc().second);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, transportNuclidesDRsmall){ 
-  // if the degradation rate is very very small, see if the model behaves well 
-  // in the long term. 
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, updateVecHist){ 
-  time_++;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, contained_mass){ 
-  time_++;
-  EXPECT_FLOAT_EQ(0, deg_rate_ptr_->contained_mass());
-
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, updateDegradation){ 
-  double deg_rate=0.1;
-   
-  for(int i=0; i<5; i++){
-    EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
-    EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
-    time_++;
+TEST_F(STCThermalTest, set_spacing){ 
+  for( spacing_=0; spacing_<10; ++spacing_){ 
+    // it should accept positive floats
+    spacing_*=0.2;
+    ASSERT_NO_THROW(stc_ptr_->set_spacing(spacing_));
+    EXPECT_FLOAT_EQ(stc_ptr_->spacing(), spacing_);
   }
-  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
-  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
-  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
-  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
-  EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
-  EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
-  time_++;
+  // an exception should be thrown if it's set outside the bounds
+  spacing_= -1;
+  EXPECT_THROW(stc_ptr_->set_spacing(spacing_), CycRangeException);
+  EXPECT_NE(stc_ptr_->spacing(), spacing_);
+  spacing_= std::numeric_limits<double>::infinity();
+  EXPECT_THROW(stc_ptr_->set_spacing(spacing_), CycRangeException);
+  EXPECT_NE(stc_ptr_->spacing(), spacing_);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, transportHeatClay){ 
+  EXPECT_NO_THROW(stc_ptr_->set_geom(geom_));
+  /// @TODO set up a clay object
+  // transport the heat
+  EXPECT_NO_THROW(therm_model_ptr_->transportHeat(time_++));
+  /// @TODO add checks and expectiations
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, transportHeatGranite){ 
+  EXPECT_NO_THROW(stc_ptr_->set_geom(geom_));
+  /// @TODO set up a salt object
+  // transport the heat
+  EXPECT_NO_THROW(therm_model_ptr_->transportHeat(time_++));
+  /// @TODO add checks and expectiations
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, transportHeatSalt){ 
+  EXPECT_NO_THROW(stc_ptr_->set_geom(geom_));
+  /// @TODO set up a salt object
+  // transport the heat
+  EXPECT_NO_THROW(therm_model_ptr_->transportHeat(time_++));
+  /// @TODO add checks and expectiations
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, setGeometry) {  
   //@TODO tests like this should be interface tests for the ThermalModel class concrete instances.
-  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
-  EXPECT_FLOAT_EQ(len_five_ , nuc_model_ptr_->geom()->length());
-  EXPECT_FLOAT_EQ(r_four_ , nuc_model_ptr_->geom()->inner_radius());
-  EXPECT_FLOAT_EQ(r_five_ , nuc_model_ptr_->geom()->outer_radius());
+  EXPECT_NO_THROW(stc_ptr_->set_geom(geom_));
+  EXPECT_FLOAT_EQ(len_five_ , therm_model_ptr_->geom()->length());
+  EXPECT_FLOAT_EQ(r_four_ , therm_model_ptr_->geom()->inner_radius());
+  EXPECT_FLOAT_EQ(r_five_ , therm_model_ptr_->geom()->outer_radius());
   double vol = len_five_*3.14159*(r_five_*r_five_ - r_four_*r_four_);
-  EXPECT_NEAR( vol , nuc_model_ptr_->geom()->volume(), 0.1);
+  EXPECT_NEAR( vol , therm_model_ptr_->geom()->volume(), 0.1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, getVolume) {  
-  EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
+  EXPECT_NO_THROW(stc_ptr_->set_geom(geom_));
   double vol = len_five_*3.14159*(r_five_*r_five_ - r_four_*r_four_);
-  EXPECT_NEAR( vol , nuc_model_ptr_->geom()->volume(), 0.1);
-  EXPECT_NO_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, r_four_));
-  EXPECT_FLOAT_EQ( 0 , nuc_model_ptr_->geom()->volume());
-  EXPECT_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()), CycRangeException);
-  EXPECT_NO_THROW(nuc_model_ptr_->geom()->volume());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, calc_conc_grad) {  
-  Concentration c_out, c_in;
-  Radius r_out, r_in;
-  c_out = 0;
-  c_in = 2;
-  r_out = 5;
-  r_in = 4;
-
-  EXPECT_FLOAT_EQ( (c_out-c_in)/(r_out-r_in), deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_out, r_in)); 
-  EXPECT_THROW( deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_in, r_out), CycRangeException); 
-  EXPECT_THROW( deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_in, r_in), CycRangeException); 
-  EXPECT_THROW( deg_rate_ptr_->calc_conc_grad(c_out, c_in, r_in, numeric_limits<double>::infinity()), CycRangeException); 
+  EXPECT_NEAR( vol , therm_model_ptr_->geom()->volume(), 0.1);
+  EXPECT_NO_THROW(stc_ptr_->geom()->set_radius(OUTER, r_four_));
+  EXPECT_FLOAT_EQ( 0 , therm_model_ptr_->geom()->volume());
+  EXPECT_THROW(stc_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()), CycRangeException);
+  EXPECT_NO_THROW(therm_model_ptr_->geom()->volume());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

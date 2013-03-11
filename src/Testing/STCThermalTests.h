@@ -1,29 +1,30 @@
-// DegRateNuclideTests.h
+// STCThermalTests.h
 #include <gtest/gtest.h>
 
-#include "DegRateNuclide.h"
+#include "STCThermal.h"
 #include "FacilityModelTests.h"
 #include "ModelTests.h"
 #include "MatDataTable.h"
 #include <string>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class DegRateNuclideTest : public ::testing::Test {
+class STCThermalTest : public ::testing::Test {
 protected:
   
-  DegRateNuclidePtr deg_rate_ptr_;
-  DegRateNuclidePtr default_deg_rate_ptr_;
-  NuclideModelPtr nuc_model_ptr_;
-  NuclideModelPtr default_nuc_model_ptr_;
-  double deg_rate_;
+  STCThermalPtr stc_ptr_;
+  STCThermalPtr default_stc_ptr_;
+  ThermalModelPtr therm_model_ptr_;
+  ThermalModelPtr default_therm_model_ptr_;
+  double alpha_th_;
+  double k_th_;
+  double spacing_;
   CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
   int one_mol_;
   int u235_, am241_;
   Elem u_;
   double test_size_;
-  double theta_;
-  double adv_vel_;
+  std::string mat_;
   MatDataTablePtr mat_table_;
   GeometryPtr geom_;
   Radius r_four_, r_five_;
@@ -33,6 +34,6 @@ protected:
   
   virtual void SetUp();
   virtual void TearDown();
-  DegRateNuclidePtr initNuclideModel();
+  STCThermalPtr initThermalModel();
 };
 

@@ -13,6 +13,7 @@ set ( CYDER_TEST_CORE
   ${CMAKE_CURRENT_SOURCE_DIR}/MixedCellNuclideTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MaterialDBTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OneDimPPMNuclideTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/STCThermalTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/StubNuclideTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MatToolsTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/SolLimTests.cpp
