@@ -103,7 +103,7 @@ public:
      
      @return impl_name_ the name of the ThermalModel implementation 
    */
-  virtual std::string name(){return "STC_THERMAL";}; 
+  virtual string name(){return "STC_THERMAL";}; 
 
   /**
      This function says whether or not the material is acceptable to 
@@ -136,7 +136,7 @@ public:
   /// sets spacing_, the spacing between waste packages (uniform grid) [m]
   void set_spacing(double spacing){spacing_=spacing;};
   /// sets mat_, the material through which to transport heat
-  void set_mat(std::string mat){mat_=mat;};
+  void set_mat(string mat){mat_=mat;};
   /// returns alpha_th_, the thermal diffusivity []
   double alpha_th(){return alpha_th_;};
   /// returns k_th_, the thermal conductivity []
@@ -144,7 +144,7 @@ public:
   /// returns spacing_, the spacing between waste packages (uniform grid) [m]
   double spacing(){return spacing_;};
   /// returns mat_, the material through which to transport heat
-  std::string mat(){return mat_;};
+  string mat(){return mat_;};
 
 protected:
   /// the thermal diffusivity []
@@ -154,7 +154,7 @@ protected:
   /// the spacing between waste packages (uniform grid) [m]
   double spacing_;
   /// the material through which to transport heat
-  std::string mat_;
+  string mat_;
 
 };
 #endif

@@ -44,7 +44,6 @@ void STCThermalTest::SetUp(){
   test_mat_->setQuantity(test_size_);
 
   // test_stc_thermal model setup
-  deg_rate_ = 0.1;
   stc_ptr_ = STCThermalPtr(initThermalModel()); //initializes stc_ptr_
   therm_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(stc_ptr_);
   stc_ptr_->set_mat_table(mat_table_);
