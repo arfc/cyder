@@ -28,14 +28,6 @@ using boost::lexical_cast;
 // Static variables to be initialized.
 int Component::nextID_ = 0;
 
-string Component::nuclide_type_names_[] = {
-  "DegRateNuclide",
-  "LumpedNuclide",
-  "MixedCellNuclide",
-  "OneDimPPMNuclide",
-  "StubNuclide", 
-};
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component(Model* creator) :
   name_(""),
@@ -260,97 +252,23 @@ ComponentType Component::componentEnum(std::string type_name) {
   return toRet;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelType Component::nuclideEnum(std::string type_name) {
-  NuclideModelType toRet = LAST_NUCLIDE;
-  for(int type = 0; type < LAST_NUCLIDE; type++){
-    if(nuclide_type_names_[type] == type_name){
-      toRet = (NuclideModelType)type;
-    }
-  }
-  if (toRet == LAST_NUCLIDE){
-    string err_msg ="'";
-    err_msg += type_name;
-    err_msg += "' does not name a valid NuclideModelType.\n";
-    err_msg += "Options are:\n";
-    for(int name=0; name < LAST_NUCLIDE; name++){
-      err_msg += nuclide_type_names_[name];
-      err_msg += "\n";
-    }
-    throw CycException(err_msg);
-  }
-  return toRet;
-}
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModelPtr Component::thermal_model(QueryEngine* qe){
-  return ThermalModelFactory::thermalModel(qe,mat_table(),geom());
+  return ThermalModelFactory::thermalModel(qe, mat_table(), geom());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
-  NuclideModelPtr toRet;
-
-  string model_name = qe->getElementName();;
-  QueryEngine* input = qe->queryElement(model_name);
-
-  switch(nuclideEnum(model_name))
-  {
-    case DEGRATE_NUCLIDE:
-      toRet = NuclideModelPtr(DegRateNuclide::create(input));
-      break;
-    case LUMPED_NUCLIDE:
-      toRet = NuclideModelPtr(LumpedNuclide::create(input));
-      break;
-    case MIXEDCELL_NUCLIDE:
-      toRet = NuclideModelPtr(MixedCellNuclide::create(input));
-      break;
-    case ONEDIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(OneDimPPMNuclide::create(input));
-      break;
-    case STUB_NUCLIDE:
-      toRet = NuclideModelPtr(StubNuclide::create(input));
-      break;
-    default:
-      throw CycException("Unknown nuclide model enum value encountered."); 
-  }
-  toRet->set_mat_table(mat_table());
-  toRet->set_geom(geom());
-  return toRet;
+  return NuclideModelFactory::nuclideModel(qe, mat_table(), geom());
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
-  return ThermalModelFactory::thermalModel(src,mat_table(),geom());
+  return ThermalModelFactory::thermalModel(src, mat_table(), geom());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
-  NuclideModelPtr toRet;
-  switch(src->type())
-  {
-    case DEGRATE_NUCLIDE:
-      toRet = NuclideModelPtr(DegRateNuclide::create());
-      break;
-    case LUMPED_NUCLIDE:
-      toRet = NuclideModelPtr(LumpedNuclide::create());
-      break;
-    case MIXEDCELL_NUCLIDE:
-      toRet = NuclideModelPtr(MixedCellNuclide::create());
-      break;
-    case ONEDIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(OneDimPPMNuclide::create());
-      break;
-    case STUB_NUCLIDE:
-      toRet = NuclideModelPtr(StubNuclide::create());
-      break;
-    default:
-      throw CycException("Unknown nuclide model enum value encountered when copying."); 
-  }      
-  toRet->copy(*src);
-  toRet->set_mat_table(mat_table());
-  toRet->set_geom(geom());
-  return toRet;
+  return NuclideModelFactory::nuclideModel(src, mat_table(), geom());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
