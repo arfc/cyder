@@ -106,9 +106,9 @@ TEST_F(STCThermalTest, copy) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, set_alpha_th){ 
-  for( alpha_th_=0; alpha_th_<10; ++alpha_th_){ 
+  for( int it=0; it<10; ++it){ 
     // it should accept positive floats
-    alpha_th_*=0.2;
+    alpha_th_ = it*0.2;
     ASSERT_NO_THROW(stc_ptr_->set_alpha_th(alpha_th_));
     EXPECT_FLOAT_EQ(stc_ptr_->alpha_th(), alpha_th_);
   }
@@ -123,9 +123,9 @@ TEST_F(STCThermalTest, set_alpha_th){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, set_k_th){ 
-  for( k_th_=0; k_th_<10; ++k_th_){ 
+  for( int it=0; it<10; ++it){ 
     // it should accept positive floats
-    k_th_*=0.2;
+    k_th_=it*0.2;
     ASSERT_NO_THROW(stc_ptr_->set_k_th(k_th_));
     EXPECT_FLOAT_EQ(stc_ptr_->k_th(), k_th_);
   }
@@ -140,9 +140,9 @@ TEST_F(STCThermalTest, set_k_th){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, set_spacing){ 
-  for( spacing_=0; spacing_<10; ++spacing_){ 
+  for( int it=0; it<10; ++it){ 
     // it should accept positive floats
-    spacing_*=0.2;
+    spacing_=it*0.2;
     ASSERT_NO_THROW(stc_ptr_->set_spacing(spacing_));
     EXPECT_FLOAT_EQ(stc_ptr_->spacing(), spacing_);
   }
