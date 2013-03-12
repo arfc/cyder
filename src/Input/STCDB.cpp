@@ -34,8 +34,8 @@ STCDB::~STCDB() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double STCDB::stc(mat_t mat, Iso tope){
-  return table(mat)->stc(tope);
+double STCDB::stc(mat_t mat, Iso tope, int the_time){
+  return table(mat)->stc(tope, the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -107,6 +107,7 @@ map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
 vector<stc_t> STCDB::stc_vec(SqliteDb* db, mat_t mat){
   std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + whereClause(mat));
   std::vector<StrList> snums = db->query("SELECT stc FROM STCData " + whereClause(mat));
+  std::vector<StrList> tnums = db->query("SELECT time FROM STCData " + whereClause(mat));
  
   vector<stc_t> stc_vec;
   for (int i = 0; i < inums.size(); i++){
