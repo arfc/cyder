@@ -1,5 +1,6 @@
 // STCDB class
 
+#include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <stdlib.h>
 
@@ -33,18 +34,18 @@ STCDB::~STCDB() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double STCDB::stc(string mat, Iso tope){
+double STCDB::stc(mat_t mat, Iso tope){
   return table(mat)->stc(tope);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCDataTablePtr STCDB::table(string mat) {
+STCDataTablePtr STCDB::table(mat_t mat) {
   STCDataTablePtr to_ret;
-  if(initialized(mat) ){
-    to_ret = (*tables_.find(mat)).second;
+  if(initialized(mat_name(mat)) ){
+    to_ret = (*tables_.find(mat_name(mat))).second;
   } else {
     to_ret = initializeFromSQL(mat);
-    tables_.insert(make_pair(mat,to_ret));
+    tables_.insert(make_pair(mat_name(mat),to_ret));
   }
   return to_ret;
 }
@@ -57,7 +58,7 @@ bool STCDB::initialized(string mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCDataTablePtr STCDB::mat_name(mat_t mat){
+std::string STCDB::mat_name(mat_t mat){
   std::string mat_name = 
     "a"+boost::lexical_cast<string>(mat.alpha_th)+
     "k"+boost::lexical_cast<string>(mat.k_th)+
@@ -67,47 +68,58 @@ STCDataTablePtr STCDB::mat_name(mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCDataTablePtr STCDB::initializeFromSQL(mat_t mat);
+STCDataTablePtr STCDB::initializeFromSQL(mat_t mat){
   SqliteDb* db = new SqliteDb(file_path_);
-  std::string mat_name = mat_name(mat);
-  vector<stc_t> stc_vec = stc_vec(db, mat);
-  map<Iso, int> iso_index = iso_index(db, mat);
-  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name, stc_vec, iso_index));
+  vector<stc_t> vec = stc_vec(db, mat);
+  map<Iso, int> index = iso_index(db, mat);
+  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(mat), vec, index));
   delete db;
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCDataTablePtr STCDB::stc_index(Sqlitedb* db, mat_t mat){
+string STCDB::whereClause(mat_t mat){
+  string where_clause = "WHERE alpha_th="+ 
+    boost::lexical_cast<string>( mat.alpha_th ) + 
+    " AND k_th="    + boost::lexical_cast<string>( mat.k_th ) +
+    " AND spacing=" + boost::lexical_cast<string>( mat.spacing ) +
+    " AND r_calc="  + boost::lexical_cast<string>( mat.r_calc );
+  return where_clause;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCDataTablePtr STCDB::stc_vec(Sqlitedb* db, mat_t mat){
-  std::vector<StrList> znums = db->query("SELECT iso FROM "+table);
-  std::vector<StrList> dnums = db->query("SELECT r_calc FROM "+mat);
-  std::vector<StrList> knums = db->query("SELECT k_d FROM "+mat);
-  std::vector<StrList> snums = db->query("SELECT s FROM "+mat);
+map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
+
+  std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + whereClause(mat));
  
-  vector<element_t> elem_vec;
-  map<Elem, int> elem_index;
-  for (int i = 0; i < znums.size(); i++){
+  map<Iso, int> iso_index;
+  for (int i = 0; i < inums.size(); i++){
     // // obtain the database row and declare the appropriate members
-    string zStr = znums.at(i).at(0);
-    string dStr = dnums.at(i).at(0);
-    string kStr = knums.at(i).at(0);
+    string iStr = inums.at(i).at(0);
+    Iso tope = atoi( iStr.c_str() );
+    // log it accordingly
+    iso_index.insert(make_pair(tope, i));
+  }
+  return iso_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<stc_t> STCDB::stc_vec(SqliteDb* db, mat_t mat){
+  std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + whereClause(mat));
+  std::vector<StrList> snums = db->query("SELECT stc FROM STCData " + whereClause(mat));
+ 
+  vector<stc_t> stc_vec;
+  for (int i = 0; i < inums.size(); i++){
+    // // obtain the database row and declare the appropriate members
+    string iStr = inums.at(i).at(0);
     string sStr = snums.at(i).at(0);
-    Elem z = atoi( zStr.c_str() );
-    double d = atof( dStr.c_str() );
-    double k = atof( kStr.c_str() );
+    Iso tope = atoi( iStr.c_str() );
     double s = atof( sStr.c_str() );
     // create a element member and add it to the element vector
-    element_t e = {z, d, k, s};
-    elem_vec.push_back(e);
-    // log it accordingly
-    elem_index.insert(make_pair(z, i));
+    stc_t v = {tope, s}; 
+    stc_vec.push_back(v);
   }
-  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat, elem_vec, elem_index)); 
-  return elem_vec;
+  return stc_vec;
 }
 
 

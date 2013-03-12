@@ -9,9 +9,6 @@
 
 #define MDB STCDB::Instance()
 
-/// a type definition for elements
-typedef int Elem;
-
 /**
    @class STCDB 
    The STCDB class provides an interface to the mat_data.sqlite 
@@ -54,24 +51,43 @@ public:
      Returns the stc for the material and isotope requested. 
      If the table has not been created, this will create it.
 
-     @param mat a descriptor of the table
+     @param mat a struct descriptor of the table
      @param iso an isotope identifier of the isotope whose stc you're interested in 
     **/
-  double stc(std::string mat, Iso tope);
+  double stc(mat_t mat, Iso tope);
 
   /**
      returns the table matching the mat string. 
 
-     @param mat a string indicating the name of the table (a0.2k0.001s5r2)
+     @param mat a struct indicating the variables in the table 
 
      @return a STCDataTablePtr holding the data associated with the mat
      */
-  STCDataTablePtr table(std::string mat);
+  STCDataTablePtr table(mat_t mat);
 
+  /**
+    Converts the mat struct into a coded name.
 
+    @param mat the struct describing a material
+    */
   std::string mat_name(mat_t mat);
 
-  std::vector<Iso, int> stc_index(SqliteDb* db, mat_t mat);
+  /**
+     This returns the iso_index_ for a particular db and mat struct.
+     iso_index_ is a map from isotope IDs to indexes in the stc_vec_
+
+     @param db the database to query
+     @param mat the struct describing the material
+    */
+  std::map<Iso, int> iso_index(SqliteDb* db, mat_t mat);
+
+  /**
+     This returns the stc_vec_ for a particular db and mat struct.
+     The stc_vec_ holds isotope-stc pairs, the main data in the table.
+
+     @param db the database to query
+     @param mat the struct describing the material
+    */
   std::vector<stc_t> stc_vec(SqliteDb* db, mat_t mat);
 
 
@@ -89,13 +105,19 @@ protected:
 
      @param mat the string indicatin the material this table should represent
    */
-  STCDataTablePtr initializeFromSQL(std::string mat);
+  STCDataTablePtr initializeFromSQL(mat_t mat);
 
   /**
      a mat from the names of the tables to the table pointers 
     */
   std::map<std::string, STCDataTablePtr> tables_;
      
+  /**
+     this helper function provides the WHERE clause that selects the mat from the db.
+
+     @param mat the material properties to specify when querying the table.
+    */
+  std::string whereClause(mat_t mat);
 
 
 };
