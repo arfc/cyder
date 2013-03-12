@@ -24,3 +24,17 @@ INSTALL(FILES
   )
   
 
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/stc_data.sqlite
+  ${CYDER_BINARY_DIR}/share/stc_data.sqlite
+  COPYONLY
+  )
+  
+INSTALL(FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/stc_data.sqlite
+  DESTINATION ${CYCLUS_CORE_SHARE_DIR}
+  COMPONENT cyder
+  )
+  
+
+
