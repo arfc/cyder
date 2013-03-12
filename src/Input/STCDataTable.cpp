@@ -44,12 +44,12 @@ int STCDataTable::isoToInd(Iso tope) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void STCDataTable::check_validity(Elem ent) { 
-  map<Elem, int>::iterator it;
-  it=elem_index_.find(ent);
-  if (it==elem_index_.end()){
+void STCDataTable::check_validity(Iso tope) { 
+  map<Iso, int>::iterator it;
+  it=iso_index_.find(tope);
+  if (it==iso_index_.end()){
     stringstream err;
-    err << "Element " << ent << " not valid";
+    err << "Isotope " << tope << " not valid";
     throw CycException(err.str());
   }
 }

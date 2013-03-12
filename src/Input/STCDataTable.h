@@ -100,6 +100,7 @@ protected:
      @throws CycException when theres some drama
     */
   void check_validity(Iso tope);
+
   /**
      The name of the material that this table represents, 
      specifically, the name of the table in the DB
