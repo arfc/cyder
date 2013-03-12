@@ -91,7 +91,12 @@ protected:
    */
   STCDataTablePtr initializeFromSQL(std::string mat);
 
-  
+  /**
+     a mat from the names of the tables to the table pointers 
+    */
+  std::map<std::string, Iso> tables_
+     
+
 
 };
 
