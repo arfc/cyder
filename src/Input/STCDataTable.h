@@ -8,6 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
+/// typedef for isotope identifier
+typedef int Iso;
+
 /**
    Defines the structure of data associated with this row location in the  
    database.
@@ -53,11 +56,11 @@ public:
      Detailed constructor for the STCDataTable class
      Fully initializes the object
 
-    @param mat the mat_ data member, a string
-    @param elem_vec the elem_vec_ data member, a vector of element structs, the data
-    @param elem_index the elem_index_ data member, mapping the element IDs to indices
+    @param mat the mat_ data member, a string naming this material
+    @param stc_vec the stc_vec_ data member, a vector of stc_t structs, the data
+    @param iso_index the iso_index_ data member, mapping the isoent IDs to indices
     */
-  STCDataTable(std::string mat, std::vector<element_t> elem_vec, std::map<Elem, int> elem_index);
+  STCDataTable(std::string mat, std::vector<stc_t> elem_vec, std::map<Iso, int> iso_index);
 
   /**
      Destructor for the NullFacility class. 
@@ -73,39 +76,7 @@ public:
      @return K_d a double, the distribution coefficient [kg/kg] for the 
      element ent in the material mat. 
     */
-  double K_d(Elem ent);
-
-  /**
-     get the solubility limit for some element in this material 
-      
-     @param ent an identifier of type Elem, which is an int 
-
-     @return S a double, the solubility limit [kg/m^3] for the element 
-     ent in the material mat. 
-    */
-  double S(Elem ent);
-
-  /**
-     get the dispersion coefficient [kg/m^2/s] for some element in this material
-      
-     @param ent an identifier of type Elem, which is an int 
-
-     @return D a double, the dispersion coefficient [kg/m^2/s] for the 
-     element ent in the material mat. 
-    */
-  double D(Elem ent);
-
-
-  /** 
-     gets a specific data object for some element in this material. 
-
-     @param ent an identifier of type Elem, which is an int 
-     @param data is a ChemDataType enum (DISP, KD, SOL, ...) 
-
-     @return the data of type data for element elt in this material.
-    */
-  double data(Elem ent, ChemDataType data);
-
+  double K_d(Iso tope);
 
   /**
      returns the string name of the material that this table represents
@@ -120,7 +91,7 @@ protected:
      ideally all of them will... 
      @throws CycException when theres some drama
     */
-  void check_validity(Elem ent);
+  void check_validity(Iso tope);
   /**
      The name of the material that this table represents, 
      specifically, the name of the table in the DB
@@ -130,7 +101,7 @@ protected:
   /** 
      The struct representing this material. 
      */
-  mat_t_ mat_;
+  mat_t mat_;
 
   /**
      The integer length (number of rows) of the tables 
