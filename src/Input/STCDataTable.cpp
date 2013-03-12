@@ -38,7 +38,7 @@ double STCDataTable::stc(Iso tope){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int STCDataTable::isoToInd(Iso tope) {
-  check_validity(tope)
+  check_validity(tope);
   map<Iso, int>::iterator it=iso_index_.find(tope);
   return(*it).second;
 }

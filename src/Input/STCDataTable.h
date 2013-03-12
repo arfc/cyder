@@ -87,6 +87,14 @@ public:
 
 protected:
   /**
+     calls check_validity on the isotope and then returns its row index.
+
+     @param tope the isotope identifier (e.g., 92235)
+     @return the index of the row of that isotope
+     */
+  int isoToInd(Iso tope);
+
+  /**
      checks whether this element has a row entry in the table.
      ideally all of them will... 
      @throws CycException when theres some drama
