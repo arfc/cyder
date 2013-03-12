@@ -10,14 +10,15 @@ set ( CYDER_TEST_CORE
   ${CMAKE_CURRENT_SOURCE_DIR}/CyderTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/GeometryTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/LumpedNuclideTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/MatToolsTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MixedCellNuclideTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MaterialDBTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/NuclideModelTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/OneDimPPMNuclideTests.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/STCDBTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/STCThermalTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/StubNuclideTests.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/MatToolsTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/SolLimTests.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/NuclideModelTests.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThermalModelTests.cpp
   ${CYCLUS_CORE_INCLUDE_DIR}/FacilityModelTests.cpp
   ${CYCLUS_CORE_INCLUDE_DIR}/ModelTests.cpp

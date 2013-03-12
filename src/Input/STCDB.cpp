@@ -87,8 +87,12 @@ MatDataTablePtr STCDB::initializeFromSQL(mat_t mat);
   return to_ret;
 }
 
-MatDataTablePtr STCDB::
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MatDataTablePtr STCDB::stc_index(Sqlitedb* db, mat_t mat){
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MatDataTablePtr STCDB::stc_vec(Sqlitedb* db, mat_t mat){
   std::vector<StrList> znums = db->query("SELECT iso FROM "+table);
   std::vector<StrList> dnums = db->query("SELECT r_calc FROM "+mat);
   std::vector<StrList> knums = db->query("SELECT k_d FROM "+mat);
@@ -113,8 +117,7 @@ MatDataTablePtr STCDB::
     elem_index.insert(make_pair(z, i));
   }
   MatDataTablePtr to_ret = MatDataTablePtr(new MatDataTable(mat, elem_vec, elem_index)); 
-  delete db;
-  return to_ret;
+  return elem_vec;
 }
 
 
