@@ -38,8 +38,8 @@ double STCDB::stc(string mat, Iso tope){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MatDataTablePtr STCDB::table(string mat) {
-  MatDataTablePtr to_ret;
+STCDataTablePtr STCDB::table(string mat) {
+  STCDataTablePtr to_ret;
   if(initialized(mat) ){
     to_ret = (*tables_.find(mat)).second;
   } else {
@@ -51,13 +51,13 @@ MatDataTablePtr STCDB::table(string mat) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool STCDB::initialized(string mat){
-  map<string,MatDataTablePtr>::iterator it;
+  map<string,STCDataTablePtr>::iterator it;
   it=tables_.find(mat);
   return it!=tables_.end()? true : false; 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MatDataTablePtr STCDB::mat_name(mat_t mat){
+STCDataTablePtr STCDB::mat_name(mat_t mat){
   std::string mat_name = 
     "a"+boost::lexical_cast<string>(mat.alpha_th)+
     "k"+boost::lexical_cast<string>(mat.k_th)+
@@ -67,7 +67,7 @@ MatDataTablePtr STCDB::mat_name(mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MatDataTablePtr STCDB::initializeFromSQL(mat_t mat);
+STCDataTablePtr STCDB::initializeFromSQL(mat_t mat);
   SqliteDb* db = new SqliteDb(file_path_);
   std::string mat_name = mat_name(mat);
   vector<stc_t> stc_vec = stc_vec(db, mat);
@@ -78,11 +78,11 @@ MatDataTablePtr STCDB::initializeFromSQL(mat_t mat);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MatDataTablePtr STCDB::stc_index(Sqlitedb* db, mat_t mat){
+STCDataTablePtr STCDB::stc_index(Sqlitedb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MatDataTablePtr STCDB::stc_vec(Sqlitedb* db, mat_t mat){
+STCDataTablePtr STCDB::stc_vec(Sqlitedb* db, mat_t mat){
   std::vector<StrList> znums = db->query("SELECT iso FROM "+table);
   std::vector<StrList> dnums = db->query("SELECT r_calc FROM "+mat);
   std::vector<StrList> knums = db->query("SELECT k_d FROM "+mat);
@@ -106,7 +106,7 @@ MatDataTablePtr STCDB::stc_vec(Sqlitedb* db, mat_t mat){
     // log it accordingly
     elem_index.insert(make_pair(z, i));
   }
-  MatDataTablePtr to_ret = MatDataTablePtr(new MatDataTable(mat, elem_vec, elem_index)); 
+  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat, elem_vec, elem_index)); 
   return elem_vec;
 }
 
