@@ -14,12 +14,13 @@ using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STCDataTable::STCDataTable() :
-  mat_(""),
-  elem_len_(0) {
+  name_(""),
+  n_isos_(0) {
+
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCDataTable::STCDataTable(string mat, vector<stc_t> stc_vec, map<Iso, int> iso_index) :
-  mat_(mat),
+STCDataTable::STCDataTable(string name, vector<stc_t> stc_vec, map<Iso, int> iso_index) :
+  name_(name),
   stc_vec_(stc_vec),
   iso_index_(iso_index)
 {

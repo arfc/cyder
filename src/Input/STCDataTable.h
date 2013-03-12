@@ -60,7 +60,7 @@ public:
     @param stc_vec the stc_vec_ data member, a vector of stc_t structs, the data
     @param iso_index the iso_index_ data member, mapping the isoent IDs to indices
     */
-  STCDataTable(std::string mat, std::vector<stc_t> elem_vec, std::map<Iso, int> iso_index);
+  STCDataTable(std::string mat, std::vector<stc_t> stc_vec, std::map<Iso, int> iso_index);
 
   /**
      Destructor for the NullFacility class. 
@@ -69,21 +69,21 @@ public:
   ~STCDataTable();
 
   /**
-     get the distribution coefficient [kg/kg] for some element in this material
+     get the specific temperature change [K] for an isotope in this material.
       
      @param ent an identifier of type Elem, which is an int 
 
      @return K_d a double, the distribution coefficient [kg/kg] for the 
      element ent in the material mat. 
     */
-  double K_d(Iso tope);
+  double stc(Iso tope);
 
   /**
      returns the string name of the material that this table represents
 
      @return mat_
      */
-  std::string mat(){return mat_;};
+  std::string name(){return name_;};
 
 protected:
   /**

@@ -33,18 +33,8 @@ STCDB::~STCDB() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double STCDB::K_d(string mat, Elem ent){
-  return table(mat)->K_d(ent);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double STCDB::S(string mat, Elem ent){
-  return table(mat)->S(ent);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double STCDB::D(string mat, Elem ent){
-  return table(mat)->D(ent);
+double STCDB::stc(string mat, Iso tope){
+  return table(mat)->stc(tope);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

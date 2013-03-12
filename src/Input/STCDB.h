@@ -51,6 +51,15 @@ public:
   ~STCDB();
 
   /**
+     Returns the stc for the material and isotope requested. 
+     If the table has not been created, this will create it.
+
+     @param mat a descriptor of the table
+     @param iso an isotope identifier of the isotope whose stc you're interested in 
+    **/
+  double stc(std::string mat, Iso tope);
+
+  /**
      returns the table matching the mat string. 
 
      @param mat a string indicating the name of the table (a0.2k0.001s5r2)
@@ -58,6 +67,13 @@ public:
      @return a STCDataTablePtr holding the data associated with the mat
      */
   STCDataTablePtr table(std::string mat);
+
+
+  std::string mat_name(mat_t mat);
+
+  std::vector<Iso, int> stc_index(SqliteDb* db, mat_t mat);
+  std::vector<stc_t> stc_vec(SqliteDb* db, mat_t mat);
+
 
 protected:
   /**
