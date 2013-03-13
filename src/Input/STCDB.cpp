@@ -70,8 +70,8 @@ std::string STCDB::mat_name(mat_t mat){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STCDataTablePtr STCDB::initializeFromSQL(mat_t mat){
   SqliteDb* db = new SqliteDb(file_path_);
-  vector<stc_t> arr = stc_array(db, mat);
-  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(mat), vec, 
+  boost::multi_array<double, 2> arr = stc_array(db, mat);
+  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(mat), arr, 
         iso_index(db, mat), time_index(db, mat)));
   delete db;
   return to_ret;
@@ -138,7 +138,7 @@ vector<stc_t> STCDB::n_isos(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
+boost::multi_array<double, 2> STCDB::stc_arrae(SqliteDb* db, mat_t mat){
   std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + 
       whereClause(mat));
   std::vector<StrList> snums = db->query("SELECT stc FROM STCData " + 

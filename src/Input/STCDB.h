@@ -84,13 +84,16 @@ public:
   std::map<Iso, int> iso_index(SqliteDb* db, mat_t mat);
 
   /**
-     This returns the stc_vec_ for a particular db and mat struct.
-     The stc_vec_ holds isotope-stc pairs, the main data in the table.
+     This returns the stc_array_ for a particular db and mat struct.
+     The stc_array holds stc values for specific isotope and time pairs.
+     This is the main data in the table and has dimensions n_isos x n_timesteps.
 
      @param db the database to query
      @param mat the struct describing the material
+
+     @return stc_array an array of stc values for specific isotope and time pairs.
     */
-  std::vector<stc_t> stc_vec(SqliteDb* db, mat_t mat);
+  boost::multi_array<double, 2> stc_array(SqliteDb* db, mat_t mat);
 
 
 protected:
