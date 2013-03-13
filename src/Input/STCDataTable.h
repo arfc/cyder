@@ -7,7 +7,6 @@
 #include <map>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/multi_array.hpp>
 
 /// typedef for isotope identifier
 typedef int Iso;
