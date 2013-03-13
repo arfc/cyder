@@ -122,7 +122,8 @@ map<int, int> STCDB::time_index(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-vector<stc_t> STCDB::n_timesteps(SqliteDb* db, mat_t mat){
+int
+STCDB::n_timesteps(SqliteDb* db, mat_t mat){
   std::vector<StrList> tnums = db->query("SELECT DISTINCT time FROM STCData " + 
       whereClause(mat));
   int n_timesteps = tnums.size();
@@ -130,7 +131,7 @@ vector<stc_t> STCDB::n_timesteps(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-vector<stc_t> STCDB::n_isos(SqliteDb* db, mat_t mat){
+int STCDB::n_isos(SqliteDb* db, mat_t mat){
   std::vector<StrList> inums = db->query("SELECT DISTINCT iso FROM STCData " + 
       whereClause(mat));
   int n_isos = inums.size();

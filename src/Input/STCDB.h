@@ -93,6 +93,26 @@ public:
   std::map<int, int> time_index(SqliteDb* db, mat_t mat);
 
   /**
+     Returns the number of distinct isotope keys in the db associated with the mat 
+
+     @param db the database to query
+     @param mat the struct describing the material
+
+     @return n_isos number of distinct isotope keys in the db associated with the mat 
+    */
+  int n_isos(SqliteDb* db, mat_t mat);
+
+  /**
+     Returns the number of distinct timestep keys in the db associated with the mat 
+
+     @param db the database to query
+     @param mat the struct describing the material
+
+     @return n_timesteps number of distinct timestep keys in the db associated with the mat 
+    */
+  int n_timesteps(SqliteDb* db, mat_t mat);
+
+  /**
      This returns the stc_array_ for a particular db and mat struct.
      The stc_array holds stc values for specific isotope and time pairs.
      This is the main data in the table and has dimensions n_isos x n_timesteps.
