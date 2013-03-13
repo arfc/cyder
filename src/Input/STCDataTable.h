@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 
+#include <boost/multi_array.hpp>
 #include <boost/shared_ptr.hpp>
 
 /// typedef for isotope identifier
