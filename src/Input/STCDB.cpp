@@ -107,7 +107,7 @@ map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 map<int, int> STCDB::time_index(SqliteDb* db, mat_t mat){
 
-  std::vector<StrList> inums = db->query("SELECT time FROM STCData " + 
+  std::vector<StrList> tnums = db->query("SELECT time FROM STCData " + 
       whereClause(mat));
  
   map<int, int> time_index;
