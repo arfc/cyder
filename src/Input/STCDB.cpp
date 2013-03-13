@@ -58,8 +58,8 @@ bool STCDB::initialized(string mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-std::string STCDB::mat_name(mat_t mat){
-  std::string mat_name = 
+string STCDB::mat_name(mat_t mat){
+  string mat_name = 
     "a"+boost::lexical_cast<string>(mat.alpha_th)+
     "k"+boost::lexical_cast<string>(mat.k_th)+
     "s"+boost::lexical_cast<string>(mat.spacing)+
@@ -72,8 +72,9 @@ STCDataTablePtr STCDB::initializeFromSQL(mat_t mat){
   bool readonly = true;
   SqliteDb* db = new SqliteDb(file_path_, readonly);
   boost::multi_array<double, 2> arr = stc_array(db, mat);
+  string stc_table_id = table_id(db, mat);
   STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(mat), arr, 
-        iso_index(db, mat), time_index(db, mat)));
+        iso_index(db, stc_table_id), time_index(db, stc_table_id)));
   delete db;
   return to_ret;
 }
@@ -89,10 +90,9 @@ string STCDB::whereClause(mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
+map<Iso, int> STCDB::iso_index(SqliteDb* db, string table_id){
 
-  std::vector<StrList> inums = db->query("SELECT DISTINCT iso FROM STCData " + 
-      whereClause(mat));
+  vector<StrList> inums = db->query("SELECT DISTINCT iso FROM " + table_id);
  
   map<Iso, int> iso_index;
   for (int i = 0; i < inums.size(); i++){
@@ -106,9 +106,8 @@ map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-map<int, int> STCDB::time_index(SqliteDb* db, mat_t mat){
-  std::vector<StrList> tnums = db->query("SELECT DISTINCT time FROM STCData " + 
-      whereClause(mat));
+map<int, int> STCDB::time_index(SqliteDb* db, string table_id){
+  vector<StrList> tnums = db->query("SELECT DISTINCT time FROM " + table_id);
  
   map<int, int> time_index;
   for (int t = 0; t < tnums.size(); t++){
@@ -122,16 +121,24 @@ map<int, int> STCDB::time_index(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
-  std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + 
-      whereClause(mat));
-  std::vector<StrList> snums = db->query("SELECT stc FROM STCData " + 
-      whereClause(mat));
-  std::vector<StrList> tnums = db->query("SELECT time FROM STCData " + 
+string STCDB::table_id(SqliteDb* db, mat_t mat) {
+  vector<StrList> mat_id = db->query("SELECT mat_id FROM STCData " + 
       whereClause(mat));
   
-  map<int,int> time_map = time_index(db, mat);
-  map<Iso,int> iso_map = iso_index(db, mat);
+  string stc_table_id = "mat"+boost::lexical_cast<string>( mat_id.at(0).at(0) );
+  return stc_table_id;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
+
+  string stc_table_id = table_id(db, mat);
+  vector<StrList> inums = db->query("SELECT iso FROM " + stc_table_id); 
+  vector<StrList> snums = db->query("SELECT stc FROM " + stc_table_id); 
+  vector<StrList> tnums = db->query("SELECT time FROM " + stc_table_id); 
+
+  map<int,int> time_map = time_index(db, stc_table_id);
+  map<Iso,int> iso_map = iso_index(db, stc_table_id);
   int n_isos = iso_map.size();
   int n_timesteps = time_map.size();
 

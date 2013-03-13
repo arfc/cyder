@@ -75,22 +75,30 @@ public:
   std::string mat_name(mat_t mat);
 
   /**
+    Finds the name of the table in the database for the mat struct .
+
+    @param db the database to query
+    @param mat the struct describing a material
+    */
+  std::string table_id(SqliteDb* db, mat_t mat);
+
+  /**
      This returns the iso_index_ for a particular db and mat struct.
      iso_index_ is a map from isotope IDs to indexes in the stc_vec_
 
      @param db the database to query
-     @param mat the struct describing the material
+     @param table_name the name of the table to query
     */
-  std::map<Iso, int> iso_index(SqliteDb* db, mat_t mat);
+  std::map<Iso, int> iso_index(SqliteDb* db, std::string table_name);
 
   /**
      This returns the time_index for a particular db and mat struct.
      time_index is a map from timestep values to indexes in the stc_array
 
      @param db the database to query
-     @param mat the struct describing the material
+     @param table_name the name of the table to query
     */
-  std::map<int, int> time_index(SqliteDb* db, mat_t mat);
+  std::map<int, int> time_index(SqliteDb* db, std::string table_name);
 
   /**
      This returns the stc_array_ for a particular db and mat struct.
