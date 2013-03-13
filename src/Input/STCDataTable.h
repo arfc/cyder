@@ -7,6 +7,7 @@
 #include <map>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/multi_array.hpp>
 
 /// typedef for isotope identifier
 typedef int Iso;
@@ -30,7 +31,8 @@ typedef struct mat_t
  */
 typedef struct stc_t
 {
-  double  iso; /**< a double indicating the <++> of an element >**/
+  double  iso; /**< a double indicating the isotope >**/
+  double  time; /**< a double indicating the time at which the stc is valid >**/
   double  stc; /**< a double indicating the STC >**/
 } element_t;
 
@@ -58,9 +60,11 @@ public:
 
     @param mat the mat_ data member, a string naming this material
     @param stc_vec the stc_vec_ data member, a vector of stc_t structs, the data
-    @param iso_index the iso_index_ data member, mapping the isoent IDs to indices
+    @param iso_index the iso_index_ data member, mapping the isotope IDs to indices
+    @param time_index the time_index_ data member, mapping the timestep values to indices
     */
-  STCDataTable(std::string mat, std::vector<stc_t> stc_vec, std::map<Iso, int> iso_index);
+  STCDataTable(std::string mat, std::vector<stc_t> stc_vec, std::map<Iso, int> 
+      iso_index, std::map<int, int> time_index);
 
   /**
      Destructor for the NullFacility class. 
@@ -71,12 +75,12 @@ public:
   /**
      get the specific temperature change [K] for an isotope in this material.
       
-     @param ent an identifier of type Elem, which is an int 
+     @param tope an identifier of type Iso, which is an int 
+     @param the_time, an integer indicating the timestep at which to determine the stc 
 
-     @return K_d a double, the distribution coefficient [kg/kg] for the 
-     element ent in the material mat. 
+     @return stc a double, the specific temperature change at time the_time [K]
     */
-  double stc(Iso tope);
+  double stc(Iso tope, int the_time);
 
   /**
      returns the string name of the material that this table represents
@@ -86,6 +90,15 @@ public:
   std::string name(){return name_;};
 
 protected:
+  /**
+     calls check_validity on the time and then returns its row index.
+
+     @param the_time the timestep value (e.g., 200)
+
+     @return the index of that time in the stc_array
+     */
+  int timeToInd(int the_time);
+
   /**
      calls check_validity on the isotope and then returns its row index.
 
@@ -113,19 +126,20 @@ protected:
   mat_t mat_;
 
   /**
-     The integer length (number of rows) of the tables 
-   */
-  int n_isos_;
-
-  /**
-     The vector of element structs that holds the data in the heat table 
-   */
-  std::vector<stc_t> stc_vec_;
+     The array of stc data. It's a 2d array with dimensions iso x time. Think 
+     of it as stc[n_isos][n_timesteps].
+     */
+  boost::multi_array<double, 2> stc_array_;
 
   /** 
-     a map for index lookup in the element vector. 
+     a map for isotope index lookup in the stc array. 
    */
   std::map<Iso, int> iso_index_;
+
+  /** 
+     a map for time index lookup in the stc array. 
+   */
+  std::map<int, int> time_index_;
 };
 
 #endif

@@ -53,8 +53,9 @@ public:
 
      @param mat a struct descriptor of the table
      @param iso an isotope identifier of the isotope whose stc you're interested in 
+     @param the_time the time at which to query the stc
     **/
-  double stc(mat_t mat, Iso tope);
+  double stc(mat_t mat, Iso tope, int the_time);
 
   /**
      returns the table matching the mat string. 

@@ -70,9 +70,9 @@ std::string STCDB::mat_name(mat_t mat){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STCDataTablePtr STCDB::initializeFromSQL(mat_t mat){
   SqliteDb* db = new SqliteDb(file_path_);
-  vector<stc_t> vec = stc_vec(db, mat);
-  map<Iso, int> index = iso_index(db, mat);
-  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(mat), vec, index));
+  vector<stc_t> arr = stc_array(db, mat);
+  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(mat), vec, 
+        iso_index(db, mat), time_index(db, mat)));
   delete db;
   return to_ret;
 }
@@ -90,7 +90,8 @@ string STCDB::whereClause(mat_t mat){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
 
-  std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + whereClause(mat));
+  std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + 
+      whereClause(mat));
  
   map<Iso, int> iso_index;
   for (int i = 0; i < inums.size(); i++){
@@ -104,23 +105,63 @@ map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-vector<stc_t> STCDB::stc_vec(SqliteDb* db, mat_t mat){
-  std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + whereClause(mat));
-  std::vector<StrList> snums = db->query("SELECT stc FROM STCData " + whereClause(mat));
-  std::vector<StrList> tnums = db->query("SELECT time FROM STCData " + whereClause(mat));
+map<Iso, int> STCDB::time_index(SqliteDb* db, mat_t mat){
+
+  std::vector<StrList> inums = db->query("SELECT time FROM STCData " + 
+      whereClause(mat));
  
+  map<int, int> time_index;
+  for (int t = 0; t < tnums.size(); t++){
+    // // obtain the database row and declare the appropriate members
+    strtng tStr = tnums.at(t).at(0);
+    int the_time = atoi( tStr.c_str() );
+    // log it accordingly
+    time_index.insert(make_pair(the_time, t));
+  }
+  return time_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<stc_t> STCDB::n_timesteps(SqliteDb* db, mat_t mat){
+  std::vector<StrList> tnums = db->query("SELECT DISTINCT time FROM STCData " + 
+      whereClause(mat));
+  int n_timesteps = tnums.size();
+  return n_timesteps;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<stc_t> STCDB::n_isos(SqliteDb* db, mat_t mat){
+  std::vector<StrList> inums = db->query("SELECT DISTINCT iso FROM STCData " + 
+      whereClause(mat));
+  int n_isos = inums.size();
+  return n_isos;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<stc_t> STCDB::stc_vec(SqliteDb* db, mat_t mat){
+  std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + 
+      whereClause(mat));
+  std::vector<StrList> snums = db->query("SELECT stc FROM STCData " + 
+      whereClause(mat));
+  std::vector<StrList> tnums = db->query("SELECT time FROM STCData " + 
+      whereClause(mat));
+  
+  boost::multi_array<double, 2> stc_array(boost::extents(n_isos(db, mat), 
+        n_timesteps(db, mat)));
+
   vector<stc_t> stc_vec;
   for (int i = 0; i < inums.size(); i++){
     // // obtain the database row and declare the appropriate members
     string iStr = inums.at(i).at(0);
     string sStr = snums.at(i).at(0);
+    string tStr = tnums.at(i).at(0);
     Iso tope = atoi( iStr.c_str() );
-    double s = atof( sStr.c_str() );
-    // create a element member and add it to the element vector
-    stc_t v = {tope, s}; 
-    stc_vec.push_back(v);
+    int the_time = atoi( tStr.c_str() );
+    double stc = atof( sStr.c_str() );
+    // determine array indcies and add stc to the stc array
+    stc_array[iso_index(db, mat)[iso]][time_index(db, mat)[the_time]] = stc;
   }
-  return stc_vec;
+  return stc_array;
 }
 
 
