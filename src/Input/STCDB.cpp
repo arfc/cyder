@@ -113,7 +113,7 @@ map<int, int> STCDB::time_index(SqliteDb* db, mat_t mat){
   map<int, int> time_index;
   for (int t = 0; t < tnums.size(); t++){
     // // obtain the database row and declare the appropriate members
-    strtng tStr = tnums.at(t).at(0);
+    string tStr = tnums.at(t).at(0);
     int the_time = atoi( tStr.c_str() );
     // log it accordingly
     time_index.insert(make_pair(the_time, t));
