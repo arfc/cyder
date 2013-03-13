@@ -121,22 +121,6 @@ map<int, int> STCDB::time_index(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int STCDB::n_timesteps(SqliteDb* db, mat_t mat){
-  std::vector<StrList> tnums = db->query("SELECT DISTINCT time FROM STCData " + 
-      whereClause(mat));
-  int n_timesteps = tnums.size();
-  return n_timesteps;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int STCDB::n_isos(SqliteDb* db, mat_t mat){
-  std::vector<StrList> inums = db->query("SELECT DISTINCT iso FROM STCData " + 
-      whereClause(mat));
-  int n_isos = inums.size();
-  return n_isos;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
   std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + 
       whereClause(mat));
@@ -147,9 +131,10 @@ boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
   
   map<int,int> time_map = time_index(db, mat);
   map<Iso,int> iso_map = iso_index(db, mat);
+  int n_isos = iso_map.size();
+  int n_timesteps = time_map.size();
 
-  boost::multi_array<double, 2> to_ret(boost::extents[n_isos(db, 
-        mat)][n_timesteps(db, mat)]);
+  boost::multi_array<double, 2> to_ret(boost::extents[n_isos][n_timesteps]);
 
   for (int i = 0; i < inums.size(); i++){
     // // obtain the database row and declare the appropriate members
