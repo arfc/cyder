@@ -8,8 +8,11 @@ class DataRange :
     spacing_range=Set([2, 5,10, 15, 20, 25, 50])
     r_calc_range=Set([2, 5,10, 15, 20, 25, 50])
     iso_range=Set([96242, 96243, 96244, 96245, 96246,
-        95241, 95243, 94238, 94240, 94241, 94242, 55134, 55135, 55137, 38090])
-    time_range=Set(range(1,101)) #@TODO 1 magnitude smaller than real one
+        95241, 95243, 
+        94238, 94240, 94241, 94242, 
+        55134, 55135, 55137, 
+        38090])
+    time_range=Set(range(1,11)) #@TODO 2 magnitudes smaller than real one
     stc_range=Set([1.])
 
 
