@@ -11,12 +11,7 @@ TEST_F(STCDBTest, createInstance){
 TEST_F(STCDBTest, initializeFromSQL){
   EXPECT_NO_THROW(STCDB());
   EXPECT_NO_THROW(SDB->initializeFromSQL(salt_struct_));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCDBTest, closeDB){
-  EXPECT_NO_THROW(STCDB());
-  EXPECT_NO_THROW(delete SDB);
+  SDB->initializeFromSQL(salt_struct_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

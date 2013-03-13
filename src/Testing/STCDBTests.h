@@ -19,13 +19,11 @@ class STCDBTest : public ::testing::Test {
       Sr90_ = 38090;
       Am241_ = 95241;
       /// @TODO these values are not valid
-      alpha_ = 0;
+      alpha_ = 1;
       /// @TODO these values are not valid
-      k_=0;
-      /// @TODO these values are not valid
-      spacing_=0;
-      /// @TODO these values are not valid
-      r_calc_=0;
+      k_=1;
+      spacing_= 10;
+      r_calc_= 2;
       iso_ids_.push_back(Cs135_);
       iso_ids_.push_back(Cs137_);
       iso_ids_.push_back(Sr90_);

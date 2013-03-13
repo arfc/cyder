@@ -90,7 +90,7 @@ string STCDB::whereClause(mat_t mat){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
 
-  std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + 
+  std::vector<StrList> inums = db->query("SELECT DISTINCT iso FROM STCData " + 
       whereClause(mat));
  
   map<Iso, int> iso_index;
@@ -106,8 +106,7 @@ map<Iso, int> STCDB::iso_index(SqliteDb* db, mat_t mat){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 map<int, int> STCDB::time_index(SqliteDb* db, mat_t mat){
-
-  std::vector<StrList> tnums = db->query("SELECT time FROM STCData " + 
+  std::vector<StrList> tnums = db->query("SELECT DISTINCT time FROM STCData " + 
       whereClause(mat));
  
   map<int, int> time_index;
@@ -122,8 +121,7 @@ map<int, int> STCDB::time_index(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int
-STCDB::n_timesteps(SqliteDb* db, mat_t mat){
+int STCDB::n_timesteps(SqliteDb* db, mat_t mat){
   std::vector<StrList> tnums = db->query("SELECT DISTINCT time FROM STCData " + 
       whereClause(mat));
   int n_timesteps = tnums.size();
@@ -147,8 +145,11 @@ boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
   std::vector<StrList> tnums = db->query("SELECT time FROM STCData " + 
       whereClause(mat));
   
-  boost::multi_array<double, 2> stc_array(boost::extents[n_isos(db, mat)] 
-        [n_timesteps(db, mat)]);
+  map<int,int> time_map = time_index(db, mat);
+  map<Iso,int> iso_map = iso_index(db, mat);
+
+  boost::multi_array<double, 2> to_ret(boost::extents[n_isos(db, 
+        mat)][n_timesteps(db, mat)]);
 
   for (int i = 0; i < inums.size(); i++){
     // // obtain the database row and declare the appropriate members
@@ -157,11 +158,11 @@ boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
     string tStr = tnums.at(i).at(0);
     Iso tope = atoi( iStr.c_str() );
     int the_time = atoi( tStr.c_str() );
-    double stc = atof( sStr.c_str() );
+    double temp_change = atof( sStr.c_str() );
     // determine array indcies and add stc to the stc array
-    stc_array[iso_index(db, mat)[tope]][time_index(db, mat)[the_time]] = stc;
+    to_ret[iso_map[tope]][time_map[the_time]] = temp_change;
   }
-  return stc_array;
+  return to_ret;
 }
 
 
