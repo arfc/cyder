@@ -3,12 +3,20 @@
 #include "STCDBTests.h"
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCDBTest, openDB){
+TEST_F(STCDBTest, createInstance){
   EXPECT_NO_THROW(STCDB());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCDBTest, DISABLED_closeDB){
+TEST_F(STCDBTest, initializeFromSQL){
+  EXPECT_NO_THROW(STCDB());
+  EXPECT_NO_THROW(STCDB->initializeFromSQL(test_mat));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCDBTest, closeDB){
+  EXPECT_NO_THROW(STCDB());
+  EXPECT_NO_THROW(delete STCDB);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
