@@ -147,8 +147,8 @@ boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
   std::vector<StrList> tnums = db->query("SELECT time FROM STCData " + 
       whereClause(mat));
   
-  boost::multi_array<double, 2> stc_array(boost::extents(n_isos(db, mat), 
-        n_timesteps(db, mat)));
+  boost::multi_array<double, 2> stc_array(boost::extents[n_isos(db, mat)] 
+        [n_timesteps(db, mat)]);
 
   vector<stc_t> stc_vec;
   for (int i = 0; i < inums.size(); i++){
