@@ -116,7 +116,7 @@ protected:
 
      @throws CycException when theres some drama
     */
-  void checkValidity(int val, map<int, int> index);
+  void checkValidity(int val, std::map<int, int> index);
 
   /**
      The name of the material that this table represents, 
