@@ -69,7 +69,8 @@ std::string STCDB::mat_name(mat_t mat){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STCDataTablePtr STCDB::initializeFromSQL(mat_t mat){
-  SqliteDb* db = new SqliteDb(file_path_);
+  bool readonly = true;
+  SqliteDb* db = new SqliteDb(file_path_, readonly);
   boost::multi_array<double, 2> arr = stc_array(db, mat);
   STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(mat), arr, 
         iso_index(db, mat), time_index(db, mat)));
