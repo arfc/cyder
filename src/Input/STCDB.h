@@ -8,7 +8,7 @@
 #include "SqliteDb.h"
 #include "STCDataTable.h"
 
-#define STCDB STCDB::Instance()
+#define SDB STCDB::Instance()
 
 /**
    @class STCDB 
@@ -124,8 +124,6 @@ public:
     */
   boost::multi_array<double, 2> stc_array(SqliteDb* db, mat_t mat);
 
-
-protected:
   /**
      checks whether a table associated with a particular mat has been created
 
@@ -142,16 +140,18 @@ protected:
   STCDataTablePtr initializeFromSQL(mat_t mat);
 
   /**
-     a mat from the names of the tables to the table pointers 
-    */
-  std::map<std::string, STCDataTablePtr> tables_;
-     
-  /**
      this helper function provides the WHERE clause that selects the mat from the db.
 
      @param mat the material properties to specify when querying the table.
     */
   std::string whereClause(mat_t mat);
+
+protected:
+  /**
+     a mat from the names of the tables to the table pointers 
+    */
+  std::map<std::string, STCDataTablePtr> tables_;
+     
 
 
 };

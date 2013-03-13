@@ -18,23 +18,19 @@ typedef int Iso;
  */
 typedef struct mat_t
 {
-  double alpha_th; /**< a double indicating the thermal diffusivity of the material [] >**/
-  double k_th; /**< a double indicating the thermal conductivity of the material [] >**/
-  double spacing; /**< a double indicating the uniform spacing between packages [m] >**/
-  double  r_calc; /**< a double indicating the radius where the STC is calculated >**/
-  //double  <++>; /**< a double indicating the <++> of an element >**/
+  public : 
+    double alpha_th; /**< a double indicating the thermal diffusivity of the material [] >**/
+    double k_th; /**< a double indicating the thermal conductivity of the material [] >**/
+    double spacing; /**< a double indicating the uniform spacing between packages [m] >**/
+    double  r_calc; /**< a double indicating the radius where the STC is calculated >**/
+    //double  <++>; /**< a double indicating the <++> of an element >**/
+    mat_t& a(double a_in){ alpha_th = a_in; return *this; }
+    mat_t& k(double k_in){ k_th = k_in; return *this; }
+    mat_t& s(double s_in){ spacing = s_in; return *this; }
+    mat_t& r(double r_in){ r_calc = r_in; return *this; }
+
 } mat_t;
 
-/**
-   Defines the structure of data associated with this row location in the  
-   database.
- */
-typedef struct stc_t
-{
-  double  iso; /**< a double indicating the isotope >**/
-  double  time; /**< a double indicating the time at which the stc is valid >**/
-  double  stc; /**< a double indicating the STC >**/
-} element_t;
 
 class STCDataTable;
 typedef boost::shared_ptr<STCDataTable> STCDataTablePtr;

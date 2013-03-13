@@ -150,7 +150,6 @@ boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
   boost::multi_array<double, 2> stc_array(boost::extents[n_isos(db, mat)] 
         [n_timesteps(db, mat)]);
 
-  vector<stc_t> stc_vec;
   for (int i = 0; i < inums.size(); i++){
     // // obtain the database row and declare the appropriate members
     string iStr = inums.at(i).at(0);
