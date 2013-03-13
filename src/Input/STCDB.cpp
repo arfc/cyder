@@ -139,7 +139,7 @@ int STCDB::n_isos(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-boost::multi_array<double, 2> STCDB::stc_arrae(SqliteDb* db, mat_t mat){
+boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
   std::vector<StrList> inums = db->query("SELECT iso FROM STCData " + 
       whereClause(mat));
   std::vector<StrList> snums = db->query("SELECT stc FROM STCData " + 
