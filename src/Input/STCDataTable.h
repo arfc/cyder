@@ -62,7 +62,7 @@ public:
     @param iso_index the iso_index_ data member, mapping the isotope IDs to indices
     @param time_index the time_index_ data member, mapping the timestep values to indices
     */
-  STCDataTable(std::string mat, boost::multi_array stc_array, std::map<Iso, int> 
+  STCDataTable(std::string mat, boost::multi_array<double, 2> stc_array, std::map<Iso, int> 
       iso_index, std::map<int, int> time_index);
 
   /**
