@@ -46,24 +46,24 @@ typedef boost::shared_ptr<STCDataTable> STCDataTablePtr;
  */
 class STCDataTable {
 private:
-
-public:
   /**
      Default constructor for the STCDataTable class. 
      Default values are zeros and null strings
    */
   STCDataTable();
 
+public:
+
   /**
      Detailed constructor for the STCDataTable class
      Fully initializes the object
 
     @param mat the mat_ data member, a string naming this material
-    @param stc_vec the stc_vec_ data member, a vector of stc_t structs, the data
+    @param stc_array the stc_array_ data member, a 2d array of stc values (n_isos x n_timesteps) 
     @param iso_index the iso_index_ data member, mapping the isotope IDs to indices
     @param time_index the time_index_ data member, mapping the timestep values to indices
     */
-  STCDataTable(std::string mat, std::vector<stc_t> stc_vec, std::map<Iso, int> 
+  STCDataTable(std::string mat, boost::multi_array stc_array, std::map<Iso, int> 
       iso_index, std::map<int, int> time_index);
 
   /**

@@ -23,7 +23,7 @@ STCDataTable::STCDataTable(string name, boost::multi_array<double, 2> stc_array,
     iso_index, map<int, int> time_index) :
   name_(name),
   stc_array_(stc_array),
-  iso_index_(iso_index)
+  iso_index_(iso_index),
   time_index_(time_index)
 {
 }
