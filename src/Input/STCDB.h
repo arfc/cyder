@@ -8,7 +8,7 @@
 #include "SqliteDb.h"
 #include "STCDataTable.h"
 
-#define MDB STCDB::Instance()
+#define STCDB STCDB::Instance()
 
 /**
    @class STCDB 
