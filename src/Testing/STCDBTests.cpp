@@ -15,15 +15,15 @@ TEST_F(STCDBTest, initializeFromSQL){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCDBTest, get_mat_table){
+TEST_F(STCDBTest, getMatTable){
  // the DB should return a table for a reasonable mat
  EXPECT_NO_THROW(SDB->table(salt_struct_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCDBTest, iso){
-  // the DB should include K_d, S, D, etc. for each elem
-
+TEST_F(STCDBTest, stcFromMatTopeTime){
+ EXPECT_NO_THROW(SDB->stc(salt_struct_, Am241_, 2));
+ EXPECT_GT(SDB->stc(salt_struct_, Am241_, 2),0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

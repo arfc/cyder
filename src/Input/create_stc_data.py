@@ -12,7 +12,7 @@ class DataRange :
         94238, 94240, 94241, 94242, 
         55134, 55135, 55137, 
         38090])
-    time_range=Set(range(1,11)) #@TODO 2 magnitudes smaller than real one
+    time_range=Set(range(1,1001)) 
     stc_range=Set([1.])
 
 class STCData:
