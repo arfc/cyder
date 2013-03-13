@@ -3,7 +3,8 @@
 #include "STCDBTests.h"
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCDBTest, DISABLED_openDB){
+TEST_F(STCDBTest, openDB){
+  EXPECT_NO_THROW(STCDB());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
