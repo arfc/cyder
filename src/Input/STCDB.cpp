@@ -160,7 +160,7 @@ boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
     int the_time = atoi( tStr.c_str() );
     double stc = atof( sStr.c_str() );
     // determine array indcies and add stc to the stc array
-    stc_array[iso_index(db, mat)[iso]][time_index(db, mat)[the_time]] = stc;
+    stc_array[iso_index(db, mat)[tope]][time_index(db, mat)[the_time]] = stc;
   }
   return stc_array;
 }
