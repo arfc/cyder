@@ -225,5 +225,36 @@ TEST_F(STCThermalTest, getVolume) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, DISABLED_SuperimposeIsos){
+  first_vec = ;
+  second_vec = ;
+  third_vec = ;
+  for f in first_vec :
+    for s in seconf_vec : 
+      for fiso in f.keys() :
+        f[fiso] + s[fiso] = superimpose(first_vec, second_vec)[fiso];
+      for siso in s.keys():
+        f[siso] + s[siso] = superimpose(first_vec, second_vec)[fiso];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, DISABLED_InterpolateTwoAlphaTHs){}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, DISABLED_InterpolateTwoKTHs){}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, DISABLED_InterpolateTwoSpacings){}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, DISABLED_InterpolateTwoRCalcs){}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(STCThermalTest, DISABLED_SuperimposeIsos){}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 INSTANTIATE_TEST_CASE_P(STCThermalModel, ThermalModelTests, Values(&STCThermalModelConstructor));
 
