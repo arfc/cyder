@@ -39,19 +39,19 @@ double STCDataTable::stc(Iso tope, int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int STCDataTable::timeToInd(int the_time) {
-  check_validity(the_time, time_index_);
+  checkValidity(the_time, time_index_);
   map<int, int>::iterator it=time_index_.find(the_time);
   return(*it).second;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int STCDataTable::isoToInd(Iso tope) {
-  check_validity(tope, iso_index_);
+  checkValidity(tope, iso_index_);
   map<Iso, int>::iterator it=iso_index_.find(tope);
   return(*it).second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void STCDataTable::check_validity(int val, map<int, int> index) { 
+void STCDataTable::checkValidity(int val, map<int, int> index) { 
   map<int, int>::iterator it;
   it=index.find(val);
   if (it==index.end()){

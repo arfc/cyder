@@ -2,7 +2,6 @@
 #if !defined(_STCDB)
 #define _STCDB
 
-#include <boost/multi_array.hpp>
 #include <string>
 #include <map>
 

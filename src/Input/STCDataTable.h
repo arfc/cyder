@@ -91,7 +91,7 @@ public:
 
 protected:
   /**
-     calls check_validity on the time and then returns its row index.
+     calls checkValidity on the time and then returns its row index.
 
      @param the_time the timestep value (e.g., 200)
 
@@ -110,9 +110,13 @@ protected:
   /**
      checks whether this element has a row entry in the table.
      ideally all of them will... 
+
+     @param val the value to find in the index
+     @param index the map between values and indices
+
      @throws CycException when theres some drama
     */
-  void check_validity(Iso tope);
+  void checkValidity(int val, map<int, int> index);
 
   /**
      The name of the material that this table represents, 
