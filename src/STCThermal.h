@@ -167,8 +167,8 @@ public:
   void set_spacing(double spacing);
   /// sets r_calc_, the radius at which the temperature is to be calculated [m]
   void set_r_calc(double r_calc);
-  /// sets mat_, the mat_t material through which to transport heat
-  void set_mat(mat_t mat){mat_=mat;};
+  /// sets mat_, an optional name for the material through which to transport heat
+  void set_mat(std::string mat){mat_=mat;};
   /// returns alpha_th_, the thermal diffusivity []
   double alpha_th(){return alpha_th_;};
   /// returns k_th_, the thermal conductivity []
@@ -178,7 +178,7 @@ public:
   /// returns spacing_, the spacing between waste packages (uniform grid) [m]
   double r_calc(){return spacing_;};
   /// returns mat_, the mat_t material through which to transport heat
-  mat_t mat(){return mat_;};
+  std::string mat(){return mat_;};
 
 protected:
   /**
@@ -202,8 +202,8 @@ protected:
   double spacing_;
   /// the r_calc radius at which the temperature is calculated [m]
   double r_calc_;
-  /// the material through which to transport heat
-  mat_t mat_;
+  /// This parameter is optional and sets default alpha, k, s, r for the mat_t
+  std::string mat_;
 
 };
 #endif
