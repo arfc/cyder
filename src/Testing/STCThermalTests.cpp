@@ -45,9 +45,19 @@ void STCThermalTest::SetUp(){
   (*hot_comp_)[Cs137_] = 1000;
   cold_comp_ = CompMapPtr(new CompMap(MASS));
   (*cold_comp_)[Cs135_] = 1;
+  cs135_comp_ = CompMapPtr(new CompMap(MASS));
+  (*cs135_comp_)[Cs135_] = 1000;
+  cs137_comp_ = CompMapPtr(new CompMap(MASS));
+  (*cs137_comp_)[Cs137_] = 1000;
+  cs_comp_ = CompMapPtr(new CompMap(MASS));
+  (*cs_comp_)[Cs135_] = 1000;
+  (*cs_comp_)[Cs137_] = 1000;
 
   hot_mat_ = mat_rsrc_ptr(new Material(hot_comp_));
   cold_mat_ = mat_rsrc_ptr(new Material(cold_comp_));
+  cs137_mat_ = mat_rsrc_ptr(new Material(cs137_comp_));
+  cs135_mat_ = mat_rsrc_ptr(new Material(cs135_comp_));
+  cs_mat_ = mat_rsrc_ptr(new Material(cs_comp_));
 
   // test_stc_thermal model setup
   stc_ptr_ = STCThermalPtr(initThermalModel()); //initializes stc_ptr_
@@ -166,10 +176,12 @@ TEST_F(STCThermalTest, set_spacing){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, get_temp_change){
-  EXPECT_NO_THROW(stc_ptr_->getTempChange(hot_mat_));
-  EXPECT_GT(0, stc_ptr_->getTempChange(hot_mat_));
-  EXPECT_NO_THROW(stc_ptr_->getTempChange(cold_mat_));
-  EXPECT_GT(stc_ptr_->getTempChange(cold_mat_), stc_ptr_->getTempChange(hot_mat_));
+  for(int the_time = 0; the_time<100; ++the_time) {
+    EXPECT_NO_THROW(stc_ptr_->getTempChange(hot_mat_, the_time));
+    EXPECT_GT(0, stc_ptr_->getTempChange(hot_mat_, the_time));
+    EXPECT_NO_THROW(stc_ptr_->getTempChange(cold_mat_, the_time));
+    EXPECT_GT(stc_ptr_->getTempChange(cold_mat_, the_time), stc_ptr_->getTempChange(hot_mat_, the_time));
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -225,16 +237,14 @@ TEST_F(STCThermalTest, getVolume) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(STCThermalTest, DISABLED_SuperimposeIsos){
-  first_vec = ;
-  second_vec = ;
-  third_vec = ;
-  for f in first_vec :
-    for s in seconf_vec : 
-      for fiso in f.keys() :
-        f[fiso] + s[fiso] = superimpose(first_vec, second_vec)[fiso];
-      for siso in s.keys():
-        f[siso] + s[siso] = superimpose(first_vec, second_vec)[fiso];
+TEST_F(STCThermalTest, superimposeIsos){
+  Temp cs135, cs137, cs;
+  for(int the_time = 0; the_time<100; ++the_time) {
+    cs137=stc_ptr_->getTempChange(cs137_mat_, the_time);
+    cs135=stc_ptr_->getTempChange(cs135_mat_, the_time);
+    cs=stc_ptr_->getTempChange(cs_mat_, the_time);
+    EXPECT_FLOAT_EQ(cs137+cs135, cs);
+  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

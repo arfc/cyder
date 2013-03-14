@@ -36,9 +36,15 @@ protected:
 
   CompMapPtr hot_comp_;
   CompMapPtr cold_comp_;
+  CompMapPtr cs135_comp_;
+  CompMapPtr cs137_comp_;
+  CompMapPtr cs_comp_;
 
   mat_rsrc_ptr hot_mat_;
   mat_rsrc_ptr cold_mat_;
+  mat_rsrc_ptr cs135_mat_;
+  mat_rsrc_ptr cs137_mat_;
+  mat_rsrc_ptr cs_mat_;
   
   virtual void SetUp();
   virtual void TearDown();

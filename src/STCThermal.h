@@ -86,12 +86,30 @@ public:
   virtual void transportHeat(int time);
 
   /**
+     Returns the whole temperature change projection due to a material over 
+     time
+
+     @param mat the material which is responsible for heating
+     @return the <time,temperature change> vector in this medium due to mat [K]
+   */
+  std::map<int, Temp> getTempChange(mat_rsrc_ptr mat);
+
+  /**
+     Returns the maximum temperature change due to a material
+
+     @param mat the material which is responsible for heating
+     @return the time and temperature change in this medium due to mat [K]
+   */
+  std::pair<int,Temp> getMaxTempChange(mat_rsrc_ptr mat);
+
+  /**
      Returns the temperature change due to a material
 
      @param mat the material which is responsible for heating
+     @param time the timestep at which to report the temp change
      @return the temperature change in this medium due to mat [K]
    */
-  Temp getTempChange(mat_rsrc_ptr mat){};
+  Temp getTempChange(mat_rsrc_ptr mat, int the_time);
 
   /**
      return the thermal model implementation type

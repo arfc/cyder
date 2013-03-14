@@ -63,6 +63,31 @@ void STCThermal::transportHeat(int time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+std::map<int, Temp> STCThermal::getTempChange(mat_rsrc_ptr mat){
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+std::pair<int,Temp> STCThermal::getMaxTempChange(mat_rsrc_ptr mat){
+
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+Temp STCThermal::getTempChange(mat_rsrc_ptr mat, int the_time){
+  Temp to_ret;
+  try{
+    to_ret = getTempChange(mat).at(the_time);
+  } catch (const std::out_of_range& oor) {
+    stringstream msg_ss;
+    msg_ss << oor.what();
+    msg_ss << "The time ";
+    msg_ss << the_time;
+    msg_ss << " is not contained in the temperature change history."; 
+    LOG(LEV_ERROR, "CydSTC") << msg_ss.str();
+    throw CycRangeException(msg_ss.str());
+  }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Temp STCThermal::peak_temp(){
   TempHist::iterator start = temp_hist_.begin();
   TempHist::iterator stop = temp_hist_.end();
