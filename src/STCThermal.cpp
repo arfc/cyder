@@ -64,12 +64,25 @@ void STCThermal::transportHeat(int time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 std::map<int, Temp> STCThermal::getTempChange(mat_rsrc_ptr mat){
+  map<int, Temp> to_ret;
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 std::pair<int,Temp> STCThermal::getMaxTempChange(mat_rsrc_ptr mat){
-
+  std::map<int, Temp> temp_map = getTempChange(mat);
+  map<int, Temp>::iterator it;
+  int max_time = 0;
+  Temp max_val = 0;
+  for(it=temp_map.begin(); it!=temp_map.end(); ++it){
+    if( (*it).second > max_val ) {
+      max_val = (*it).second;
+      max_time = (*it).first;
+    }
+  }
+  return make_pair(max_time, max_val);
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Temp STCThermal::getTempChange(mat_rsrc_ptr mat, int the_time){
   Temp to_ret;
