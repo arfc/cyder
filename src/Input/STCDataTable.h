@@ -85,12 +85,10 @@ public:
      */
   std::string name(){return name_;};
 
-protected:
   /**
      calls checkValidity on the time and then returns its row index.
 
      @param the_time the timestep value (e.g., 200)
-
      @return the index of that time in the stc_array
      */
   int timeToInd(int the_time);
@@ -103,6 +101,36 @@ protected:
      */
   int isoToInd(Iso tope);
 
+  /**
+     calls check_validity on the isotope and then returns its row value.
+
+
+     @param index the map of indices for this table in which the val exists
+     @param ind the index of the row of that isotope
+     @return tope the isotope identifier (e.g., 92235)
+     */
+  int indToVal(int ind, std::map<int, int> index);
+
+  /**
+     calls checkValidity on the iso and then returns its row value.
+
+     @param ind the index of the value of interest
+     @return the value of that index in the stc_array
+     */
+  int indToIso(int ind);
+
+  /**
+     calls checkValidity on the time and then returns its row value.
+
+     @param ind the index of the value of interest
+     @return the value of that index in the stc_array
+     */
+  int indToTime(int ind);
+
+  std::map<int, int>timeIndex(){return time_index_; }
+  std::map<Iso, int>isoIndex(){return iso_index_; }
+
+protected:
   /**
      checks whether this element has a row entry in the table.
      ideally all of them will... 

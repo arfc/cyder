@@ -10,6 +10,7 @@
 #include <string>
 
 #include "ThermalModel.h"
+#include "STCDB.h"
 
 /// A shared pointer for the STCThermal object
 class STCThermal;
@@ -86,6 +87,14 @@ public:
   virtual void transportHeat(int time);
 
   /**
+     Returns the maximum temperature change due to a material
+
+     @param mat the material which is responsible for heating
+     @return the time and temperature change in this medium due to mat [K]
+   */
+  std::pair<int,Temp> getMaxTempChange(mat_rsrc_ptr mat);
+
+  /**
      Returns the whole temperature change projection due to a material over 
      time
 
@@ -95,18 +104,19 @@ public:
   std::map<int, Temp> getTempChange(mat_rsrc_ptr mat);
 
   /**
-     Returns the maximum temperature change due to a material
+     Returns the temperature change due to a material
 
-     @param mat the material which is responsible for heating
-     @return the time and temperature change in this medium due to mat [K]
+     @param tope the isotope for which to collect the STC
+     @param the_time the timestep at which to report the temp change
+     @return the temperature change in this medium due to mat [K]
    */
-  std::pair<int,Temp> getMaxTempChange(mat_rsrc_ptr mat);
+  Temp getTempChange(Iso tope, int the_time);
 
   /**
      Returns the temperature change due to a material
 
      @param mat the material which is responsible for heating
-     @param time the timestep at which to report the temp change
+     @param the_time the timestep at which to report the temp change
      @return the temperature change in this medium due to mat [K]
    */
   Temp getTempChange(mat_rsrc_ptr mat, int the_time);
@@ -155,26 +165,45 @@ public:
   void set_k_th(double k_th);
   /// sets spacing_, the spacing between waste packages (uniform grid) [m]
   void set_spacing(double spacing);
-  /// sets mat_, the material through which to transport heat
-  void set_mat(std::string mat){mat_=mat;};
+  /// sets r_calc_, the radius at which the temperature is to be calculated [m]
+  void set_r_calc(double r_calc);
+  /// sets mat_, the mat_t material through which to transport heat
+  void set_mat(mat_t mat){mat_=mat;};
   /// returns alpha_th_, the thermal diffusivity []
   double alpha_th(){return alpha_th_;};
   /// returns k_th_, the thermal conductivity []
   double k_th(){return k_th_;};
   /// returns spacing_, the spacing between waste packages (uniform grid) [m]
   double spacing(){return spacing_;};
-  /// returns mat_, the material through which to transport heat
-  std::string mat(){return mat_;};
+  /// returns spacing_, the spacing between waste packages (uniform grid) [m]
+  double r_calc(){return spacing_;};
+  /// returns mat_, the mat_t material through which to transport heat
+  mat_t mat(){return mat_;};
 
 protected:
+  /**
+     initializes the STC map from the STCDB.
+
+     @param mat the mat_t struct defining the near field material:w
+     */
+  void initializeSTCTable();
+
+  /**
+    an STCDataTable containing a fully interpereted array of STC values indexed 
+    by isotope and time for specifically this mat_t.
+    */
+  STCDataTablePtr table_;
+
   /// the thermal diffusivity []
   double alpha_th_;
   /// the thermal conductivity []
   double k_th_;
   /// the spacing between waste packages (uniform grid) [m]
   double spacing_;
+  /// the r_calc radius at which the temperature is calculated [m]
+  double r_calc_;
   /// the material through which to transport heat
-  std::string mat_;
+  mat_t mat_;
 
 };
 #endif
