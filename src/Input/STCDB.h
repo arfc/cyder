@@ -110,10 +110,10 @@ public:
   std::vector<double> k_th_range(SqliteDb* db);
 
   /** 
-     Returns a vector of distinct values of k_th in the db
+     Returns a vector of distinct values of alpha_th in the db
 
      @param db the database to look into
-     @returns k_th_range_
+     @returns alpha_th_range_
      */
   std::vector<double> alpha_th_range(SqliteDb* db);
 
