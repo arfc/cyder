@@ -22,7 +22,7 @@ STCThermal::STCThermal():
   k_th_(0),
   spacing_(0),
   r_calc_(0),
-  mat_("")
+  mat_("clay")
 {
   set_geom(GeometryPtr(new Geometry()));
 }
@@ -33,7 +33,7 @@ STCThermal::STCThermal(QueryEngine* qe):
   k_th_(0),
   spacing_(0),
   r_calc_(0),
-  mat_("")
+  mat_("clay")
 {
   set_geom(GeometryPtr(new Geometry()));
   initModuleMembers(qe);
@@ -41,16 +41,12 @@ STCThermal::STCThermal(QueryEngine* qe):
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void STCThermal::initModuleMembers(QueryEngine* qe){
-  int n_predef_mats = qe->nElementsMatchingQuery("material_data");
-  if(n_predef_mats == 1 ){
-    set_mat(lexical_cast<string>(qe->getElementContent("material_data")));
-    /// @TODO use this to set alpha, k, s, r
-  } else {
-    set_alpha_th(lexical_cast<double>(qe->getElementContent("alpha_th")));
-    set_k_th(lexical_cast<double>(qe->getElementContent("k_th")));
-    set_spacing(lexical_cast<double>(qe->getElementContent("spacing")));
-    set_r_calc(lexical_cast<double>(qe->getElementContent("r_calc")));
-  }
+  set_mat(lexical_cast<string>(qe->getElementContent("material_data")));
+  /// @TODO use this to set alpha, k, s, r
+  set_alpha_th(lexical_cast<double>(qe->getElementContent("alpha_th")));
+  set_k_th(lexical_cast<double>(qe->getElementContent("k_th")));
+  set_spacing(lexical_cast<double>(qe->getElementContent("spacing")));
+  set_r_calc(lexical_cast<double>(qe->getElementContent("r_calc")));
   LOG(LEV_DEBUG2,"GRSThm") << "The STCThermal Class init(cur) function has been called";;
   initializeSTCTable();
 }

@@ -97,6 +97,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="alpha_th"/>
       <ref name="k_th"/>
       <ref name="material_data"/>
+      <ref name="r_calc"/>
       <ref name="spacing"/>
     </element>
   </define>

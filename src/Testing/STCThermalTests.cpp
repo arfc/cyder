@@ -22,11 +22,12 @@ void STCThermalTest::SetUp(){
 
   // other vars
   k_th_ = .1; // ___  @TODO worry about units
-  spacing_ = .1; // ___ @TODO worry about units
   alpha_th_ = .1; // ___ @TODO worry about units
+  spacing_ = 20; // ___ @TODO worry about units
+  r_calc_= 2; // ___ @TODO worry about units
   time_ = 0;
   mat_ = "clay";
-  mat_table_=MDB->table(mat_);
+  //mat_table_=MDB->table(mat_);
 
   // composition set up
   u235_=92235;
@@ -62,12 +63,11 @@ void STCThermalTest::SetUp(){
   // test_stc_thermal model setup
   stc_ptr_ = STCThermalPtr(initThermalModel()); //initializes stc_ptr_
   therm_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(stc_ptr_);
-  stc_ptr_->set_mat_table(mat_table_);
+  //stc_ptr_->set_mat_table(mat_table_);
   stc_ptr_->set_geom(geom_);
   default_stc_ptr_ = STCThermalPtr(STCThermal::create());
   default_therm_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(default_stc_ptr_);
-  default_stc_ptr_->set_mat_table(mat_table_);
-
+  //stc_ptr_->set_mat_table(mat_table_);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void STCThermalTest::TearDown() {
@@ -84,6 +84,7 @@ STCThermalPtr STCThermalTest::initThermalModel(){
      << "  <alpha_th>" << alpha_th_ << "</alpha_th>"
      << "  <k_th>" << k_th_ << "</k_th>"
      << "  <material_data>" << mat_ << "</material_data>"
+     << "  <r_calc>" << r_calc_ << "</r_calc>"
      << "  <spacing>" << spacing_ << "</spacing>"
      << "</start>";
 
@@ -99,6 +100,7 @@ STCThermalPtr STCThermalTest::initThermalModel(){
 TEST_F(STCThermalTest, initial_state){
   EXPECT_EQ(alpha_th_, stc_ptr_->alpha_th());
   EXPECT_EQ(k_th_, stc_ptr_->k_th());
+  EXPECT_EQ(spacing_, stc_ptr_->spacing());
   EXPECT_EQ(spacing_, stc_ptr_->spacing());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

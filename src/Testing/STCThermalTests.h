@@ -15,6 +15,7 @@ protected:
   STCThermalPtr default_stc_ptr_;
   ThermalModelPtr therm_model_ptr_;
   ThermalModelPtr default_therm_model_ptr_;
+  double r_calc_;
   double alpha_th_;
   double k_th_;
   double spacing_;
