@@ -170,15 +170,15 @@ public:
   /// sets mat_, an optional name for the material through which to transport heat
   void set_mat(std::string mat){mat_=mat;};
   /// returns alpha_th_, the thermal diffusivity []
-  double alpha_th(){return alpha_th_;};
+  const double alpha_th() const {return alpha_th_;};
   /// returns k_th_, the thermal conductivity []
-  double k_th(){return k_th_;};
+  const double k_th() const {return k_th_;};
   /// returns spacing_, the spacing between waste packages (uniform grid) [m]
-  double spacing(){return spacing_;};
+  const double spacing() const {return spacing_;};
   /// returns spacing_, the spacing between waste packages (uniform grid) [m]
-  double r_calc(){return spacing_;};
+  const double r_calc() const {return spacing_;};
   /// returns mat_, the mat_t material through which to transport heat
-  std::string mat(){return mat_;};
+  const std::string mat() const {return mat_;};
 
 protected:
   /**

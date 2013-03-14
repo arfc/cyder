@@ -44,6 +44,7 @@ void STCThermal::initModuleMembers(QueryEngine* qe){
   int n_predef_mats = qe->nElementsMatchingQuery("material_data");
   if(n_predef_mats == 1 ){
     set_mat(lexical_cast<string>(qe->getElementContent("material_data")));
+    /// @TODO use this to set alpha, k, s, r
   } else {
     set_alpha_th(lexical_cast<double>(qe->getElementContent("alpha_th")));
     set_k_th(lexical_cast<double>(qe->getElementContent("k_th")));
@@ -56,6 +57,13 @@ void STCThermal::initModuleMembers(QueryEngine* qe){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void STCThermal::copy(const ThermalModel& src){
+  const STCThermal* src_ptr = dynamic_cast<const STCThermal*>(&src);
+  set_alpha_th(src_ptr->alpha_th());
+  set_k_th(src_ptr->k_th());
+  set_spacing(src_ptr->spacing());
+  set_r_calc(src_ptr->r_calc());
+  set_mat(src_ptr->mat());
+  set_geom(GeometryPtr(new Geometry()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -65,7 +73,7 @@ void STCThermal::print(){
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void STCThermal::transportHeat(int time){
+void STCThermal::transportHeat(int the_time){
   // This will transport the heat through the component at hand. 
   // It should send some kind of heat object or reset the temperatures. 
 }
@@ -101,7 +109,6 @@ std::map<int, Temp> STCThermal::getTempChange(mat_rsrc_ptr mat){
     }
   }
   return to_ret;
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -127,6 +134,7 @@ std::pair<int,Temp> STCThermal::getMaxTempChange(mat_rsrc_ptr mat){
   map<int, Temp>::iterator it;
   int max_time = 0;
   Temp max_val = 0;
+  
   for(it=temp_map.begin(); it!=temp_map.end(); ++it){
     if( (*it).second > max_val ) {
       max_val = (*it).second;
