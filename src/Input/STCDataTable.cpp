@@ -39,9 +39,9 @@ double STCDataTable::stc(Iso tope, int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int STCDataTable::indToVal(int ind, map<int,int> index){
+int STCDataTable::indToVal(int ind, map<int,int> val_index){
   try{
-    int to_ret =index.at(ind);
+    int to_ret =val_index.at(ind);
     return to_ret;
   } catch (const out_of_range& oor){
     stringstream msg_ss;
@@ -80,10 +80,10 @@ int STCDataTable::isoToInd(Iso tope) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void STCDataTable::checkValidity(int val, map<int, int> index) { 
+void STCDataTable::checkValidity(int val, map<int, int> val_index) { 
   map<int, int>::iterator it;
-  it=index.find(val);
-  if (it==index.end()){
+  it=val_index.find(val);
+  if (it==val_index.end()){
     stringstream err;
     err << "Value " << val << " not valid in the index.";
     throw CycException(err.str());
