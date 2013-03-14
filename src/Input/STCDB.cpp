@@ -103,7 +103,7 @@ map<int, int> STCDB::time_index(SqliteDb* db, string table_id){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-map<int, int> getIndex(vector<StrList> vals){
+map<int, int> STCDB::getIndex(vector<StrList> vals){
   map<int, int> to_ret;
   for(int i = 0; i < vals.size(); i++){
     // // obtain the database row and declare the appropriate members
@@ -111,6 +111,19 @@ map<int, int> getIndex(vector<StrList> vals){
     int the_val = atoi( vStr.c_str() );
     // log it accordingly
     to_ret.insert(make_pair(the_val, i));
+  }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<double> STCDB::getRange(vector<StrList> vals){
+  vector<double> to_ret;
+  for(int i = 0; i < vals.size(); i++){
+    // // obtain the database row and declare the appropriate members
+    string vStr = vals.at(i).at(0);
+    double the_val = atof( vStr.c_str() );
+    // log it accordingly
+    to_ret.push_back(the_val);
   }
   return to_ret;
 }
@@ -154,20 +167,35 @@ boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-vector<double> STCDB::k_th_range(){
-  
+vector<double> STCDB::k_th_range(SqliteDb* db){
+  if(k_th_range_.empty()){
+    vector<StrList> k_th_list = db->query("SELECT DISTINCT k_th FROM STCData");
+    k_th_range_ = getRange(k_th_list);
+  }
   return k_th_range_;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-vector<double> STCDB::alpha_th_range(){
+vector<double> STCDB::alpha_th_range(SqliteDb* db){
+  if(alpha_th_range_.empty()){
+    vector<StrList> alpha_th_list = db->query("SELECT DISTINCT alpha_th FROM STCData");
+    alpha_th_range_ = getRange(alpha_th_list);
+  }
   return alpha_th_range_;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-vector<double> STCDB::spacing_range(){
+vector<double> STCDB::spacing_range(SqliteDb* db){
+  if(spacing_range_.empty()){
+    vector<StrList> spacing_list = db->query("SELECT DISTINCT spacing FROM STCData");
+    spacing_range_ = getRange(spacing_list);
+  }
   return spacing_range_;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-vector<double> STCDB::r_calc_range(){
+vector<double> STCDB::r_calc_range(SqliteDb* db){
+  if(r_calc_range_.empty()){
+    vector<StrList> r_calc_list = db->query("SELECT DISTINCT r_calc FROM STCData");
+    r_calc_range_ = getRange(r_calc_list);
+  }
   return r_calc_range_;
 }
 

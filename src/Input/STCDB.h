@@ -101,6 +101,15 @@ public:
   std::map<int, int> time_index(SqliteDb* db, std::string table_name);
 
   std::map<int, int> getIndex(std::vector<StrList>);
+  std::vector<double> getRange(std::vector<StrList> vals);
+
+  std::vector<double> k_th_range(SqliteDb* db);
+
+  std::vector<double> alpha_th_range(SqliteDb* db);
+
+  std::vector<double> spacing_range(SqliteDb* db);
+
+  std::vector<double> r_calc_range(SqliteDb* db);
 
   /**
      This returns the stc_array_ for a particular db and mat struct.
@@ -141,9 +150,14 @@ protected:
      a mat from the names of the tables to the table pointers 
     */
   std::map<std::string, STCDataTablePtr> tables_;
-     
 
+  std::vector<double> k_th_range_;
 
+  std::vector<double> alpha_th_range_;
+
+  std::vector<double> spacing_range_;
+
+  std::vector<double> r_calc_range_;
 };
 
 #endif
