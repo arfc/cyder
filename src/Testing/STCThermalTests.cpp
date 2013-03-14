@@ -27,7 +27,7 @@ void STCThermalTest::SetUp(){
   r_calc_= 2; // ___ @TODO worry about units
   time_ = 0;
   mat_ = "clay";
-  //mat_table_=MDB->table(mat_);
+  mat_table_=MDB->table(mat_);
 
   // composition set up
   u235_=92235;
@@ -63,11 +63,11 @@ void STCThermalTest::SetUp(){
   // test_stc_thermal model setup
   stc_ptr_ = STCThermalPtr(initThermalModel()); //initializes stc_ptr_
   therm_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(stc_ptr_);
-  //stc_ptr_->set_mat_table(mat_table_);
+  stc_ptr_->set_mat_table(mat_table_);
   stc_ptr_->set_geom(geom_);
   default_stc_ptr_ = STCThermalPtr(STCThermal::create());
   default_therm_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(default_stc_ptr_);
-  //stc_ptr_->set_mat_table(mat_table_);
+  default_stc_ptr_->set_mat_table(mat_table_);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void STCThermalTest::TearDown() {

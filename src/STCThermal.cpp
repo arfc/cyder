@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Logger.h"
 #include <fstream>
+#include <stdexcept>
 #include <vector>
 #include <time.h>
 

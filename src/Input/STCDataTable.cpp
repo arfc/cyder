@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <sstream>
+#include <stdexcept>
 
 #include "Logger.h"
 #include "STCDataTable.h"
