@@ -93,31 +93,26 @@ string STCDB::whereClause(mat_t mat){
 map<Iso, int> STCDB::iso_index(SqliteDb* db, string table_id){
 
   vector<StrList> inums = db->query("SELECT DISTINCT iso FROM " + table_id);
- 
-  map<Iso, int> iso_index;
-  for (int i = 0; i < inums.size(); i++){
-    // // obtain the database row and declare the appropriate members
-    string iStr = inums.at(i).at(0);
-    Iso tope = atoi( iStr.c_str() );
-    // log it accordingly
-    iso_index.insert(make_pair(tope, i));
-  }
-  return iso_index;
+  return getIndex(inums);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 map<int, int> STCDB::time_index(SqliteDb* db, string table_id){
   vector<StrList> tnums = db->query("SELECT DISTINCT time FROM " + table_id);
- 
-  map<int, int> time_index;
-  for (int t = 0; t < tnums.size(); t++){
+  return getIndex(tnums);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+map<int, int> getIndex(vector<StrList> vals){
+  map<int, int> to_ret;
+  for(int i = 0; i < vals.size(); i++){
     // // obtain the database row and declare the appropriate members
-    string tStr = tnums.at(t).at(0);
-    int the_time = atoi( tStr.c_str() );
+    string vStr = vals.at(i).at(0);
+    int the_val = atoi( vStr.c_str() );
     // log it accordingly
-    time_index.insert(make_pair(the_time, t));
+    to_ret.insert(make_pair(the_val, i));
   }
-  return time_index;
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -158,4 +153,21 @@ boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
   return to_ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<double> STCDB::k_th_range(){
+  
+  return k_th_range_;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<double> STCDB::alpha_th_range(){
+  return alpha_th_range_;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<double> STCDB::spacing_range(){
+  return spacing_range_;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+vector<double> STCDB::r_calc_range(){
+  return r_calc_range_;
+}
 

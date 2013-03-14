@@ -100,6 +100,8 @@ public:
     */
   std::map<int, int> time_index(SqliteDb* db, std::string table_name);
 
+  std::map<int, int> getIndex(std::vector<StrList>);
+
   /**
      This returns the stc_array_ for a particular db and mat struct.
      The stc_array holds stc values for specific isotope and time pairs.
