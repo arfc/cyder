@@ -100,12 +100,37 @@ public:
     */
   std::map<int, int> time_index(SqliteDb* db, std::string table_name);
 
+
+  /** 
+     Returns a vector of distinct values of k_th in the db
+
+     @param db the database to look into
+     @returns k_th_range_
+     */
   std::vector<double> k_th_range(SqliteDb* db);
 
+  /** 
+     Returns a vector of distinct values of k_th in the db
+
+     @param db the database to look into
+     @returns k_th_range_
+     */
   std::vector<double> alpha_th_range(SqliteDb* db);
 
+  /** 
+     Returns a vector of distinct values of spacing in the db
+
+     @param db the database to look into
+     @returns spacing_range_
+     */
   std::vector<double> spacing_range(SqliteDb* db);
 
+  /** 
+     Returns a vector of distinct values of r_calc in the db
+
+     @param db the database to look into
+     @returns r_calc_range_
+     */
   std::vector<double> r_calc_range(SqliteDb* db);
 
   /**
