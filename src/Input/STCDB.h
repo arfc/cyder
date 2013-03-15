@@ -12,7 +12,7 @@
 
 /**
    @class STCDB 
-   The STCDB class provides an interface to the mat_data.sqlite 
+   The STCDB class provides an interface to the stc_data.sqlite 
    database, providing a robust and correct mass lookup by isotope 
  */
 class STCDB {
@@ -56,7 +56,7 @@ public:
      @param iso an isotope identifier of the isotope whose stc you're interested in 
      @param the_time the time at which to query the stc
     **/
-  double stc(mat_t mat, Iso tope, int the_time);
+  double stc(th_params_t th_params, Iso tope, int the_time);
 
   /**
      returns the table matching the mat string. 
@@ -65,14 +65,14 @@ public:
 
      @return a STCDataTablePtr holding the data associated with the mat
      */
-  STCDataTablePtr table(mat_t mat);
+  STCDataTablePtr table(th_params_t th_params);
 
   /**
-    Converts the mat struct into a coded name.
+    Converts the th_params struct into a coded name.
 
     @param mat the struct describing a material
     */
-  std::string mat_name(mat_t mat);
+  std::string mat_name(th_params_t th_params);
 
   /**
     Finds the name of the table in the database for the mat struct .
@@ -80,7 +80,7 @@ public:
     @param db the database to query
     @param mat the struct describing a material
     */
-  std::string table_id(SqliteDb* db, mat_t mat);
+  std::string table_id(SqliteDb* db, th_params_t th_params);
 
   /**
      This returns the iso_index_ for a particular db and mat struct.
@@ -143,7 +143,7 @@ public:
 
      @return stc_array an array of stc values for specific isotope and time pairs.
     */
-  boost::multi_array<double, 2> stc_array(SqliteDb* db, mat_t mat);
+  boost::multi_array<double, 2> stc_array(SqliteDb* db, th_params_t th_params);
 
   /**
      checks whether a table associated with a particular mat has been created
@@ -158,14 +158,14 @@ public:
 
      @param mat the string indicatin the material this table should represent
    */
-  STCDataTablePtr initializeFromSQL(mat_t mat);
+  STCDataTablePtr initializeFromSQL(th_params_t th_params);
 
   /**
      this helper function provides the WHERE clause that selects the mat from the db.
 
      @param mat the material properties to specify when querying the table.
     */
-  std::string whereClause(mat_t mat);
+  std::string whereClause(th_params_t th_params);
 
 protected:
 

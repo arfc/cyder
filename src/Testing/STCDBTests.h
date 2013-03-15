@@ -8,7 +8,7 @@ class STCDBTest : public ::testing::Test {
     std::vector<std::string> mat_names_;
     std::vector<int> iso_ids_;
     Iso Cs135_, Cs137_, Sr90_, Am241_;
-    mat_t salt_struct_;
+    th_params_t salt_struct_;
     double alpha_, k_, spacing_, r_calc_;
 
 

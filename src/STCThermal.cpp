@@ -77,9 +77,9 @@ void STCThermal::transportHeat(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void STCThermal::initializeSTCTable(){
-  mat_t mat;
-  mat.a(alpha_th_).k(k_th_).s(spacing_).r(r_calc_);
-  table_ = STCDataTablePtr(SDB->table(mat));
+  th_params_t th_params;
+  th_params.a(alpha_th_).k(k_th_).s(spacing_).r(r_calc_);
+  table_ = STCDataTablePtr(SDB->table(th_params));
   ///@TODO this is where the interpolation must occur.
   ///@TODO you want to make a NEW STCDataTable out of whatever tables, indexes, 
   //etc that you need to, then set it to stc_table_.

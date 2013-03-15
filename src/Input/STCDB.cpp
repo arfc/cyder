@@ -34,58 +34,58 @@ STCDB::~STCDB() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-double STCDB::stc(mat_t mat, Iso tope, int the_time){
-  return table(mat)->stc(tope, the_time);
+double STCDB::stc(th_params_t th_params, Iso tope, int the_time){
+  return table(th_params)->stc(tope, the_time);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCDataTablePtr STCDB::table(mat_t mat) {
+STCDataTablePtr STCDB::table(th_params_t th_params) {
   STCDataTablePtr to_ret;
-  if(initialized(mat_name(mat)) ){
-    to_ret = (*tables_.find(mat_name(mat))).second;
+  if(initialized(mat_name(th_params)) ){
+    to_ret = (*tables_.find(mat_name(th_params))).second;
   } else {
-    to_ret = initializeFromSQL(mat);
-    tables_.insert(make_pair(mat_name(mat),to_ret));
+    to_ret = initializeFromSQL(th_params);
+    tables_.insert(make_pair(mat_name(th_params),to_ret));
   }
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool STCDB::initialized(string mat){
+bool STCDB::initialized(string mat_name){
   map<string,STCDataTablePtr>::iterator it;
-  it=tables_.find(mat);
+  it=tables_.find(mat_name);
   return it!=tables_.end()? true : false; 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string STCDB::mat_name(mat_t mat){
+string STCDB::mat_name(th_params_t th_params){
   string mat_name = 
-    "a"+boost::lexical_cast<string>(mat.alpha_th)+
-    "k"+boost::lexical_cast<string>(mat.k_th)+
-    "s"+boost::lexical_cast<string>(mat.spacing)+
-    "r"+boost::lexical_cast<string>(mat.r_calc); 
+    "a"+boost::lexical_cast<string>(th_params.alpha_th)+
+    "k"+boost::lexical_cast<string>(th_params.k_th)+
+    "s"+boost::lexical_cast<string>(th_params.spacing)+
+    "r"+boost::lexical_cast<string>(th_params.r_calc); 
   return mat_name;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-STCDataTablePtr STCDB::initializeFromSQL(mat_t mat){
+STCDataTablePtr STCDB::initializeFromSQL(th_params_t th_params){
   bool readonly = true;
   SqliteDb* db = new SqliteDb(file_path_, readonly);
-  boost::multi_array<double, 2> arr = stc_array(db, mat);
-  string stc_table_id = table_id(db, mat);
-  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(mat), arr, 
+  boost::multi_array<double, 2> arr = stc_array(db, th_params);
+  string stc_table_id = table_id(db, th_params);
+  STCDataTablePtr to_ret = STCDataTablePtr(new STCDataTable(mat_name(th_params), arr, 
         iso_index(db, stc_table_id), time_index(db, stc_table_id)));
   delete db;
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string STCDB::whereClause(mat_t mat){
+string STCDB::whereClause(th_params_t th_params){
   string where_clause = "WHERE alpha_th="+ 
-    boost::lexical_cast<string>( mat.alpha_th ) + 
-    " AND k_th="    + boost::lexical_cast<string>( mat.k_th ) +
-    " AND spacing=" + boost::lexical_cast<string>( mat.spacing ) +
-    " AND r_calc="  + boost::lexical_cast<string>( mat.r_calc );
+    boost::lexical_cast<string>( th_params.alpha_th ) + 
+    " AND k_th="    + boost::lexical_cast<string>( th_params.k_th ) +
+    " AND spacing=" + boost::lexical_cast<string>( th_params.spacing ) +
+    " AND r_calc="  + boost::lexical_cast<string>( th_params.r_calc );
   return where_clause;
 }
 
@@ -129,18 +129,17 @@ vector<double> STCDB::getRange(vector<StrList> vals){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string STCDB::table_id(SqliteDb* db, mat_t mat) {
+string STCDB::table_id(SqliteDb* db, th_params_t th_params) {
   vector<StrList> mat_id = db->query("SELECT mat_id FROM STCData " + 
-      whereClause(mat));
-  
+      whereClause(th_params));
   string stc_table_id = "mat"+boost::lexical_cast<string>( mat_id.at(0).at(0) );
   return stc_table_id;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, mat_t mat){
+boost::multi_array<double, 2> STCDB::stc_array(SqliteDb* db, th_params_t th_params){
 
-  string stc_table_id = table_id(db, mat);
+  string stc_table_id = table_id(db, th_params);
   vector<StrList> inums = db->query("SELECT iso FROM " + stc_table_id); 
   vector<StrList> snums = db->query("SELECT stc FROM " + stc_table_id); 
   vector<StrList> tnums = db->query("SELECT time FROM " + stc_table_id); 

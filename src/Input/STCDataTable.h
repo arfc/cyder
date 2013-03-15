@@ -16,7 +16,7 @@ typedef int Iso;
    Defines the structure of data associated with this row location in the  
    database.
  */
-typedef struct mat_t
+typedef struct th_params_t
 {
   public : 
     double alpha_th; /**< a double indicating the thermal diffusivity of the material [] >**/
@@ -24,12 +24,12 @@ typedef struct mat_t
     double spacing; /**< a double indicating the uniform spacing between packages [m] >**/
     double  r_calc; /**< a double indicating the radius where the STC is calculated >**/
     //double  <++>; /**< a double indicating the <++> of an element >**/
-    mat_t& a(double a_in){ alpha_th = a_in; return *this; }
-    mat_t& k(double k_in){ k_th = k_in; return *this; }
-    mat_t& s(double s_in){ spacing = s_in; return *this; }
-    mat_t& r(double r_in){ r_calc = r_in; return *this; }
+    th_params_t& a(double a_in){ alpha_th = a_in; return *this; }
+    th_params_t& k(double k_in){ k_th = k_in; return *this; }
+    th_params_t& s(double s_in){ spacing = s_in; return *this; }
+    th_params_t& r(double r_in){ r_calc = r_in; return *this; }
 
-} mat_t;
+} th_params_t;
 
 
 class STCDataTable;
@@ -37,7 +37,7 @@ typedef boost::shared_ptr<STCDataTable> STCDataTablePtr;
 
 /**
    @class STCDataTable 
-   The STCDataTable class provides an interface to the mat_data.sqlite 
+   The STCDataTable class provides an interface to the stc_data.sqlite 
    database, providing a robust and correct mass lookup by isotope 
  */
 class STCDataTable {
@@ -54,12 +54,12 @@ public:
      Detailed constructor for the STCDataTable class
      Fully initializes the object
 
-    @param mat the mat_ data member, a string naming this material
+    @param name the name_ data member, a string naming this material
     @param stc_array the stc_array_ data member, a 2d array of stc values (n_isos x n_timesteps) 
     @param iso_index the iso_index_ data member, mapping the isotope IDs to indices
     @param time_index the time_index_ data member, mapping the timestep values to indices
     */
-  STCDataTable(std::string mat, boost::multi_array<double, 2> stc_array, std::map<Iso, int> 
+  STCDataTable(std::string name, boost::multi_array<double, 2> stc_array, std::map<Iso, int> 
       iso_index, std::map<int, int> time_index);
 
   /**
@@ -81,7 +81,7 @@ public:
   /**
      returns the string name of the material that this table represents
 
-     @return mat_
+     @return name_
      */
   std::string name(){return name_;};
 
@@ -151,7 +151,7 @@ protected:
   /** 
      The struct representing this material. 
      */
-  mat_t mat_;
+  th_params_t th_params_;
 
   /**
      The array of stc data. It's a 2d array with dimensions iso x time. Think 
