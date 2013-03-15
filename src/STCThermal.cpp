@@ -43,7 +43,7 @@ STCThermal::STCThermal(QueryEngine* qe):
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void STCThermal::initModuleMembers(QueryEngine* qe){
   set_mat(lexical_cast<string>(qe->getElementContent("material_data")));
-  /// @TODO use this to set alpha, k, s, r
+  /// @TODO use mat to set alpha, k, s, r
   set_alpha_th(lexical_cast<double>(qe->getElementContent("alpha_th")));
   set_k_th(lexical_cast<double>(qe->getElementContent("k_th")));
   set_spacing(lexical_cast<double>(qe->getElementContent("spacing")));
