@@ -100,9 +100,15 @@ std::map<int, Temp> STCThermal::getTempChange(mat_rsrc_ptr mat){
   int time_ind;
   for(it=(*comp).begin(); it!=(*comp).end(); ++it) {
     iso = (*it).first;
-    for(step=table_->timeIndex().begin(); step!=table_->timeIndex().end(); ++step){
+    map<int,int> time_map= table_->timeIndex();
+    for(step=time_map.begin(); step!=time_map.end(); ++step){
       time_ind=(*step).second;
-      to_ret[time_ind] += getTempChange(iso, time_ind)*mat->mass(iso);
+      Temp tc = getTempChange(iso, time_ind)*mat->mass(iso);
+      if(to_ret.find(time_ind) != to_ret.end()){
+        to_ret[time_ind] += tc; 
+      } else {
+        to_ret[time_ind] = tc;
+      }
     }
   }
   return to_ret;
