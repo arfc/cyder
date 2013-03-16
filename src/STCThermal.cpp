@@ -113,7 +113,7 @@ Temp STCThermal::getTempChange(mat_rsrc_ptr mat, int the_time){
   Temp to_ret;
   try{
     to_ret = getTempChange(mat).at(the_time);
-  } catch (const std::out_of_range& oor) {
+  } catch (const out_of_range& oor) {
     stringstream msg_ss;
     msg_ss << oor.what();
     msg_ss << "The time ";
@@ -121,7 +121,8 @@ Temp STCThermal::getTempChange(mat_rsrc_ptr mat, int the_time){
     msg_ss << " is not contained in the temperature change history."; 
     LOG(LEV_ERROR, "CydSTC") << msg_ss.str();
     throw CycRangeException(msg_ss.str());
-  }
+  } 
+
   return to_ret;
 }
 

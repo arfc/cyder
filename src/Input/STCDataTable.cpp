@@ -41,9 +41,9 @@ double STCDataTable::stc(Iso tope, int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int STCDataTable::indToVal(int ind, map<int,int> val_index){
+  int to_ret;
   try{
-    int to_ret =val_index.at(ind);
-    return to_ret;
+    to_ret =val_index.at(ind);
   } catch (const out_of_range& oor){
     stringstream msg_ss;
     msg_ss << oor.what();
@@ -53,6 +53,7 @@ int STCDataTable::indToVal(int ind, map<int,int> val_index){
     LOG(LEV_ERROR, "CydSTC") << msg_ss.str();
     throw CycRangeException(msg_ss.str());
   }
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

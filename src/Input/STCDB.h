@@ -72,7 +72,7 @@ public:
 
     @param mat the struct describing a material
     */
-  std::string mat_name(th_params_t th_params);
+  const std::string mat_name(th_params_t th_params) const;
 
   /**
     Finds the name of the table in the database for the mat struct .
@@ -89,7 +89,7 @@ public:
      @param db the database to query
      @param table_name the name of the table to query
     */
-  std::map<Iso, int> iso_index(SqliteDb* db, std::string table_name);
+  const std::map<Iso, int> iso_index(SqliteDb* db, std::string table_name) const;
 
   /**
      This returns the time_index for a particular db and mat struct.
@@ -98,7 +98,7 @@ public:
      @param db the database to query
      @param table_name the name of the table to query
     */
-  std::map<int, int> time_index(SqliteDb* db, std::string table_name);
+  const std::map<int, int> time_index(SqliteDb* db, std::string table_name) const;
 
 
   /** 
@@ -170,7 +170,7 @@ public:
 protected:
 
   /// Returns a map from values to indices of the query result
-  std::map<int, int> getIndex(std::vector<StrList>);
+  const std::map<int, int> getIndex(std::vector<StrList>) const;
 
   /// Returns a vector of distinct values of the query result
   std::vector<double> getRange(std::vector<StrList> vals);

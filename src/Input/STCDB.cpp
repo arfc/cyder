@@ -7,6 +7,7 @@
 #include "STCDB.h"
 
 #include "Env.h"
+#include "Logger.h"
 #include "CycException.h"
 
 using namespace std;
@@ -40,12 +41,13 @@ double STCDB::stc(th_params_t th_params, Iso tope, int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STCDataTablePtr STCDB::table(th_params_t th_params) {
-  STCDataTablePtr to_ret;
+  STCDataTablePtr to_ret; 
+  string name = mat_name(th_params);
   if(initialized(mat_name(th_params)) ){
-    to_ret = (*tables_.find(mat_name(th_params))).second;
+    to_ret = (*tables_.find(name)).second;
   } else {
     to_ret = initializeFromSQL(th_params);
-    tables_.insert(make_pair(mat_name(th_params),to_ret));
+    tables_.insert(make_pair(name,to_ret));
   }
   return to_ret;
 }
@@ -58,7 +60,7 @@ bool STCDB::initialized(string mat_name){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string STCDB::mat_name(th_params_t th_params){
+const string STCDB::mat_name(th_params_t th_params) const {
   string mat_name = 
     "a"+boost::lexical_cast<string>(th_params.alpha_th)+
     "k"+boost::lexical_cast<string>(th_params.k_th)+
@@ -90,23 +92,23 @@ string STCDB::whereClause(th_params_t th_params){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-map<Iso, int> STCDB::iso_index(SqliteDb* db, string table_id){
+const map<Iso, int> STCDB::iso_index(SqliteDb* db, string table_id) const {
 
   vector<StrList> inums = db->query("SELECT DISTINCT iso FROM " + table_id);
   return getIndex(inums);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-map<int, int> STCDB::time_index(SqliteDb* db, string table_id){
+const map<int, int> STCDB::time_index(SqliteDb* db, string table_id) const {
   vector<StrList> tnums = db->query("SELECT DISTINCT time FROM " + table_id);
   return getIndex(tnums);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-map<int, int> STCDB::getIndex(vector<StrList> vals){
+const map<int, int> STCDB::getIndex(vector<StrList> vals) const {
   map<int, int> to_ret;
   for(int i = 0; i < vals.size(); i++){
-    // // obtain the database row and declare the appropriate members
+    // obtain the database row and declare the appropriate members
     string vStr = vals.at(i).at(0);
     int the_val = atoi( vStr.c_str() );
     // log it accordingly
@@ -119,7 +121,7 @@ map<int, int> STCDB::getIndex(vector<StrList> vals){
 vector<double> STCDB::getRange(vector<StrList> vals){
   vector<double> to_ret;
   for(int i = 0; i < vals.size(); i++){
-    // // obtain the database row and declare the appropriate members
+    // obtain the database row and declare the appropriate members
     string vStr = vals.at(i).at(0);
     double the_val = atof( vStr.c_str() );
     // log it accordingly
@@ -132,7 +134,18 @@ vector<double> STCDB::getRange(vector<StrList> vals){
 string STCDB::table_id(SqliteDb* db, th_params_t th_params) {
   vector<StrList> mat_id = db->query("SELECT mat_id FROM STCData " + 
       whereClause(th_params));
-  string stc_table_id = "mat"+boost::lexical_cast<string>( mat_id.at(0).at(0) );
+  if( mat_id.empty() ) { 
+    stringstream ss("");
+    ss << "The material thermal parameters ";
+    ss << th_params.alpha_th;
+    ss << th_params.k_th;
+    ss << th_params.spacing;
+    ss << th_params.r_calc;
+    ss << " do not yet exist in the database.";
+    LOG(LEV_ERROR, "CydSTC") << ss.str();
+    throw CycException(ss.str()); 
+  }
+  string stc_table_id = "mat" + mat_id.at(0).at(0);
   return stc_table_id;
 }
 

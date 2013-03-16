@@ -19,13 +19,12 @@ protected:
   double alpha_th_;
   double k_th_;
   double spacing_;
-  CompMapPtr test_comp_;
   mat_rsrc_ptr test_mat_;
   int one_mol_;
   int u235_, am241_;
   Elem u_;
   double test_size_;
-  std::string mat_;
+  std::string mat_name_;
   MatDataTablePtr mat_table_;
   GeometryPtr geom_;
   Radius r_four_, r_five_;
@@ -35,6 +34,7 @@ protected:
 
   int Cs135_, Cs137_;
 
+  CompMapPtr test_comp_;
   CompMapPtr hot_comp_;
   CompMapPtr cold_comp_;
   CompMapPtr cs135_comp_;

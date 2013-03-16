@@ -6,8 +6,7 @@
 #include "STCThermalTests.h"
 #include "ThermalModelTests.h"
 #include "CycException.h"
-#include "Material.h"
-#include "MaterialDB.h"
+//#include "Material.h"
 #include "XMLQueryEngine.h"
 
 using namespace std;
@@ -21,13 +20,12 @@ void STCThermalTest::SetUp(){
   geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
 
   // other vars
-  k_th_ = .1; // ___  @TODO worry about units
-  alpha_th_ = .1; // ___ @TODO worry about units
+  k_th_ = 0.25; // ___  @TODO worry about units
+  alpha_th_ = 2.5; // ___ @TODO worry about units
   spacing_ = 20; // ___ @TODO worry about units
   r_calc_= 2; // ___ @TODO worry about units
   time_ = 0;
-  mat_ = "clay";
-  mat_table_=MDB->table(mat_);
+  mat_name_ = "clay";
 
   // composition set up
   u235_=92235;
@@ -61,6 +59,7 @@ void STCThermalTest::SetUp(){
   cs_mat_ = mat_rsrc_ptr(new Material(cs_comp_));
 
   // test_stc_thermal model setup
+  mat_table_ = MDB->table("clay");
   stc_ptr_ = STCThermalPtr(initThermalModel()); //initializes stc_ptr_
   therm_model_ptr_ = boost::dynamic_pointer_cast<ThermalModel>(stc_ptr_);
   stc_ptr_->set_mat_table(mat_table_);
@@ -83,7 +82,7 @@ STCThermalPtr STCThermalTest::initThermalModel(){
   ss << "<start>"
      << "  <alpha_th>" << alpha_th_ << "</alpha_th>"
      << "  <k_th>" << k_th_ << "</k_th>"
-     << "  <material_data>" << mat_ << "</material_data>"
+     << "  <material_data>" << mat_name_ << "</material_data>"
      << "  <r_calc>" << r_calc_ << "</r_calc>"
      << "  <spacing>" << spacing_ << "</spacing>"
      << "</start>";
