@@ -6,7 +6,6 @@
 #include "STCThermalTests.h"
 #include "ThermalModelTests.h"
 #include "CycException.h"
-//#include "Material.h"
 #include "XMLQueryEngine.h"
 
 using namespace std;

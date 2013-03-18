@@ -23,6 +23,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
         </element>
         <ref name="advective_velocity"/>
         <ref name="capacity"/>
+        <ref name="limiting_temp"/>
         <oneOrMore>
           <ref name = "incommodity"/>
         </oneOrMore>
@@ -221,6 +222,14 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
   <define name="k_th">
     <element name="k_th">
+      <data type="double">
+        <param name="minInclusive">0</param>
+      </data>
+    </element>
+  </define>
+
+  <define name="limiting_temp">
+    <element name="limiting_temp">
       <data type="double">
         <param name="minInclusive">0</param>
       </data>
