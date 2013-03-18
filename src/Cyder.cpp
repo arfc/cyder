@@ -64,6 +64,7 @@ Cyder::Cyder() :
   dz_(0),
   adv_vel_(0),
   capacity_(70000),
+  t_lim_(500),
   inventory_size_(70000),
   lifetime_(10000),
   start_op_yr_(2000),
@@ -84,6 +85,7 @@ Cyder::Cyder() :
   mapVars("dz", &dz_);
   mapVars("advective_velocity", &adv_vel_);
   mapVars("capacity", &capacity_);
+  mapVars("limiting_temp", &t_lim_);
   mapVars("inventorysize", &inventory_size_);
   mapVars("lifetime", &lifetime_);
   mapVars("startOperYear", &start_op_yr_);
@@ -198,6 +200,7 @@ void Cyder::cloneModuleMembersFrom(FacilityModel* source)
   dz_= src->dz_;
   adv_vel_ = src->adv_vel_;
   capacity_ = src->capacity_;
+  t_lim_ = src->t_lim_;
   inventory_size_ = src->inventory_size_;
   inventory_size_ = src->lifetime_;
   start_op_yr_ = src->start_op_yr_;
