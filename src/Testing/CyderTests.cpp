@@ -21,6 +21,7 @@ void CyderTest::SetUp(){
   dz_ = 1;
   adv_vel_ = .000631;
   capacity_ = 100;
+  t_lim_ = 100;
   in_commod_ = "in_commod";
   inventory_size_ = 70000;
   lifetime_ = 3000000;
@@ -85,6 +86,7 @@ Cyder* CyderTest::initSrcFacility(){
          << "  <dz>" << dz_ << "</dz>"
          << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
          << "  <capacity>" << capacity_ << "</capacity>"
+         << "  <limiting_temp>" << t_lim_ << "</limiting_temp>"
          << "  <incommodity>" << in_commod_ << "</incommodity>"
          << "  <inventorysize>" << inventory_size_ << "</inventorysize>"
          << "  <lifetime>" << lifetime_ << "</lifetime>"
@@ -177,6 +179,7 @@ TEST_F(CyderTest, initial_state) {
   EXPECT_EQ(0, src_facility_->checkInventory());
   EXPECT_EQ(capacity_, src_facility_->getCapacity(in_commod_));
   EXPECT_EQ(adv_vel_, src_facility_->adv_vel());
+  EXPECT_EQ(t_lim_, src_facility_->t_lim());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

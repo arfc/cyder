@@ -17,7 +17,7 @@ protected:
   double wpinnerradius_, wpouterradius_; 
   double binnerradius_, bouterradius_;
   double ffinnerradius_, ffouterradius_; 
-  double x_,y_,z_,dx_,dy_,dz_,adv_vel_,capacity_,inventory_size_;
+  double x_,y_,z_,dx_,dy_,dz_,adv_vel_,capacity_,t_lim_,inventory_size_;
   std::string in_commod_, cname_, componenttype_;
   std::string wfname_, wftype_;
   std::string wpname_, wptype_;
