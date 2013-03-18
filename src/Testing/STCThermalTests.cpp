@@ -53,10 +53,15 @@ void STCThermalTest::SetUp(){
   (*cs_comp_)[Cs137_] = 1000;
 
   hot_mat_ = mat_rsrc_ptr(new Material(hot_comp_));
+  hot_mat_->setQuantity(2000);
   cold_mat_ = mat_rsrc_ptr(new Material(cold_comp_));
+  cold_mat_->setQuantity(1000);
   cs137_mat_ = mat_rsrc_ptr(new Material(cs137_comp_));
+  cs137_mat_->setQuantity(1000);
   cs135_mat_ = mat_rsrc_ptr(new Material(cs135_comp_));
+  cs135_mat_->setQuantity(1000);
   cs_mat_ = mat_rsrc_ptr(new Material(cs_comp_));
+  cs_mat_->setQuantity(2000);
 
   // test_stc_thermal model setup
   mat_table_ = MDB->table("clay");
@@ -177,13 +182,15 @@ TEST_F(STCThermalTest, set_spacing){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, get_temp_change){
-  for(int the_time = 1; the_time<100; ++the_time) {
+  for(int the_time = 1; the_time<10; ++the_time) {
+    EXPECT_GT(stc_ptr_->getTempChange(Cs137_, the_time), 0);
+    EXPECT_FLOAT_EQ(1, stc_ptr_->getTempChange(Cs137_, the_time));
     EXPECT_NO_THROW(stc_ptr_->getTempChange(hot_mat_, the_time));
-    EXPECT_GT(0, stc_ptr_->getTempChange(hot_mat_, the_time));
     EXPECT_NO_THROW(stc_ptr_->getTempChange(cold_mat_, the_time));
+    EXPECT_GT(stc_ptr_->getTempChange(hot_mat_, the_time), 0);
     Temp cold=stc_ptr_->getTempChange(cold_mat_, the_time);
     Temp hot=stc_ptr_->getTempChange(hot_mat_, the_time);
-    EXPECT_GT(cold, hot);
+    EXPECT_GT(hot, cold);
   }
 }
 

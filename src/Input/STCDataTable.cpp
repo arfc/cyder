@@ -36,6 +36,19 @@ STCDataTable::~STCDataTable() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double STCDataTable::stc(Iso tope, int the_time){
+  int iso_ind;
+  int time_ind;
+  try {
+    iso_ind = isoToInd(tope);
+  } catch (CycRangeException& cre) {
+    return 0;
+  }
+  try { 
+    time_ind = timeToInd(the_time);
+  } catch (CycRangeException& cre){
+    /// @TODO interpolate between closest times
+    return 0;
+  }
   return stc_array_[isoToInd(tope)][timeToInd(the_time)];
 }
 
