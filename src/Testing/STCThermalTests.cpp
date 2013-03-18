@@ -249,7 +249,7 @@ TEST_F(STCThermalTest, getVolume) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, superimposeIsos){
   Temp cs135, cs137, cs;
-  for(int the_time = 0; the_time<100; ++the_time) {
+  for(int the_time = 1; the_time<10; ++the_time) {
     cs137=stc_ptr_->getTempChange(cs137_mat_, the_time);
     cs135=stc_ptr_->getTempChange(cs135_mat_, the_time);
     cs=stc_ptr_->getTempChange(cs_mat_, the_time);
