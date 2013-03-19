@@ -120,8 +120,7 @@ Acknowledgements
 ------------------------------------------------------------------
     
 This work is supported by the U.S. Department of Energy, Basic Energy Sciences, 
-Office of Nuclear Energy, under contract # DE-AC02-06CH11357. In the past, it 
-has been supported by the University of Wisconsin - Madison Graduate School.
+Office of Nuclear Energy, under contract # DE-AC02-06CH11357.
 
 
 .. _`Cyder Homepage`: http://cyder.github.com
