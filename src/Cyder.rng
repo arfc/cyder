@@ -272,6 +272,14 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
+  <define name="r_calc">
+    <element name="r_calc">
+      <data type="double">
+        <param name="minInclusive">0</param>
+      </data>
+    </element>
+  </define>
+
   <define name="source_concentration">
     <element name="source_concentration">
       <data type="double">
