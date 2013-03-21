@@ -13,6 +13,7 @@
 #include "Logger.h"
 #include "Cyder.h"
 #include "EventManager.h"
+#include "StubThermal.h"
 
 
 
@@ -75,7 +76,9 @@ Cyder::Cyder() :
   commod_wf_map_(std::map< std::string, ComponentPtr >()),
   wf_wp_map_(std::map< std::string, ComponentPtr >()),
   far_field_(ComponentPtr(new Component(this))),
-  buffer_template_(ComponentPtr(new Component(this))) {
+  buffer_template_(ComponentPtr(new Component(this))),
+  thermal_model_(StubThermal::create())
+{
 
   mapVars("x", &x_);
   mapVars("y", &y_);
