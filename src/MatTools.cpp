@@ -22,6 +22,7 @@ using namespace std;
 pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
   IsoVector vec;
   CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
+  double tot = 0;
   double kg = 0;
 
   if( !mats.empty() ){ 
@@ -31,13 +32,14 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
     CompMap::const_iterator comp;
 
     for(mat = mats.begin(); mat != mats.end(); ++mat){ 
-      kg += (*mat)->mass(MassUnit(KG));
+      kg = (*mat)->mass(MassUnit(KG));
+      tot += kg;
       comp_to_add = (*mat)->isoVector().comp();
       comp_to_add->massify();
       for(comp = (*comp_to_add).begin(); comp != (*comp_to_add).end(); ++comp) {
         iso = comp->first;
         if(sum_comp->count(iso)!=0) {
-          (*sum_comp)[iso] = (*sum_comp)[iso] + (comp->second)*kg;
+          (*sum_comp)[iso] += (comp->second)*kg;
         } else { 
           (*sum_comp)[iso] = (comp->second)*kg;
         }
@@ -47,7 +49,7 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
     (*sum_comp)[92235] = 0;
   }
   vec = IsoVector(sum_comp);
-  return make_pair(vec, kg);
+  return make_pair(vec, tot);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

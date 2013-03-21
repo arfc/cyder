@@ -149,8 +149,8 @@ double DegRateNuclide::contained_mass(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::source_term_bc(){
-  return make_pair(contained_vec(last_degraded()), 
-      tot_deg()*shared_from_this()->contained_mass(last_degraded()));
+  return make_pair(contained_vec(last_updated()), 
+      tot_deg()*shared_from_this()->contained_mass(last_updated()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -268,10 +268,12 @@ void DegRateNuclide::update_vec_hist(int the_time){
 void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
-  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    source_term = (*daughter)->source_term_bc();
-    if( source_term.second > 0 ){
-      absorb((*daughter)->extract(source_term.first.comp(), source_term.second));
+  if( !daughters.empty() ){
+    for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+      source_term = (*daughter)->source_term_bc();
+      if( source_term.second > 0 ){
+        absorb((*daughter)->extract(source_term.first.comp(), source_term.second));
+      }
     }
   }
 }

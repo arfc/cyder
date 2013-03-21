@@ -806,6 +806,9 @@ class Query(object):
         t = self.data_labels[time_dim]  
         run_sum = zeros(self.data.shape[time_dim])
 
+        # Turn the comptypes and ids into names
+        compTypes = self.get_comp_types
+
         # Turn the list of stream labels into a list of indices.
         indList = [0] * len(stream_list)
         for i, s in enumerate(stream_list):
@@ -822,7 +825,7 @@ class Query(object):
                                      width=1,
                                      bottom=run_sum[time], 
                                      color=cm.jet(float(ind/20.), alpha=0.5), 
-                                     label=str(ind))
+                                     label=str(CompTypes[ind]+ind))
               run_sum[time] += plot_data[time, ind]
             legend_items.append(the_plot[0])
             legend_ids.append(indList[ind])

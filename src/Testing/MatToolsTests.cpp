@@ -68,6 +68,32 @@ TEST_F(MatToolsTest, sum_mats_one){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, sum_mats_small_entry){
+
+  CompMapPtr comp_to_add;
+  comp_to_add = CompMapPtr(new CompMap(MASS));
+  (*comp_to_add)[u235_] = 1;
+  (*comp_to_add)[am241_] = 1;
+  mat_rsrc_ptr mat_to_add = mat_rsrc_ptr(new Material(comp_to_add));
+  mat_to_add->setQuantity(2*test_size_);
+
+  deque<mat_rsrc_ptr> mats;
+  mats.push_back(test_mat_);
+  mats.push_back(mat_to_add);
+
+  double exp_u235 = test_mat_->mass(u235_) + mat_to_add->mass(u235_);
+  double exp_am241 = mat_to_add->mass(am241_);
+  double exp_tot = test_mat_->mass(MassUnit(KG)) + mat_to_add->mass(MassUnit(KG));
+  ASSERT_FLOAT_EQ(3*test_size_, exp_tot);
+
+  pair<IsoVector, double> the_sum;
+  the_sum = MatTools::sum_mats(mats);
+  EXPECT_FLOAT_EQ(exp_tot, the_sum.second);
+  EXPECT_FLOAT_EQ(exp_u235/exp_tot, the_sum.first.comp()->massFraction(u235_));
+  EXPECT_FLOAT_EQ(exp_am241/exp_tot, the_sum.first.comp()->massFraction(am241_));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, extract){
   //@TODO this is just a placeholder, to remind you to write a test.
 }

@@ -18,7 +18,7 @@ def print_contaminants(dbname):
 
 
 def query_contaminants(dbname):
-    return Query(dbname, 'contaminants', t0=9900, tf=10000)
+    return Query(dbname, 'contaminants', t0=0, tf=100)
 
 
 def plot_contaminants(dbname, plttype, pltname, stream_dim='IsoID', select_dim=None,
