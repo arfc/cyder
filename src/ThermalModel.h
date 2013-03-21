@@ -32,6 +32,7 @@ typedef double Power;
 enum ThermalModelType{
   LUMPED_THERMAL,
   STUB_THERMAL, 
+  STC_THERMAL, 
   LAST_THERMAL};  
 
 /// A shared pointer for the abstract ThermalModel class
@@ -45,7 +46,7 @@ typedef boost::shared_ptr<ThermalModel> ThermalModelPtr;
    will share this virtual interface so that they can be interchanged within the  
    Cyder.
  */
-class ThermalModel {
+class ThermalModel : public boost::enable_shared_from_this<ThermalModel> {
 
 public:
 
@@ -66,7 +67,7 @@ public:
      
      @param src is the component being copied
    */
-  virtual void copy(ThermalModelPtr src)=0; 
+  virtual void copy(const ThermalModel& src)=0; 
 
   /**
      standard verbose printer should include current temp and concentrations
@@ -89,13 +90,23 @@ public:
      get the name of the thermal model implementation type
    */
   virtual std::string name()=0;
+   /**
+      get the peak Temperature this object will experience during the 
+      simulation
+    */
+  virtual Temp peak_temp() = 0;
 
   /**
-     get the peak Temperature this object will experience during the simulation
-     
-     
+     This function says whether or not the material is acceptable to 
+     this repository at r_lim for the limit t_lim
+
+     @param mat the material whose whose contribution to query 
+     @param r_lim the limiting radius
+     @param t_lim the limiting temperature  
+
+     @return mat_acceptable (true when acceptable, false otherwise)
    */
-  virtual Temp peak_temp() = 0;
+  virtual bool mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim) = 0;
 
   /**
      get the Temperature
@@ -110,6 +121,8 @@ public:
      @param geom the geometry of the component, a shared pointer
     */
   void set_geom(GeometryPtr geom){geom_ = GeometryPtr(geom);};
+
+  GeometryPtr geom(){return geom_;};
 
   /**
      set the MatDataTablePtr shared pointer

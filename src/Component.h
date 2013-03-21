@@ -11,8 +11,8 @@
 
 #include "Material.h"
 #include "MaterialDB.h"
-#include "ThermalModel.h"
-#include "NuclideModel.h"
+#include "ThermalModelFactory.h"
+#include "NuclideModelFactory.h"
 #include "Geometry.h"
 #include "Model.h"
 
@@ -178,20 +178,6 @@ public:
    */
   ComponentType componentEnum(std::string type);
   
-  /**
-     Enumerates a string if it is one of the named ThermalModelTypes
-     
-     @param type the name of the ThermalModelType (i.e. StubThermal)
-   */
-  ThermalModelType thermalEnum(std::string type);
-
-  /** 
-     Enumerates a string if it is one of the named NuclideModelTypes
-     
-     @param type the name of the NuclideModelType (i.e. StubNuclide)
-   */
-  NuclideModelType nuclideEnum(std::string type);
-
   /** 
      Returns a new thermal model of the string type QueryEngine object
      
@@ -400,12 +386,6 @@ protected:
      Stores the next available component ID
    */
   static int nextID_;
-
-  /// ThermalModleType names list
-  static std::string thermal_type_names_[LAST_THERMAL];
-
-  /// NuclideModelType names list
-  static std::string nuclide_type_names_[LAST_NUCLIDE];
 
   /**
      The composition history of this Component, in the form of a map whose

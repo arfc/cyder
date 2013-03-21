@@ -19,14 +19,7 @@ void LumpedThermal::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LumpedThermalPtr LumpedThermal::deepCopy(){
-  LumpedThermalPtr toRet = LumpedThermalPtr(new LumpedThermal());
-  toRet->copy(LumpedThermalPtr(this));
-  return toRet;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void LumpedThermal::copy(ThermalModelPtr src){
+void LumpedThermal::copy(const ThermalModel& src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -47,6 +40,12 @@ Temp LumpedThermal::peak_temp(){
   TempHist::iterator stop = temp_hist_.end();
   TempHist::iterator max = max_element(start, stop);
   return (*max).second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+bool LumpedThermal::mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim){
+  /// @TODO obviously, put some logic here.
+  return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

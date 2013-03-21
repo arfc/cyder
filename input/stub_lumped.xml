@@ -49,11 +49,15 @@
         <dz>100</dz>
         <advective_velocity>0.000631</advective_velocity>
         <capacity>1</capacity>
+        <limiting_temp>1000</limiting_temp>
         <incommodity>waste</incommodity>
         <inventorysize>20</inventorysize>
         <lifetime>1000</lifetime>
         <startOperMonth>1</startOperMonth>
         <startOperYear>2000</startOperYear>
+        <thermalmodel>
+          <StubThermal/>
+        </thermalmodel>
         <component>
           <name>WF</name>
           <innerradius>0</innerradius>

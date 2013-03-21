@@ -48,14 +48,14 @@ public:
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
     */
-  static ThermalModelPtr create (){ return ThermalModelPtr(new StubThermal()); };
+  static StubThermalPtr create (){ return StubThermalPtr(new StubThermal()); };
 
   /**
      A constructor for the Lumped Nuclide Model that returns a shared pointer.
 
      @param qe is the QueryEngine object containing intialization info
     */
-  static ThermalModelPtr create (QueryEngine* qe){ return ThermalModelPtr(new StubThermal(qe)); };
+  static StubThermalPtr create (QueryEngine* qe){ return StubThermalPtr(new StubThermal(qe)); };
 
   /**
      initializes the model parameters from an xmlNodePtr
@@ -65,16 +65,11 @@ public:
   virtual void initModuleMembers(QueryEngine* qe); 
 
   /**
-     A function that copies deeply.
-   */
-  StubThermalPtr deepCopy();
-
-  /**
      copies a component and its parameters from another
      
      @param src is the component being copied
    */
-  virtual void copy(ThermalModelPtr src); 
+  virtual void copy(const ThermalModel& src); 
 
   /**
      standard verbose printer includes current temp and concentrations
@@ -101,6 +96,18 @@ public:
      @return impl_name_ the name of the ThermalModel implementation 
    */
   virtual std::string name(){return "STUB_THERMAL";}; 
+
+  /**
+     This function says whether or not the material is acceptable to 
+     this repository at r_lim for the limit t_lim
+
+     @param mat the material whose whose contribution to query 
+     @param r_lim the limiting radius
+     @param t_lim the limiting temperature  
+
+     @return mat_acceptable (true when acceptable, false otherwise)  
+    */
+  virtual bool mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim);
   
   /**
      gets the peak temperature that this component will experience on the 

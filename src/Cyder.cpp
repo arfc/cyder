@@ -64,6 +64,7 @@ Cyder::Cyder() :
   dz_(0),
   adv_vel_(0),
   capacity_(70000),
+  t_lim_(500),
   inventory_size_(70000),
   lifetime_(10000),
   start_op_yr_(2000),
@@ -84,6 +85,7 @@ Cyder::Cyder() :
   mapVars("dz", &dz_);
   mapVars("advective_velocity", &adv_vel_);
   mapVars("capacity", &capacity_);
+  mapVars("limiting_temp", &t_lim_);
   mapVars("inventorysize", &inventory_size_);
   mapVars("lifetime", &lifetime_);
   mapVars("startOperYear", &start_op_yr_);
@@ -104,7 +106,7 @@ void Cyder::initModuleMembers(QueryEngine* qe) {
       err += item->second.type().name();
       err += " data type for variable: ";
       err += item->first;
-      err += " is not yet supported by the Cyder.";
+      err += " is not yet supported by Cyder.";
       LOG(LEV_ERROR,"GenRepoFac")<<err;;
       throw CycException(err);
     }
@@ -116,6 +118,12 @@ void Cyder::initModuleMembers(QueryEngine* qe) {
   for (int i = 0; i < n_incommodities; i++) {
     in_commods_.push_back(qe->getElementContent("incommodity",i));
   }
+
+  // get thermal_model_ for capacity estimation
+  QueryEngine* thermal_model_input;
+  thermal_model_input = qe->queryElement("thermalmodel");
+  thermal_model_ = ThermalModelFactory::thermalModel(thermal_model_input); /// @TODO has no geom
+  thermal_model_->initModuleMembers(thermal_model_input);
 
   // get components
   int n_components = qe->nElementsMatchingQuery("component");
@@ -192,11 +200,13 @@ void Cyder::cloneModuleMembersFrom(FacilityModel* source)
   dz_= src->dz_;
   adv_vel_ = src->adv_vel_;
   capacity_ = src->capacity_;
+  t_lim_ = src->t_lim_;
   inventory_size_ = src->inventory_size_;
   inventory_size_ = src->lifetime_;
   start_op_yr_ = src->start_op_yr_;
   start_op_mo_ = src->start_op_mo_;
   in_commods_ = src->in_commods_;
+  thermal_model_->copy(*(src->thermal_model_));
   far_field_->copy(src->far_field_);
   buffer_template_ = src->buffer_template_;
   wp_templates_ = src->wp_templates_;
@@ -471,7 +481,7 @@ ComponentPtr Cyder::conditionWaste(WasteStream waste_stream){
   if (found_pair == commod_wf_map_.end()){
     std::string err_msg = "The commodity '";
     err_msg += waste_stream.second;
-    err_msg +="' does not have a matching WF in the Cyder.";
+    err_msg +="' does not have a matching WF in Cyder.";
     throw CycException(err_msg);
   } else {
     chosen_wf_template = commod_wf_map_[waste_stream.second];
@@ -496,7 +506,7 @@ ComponentPtr Cyder::packageWaste(ComponentPtr waste_form){
   if (chosen_wp_template == NULL){
     std::string err_msg = "The waste form '";
     err_msg += (waste_form)->name();
-    err_msg +="' does not have a matching WP in the Cyder.";
+    err_msg +="' does not have a matching WP in Cyder.";
     throw CycException(err_msg);
   }
   ComponentPtr toRet;
@@ -602,6 +612,10 @@ ComponentPtr Cyder::setPlacement(ComponentPtr comp){
   comp->addComponentToTable(comp);
   return comp; 
 }
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool Cyder::mat_acceptable(mat_rsrc_ptr mat){
+  return thermal_model_->mat_acceptable(mat, r_lim_, t_lim_);
+}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::transportHeat(int time){
@@ -677,6 +691,18 @@ void Cyder::updateContaminantTable(int the_time) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::mapVars(std::string name, boost::any val) {
   member_refs_[name] = val;
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Cyder::set_r_lim(Radius r_lim){
+  MatTools::validate_pos(r_lim);
+  r_lim_=r_lim;
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Cyder::set_t_lim(Temp t_lim){
+  MatTools::validate_pos(t_lim);
+  t_lim_=t_lim;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
