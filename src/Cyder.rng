@@ -44,6 +44,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
             <ref name="name"/>
             <ref name="innerradius"/>
             <ref name="outerradius"/>
+            <ref name="length"/>
             <ref name="componenttype"/>
             <ref name="material_data"/>
             <element name="thermalmodel">
@@ -228,6 +229,14 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
+  <define name="length">
+    <element name="length">
+      <data type="double">
+        <param name="minExclusive">0</param>
+      </data>
+    </element>
+  </define>
+
   <define name="limiting_temp">
     <element name="limiting_temp">
       <data type="double">
@@ -350,7 +359,4 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   </define>
 
 
-</grammar>
-
-
-    
+</grammar> 
