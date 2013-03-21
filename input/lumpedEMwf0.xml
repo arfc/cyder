@@ -58,6 +58,7 @@
           <name>WF</name>
           <innerradius>0</innerradius>
           <outerradius>1</outerradius>
+          <length>1</length>
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
@@ -81,6 +82,7 @@
           <name>WP</name>
           <innerradius>1</innerradius>
           <outerradius>2</outerradius>
+          <length>1</length>
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
@@ -104,6 +106,8 @@
           <name>BUFFER</name>
           <innerradius>2</innerradius>
           <outerradius>3</outerradius>
+          <length>1</length>
+          <length>1</length>
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
@@ -126,6 +130,7 @@
           <name>FF</name>
           <innerradius>3</innerradius>
           <outerradius>100</outerradius>
+          <length>1</length>
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>
