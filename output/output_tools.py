@@ -801,18 +801,30 @@ class Query(object):
 
         # For RANDOM colors:
         #colors = pylab.rand(len(stream_list),len(stream_list))
-
+        
         # get time dimension labels
         t = self.data_labels[time_dim]  
         run_sum = zeros(self.data.shape[time_dim])
-
-        # Turn the comptypes and ids into names
-        compTypes = self.get_comp_types
 
         # Turn the list of stream labels into a list of indices.
         indList = [0] * len(stream_list)
         for i, s in enumerate(stream_list):
             indList[i] = self.data_labels[stream_dim].index(s)
+
+        # get labels for the stream dimension
+        stream_labels = {}
+        if stream_dim == "CompID":
+            # get the component types
+            comp_types = self.get_comp_types
+            for comp_id, comp_type in comp_types.iteritems() : 
+                # "WF3"
+                stream_labels[indList[comp_id]] = str(comp_type + comp_id)
+        elif stream_dim == "IsoID":
+            # get the isotope names
+            # "92235"
+            stream_labels = self.data_labels[stream_dim]
+
+            
         # Iterate through the streams and add them to the plot.
         legend_items=[]
         legend_ids=[]
@@ -825,10 +837,10 @@ class Query(object):
                                      width=1,
                                      bottom=run_sum[time], 
                                      color=cm.jet(float(ind/20.), alpha=0.5), 
-                                     label=str(CompTypes[ind]+ind))
+                                     label=ind)
               run_sum[time] += plot_data[time, ind]
             legend_items.append(the_plot[0])
-            legend_ids.append(indList[ind])
+            legend_ids.append(stream_labels[self.data_labels[stream_dim][ind]])
 
         self.ax.set_xlim(left=0)
         self.ax.set_ylabel(self.data_units[3])
