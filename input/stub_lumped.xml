@@ -40,7 +40,7 @@
   <facility>
     <name>Repository</name>
     <model>
-      <GenericRepository>
+      <Cyder>
         <x>0</x>
         <y>0</y>
         <z>0</z>
@@ -152,7 +152,7 @@
             </LumpedNuclide>
           </nuclidemodel>
         </component>
-      </GenericRepository>
+      </Cyder>
     </model>
     <incommodity>waste</incommodity>
   </facility>
