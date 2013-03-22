@@ -437,7 +437,7 @@ class Query(object):
         return actList
 
 ###############################################################################
-    def get_comp_types(self):
+    def get_comp_names(self):
         """
         Count and record how many Components exist during the range of the
         calculation.
@@ -446,7 +446,7 @@ class Query(object):
 
         compTypes = {}
         c.execute("SELECT components.CompID, " +
-                  "components.Type FROM components")
+                  "components.name FROM components")
 
         for row in c:
             if row[0] not in compTypes:
@@ -796,8 +796,6 @@ class Query(object):
 
         self.set_up_figure()
 
-        self.ax.set_title(self.data_axes[select_dim] + " = " + 
-            str(self.data_labels[select_dim].index(selectItem)))
 
         # For RANDOM colors:
         #colors = pylab.rand(len(stream_list),len(stream_list))
@@ -813,16 +811,27 @@ class Query(object):
 
         # get labels for the stream dimension
         stream_labels = {}
-        if stream_dim == "CompID":
+        if streamDim == 'CompID':
             # get the component types
-            comp_types = self.get_comp_types
-            for comp_id, comp_type in comp_types.iteritems() : 
+            comp_names = self.get_comp_names()
+            for comp_id, comp_name in comp_names.iteritems() : 
                 # "WF3"
-                stream_labels[indList[comp_id]] = str(comp_type + comp_id)
-        elif stream_dim == "IsoID":
+                stream_labels[comp_id] = comp_name + str(comp_id)
+            print stream_labels
+            self.ax.set_title(self.data_axes[select_dim] + " = " + 
+                    str(selectItem))
+        elif streamDim == 'IsoID':
             # get the isotope names
             # "92235"
-            stream_labels = self.data_labels[stream_dim]
+            for i in self.data_labels[stream_dim] :
+              stream_labels[i] = str(i)
+            print stream_labels
+            self.ax.set_title(self.data_axes[select_dim] + " = " + 
+                    self.get_comp_names()[selectItem] + str(selectItem))
+        else : 
+            raise QueryException(
+                    "Error: Bar Plots are currently supported only for CompID \
+                    and IsoID streamDims.")
 
             
         # Iterate through the streams and add them to the plot.
@@ -836,7 +845,7 @@ class Query(object):
                                      plot_data[time, ind], 
                                      width=1,
                                      bottom=run_sum[time], 
-                                     color=cm.jet(float(ind/20.), alpha=0.5), 
+                                     color=cm.jet(float(ind)/float(len(stream_list)), alpha=0.5), 
                                      label=ind)
               run_sum[time] += plot_data[time, ind]
             legend_items.append(the_plot[0])
