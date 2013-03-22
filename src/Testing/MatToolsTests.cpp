@@ -282,3 +282,16 @@ TEST_F(MatToolsTest, V_ms){
 }
 
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, isoToElem){
+  int u235 = 92235;
+  int u = 92;
+  int pu600 = 94600; // yes, I get that this isn't real, it's a TEST.
+  int pu = 94;
+  int o16 = 8016;
+  int o = 8;
+  EXPECT_EQ(u, MatTools::isoToElem(u235));
+  EXPECT_EQ(pu, MatTools::isoToElem(pu600));
+  EXPECT_EQ(o, MatTools::isoToElem(o16));
+}
+

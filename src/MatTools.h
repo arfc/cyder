@@ -222,6 +222,15 @@ public:
     @return to_ret the sum of orig and to_add
     */
   static IsoConcMap addConcMaps(IsoConcMap orig, IsoConcMap to_add);
+
+  /** 
+    Converts a standard isoid into an element. 
+
+    @param iso the isotope id (i.e. 92235) to convert
+
+    @return elem the element id (i.e. 92) that corresponds to iso
+    */
+  static int isoToElem(int iso);
   
 };
 #endif

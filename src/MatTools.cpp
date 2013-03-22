@@ -209,3 +209,8 @@ IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
   return to_ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+int MatTools::isoToElem(int iso) { 
+  int N = iso % 1000;
+  return (iso-N)/1000;
+}
