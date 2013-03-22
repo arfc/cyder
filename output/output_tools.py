@@ -817,7 +817,6 @@ class Query(object):
             for comp_id, comp_name in comp_names.iteritems() : 
                 # "WF3"
                 stream_labels[comp_id] = comp_name + str(comp_id)
-            print stream_labels
             self.ax.set_title(self.data_axes[select_dim] + " = " + 
                     str(selectItem))
         elif streamDim == 'IsoID':
@@ -825,7 +824,6 @@ class Query(object):
             # "92235"
             for i in self.data_labels[stream_dim] :
               stream_labels[i] = str(i)
-            print stream_labels
             self.ax.set_title(self.data_axes[select_dim] + " = " + 
                     self.get_comp_names()[selectItem] + str(selectItem))
         else : 
@@ -845,7 +843,8 @@ class Query(object):
                                      plot_data[time, ind], 
                                      width=1,
                                      bottom=run_sum[time], 
-                                     color=cm.jet(float(ind)/float(len(stream_list)), alpha=0.5), 
+                                     color=cm.jet(float(ind)/float(len(stream_list)), 
+                                         alpha=0.5), 
                                      label=ind)
               run_sum[time] += plot_data[time, ind]
             legend_items.append(the_plot[0])
