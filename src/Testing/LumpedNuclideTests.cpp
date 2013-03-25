@@ -27,7 +27,6 @@ void LumpedNuclideTest::SetUp(){
   theta_ = 0.3; // percent porosity
   adv_vel_ = 1; // m/yr
   time_ = 0;
-  t_t_ = 1;
 
   // composition set up
   u_=92;
@@ -70,7 +69,6 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <porosity>" << theta_ << "</porosity>"
-     << "  <transit_time>" << t_t_ << "</transit_time>"
      << "  <formulation>"
      << "    <EM/>"
      << "  </formulation>"
@@ -86,7 +84,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, initial_state){
-  EXPECT_EQ(t_t_, lumped_ptr_->t_t());
+  EXPECT_EQ(FormulationType(EM), lumped_ptr_->formulation());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, defaultConstructor) {
@@ -103,7 +101,6 @@ TEST_F(LumpedNuclideTest, copy) {
   NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
   EXPECT_NO_THROW(test_copy->copy(*lumped_shared_ptr));
   EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
-  EXPECT_FLOAT_EQ(lumped_ptr_->t_t(), test_copy->t_t());
   EXPECT_FLOAT_EQ(lumped_ptr_->V_T(), test_copy->V_T());
   EXPECT_GT(test_copy->V_T(),0);
   EXPECT_FLOAT_EQ(lumped_ptr_->V_f(), test_copy->V_f());

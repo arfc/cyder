@@ -17,7 +17,6 @@ using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide() : 
-  t_t_(0),
   Pe_(0),
   porosity_(0),
   formulation_(LAST_FORMULATION_TYPE) 
@@ -25,7 +24,6 @@ LumpedNuclide::LumpedNuclide() :
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
-  t_t_ = 0;
   v_ = 0;
   Pe_ = 0;
   vec_hist_ = VecHist();
@@ -35,7 +33,6 @@ LumpedNuclide::LumpedNuclide() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
-  t_t_(0),
   Pe_(0),
   porosity_(0),
   formulation_(LAST_FORMULATION_TYPE)
@@ -56,7 +53,6 @@ LumpedNuclide::~LumpedNuclide(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
-  t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
 
@@ -102,7 +98,6 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   const LumpedNuclide* src_ptr = dynamic_cast<const LumpedNuclide*>(&src);
 
   set_last_updated(0);
-  set_t_t(src_ptr->t_t());
   set_Pe(src_ptr->Pe());
   set_porosity(src_ptr->porosity());
   set_formulation(src_ptr->formulation());
@@ -420,7 +415,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
       st = (*daughter)->source_term_bc();
       vol = (*daughter)->V_ff();
       vol_sum += vol;
-      if(mixed.second==0){
+      if(mixed.second == NULL){
         mixed.first=st.first;
         mixed.second=st.second;
       } else {
@@ -437,7 +432,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
-  double theta = daughter->V_ff()/daughter->geom()->length();
+  double theta = daughter->V_ff()/daughter->V_T();
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
       dt*theta*v());
 
