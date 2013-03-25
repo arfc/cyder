@@ -422,10 +422,10 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
         mixed.first=st.first;
         mixed.second=st.second;
       } else {
-        absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
         mixed.second +=st.second;
         mixed.first.mix(st.first,mixed.second/st.second);
       }
+      absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
     }
     C_0 = MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
   }
