@@ -19,12 +19,12 @@ using boost::lexical_cast;
 LumpedNuclide::LumpedNuclide() : 
   Pe_(0),
   porosity_(0),
+  v_(0),
   formulation_(LAST_FORMULATION_TYPE) 
 { 
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
-  v_ = 0;
   Pe_ = 0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
@@ -35,6 +35,7 @@ LumpedNuclide::LumpedNuclide() :
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   Pe_(0),
   porosity_(0),
+  v_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -102,6 +103,7 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   set_porosity(src_ptr->porosity());
   set_formulation(src_ptr->formulation());
   set_C_0(IsoConcMap());
+  v_=src_ptr->v();
 
   // copy the geometry AND the centroid, it should be reset later.
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
