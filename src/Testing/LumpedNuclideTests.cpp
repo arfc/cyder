@@ -110,6 +110,7 @@ TEST_F(LumpedNuclideTest, copy) {
   EXPECT_FLOAT_EQ(lumped_ptr_->porosity(), test_copy->porosity());
   EXPECT_EQ(lumped_ptr_->formulation(), test_copy->formulation());
   EXPECT_FLOAT_EQ(lumped_ptr_->last_updated(), test_copy->last_updated());
+  EXPECT_FLOAT_EQ(lumped_ptr_->v(), test_copy->v());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
