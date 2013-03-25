@@ -404,6 +404,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
   
   pair<IsoVector, double> st;
   pair<IsoVector, double> mixed;
+  mixed = make_pair(IsoVector(), 0);
   Volume vol(0);
   Volume vol_sum(0);
   IsoConcMap C_0;
@@ -415,7 +416,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
       st = (*daughter)->source_term_bc();
       vol = (*daughter)->V_ff();
       vol_sum += vol;
-      if(mixed.second == NULL){
+      if(mixed.second == 0){
         mixed.first=st.first;
         mixed.second=st.second;
       } else {
