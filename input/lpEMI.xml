@@ -73,7 +73,7 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
+              <porosity>0.1</porosity>
               <formulation>
                 <EM/>
               </formulation>
@@ -119,7 +119,7 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
+              <porosity>0.1</porosity>
               <formulation>
                 <EM/>
               </formulation>
@@ -141,7 +141,7 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
+              <porosity>0.1</porosity>
               <formulation>
                 <EM/>
               </formulation>
