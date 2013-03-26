@@ -14,6 +14,7 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 class MatToolsTest : public ::testing::Test {
   protected:
+    IsoConcMap test_conc_map_;
     CompMapPtr test_comp_;
     mat_rsrc_ptr test_mat_;
     int one_mol_;
@@ -32,6 +33,8 @@ class MatToolsTest : public ::testing::Test {
       test_comp_= CompMapPtr(new CompMap(MASS));
       (*test_comp_)[u235_] = one_mol_;
       test_size_=10.0;
+      // conc setup
+      test_conc_map_[u235_] = test_size_; 
       // material creation
       test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
       test_mat_->setQuantity(test_size_);
@@ -117,8 +120,13 @@ TEST_F(MatToolsTest, convert_comp_to_conc){
       EXPECT_FLOAT_EQ(exp_u235_conc, test_conc_map[u235_]);
       exp_am241_conc = (*test_comp_map)[am241_]*m/v;
       EXPECT_FLOAT_EQ(exp_am241_conc, test_conc_map[am241_]);
+      EXPECT_NO_THROW(MatTools::comp_to_conc_map(test_comp_map, m, 0));
     }
   }
+
+  // it should result in a real object when scaled by zero volume
+  test_conc_map = MatTools::comp_to_conc_map(test_comp_map, 1, 0);
+  EXPECT_FLOAT_EQ(0, test_conc_map[u235_]);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, scale_conc_map){
@@ -282,6 +290,11 @@ TEST_F(MatToolsTest, V_ms){
 }
 
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, conc_to_conc_map) {
+  pair <CompMapPtr, double> test_comp_pair = MatTools::conc_to_comp_map(test_conc_map_ , 0);
+  EXPECT_FLOAT_EQ(0, test_comp_pair.second );
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, isoToElem){
   int u235 = 92235;

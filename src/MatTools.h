@@ -106,6 +106,9 @@ public:
   static std::pair<CompMapPtr, double> conc_to_comp_map(const 
       IsoConcMap conc, double vol); 
 
+  /// Returns an empty IsoConcMap
+  static IsoConcMap zeroConcMap();
+
   /**
     Returns the fluid volume [m^3] based on the total volume and the porosity
 
