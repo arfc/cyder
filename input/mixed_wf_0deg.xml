@@ -74,9 +74,9 @@
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0</degradation>
-              <kd_limited>1</kd_limited>
-              <porosity>0.001</porosity>
-              <sol_limited>1</sol_limited>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
@@ -97,9 +97,9 @@
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-              <kd_limited>1</kd_limited>
-              <porosity>0.001</porosity>
-              <sol_limited>1</sol_limited>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
@@ -120,9 +120,9 @@
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-              <kd_limited>1</kd_limited>
-              <porosity>0.001</porosity>
-              <sol_limited>1</sol_limited>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
         </component>
@@ -142,9 +142,9 @@
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
-              <kd_limited>1</kd_limited>
-              <porosity>0.001</porosity>
-              <sol_limited>1</sol_limited>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
         </component>
