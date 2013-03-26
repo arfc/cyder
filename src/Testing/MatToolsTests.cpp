@@ -120,8 +120,13 @@ TEST_F(MatToolsTest, convert_comp_to_conc){
       EXPECT_FLOAT_EQ(exp_u235_conc, test_conc_map[u235_]);
       exp_am241_conc = (*test_comp_map)[am241_]*m/v;
       EXPECT_FLOAT_EQ(exp_am241_conc, test_conc_map[am241_]);
+      EXPECT_NO_THROW(MatTools::comp_to_conc_map(test_comp_map, m, 0));
     }
   }
+
+  // it should result in a real object when scaled by zero volume
+  test_conc_map = MatTools::comp_to_conc_map(test_comp_map, 1, 0);
+  EXPECT_FLOAT_EQ(0, test_conc_map[u235_]);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, scale_conc_map){
