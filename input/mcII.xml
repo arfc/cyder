@@ -66,6 +66,7 @@
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>

@@ -343,14 +343,14 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
         </element>
       </optional>
       <optional>
-        <element name="ref_kd_lim">
+        <element name="ref_kd">
           <data type="double">
             <param name="minInclusive">0</param>
           </data>
         </element>
       </optional>
       <optional>
-        <element name="ref_diff">
+        <element name="ref_disp">
           <data type="double">
             <param name="minInclusive">0</param>
           </data>

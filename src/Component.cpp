@@ -66,15 +66,15 @@ void Component::initModuleMembers(QueryEngine* qe){
 
   int n_disp = mat_data->nElementsMatchingQuery("ref_disp_lim");
   double ref_disp = NULL;
-  if( n_disp!=0 ) { ref_disp=lexical_cast<double>(mat_data->queryElement("ref_disp_lim")); };
+  if( n_disp!=0 ) { ref_disp=lexical_cast<double>(mat_data->getElementContent("ref_disp")); };
 
   int n_kd = mat_data->nElementsMatchingQuery("ref_kd_lim");
   double ref_kd = NULL;
-  if( n_kd!=0 ) { ref_kd=lexical_cast<double>(mat_data->queryElement("ref_kd_lim")); };
+  if( n_kd!=0 ) { ref_kd=lexical_cast<double>(mat_data->getElementContent("ref_kd")); };
 
   int n_sol = mat_data->nElementsMatchingQuery("ref_sol_lim");
   double ref_sol = NULL;
-  if( n_sol!=0 ) { ref_sol=lexical_cast<double>(mat_data->queryElement("ref_sol_lim")); };
+  if( n_sol!=0 ) { ref_sol=lexical_cast<double>(mat_data->getElementContent("ref_sol_lim")); };
 
 
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
