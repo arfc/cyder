@@ -42,19 +42,19 @@ MatDataTable::~MatDataTable() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double MatDataTable::K_d(Elem ent){
   check_validity(ent);
-  return elem_vec_[ent].K_d;
+  return data(ent, KD);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double MatDataTable::S(Elem ent){
   check_validity(ent);
-  return elem_vec_[ent].S;
+  return data(ent, SOL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double MatDataTable::D(Elem ent){
   check_validity(ent);
-  return elem_vec_[ent].D;
+  return data(ent, DISP);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,13 +73,13 @@ double MatDataTable::data(Elem ent, ChemDataType data) {
   double to_ret;
   switch( data ){
     case DISP :
-      to_ret = D(ent)*rel(ent, DISP);
+      to_ret = elem_vec_[ent].D*rel(ent, DISP);
       break;
     case KD :
-      to_ret = K_d(ent)*rel(ent, SOL);
+      to_ret = elem_vec_[ent].K_d*rel(ent, SOL);
       break;
     case SOL :
-      to_ret = S(ent)*rel(ent, SOL);
+      to_ret = elem_vec_[ent].S*rel(ent, SOL);
       break;
     default : 
       throw CycException("The ChemDataType provided is not yet supported.");
