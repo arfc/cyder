@@ -120,27 +120,6 @@ public:
      */
   MatDataTablePtr table(std::string mat);
 
-  /**
-     Returns the reference paramter supplied by the user.  That is, in the case 
-     of data=DISP, the reference dispersion coefficient that the user has 
-     supplied for the  reference element, Hydrogen is returned.  
-
-     @param data is a ChemDataType enum (DISP, KD, SOL, ...) 
-     */
-  double ref(ChemDataType data){return ref_map_[data];};
-
-  /**
-     The reference chemical data parameter for the reference element, Hydrogen. 
-     In the case of data=DISP, this is the dispersion coefficient for the 
-     reference element, Hydrogen. The amount by which D(element) differs from 
-     D(hydrogen) is its relative diffusivity. That is returned with this 
-     function.  
-
-     @param ent an identifier of type Elem, the element for which to return the rel_D 
-     @param data is a ChemDataType enum (DISP, KD, SOL, ...) 
-     */
-  double rel(Elem ent, ChemDataType data);
-
 protected:
   /**
      checks whether a table associated with a particular mat has been created
@@ -156,9 +135,6 @@ protected:
      @param mat the string indicatin the material this table should represent
    */
   MatDataTablePtr initializeFromSQL(std::string mat);
-
-  /// This holds a map from data types to reference parameters supplied by the user.
-  map<ChemDataType, double> ref_map_;
 
 };
 
