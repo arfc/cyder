@@ -49,7 +49,7 @@ double MaterialDB::D(string mat, Elem ent){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MatDataTablePtr MaterialDB::table(string mat, double ref_disp, double 
-    ref_kd, double ref_sol=NULL) {
+    ref_kd, double ref_sol) {
   MatDataTablePtr to_ret;
   string ID = tableID(mat, ref_disp, ref_kd, ref_sol);
 
@@ -64,7 +64,7 @@ MatDataTablePtr MaterialDB::table(string mat, double ref_disp, double
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int MaterialDB::tableID(string mat, double ref_disp, double ref_kd, 
-    double ref_sol=NULL){
+    double ref_sol){
   if(ref_disp == NULL){ref_disp=0;};
   if(ref_kd == NULL){ref_kd=0;};
   if(ref_sol == NULL){ref_sol=0;};
@@ -88,7 +88,7 @@ bool MaterialDB::initialized(string mat){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MatDataTablePtr MaterialDB::initializeFromSQL(string mat, double ref_disp,
-    double ref_kd, double ref_sol=NULL) {
+    double ref_kd, double ref_sol) {
   SqliteDb* db = new SqliteDb(file_path_);
 
   std::vector<StrList> znums = db->query("SELECT elem FROM "+mat);
