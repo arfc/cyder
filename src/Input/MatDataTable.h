@@ -160,9 +160,14 @@ protected:
    */
   std::map<Elem, int> elem_index_;
 
-  /**
-     The reference diffusivity
-     */
+  /// The reference dispersion coefficient
+  double ref_disp_;
+
+  /// The reference K_d coefficient
+  double ref_kd_;
+
+  /// The reference solubility limit
+  double ref_sol_;
 };
 
 #endif

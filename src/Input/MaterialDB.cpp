@@ -48,15 +48,35 @@ double MaterialDB::D(string mat, Elem ent){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MatDataTablePtr MaterialDB::table(string mat) {
+MatDataTablePtr MaterialDB::table(string mat, double ref_disp=NULL, double 
+    ref_kd=NULL, double ref_sol=NULL) {
   MatDataTablePtr to_ret;
-  if(initialized(mat) ){
-    to_ret = (*tables_.find(mat)).second;
+  string ID = tableID(mat, ref_disp, ref_kd, ref_sol);
+
+  if(initialized(ID)) {
+    to_ret = (*tables_.find(ID)).second;
   } else {
-    to_ret = initializeFromSQL(mat);
-    tables_.insert(make_pair(mat,to_ret));
+    to_ret = initializeFromSQL(mat, ref_disp, ref_kd, ref_sol);
+    tables_.insert(make_pair(ID,to_ret));
   }
   return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int MaterialDB::tableID(string mat, double ref_disp=NULL, double ref_kd=NULL, 
+    double ref_sol=NULL){
+  if(ref_disp == NULL){ref_disp=0;};
+  if(ref_kd == NULL){ref_kd=0;};
+  if(ref_sol == NULL){ref_sol=0;};
+  int ref_id = table_id_array[ref_disp][ref_kd][ref_sol]; 
+
+  if( ref_id == NULL ) {
+    table_id_array[ref_disp][ref_kd][ref_sol] = table_id_array.max() + 1;
+    ref_id = table_id_array[ref_disp][ref_kd][ref_sol]; 
+  }
+
+  return mat_id+lexical_cast<string>(ref_id);
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -67,7 +87,8 @@ bool MaterialDB::initialized(string mat){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MatDataTablePtr MaterialDB::initializeFromSQL(string mat) {
+MatDataTablePtr MaterialDB::initializeFromSQL(string mat, double ref_disp=NULL,
+    double ref_kd=NULL, double ref_sol=NULL) {
   SqliteDb* db = new SqliteDb(file_path_);
 
   std::vector<StrList> znums = db->query("SELECT elem FROM "+mat);
@@ -93,7 +114,8 @@ MatDataTablePtr MaterialDB::initializeFromSQL(string mat) {
     // log it accordingly
     elem_index.insert(make_pair(z, i));
   }
-  MatDataTablePtr to_ret = MatDataTablePtr(new MatDataTable(mat, elem_vec, elem_index)); 
+  MatDataTablePtr to_ret = MatDataTablePtr(new MatDataTable(mat, elem_vec, elem_index, 
+        ref_disp, ref_kd, ref_sol)); 
   delete db;
   return to_ret;
 }

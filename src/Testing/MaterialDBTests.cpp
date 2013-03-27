@@ -68,9 +68,10 @@ TEST_F(MaterialDBTest, DISABLED_get_data_elem){
 TEST_F(MaterialDBTest, S){
   // the DB should give appropriate solubility limits for canonical mat/elems, within a range.
   std::vector<Elem>::iterator it;
+  std::string matID = tableID("clay");
   for(it=elem_ids_.begin(); it<elem_ids_.end(); it++){
-    EXPECT_NO_THROW(MDB->S("clay", (*it)));
-    EXPECT_GT(MDB->S("clay", (*it)),0);
+    EXPECT_NO_THROW(MDB->S(matID, (*it)));
+    EXPECT_GT(MDB->S(matID, (*it)),0);
   }
 }
 
@@ -78,9 +79,10 @@ TEST_F(MaterialDBTest, S){
 TEST_F(MaterialDBTest, K_d){
   // the DB should give appropriate K_d values for canonical mat/elems, within a range.
   std::vector<Elem>::iterator it;
+  std::string matID = tableID("clay");
   for(it=elem_ids_.begin(); it<elem_ids_.end(); it++){
-    EXPECT_NO_THROW(MDB->K_d("clay", (*it)));
-    EXPECT_GT(MDB->K_d("clay", (*it)),0);
+    EXPECT_NO_THROW(MDB->K_d(matID, (*it)));
+    EXPECT_GT(MDB->K_d(matID, (*it)),0);
   }
 }
 
@@ -88,9 +90,10 @@ TEST_F(MaterialDBTest, K_d){
 TEST_F(MaterialDBTest, D){
   // the DB should give appropriate D values for canonical mat/elems, within a range.
   std::vector<Elem>::iterator it;
+  std::string matID = tableID("clay");
   for(it=elem_ids_.begin(); it<elem_ids_.end(); it++){
-    EXPECT_NO_THROW(MDB->D("clay", (*it)));
-    EXPECT_GT(MDB->D("clay", (*it)),0);
+    EXPECT_NO_THROW(MDB->D(matID, (*it)));
+    EXPECT_GT(MDB->D(matID, (*it)),0);
   }
 }
 
@@ -98,7 +101,8 @@ TEST_F(MaterialDBTest, D){
 TEST_F(MaterialDBTest, infSolLimits){
   // Some elements can have effectively infinite solubility limits. 
   // Check that this is communicated.
-  EXPECT_NO_THROW(MDB->S("clay", 53));
+  std::string matID = tableID("clay");
+  EXPECT_NO_THROW(MDB->S(matID, 53));
 }
 
 
