@@ -330,7 +330,7 @@ double MixedCellNuclide::precipitate(int the_time, int iso, double mass){
   if(!sol_limited()){
     throw CycException("The sorb function was called, but sol_limited=false.");
   }
-  return SolLim::m_aff(mass, mat_table_->K_d(MatTools::isoToElem(iso)), V_s(), V_f(), tot_deg(), mat_table_->S(MatTools::isoToElem(iso)));
+  return SolLim::m_aff(mass, V_f(), mat_table_->S(MatTools::isoToElem(iso)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

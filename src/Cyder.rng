@@ -336,7 +336,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
         </element>
       </choice>
       <optional>
-        <element name="ref_sol_lim">
+        <element name="ref_disp">
           <data type="double">
             <param name="minInclusive">0</param>
           </data>
@@ -350,7 +350,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
         </element>
       </optional>
       <optional>
-        <element name="ref_disp">
+        <element name="ref_sol_lim">
           <data type="double">
             <param name="minInclusive">0</param>
           </data>

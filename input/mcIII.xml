@@ -66,7 +66,7 @@
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
-            <ref_sol_lim>0.00000001</ref_sol_lim>
+            <ref_kd>0.1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
