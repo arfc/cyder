@@ -175,7 +175,7 @@ double MixedCellNuclide::contained_mass(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
   pair<CompMapPtr, double> comp_pair = 
-    MatTools::conc_to_comp_map(conc_hist(last_updated()), V_ff());
+    MatTools::conc_to_comp_map(conc_hist(last_degraded()), V_ff());
 
   return make_pair(IsoVector(comp_pair.first), comp_pair.second);
 }
@@ -264,7 +264,7 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
       if(kd_limited()){
         m_ff = sorb(the_time, iso, (*it).second*mass);
       } else { 
-        m_ff = (*it).second*mass;
+        m_ff = (*it).second*mass*tot_deg();
       }
       if(sol_limited()){
         m_aff = precipitate(the_time, iso, m_ff);
