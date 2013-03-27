@@ -112,6 +112,28 @@ public:
 
 protected:
   /**
+     Returns the reference paramter supplied by the user.  That is, in the case 
+     of data=DISP, the reference dispersion coefficient that the user has 
+     supplied for the  reference element, Hydrogen is returned.  
+
+     @param data is a ChemDataType enum (DISP, KD, SOL, ...) 
+     */
+  double ref(ChemDataType data);
+
+  /**
+     The reference chemical data parameter for the reference element, Hydrogen. 
+     In the case of data=DISP, this is the dispersion coefficient for the 
+     reference element, Hydrogen. The amount by which D(element) differs from 
+     D(hydrogen) is its relative diffusivity. That is returned with this 
+     function.  
+
+     @param ent an identifier of type Elem, the element for which to return the rel_D 
+     @param data is a ChemDataType enum (DISP, KD, SOL, ...) 
+     */
+  double rel(Elem ent, ChemDataType data);
+
+
+  /**
      checks whether this element has a row entry in the table.
      ideally all of them will... 
      @throws CycException when theres some drama
@@ -137,6 +159,10 @@ protected:
      a map for index lookup in the element vector. 
    */
   std::map<Elem, int> elem_index_;
+
+  /**
+     The reference diffusivity
+     */
 };
 
 #endif
