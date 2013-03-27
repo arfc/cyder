@@ -174,9 +174,10 @@ double MixedCellNuclide::contained_mass(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
-  pair<CompMapPtr, double> comp = MatTools::conc_to_comp_map(conc_hist(last_updated()), V_ff());
+  pair<CompMapPtr, double> comp_pair = 
+    MatTools::conc_to_comp_map(conc_hist(last_updated()), V_ff());
 
-  return make_pair(IsoVector(comp.first), comp.second);
+  return make_pair(IsoVector(comp_pair.first), comp_pair.second);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
