@@ -118,7 +118,8 @@ public:
 
      @return a MatDataTablePtr holding the data associated with the mat
      */
-  MatDataTablePtr table(std::string mat);
+  MatDataTablePtr table(std::string mat, double ref_disp=NULL, double ref_kd=NULL, double 
+      ref_sol=NULL);
 
 protected:
   /**
@@ -134,7 +135,8 @@ protected:
 
      @param mat the string indicatin the material this table should represent
    */
-  MatDataTablePtr initializeFromSQL(std::string mat);
+  MatDataTablePtr initializeFromSQL(std::string mat, double ref_disp=NULL, double 
+      ref_kd=NULL, double ref_sol=NULL);
 
 };
 
