@@ -76,7 +76,7 @@
               <degradation>0.1</degradation>
               <kd_limited>0</kd_limited>
               <porosity>0.1</porosity>
-              <sol_limited>0</sol_limited>
+              <sol_limited>1</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
@@ -99,7 +99,7 @@
               <degradation>0</degradation>
               <kd_limited>0</kd_limited>
               <porosity>0.1</porosity>
-              <sol_limited>0</sol_limited>
+              <sol_limited>1</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
@@ -122,7 +122,7 @@
               <degradation>0.1</degradation>
               <kd_limited>0</kd_limited>
               <porosity>0.1</porosity>
-              <sol_limited>0</sol_limited>
+              <sol_limited>1</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
         </component>
@@ -144,7 +144,7 @@
               <degradation>0.1</degradation>
               <kd_limited>0</kd_limited>
               <porosity>0.1</porosity>
-              <sol_limited>0</sol_limited>
+              <sol_limited>1</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
         </component>
