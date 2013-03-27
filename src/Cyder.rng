@@ -324,7 +324,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
         </element>
         <element name="bentonite">
           <text/>
-        </elemediff>
+        </element>
         <element name="borosilicate_glass">
           <text/>
         </element>

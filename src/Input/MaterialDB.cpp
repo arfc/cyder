@@ -28,6 +28,10 @@ MaterialDB* MaterialDB::Instance() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MaterialDB::MaterialDB() :
   file_path_(Env::getInstallPath() + "/share/mat_data.sqlite") {
+    disp_ind_map_[0]=0;
+    kd_ind_map_[0]=0;
+    sol_ind_map_[0]=0;
+    table_id_array_[0][0][0]=0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,9 +79,11 @@ string MaterialDB::tableID(string mat, double ref_disp, double ref_kd,
   int kd_ind = ref_ind(ref_kd, KD);
   int sol_ind = ref_ind(ref_sol, SOL);
 
-  int ref_id = table_id_array_[disp_ind][kd_ind][sol_ind]; 
+  int ref_id;
 
-  if( ref_id == NULL ) {
+  try{
+    ref_id = table_id_array_.at(disp_ind).at(kd_ind).at(sol_ind); 
+  } catch(const out_of_range& oor){
     table_id_array_[disp_ind][kd_ind][sol_ind] = table_id_++;
     ref_id = table_id_array_[disp_ind][kd_ind][sol_ind]; 
   }
@@ -92,16 +98,20 @@ int MaterialDB::ref_ind(double ref, ChemDataType data){
   switch (data) {
     case DISP:
       ref_map = &disp_ind_map_;
+      break;
     case KD:
       ref_map = &kd_ind_map_;
+      break;
     case SOL:
       ref_map = &sol_ind_map_;
+      break;
     default:
      string err = "The ChemDataType '"; 
      err += data; 
      err += "' is not supported.";
      LOG(LEV_ERROR,"GRMDB") << err;
      throw CycException(err); 
+     break;
   }
  if( (*ref_map).find(ref) != (*ref_map).end() ){
    to_ret=(*ref_map)[ref];

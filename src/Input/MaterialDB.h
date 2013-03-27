@@ -147,7 +147,7 @@ protected:
   MatDataTablePtr initializeFromSQL(std::string mat, double ref_disp=NULL, double 
       ref_kd=NULL, double ref_sol=NULL);
 
-  boost::multi_array<int, 3> table_id_array_;
+  std::map<int, std::map<int, std::map<int,int> > > table_id_array_;
 
   std::map<double, int> disp_ind_map_;
   std::map<double, int> kd_ind_map_;
