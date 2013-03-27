@@ -5,6 +5,7 @@
 
 #include <string>
 #include <map>
+#include <boost/multi_array.hpp>
 #include "SqliteDb.h"
 #include "MatDataTable.h"
 
@@ -29,6 +30,9 @@ private:
     this database's file path
    */
   std::string file_path_;
+
+  /// the current table id
+  static int table_id_;
 
 public:
   /** 
@@ -118,8 +122,13 @@ public:
 
      @return a MatDataTablePtr holding the data associated with the mat
      */
-  MatDataTablePtr table(std::string mat, double ref_disp=NULL, double ref_kd=NULL, double 
+  MatDataTablePtr table( std::string mat, double ref_disp=NULL, double 
+      ref_kd=NULL, double ref_sol=NULL);
+
+  std::string tableID(std::string mat, double ref_disp=NULL, double ref_kd=NULL, double 
       ref_sol=NULL);
+
+  int ref_ind(double ref, ChemDataType data);
 
 protected:
   /**
@@ -137,6 +146,13 @@ protected:
    */
   MatDataTablePtr initializeFromSQL(std::string mat, double ref_disp=NULL, double 
       ref_kd=NULL, double ref_sol=NULL);
+
+  boost::multi_array<int, 3> table_id_array_;
+
+  std::map<double, int> disp_ind_map_;
+  std::map<double, int> kd_ind_map_;
+  std::map<double, int> sol_ind_map_;
+
 
 };
 

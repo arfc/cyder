@@ -2,15 +2,18 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <boost/lexical_cast.hpp>
 
 #include "MaterialDB.h"
 
 #include "Env.h"
 #include "CycException.h"
+#include "Logger.h"
 
 using namespace std;
 
 MaterialDB* MaterialDB::instance_ = 0;
+int MaterialDB::table_id_ = 0;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MaterialDB* MaterialDB::Instance() {
@@ -62,23 +65,53 @@ MatDataTablePtr MaterialDB::table(string mat, double ref_disp, double
   return to_ret;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int MaterialDB::tableID(string mat, double ref_disp, double ref_kd, 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+string MaterialDB::tableID(string mat, double ref_disp, double ref_kd, 
     double ref_sol){
   if(ref_disp == NULL){ref_disp=0;};
   if(ref_kd == NULL){ref_kd=0;};
   if(ref_sol == NULL){ref_sol=0;};
-  int ref_id = table_id_array[ref_disp][ref_kd][ref_sol]; 
+  int disp_ind = ref_ind(ref_disp, DISP);
+  int kd_ind = ref_ind(ref_kd, KD);
+  int sol_ind = ref_ind(ref_sol, SOL);
+
+  int ref_id = table_id_array_[disp_ind][kd_ind][sol_ind]; 
 
   if( ref_id == NULL ) {
-    table_id_array[ref_disp][ref_kd][ref_sol] = table_id_array.max() + 1;
-    ref_id = table_id_array[ref_disp][ref_kd][ref_sol]; 
+    table_id_array_[disp_ind][kd_ind][sol_ind] = table_id_++;
+    ref_id = table_id_array_[disp_ind][kd_ind][sol_ind]; 
   }
 
-  return mat_id+lexical_cast<string>(ref_id);
-
+  return mat+boost::lexical_cast<string>(ref_id);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int MaterialDB::ref_ind(double ref, ChemDataType data){
+  int to_ret;
+  map<double, int>* ref_map;
+  switch (data) {
+    case DISP:
+      ref_map = &disp_ind_map_;
+    case KD:
+      ref_map = &kd_ind_map_;
+    case SOL:
+      ref_map = &sol_ind_map_;
+    default:
+     string err = "The ChemDataType '"; 
+     err += data; 
+     err += "' is not supported.";
+     LOG(LEV_ERROR,"GRMDB") << err;
+     throw CycException(err); 
+  }
+ if( (*ref_map).find(ref) != (*ref_map).end() ){
+   to_ret=(*ref_map)[ref];
+ } else { 
+   to_ret = (*ref_map).size();
+   (*ref_map).insert(make_pair(ref, to_ret));
+ }
+ return to_ret;
+
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool MaterialDB::initialized(string mat){
   map<string,MatDataTablePtr>::iterator it;

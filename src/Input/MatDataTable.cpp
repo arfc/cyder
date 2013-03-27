@@ -23,8 +23,8 @@ MatDataTable::MatDataTable() :
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MatDataTable::MatDataTable(string mat, vector<element_t> elem_vec, map<Elem, 
-    int> elem_index, double ref_disp=NULL, double ref_kd=NULL, double 
-    ref_sol=NULL) :
+    int> elem_index, double ref_disp, double ref_kd, double 
+    ref_sol) :
   mat_(mat),
   elem_vec_(elem_vec),
   elem_index_(elem_index),

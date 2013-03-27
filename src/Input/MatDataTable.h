@@ -52,8 +52,13 @@ public:
     @param mat the mat_ data member, a string
     @param elem_vec the elem_vec_ data member, a vector of element structs, the data
     @param elem_index the elem_index_ data member, mapping the element IDs to indices
+    @param ref_disp is the reference dispersion coefficient
+    @param ref_kd is the reference kd coefficient
+    @param ref_sol is the reference solubility limit
     */
-  MatDataTable(std::string mat, std::vector<element_t> elem_vec, std::map<Elem, int> elem_index);
+  MatDataTable(std::string mat, std::vector<element_t> elem_vec, std::map<Elem, 
+      int> elem_index, double ref_disp=NULL, double ref_kd=NULL, double 
+      ref_sol=NULL);
 
   /**
      Destructor for the NullFacility class. 
