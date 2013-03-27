@@ -93,13 +93,13 @@ double MatDataTable::rel(Elem ent, ChemDataType data) {
   Elem h = 1;
   switch( data ){
     case DISP : 
-      to_ret = D(ent)/D(h);
+      to_ret = elem_vec_[ent].D/elem_vec_[h].D;
       break;
     case KD :
-      to_ret = K_d(ent)*K_d(h);
+      to_ret = elem_vec_[ent].K_d/elem_vec_[h].K_d;
       break;
     case SOL :
-      to_ret = S(ent)*S(h);
+      to_ret = elem_vec_[ent].S/elem_vec_[h].S;
       break;
     default : 
       throw CycException("The ChemDataType provided is not yet supported.");
