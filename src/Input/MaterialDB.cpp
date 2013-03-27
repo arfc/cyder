@@ -123,9 +123,9 @@ int MaterialDB::ref_ind(double ref, ChemDataType data){
 
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool MaterialDB::initialized(string mat){
+bool MaterialDB::initialized(string ID){
   map<string,MatDataTablePtr>::iterator it;
-  it=tables_.find(mat);
+  it=tables_.find(ID);
   return it!=tables_.end()? true : false; 
 }
 
