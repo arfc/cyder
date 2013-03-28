@@ -52,7 +52,7 @@ def full_path(fpath, fname) :
 def change_extension(fname, new_ext) :
     """ returns filename or full path with new extension """
     root, old_ext = os.path.splitext(fname)
-    return root.append(new_ext)
+    return root+new_ext
 
 def make_param_range(low, upper, number):
     """ makes a range between low and high with number vals"""
