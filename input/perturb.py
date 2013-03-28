@@ -46,7 +46,7 @@ def fname_root(full_path) :
 
 def full_path(fpath, fname) :
     """ for a path and a name, create a full path."""
-    to_ret = os.abspath(os.path.join(fpath, fname))
+    to_ret = os.path.abspath(os.path.join(fpath, fname))
     return to_ret
 
 def change_extension(fname, new_ext) :
