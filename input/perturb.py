@@ -21,8 +21,8 @@ def configure_infile(xml_in, xml, param, val) :
     new = "<"+param+">[^<]"+str(val)+"</"+param+">"
     for line in f_old :
         f_new.write(re.sub(old, new, line))
-    close(xml_in)
-    close(xml)
+    f_old.close()
+    f_new.close()
     return f_new
      
 def configure_infiles(xml_in, param, val_list) :
