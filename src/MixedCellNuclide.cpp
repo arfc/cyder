@@ -182,11 +182,11 @@ pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MixedCellNuclide::dirichlet_bc(){
-  IsoConcMap dirichlet, whole_vol;
-  whole_vol = conc_hist(last_degraded());
+  IsoConcMap dirichlet, c_ff;
+  c_ff = conc_hist(last_degraded());
   IsoConcMap::const_iterator it;
-  for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
-    dirichlet[(*it).first] = tot_deg()*(*it).second ;
+  for( it=c_ff.begin(); it!=c_ff.end(); ++it){
+    dirichlet[(*it).first] = (*it).second ;
   }
   return dirichlet;
 }
