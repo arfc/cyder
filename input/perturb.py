@@ -36,7 +36,7 @@ def configure_infiles(xml_in, param, val_list) :
 def run_cyclus(in_file_list, out_path) :
     """ for each infile in the dict, run cyclus and create the outfile in the dict"""
     for in_file in in_file_list : 
-        out_file = full_path(out_path, change_extension(fname_root(in_file), "sqlite"))
+        out_file = full_path(out_path, change_extension(fname_root(in_file), ".sqlite"))
         call(["/usr/local/cyclus/bin/cyclus", in_file, "-o", out_file])
 
 def fname_root(full_path) :
