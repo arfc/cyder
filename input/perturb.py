@@ -27,6 +27,7 @@ def configure_infile(xml_in, xml, param, val) :
      
 def configure_infiles(xml_in, param, val_list) :
     """ takes a list of values, each of which will result in runnable xml. """
+    xml_list = []
     for val in val_list:
         xml = change_extension(xml_in, str(val)+".xml")
         xml_list.append(configure_infile(xml_in, xml, param, val))
