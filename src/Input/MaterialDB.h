@@ -130,7 +130,6 @@ public:
 
   int ref_ind(double ref, ChemDataType data);
 
-protected:
   /**
      checks whether a table associated with a particular mat has been created
 
@@ -147,6 +146,7 @@ protected:
   MatDataTablePtr initializeFromSQL(std::string mat, double ref_disp=NULL, double 
       ref_kd=NULL, double ref_sol=NULL);
 
+protected:
   std::map<int, std::map<int, std::map<int,int> > > table_id_array_;
 
   std::map<double, int> disp_ind_map_;

@@ -20,13 +20,9 @@ TEST_F(MaterialDBTest, DISABLED_listAvailableMats){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, DISABLED_get_mat_table){
-  // the DB should return a table for any mat in the list of avail mats
- // set<std::string>::iterator it;
- // for(it=MDB->list_available_mats().begin();
- //     it!=MDB->list_available_mats().end(); ++it){
- //   EXPECT_NO_THROW(MDB->table((*it)))
- // }
+TEST_F(MaterialDBTest, get_mat_table){
+  EXPECT_NO_THROW(MDB->table("clay", 0, 0, 0));
+  EXPECT_NO_THROW(MDB->table("clay", 1, 1, 1));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -72,6 +68,10 @@ TEST_F(MaterialDBTest, S){
     EXPECT_NO_THROW(MDB->S("clay", (*it)));
     EXPECT_GT(MDB->S("clay", (*it)),0);
   }
+
+  EXPECT_FLOAT_EQ(0, MDB->table("clay", 0, 0, 0)->S(1));
+  EXPECT_FLOAT_EQ(1, MDB->table("clay", 1, 1, 1)->S(1));
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -101,4 +101,24 @@ TEST_F(MaterialDBTest, infSolLimits){
   EXPECT_NO_THROW(MDB->S("clay", 53));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MaterialDBTest, tableID){
+  EXPECT_EQ("clay0", MDB->tableID("clay",1,1,1) );
+  EXPECT_EQ("clay1", MDB->tableID("clay",2,1,1) );
+  EXPECT_EQ("clay2", MDB->tableID("clay",3,1,1) );
+  EXPECT_EQ("clay3", MDB->tableID("clay",4,1,1) );
+  EXPECT_EQ("clay0", MDB->tableID("clay",1,1,1) );
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MaterialDBTest, initialized){
+  EXPECT_NO_THROW(MDB->table("clay", 18, 1, 1));
+  EXPECT_FALSE(MDB->initialized(MDB->tableID("clay",19,1,1)));
+  EXPECT_NO_THROW(MDB->table("clay", 19, 1, 1));
+  EXPECT_TRUE( MDB->initialized(MDB->tableID("clay",19,1,1)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MaterialDBTest, initializeFromSQL) {
+  EXPECT_NO_THROW(MDB->initializeFromSQL("clay", 18, 1, 1));
+}

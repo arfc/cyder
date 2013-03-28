@@ -132,6 +132,7 @@ TEST_F(SolLimTest, m_aff){
     EXPECT_FLOAT_EQ(0, SolLim::m_aff(mff, V_f, 0));
     expected = min(C_sol*V_f,(1-d)*m_T/(1+K_d_*(V_s/V_f)));
     EXPECT_FLOAT_EQ(expected, SolLim::m_aff(mff, V_f, C_sol));
+    EXPECT_GT(mff, SolLim::m_aff(mff, V_f, C_sol));
   }
 }
 

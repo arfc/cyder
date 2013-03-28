@@ -114,8 +114,11 @@ public:
      @return mat_
      */
   std::string mat(){return mat_;};
+  double ref_disp(){return ref_disp_;};
+  double ref_kd(){return ref_kd_;};
+  double ref_sol(){return ref_sol_;};
 
-protected:
+
   /**
      Returns the reference paramter supplied by the user.  That is, in the case 
      of data=DISP, the reference dispersion coefficient that the user has 
@@ -137,6 +140,7 @@ protected:
      */
   double rel(Elem ent, ChemDataType data);
 
+protected:
 
   /**
      checks whether this element has a row entry in the table.

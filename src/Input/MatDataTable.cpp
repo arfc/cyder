@@ -90,16 +90,17 @@ double MatDataTable::data(Elem ent, ChemDataType data) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double MatDataTable::rel(Elem ent, ChemDataType data) {
   double to_ret;
-  Elem h = 1;
+  int h = elem_index_[1];
+  int ind = elem_index_[ent];
   switch( data ){
     case DISP : 
-      to_ret = elem_vec_[ent].D/elem_vec_[h].D;
+      to_ret = elem_vec_[ind].D/elem_vec_[h].D;
       break;
     case KD :
-      to_ret = elem_vec_[ent].K_d/elem_vec_[h].K_d;
+      to_ret = elem_vec_[ind].K_d/elem_vec_[h].K_d;
       break;
     case SOL :
-      to_ret = elem_vec_[ent].S/elem_vec_[h].S;
+      to_ret = elem_vec_[ind].S/elem_vec_[h].S;
       break;
     default : 
       throw CycException("The ChemDataType provided is not yet supported.");
@@ -111,7 +112,7 @@ double MatDataTable::rel(Elem ent, ChemDataType data) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double MatDataTable::ref(ChemDataType data){
   double to_ret;
-  Elem h = 1;
+  int h = elem_index_[1];
   switch( data ){
     case DISP : 
       (ref_disp_==NULL) ? (to_ret=elem_vec_[h].D) : (to_ret=ref_disp_);
