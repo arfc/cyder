@@ -61,7 +61,7 @@ def make_param_range(low, upper, number):
 
 def perturb(xml_in, out_path, param, val_list) :
     make_dir(out_path)
-    in_file_list = create_infiles(xml_in, param, val_list)
+    in_file_list = configure_infiles(xml_in, param, val_list)
     run_cyclus(in_file_list, out_path)
 
 def main() :
