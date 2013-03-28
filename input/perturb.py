@@ -23,7 +23,7 @@ def configure_infile(xml_in, xml, param, val) :
         f_new.write(re.sub(old, new, line))
     f_old.close()
     f_new.close()
-    return f_new
+    return xml
      
 def configure_infiles(xml_in, param, val_list) :
     """ takes a list of values, each of which will result in runnable xml. """
