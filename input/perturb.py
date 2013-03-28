@@ -40,9 +40,14 @@ def run_cyclus(in_file_list, out_path) :
         call(["/usr/local/cyclus/bin/cyclus", in_file, "-o", out_file])
 
 def strip_xml(full_path) :
-    """ returns root of the filename. /usr/local/cyclus.txt returns cyclus """
+    """ returns root of the filename. /usr/local/cyclus.xml returns cyclus """
     fpath, fname = os.path.split(full_path)
     return re.sub('.xml$', '', fname)
+
+def strip_in(full_path) :
+    """ returns root of the filename. /usr/local/cyclus.xml.in returns cyclus.xml """
+    fpath, fname = os.path.split(full_path)
+    return re.sub('.in$', '', fname)
 
 def full_path(fpath, fname) :
     """ for a path and a name, create a full path."""
@@ -51,7 +56,8 @@ def full_path(fpath, fname) :
 
 def change_extension(fname, new_ext) :
     """ returns filename or full path with new extension """
-    root, old_ext = os.path.splitext(fname)
+    root_xml = strip_in(fname)
+    root = strip_xml(root_xml)
     return root+new_ext
 
 def make_param_range(low, upper, number):
