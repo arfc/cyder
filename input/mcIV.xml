@@ -67,7 +67,7 @@
           <material_data>
             <clay/>
             <ref_kd>0.1</ref_kd>
-            <ref_sol_lim>0.0000001</ref_sol_lim>
+            <ref_sol_lim>0.001</ref_sol_lim>
           </material_data>
           <thermalmodel>
             <StubThermal/>
