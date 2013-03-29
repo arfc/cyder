@@ -177,6 +177,9 @@ protected:
 
   /// The reference solubility limit
   double ref_sol_;
+
+  /// True iff the ref values have been initialized.
+  bool initialized_;
 };
 
 #endif

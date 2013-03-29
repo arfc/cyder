@@ -16,9 +16,7 @@ using namespace std;
 MatDataTable::MatDataTable() :
   mat_(""),
   elem_len_(0),
-  ref_disp_(NULL),
-  ref_kd_(NULL),
-  ref_sol_(NULL)
+  initialized_(false)
 {
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,6 +31,7 @@ MatDataTable::MatDataTable(string mat, vector<element_t> elem_vec, map<Elem,
   ref_sol_(ref_sol)
 {
   elem_len_= elem_vec_.size();
+  initialized_=true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -115,13 +114,13 @@ double MatDataTable::ref(ChemDataType data){
   int h = elem_index_[1];
   switch( data ){
     case DISP : 
-      (ref_disp_==NULL) ? (to_ret=elem_vec_[h].D) : (to_ret=ref_disp_);
+      (initialized_) ?  (to_ret=ref_disp_) : (to_ret=elem_vec_[h].D) ;
       break;
     case KD :
-      (ref_kd_==NULL) ? (to_ret=elem_vec_[h].K_d) : (to_ret=ref_kd_);
+      (initialized_) ?  (to_ret=ref_kd_) : (to_ret=elem_vec_[h].K_d) ;
       break;
     case SOL :
-      (ref_sol_==NULL) ? (to_ret=elem_vec_[h].S) : (to_ret=ref_sol_);
+      (initialized_) ?  (to_ret=ref_sol_) : (to_ret=elem_vec_[h].S) ;
       break;
     default : 
       throw CycException("The ChemDataType provided is not yet supported.");

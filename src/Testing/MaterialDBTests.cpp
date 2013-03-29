@@ -1,5 +1,6 @@
 // MaterialDBTests.cpp
 #include <gtest/gtest.h>
+#include <boost/lexical_cast.hpp>
 #include "MaterialDBTests.h"
 
 
@@ -21,13 +22,31 @@ TEST_F(MaterialDBTest, DISABLED_listAvailableMats){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MaterialDBTest, tableID){
-  EXPECT_EQ("clay1", MDB->tableID("clay",1,1,1) );
-  EXPECT_EQ("clay2", MDB->tableID("clay",2,1,1) );
-  EXPECT_EQ("clay3", MDB->tableID("clay",3,1,1) );
-  EXPECT_EQ("clay4", MDB->tableID("clay",4,1,1) );
-  EXPECT_EQ("clay1", MDB->tableID("clay",1,1,1) );
+  //int start = MDB->curr_table_id();
+  //std::string mat = "clay";
+  //std::string exp_id = mat;
+  //exp_id = mat+boost::lexical_cast<std::string>(0);
+  //EXPECT_EQ(exp_id, MDB->tableID(mat,0,0,0) );
+  //for ( int i=start; i<10; i++) {
+  //  exp_id = mat+boost::lexical_cast<std::string>(i);
+  //  EXPECT_EQ(exp_id, MDB->tableID(mat,i,i,i) );
+  //}
+  EXPECT_EQ("clay0", MDB->tableID("clay",0,0,0) );
+  EXPECT_EQ("clay1", MDB->tableID("clay",2,1,1) );
+  EXPECT_EQ("clay2", MDB->tableID("clay",3,1,1) );
+  EXPECT_EQ("clay3", MDB->tableID("clay",4,1,1) );
+  EXPECT_EQ("clay4", MDB->tableID("clay",1,1,1) );
+  EXPECT_EQ("clay0", MDB->tableID("clay",0,0,0) );
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MaterialDBTest, ref_ind) {
+  for( int i=0; i<10; i++) {
+    EXPECT_EQ(i,MDB->ref_ind(i,DISP));
+    EXPECT_EQ(i,MDB->ref_ind(i,KD));
+    EXPECT_EQ(i,MDB->ref_ind(i,SOL));
+  }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MaterialDBTest, get_mat_table){
@@ -76,10 +95,11 @@ TEST_F(MaterialDBTest, S){
   std::vector<Elem>::iterator it;
   for(it=elem_ids_.begin(); it<elem_ids_.end(); it++){
     EXPECT_NO_THROW(MDB->S("clay", (*it)));
-    EXPECT_GT(MDB->S("clay", (*it)),0);
+    EXPECT_EQ(MDB->S("clay", (*it)),0);
   }
 
   EXPECT_FLOAT_EQ(0, MDB->table("clay", 0, 0, 0)->S(1));
+  EXPECT_FLOAT_EQ(0.1, MDB->table("clay", 0.1, 0.1, 0.1)->S(1));
   EXPECT_FLOAT_EQ(1, MDB->table("clay", 1, 1, 1)->S(1));
 
 }
@@ -90,8 +110,12 @@ TEST_F(MaterialDBTest, K_d){
   std::vector<Elem>::iterator it;
   for(it=elem_ids_.begin(); it<elem_ids_.end(); it++){
     EXPECT_NO_THROW(MDB->K_d("clay", (*it)));
-    EXPECT_GT(MDB->K_d("clay", (*it)),0);
+    EXPECT_EQ(MDB->K_d("clay", (*it)),0);
   }
+
+  EXPECT_FLOAT_EQ(0, MDB->table("clay", 0, 0, 0)->K_d(1));
+  EXPECT_FLOAT_EQ(0.1, MDB->table("clay", 0.1, 0.1, 0.1)->K_d(1));
+  EXPECT_FLOAT_EQ(1, MDB->table("clay", 1, 1, 1)->K_d(1));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -100,8 +124,11 @@ TEST_F(MaterialDBTest, D){
   std::vector<Elem>::iterator it;
   for(it=elem_ids_.begin(); it<elem_ids_.end(); it++){
     EXPECT_NO_THROW(MDB->D("clay", (*it)));
-    EXPECT_GT(MDB->D("clay", (*it)),0);
+    EXPECT_EQ(MDB->D("clay", (*it)),0);
   }
+  EXPECT_FLOAT_EQ(0, MDB->table("clay", 0, 0, 0)->D(1));
+  EXPECT_FLOAT_EQ(0.1, MDB->table("clay", 0.1, 0.1, 0.1)->D(1));
+  EXPECT_FLOAT_EQ(1, MDB->table("clay", 1, 1, 1)->D(1));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
