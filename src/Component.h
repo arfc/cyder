@@ -284,11 +284,11 @@ public:
   ComponentPtr parent();
 
   /**
-     get the list of waste objects 
+     get the waste material
      
      @return wastes
    */
-  const std::deque<mat_rsrc_ptr> wastes();
+  const mat_rsrc_ptr wastes();
 
   /**
      get the maximum Temperature this object allows at its boundaries 

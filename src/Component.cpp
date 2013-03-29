@@ -154,12 +154,9 @@ void Component::copy(const ComponentPtr& src){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void Component::print(){
-  std::deque<mat_rsrc_ptr> waste_list=wastes();
   LOG(LEV_DEBUG2,"GRComp") << "Component: " << shared_from_this()->name();
   LOG(LEV_DEBUG2,"GRComp") << "Contains Materials:";
-  for(int i=0; i< waste_list.size() ; i++){
-    LOG(LEV_DEBUG2,"GRComp") << waste_list[i];
-  }
+  LOG(LEV_DEBUG2,"GRComp") << wastes();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -344,7 +341,7 @@ const std::vector<ComponentPtr> Component::daughters(){return daughters_;}
 ComponentPtr Component::parent(){return parent_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const deque<mat_rsrc_ptr> Component::wastes(){return nuclide_model()->wastes();}
+const mat_rsrc_ptr Component::wastes(){return nuclide_model()->wastes();}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Temp Component::temp_lim(){return temp_lim_;}
