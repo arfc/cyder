@@ -177,6 +177,9 @@ protected:
 
   /// The reference solubility limit
   double ref_sol_;
+
+  /// This is true if the MatDataTable has been initialized with real data.
+  bool initialized_;
 };
 
 #endif
