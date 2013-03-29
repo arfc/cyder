@@ -23,26 +23,20 @@ class MatDataTableTest : public ::testing::Test {
 
     std::vector<element_t> initElemVec(){
       std::vector<int>::iterator it;
+      int i=0;
       for(it= elem_ids_.begin(); it!= elem_ids_.end(); ++it){
         Elem el = (*it);
-        d_[el] = 1;
-        kd_[el] = 1;
-        sol_[el] = 1;
-        element_t e = {el, d_[el] , kd_[el], sol_[el]};
+        d_[el] = el;
+        kd_[el] = el;
+        sol_[el] = el;
+        element_t e = {el, d_[el], kd_[el], sol_[el]};
         elem_vec_.push_back(e);
+        elem_index_.insert(std::make_pair(el,i));
+        i+=1;
       }
       return elem_vec_;
     }
 
-    std::map<Elem, int> initElemIndex(){
-      std::vector<int>::iterator it;
-      int i=0;
-      for(it= elem_ids_.begin(); it!= elem_ids_.end(); ++it){
-        Elem el = (*it);
-        elem_index_.insert(std::make_pair(el, ++i));
-      }
-      return elem_index_;
-    }
 
     void initMatTable(){
       mat_table_ = MatDataTablePtr(new MatDataTable(mat_, elem_vec_, 
@@ -66,7 +60,6 @@ class MatDataTableTest : public ::testing::Test {
       ref_kd_=2;
       mat_="clay";
       elem_vec_=initElemVec();
-      elem_index_=initElemIndex();
       initMatTable();
 
       default_table_=MatDataTablePtr(new MatDataTable());

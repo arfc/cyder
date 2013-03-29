@@ -29,7 +29,7 @@ TEST_F(MatDataTableTest, ref){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatDataTableTest, rel){
   std::vector<Elem>::iterator it;
-  for(it=elem_ids_.begin(); it<elem_ids_.end(); it++){
+  for(it=elem_ids_.begin(); it!=elem_ids_.end(); ++it){
     EXPECT_FLOAT_EQ(d_[(*it)]/d_[h_], mat_table_->rel((*it),DISP));
     EXPECT_FLOAT_EQ(kd_[(*it)]/kd_[h_], mat_table_->rel((*it),KD));
     EXPECT_FLOAT_EQ(sol_[(*it)]/sol_[h_], mat_table_->rel((*it),SOL));
@@ -40,7 +40,7 @@ TEST_F(MatDataTableTest, rel){
 TEST_F(MatDataTableTest, S){
   // the DB should give appropriate solubility limits for canonical mat/elems, within a range.
   std::vector<Elem>::iterator it;
-  for(it=elem_ids_.begin(); it<elem_ids_.end(); it++){
+  for(it=elem_ids_.begin(); it!=elem_ids_.end(); ++it){
     EXPECT_NO_THROW(mat_table_->S((*it)));
     EXPECT_GT(mat_table_->S((*it)),0);
   }
