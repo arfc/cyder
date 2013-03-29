@@ -20,6 +20,16 @@ TEST_F(MaterialDBTest, DISABLED_listAvailableMats){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MaterialDBTest, tableID){
+  EXPECT_EQ("clay1", MDB->tableID("clay",1,1,1) );
+  EXPECT_EQ("clay2", MDB->tableID("clay",2,1,1) );
+  EXPECT_EQ("clay3", MDB->tableID("clay",3,1,1) );
+  EXPECT_EQ("clay4", MDB->tableID("clay",4,1,1) );
+  EXPECT_EQ("clay1", MDB->tableID("clay",1,1,1) );
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MaterialDBTest, get_mat_table){
   EXPECT_NO_THROW(MDB->table("clay", 0, 0, 0));
   EXPECT_NO_THROW(MDB->table("clay", 1, 1, 1));
@@ -99,15 +109,6 @@ TEST_F(MaterialDBTest, infSolLimits){
   // Some elements can have effectively infinite solubility limits. 
   // Check that this is communicated.
   EXPECT_NO_THROW(MDB->S("clay", 53));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MaterialDBTest, tableID){
-  EXPECT_EQ("clay0", MDB->tableID("clay",1,1,1) );
-  EXPECT_EQ("clay1", MDB->tableID("clay",2,1,1) );
-  EXPECT_EQ("clay2", MDB->tableID("clay",3,1,1) );
-  EXPECT_EQ("clay3", MDB->tableID("clay",4,1,1) );
-  EXPECT_EQ("clay0", MDB->tableID("clay",1,1,1) );
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
