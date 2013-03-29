@@ -146,6 +146,10 @@ public:
   MatDataTablePtr initializeFromSQL(std::string mat, double ref_disp=NULL, double 
       ref_kd=NULL, double ref_sol=NULL);
 
+  int curr_table_id(){return table_id_;};
+
+  void clearTables();
+
 protected:
   std::map<int, std::map<int, std::map<int,int> > > table_id_array_;
 

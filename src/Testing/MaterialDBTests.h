@@ -23,5 +23,6 @@ class MaterialDBTest : public ::testing::Test {
     }
 
     virtual void TearDown(){
+      MDB->clearTables();
     }
 };

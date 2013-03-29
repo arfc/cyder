@@ -120,19 +120,45 @@ TEST_F(SolLimTest, m_mf){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(SolLimTest, m_aff){
-  double V_f, V_s, m_T, d;
-  double C_sol = 0.001;
+  double V_f, V_ff, V_s, m_T, d;
+  double C_sol;
   double expected, mff;
-  for(int i=1; i<10; i++){
-    V_f=0.1*i;
-    V_s=0.1*i;
-    m_T=0.1*i;
-    d=0.1*i;
-    mff= SolLim::m_ff(m_T, K_d_, V_s, V_f, d);
-    EXPECT_FLOAT_EQ(0, SolLim::m_aff(mff, V_f, 0));
-    expected = min(C_sol*V_f,(1-d)*m_T/(1+K_d_*(V_s/V_f)));
-    EXPECT_FLOAT_EQ(expected, SolLim::m_aff(mff, V_f, C_sol));
-    EXPECT_GT(mff, SolLim::m_aff(mff, V_f, C_sol));
+  for(int c = 0; c<100; c++){
+    C_sol = 0.1/c;
+    for(int i=1; i<10; i++){
+      V_f=0.1*i;
+      V_s=0.1*i;
+      m_T=0.1*i;
+      d=0.1*i;
+      V_ff=V_f*d;
+      mff= SolLim::m_ff(m_T, K_d_, V_s, V_f, d);
+      EXPECT_FLOAT_EQ(0, SolLim::m_aff(mff, V_ff, 0));
+      expected = min(C_sol*V_ff, d*m_T/(1+K_d_*(V_s/V_f)));
+      EXPECT_FLOAT_EQ(expected, SolLim::m_aff(mff, V_ff, C_sol));
+      EXPECT_GE(mff, SolLim::m_aff(mff, V_ff, C_sol));
+    }
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(SolLimTest, m_aff_kd0){
+  double V_f, V_ff, V_s, m_T, d;
+  double C_sol;
+  double expected, mff;
+  for(int c = 0; c<100; c++){
+    C_sol = 0.1/c;
+    for(int i=1; i<10; i++){
+      V_f=0.1*i;
+      V_s=0.1*i;
+      m_T=0.1*i;
+      d=0.1*i;
+      V_ff=V_f*d;
+      mff= SolLim::m_ff(m_T, 0, V_s, V_f, d);
+      EXPECT_FLOAT_EQ(0, SolLim::m_aff(mff, V_ff, 0));
+      expected = min(C_sol*V_ff, d*m_T/(1+0*(V_s/V_f)));
+      EXPECT_FLOAT_EQ(expected, SolLim::m_aff(mff, V_ff, C_sol));
+      EXPECT_GE(mff, SolLim::m_aff(mff, V_ff, C_sol));
+    }
   }
 }
 

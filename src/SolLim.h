@@ -101,12 +101,12 @@ public:
     Returns m_aff the available contaminant mass in the free fluid volume [kg]
 
     @param m_ff the contaminant mass int he free fluid volume [kg]
-    @param V_f the fluid volume [m^3]
+    @param V_ff the free fluid volume [m^3]
     @param C_sol the solubility limit of the element e [kg/m^3]
 
     @return m_aff the available contaminant mass in the free fluid volume [kg]
     */
-  static double m_aff(double m_ff, double V_f, double C_sol);
+  static double m_aff(double m_ff, double V_ff, double C_sol);
 
   /**
     Returns m_ps the contaminant mass that has precipitated into a solid form [kg]

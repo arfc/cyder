@@ -61,10 +61,10 @@ MatDataTablePtr MaterialDB::table(string mat, double ref_disp, double
   string ID = tableID(mat, ref_disp, ref_kd, ref_sol);
 
   if(initialized(ID)) {
-    to_ret = (*tables_.find(ID)).second;
+    to_ret = MatDataTablePtr((*tables_.find(ID)).second);
   } else {
-    to_ret = initializeFromSQL(mat, ref_disp, ref_kd, ref_sol);
-    tables_.insert(make_pair(ID,to_ret));
+    to_ret =MatDataTablePtr( initializeFromSQL(mat, ref_disp, ref_kd, ref_sol));
+    tables_.insert(make_pair(ID, to_ret));
   }
   return to_ret;
 }
@@ -84,7 +84,8 @@ string MaterialDB::tableID(string mat, double ref_disp, double ref_kd,
   try{
     ref_id = table_id_array_.at(disp_ind).at(kd_ind).at(sol_ind); 
   } catch(const out_of_range& oor){
-    table_id_array_[disp_ind][kd_ind][sol_ind] = table_id_++;
+    table_id_+=1;
+    table_id_array_[disp_ind][kd_ind][sol_ind] = table_id_;
     ref_id = table_id_array_[disp_ind][kd_ind][sol_ind]; 
   }
 
@@ -164,3 +165,19 @@ MatDataTablePtr MaterialDB::initializeFromSQL(string mat, double ref_disp,
 }
 
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void MaterialDB::clearTables(){
+  tables_.clear();
+
+  table_id_array_.clear();
+  table_id_array_[0][0][0]=0;
+
+  disp_ind_map_.clear();
+  disp_ind_map_[0]=0;
+
+  kd_ind_map_.clear();
+  kd_ind_map_[0]=0;
+
+  sol_ind_map_.clear();
+  sol_ind_map_[0]=0;
+}
