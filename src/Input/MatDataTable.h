@@ -114,9 +114,9 @@ public:
      @return mat_
      */
   std::string mat(){return mat_;};
-  double ref_disp(){return ref_disp_;};
-  double ref_kd(){return ref_kd_;};
-  double ref_sol(){return ref_sol_;};
+  double ref_disp(){return (initialized_) ? ref_disp_ : NULL;};
+  double ref_kd(){return (initialized_) ? ref_kd_ : NULL;};
+  double ref_sol(){return (initialized_) ? ref_sol_ : NULL;};
 
 
   /**
