@@ -39,8 +39,8 @@ double SolLim::m_mf(double m_T, double K_d, double V_s, double V_f, double d){
   return (1-d)*m_f(m_T,K_d,V_s,V_f);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double SolLim::m_aff(double m_ff, double V_f, double C_sol){
-  return min(C_sol*V_f, m_ff);
+double SolLim::m_aff(double m_ff, double V_ff, double C_sol){
+  return min(C_sol*V_ff, m_ff);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double SolLim::m_ps(double m_T, double K_d, double V_s, double V_f, double d, double C_sol){
