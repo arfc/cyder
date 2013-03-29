@@ -120,7 +120,7 @@ mat_rsrc_ptr MixedCellNuclide::extract(const CompMapPtr comp_to_rem, double kg_t
   // Get the given MixedCellNuclide's contaminant material.
   // add the material to it with the material extract function.
   // each nuclide model should override this function
-  LOG(LEV_DEBUG2,"GRDRNuc") << "MixedCellNuclide" << "is extracting composition: ";
+  LOG(LEV_DEBUG2,"GRDRNuc") << "MixedCellNuclide " << " is extracting composition: ";
   comp_to_rem->print() ;
   mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
   update(last_updated());
@@ -371,7 +371,7 @@ double MixedCellNuclide::precipitate(int the_time, int iso, double mass){
     throw CycException("The sorb function was called, but sol_limited=false.");
   }
   double s = mat_table_->S(MatTools::isoToElem(iso));
-  return SolLim::m_aff(mass, V_f(),s);
+  return SolLim::m_aff(mass, V_ff(),s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
