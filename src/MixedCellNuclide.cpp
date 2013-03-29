@@ -29,7 +29,7 @@ MixedCellNuclide::MixedCellNuclide():
   sol_limited_(true),
   kd_limited_(true)
 {
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
   vec_hist_ = VecHist();
@@ -46,7 +46,7 @@ MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) :
   sol_limited_(true),
   kd_limited_(true)
 {
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
   vec_hist_ = VecHist();
@@ -84,7 +84,7 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   set_geom(GeometryPtr(new Geometry()));
   geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid());
 
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 
@@ -111,7 +111,7 @@ void MixedCellNuclide::absorb(mat_rsrc_ptr matToAdd)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "MixedCellNuclide is absorbing material: ";
   matToAdd->print();
-  wastes_.push_back(matToAdd);
+  wastes_->absorb(matToAdd);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,7 +122,7 @@ mat_rsrc_ptr MixedCellNuclide::extract(const CompMapPtr comp_to_rem, double kg_t
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "MixedCellNuclide " << " is extracting composition: ";
   comp_to_rem->print() ;
-  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
+  mat_rsrc_ptr to_ret = wastes_->extract(comp_to_rem, kg_to_rem);
   update(last_updated());
   return to_ret;
 }
@@ -281,7 +281,7 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
+IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, mat_rsrc_ptr mat){
   // @TODO mats is unused in this (and analogous) functions.
   assert(last_degraded() <= the_time);
 
@@ -340,7 +340,7 @@ double MixedCellNuclide::update_degradation(int the_time, double cur_rate){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MixedCellNuclide::update_vec_hist(int the_time){
-  vec_hist_[ the_time ] = MatTools::sum_mats(wastes_) ;
+  vec_hist_[ the_time ] = make_pair(wastes_->isoVector(), wastes_->mass(KG)) ;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

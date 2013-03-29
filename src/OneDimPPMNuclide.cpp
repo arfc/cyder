@@ -28,7 +28,7 @@ OneDimPPMNuclide::OneDimPPMNuclide():
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 }
@@ -41,7 +41,7 @@ OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
   porosity_(0),
   rho_(0)
 {
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
   vec_hist_ = VecHist();
@@ -82,7 +82,7 @@ NuclideModelPtr OneDimPPMNuclide::copy(const NuclideModel& src){
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
 
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
   update_vec_hist(TI->time());
@@ -103,7 +103,7 @@ void OneDimPPMNuclide::absorb(mat_rsrc_ptr matToAdd)
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GR1DNuc") << "OneDimPPMNuclide is absorbing material: ";
   matToAdd->print();
-  wastes_.push_back(matToAdd);
+  wastes_->absorb(matToAdd);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -114,7 +114,7 @@ mat_rsrc_ptr OneDimPPMNuclide::extract(const CompMapPtr comp_to_rem, double kg_t
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GR1DNuc") << "OneDimPPMNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
+  mat_rsrc_ptr to_ret = wastes_->extract(comp_to_rem, kg_to_rem);
   update(last_updated());
   return to_ret;
 }
@@ -204,7 +204,7 @@ IsoFluxMap OneDimPPMNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::update_vec_hist(int the_time){
-  vec_hist_[the_time]=MatTools::sum_mats(wastes_);
+  vec_hist_[the_time]=make_pair(wastes_->isoVector(), wastes_->mass(KG));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -212,7 +212,7 @@ void OneDimPPMNuclide::update_conc_hist(int the_time){
   return update_conc_hist(the_time, wastes_);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void OneDimPPMNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
+void OneDimPPMNuclide::update_conc_hist(int the_time, mat_rsrc_ptr mat){
   assert(last_updated() <= the_time);
   IsoConcMap to_ret;
 

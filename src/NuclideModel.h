@@ -334,7 +334,7 @@ public:
   void set_mat_table(MatDataTablePtr mat_table){mat_table_ = MatDataTablePtr(mat_table);}
 
   /// Returns wastes_
-  std::deque<mat_rsrc_ptr> wastes() {return wastes_;};
+  mat_rsrc_ptr wastes() {return wastes_;};
 
   /// returns the time at which the vec_hist and conc_hist were updated
   int last_updated(){return last_updated_;};
@@ -359,9 +359,9 @@ public:
   virtual double V_T()=0;
 
 protected:
-  /// A vector of the wastes contained by this component
+  /// A material representing the contaminants contained by this component
   ///wastes(){return component_->wastes();};
-  std::deque<mat_rsrc_ptr> wastes_;
+  mat_rsrc_ptr wastes_;
 
   /// The map of times to isotopes to concentrations, in kg/m^3
   ConcHist conc_hist_;

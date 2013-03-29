@@ -203,10 +203,10 @@ public:
      updates the contained concentration with mats provided 
     
      @param time the time at which to update the degradation
-     @param mats the vector of materials contained in the component
+     @param mat the contaminant material contained in the component
      @return the current isotopic concentration map at the outer border
     */
-  IsoConcMap update_conc_hist(int time, std::deque<mat_rsrc_ptr> mats);
+  IsoConcMap update_conc_hist(int time, mat_rsrc_ptr mat);
 
   /**
      updates the total degradation and makes time the last degraded time.
@@ -228,11 +228,11 @@ public:
      Updates the isotopic vector history at the time
 
      @param time the time at which to update the vector history
-     @param mats the deque of materials to include in the history, usually wastes_
+     @param mat the material to include in the history, usually wastes_
      @throws an exception if the time provided is less than the 
      last_degraded_ time.
      */
-  void update_vec_hist(int time, std::deque<mat_rsrc_ptr> mats);
+  void update_vec_hist(int time, mat_rsrc_ptr mat);
 
   /** 
      Determines what IsoVector to remove from the daughter nuclide models

@@ -108,7 +108,7 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   // copy the geometry AND the centroid, it should be reset later.
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
 
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
 
@@ -135,7 +135,7 @@ void LumpedNuclide::absorb(mat_rsrc_ptr matToAdd) {
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide is absorbing material: ";
   matToAdd->print();
-  wastes_.push_back(matToAdd);
+  wastes_->absorb(matToAdd);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -146,8 +146,7 @@ mat_rsrc_ptr LumpedNuclide::extract(const CompMapPtr comp_to_rem, double
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, 
-        wastes_));
+  mat_rsrc_ptr to_ret = wastes_->extract(comp_to_rem, kg_to_rem);
   update(last_updated());
   return to_ret;
 }
@@ -308,7 +307,7 @@ double LumpedNuclide::V_T(){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
+void LumpedNuclide::update_conc_hist(int the_time, mat_rsrc_ptr mat){
 
   IsoConcMap to_ret;
 
@@ -395,7 +394,7 @@ IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::update_vec_hist(int the_time){
-  vec_hist_[the_time] = MatTools::sum_mats(wastes_);
+  vec_hist_[the_time] = make_pair(wastes_->isoVector(), wastes_->mass(KG));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

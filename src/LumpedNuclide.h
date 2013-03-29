@@ -293,9 +293,9 @@ public:
      Updates the available concentration
 
      @param the_time the time at which to update the IsoConcMap
-     @param mats the materials that are part of the available concentration
+     @param mat the material that is part of the available concentration
     */
-  void update_conc_hist(int the_time, std::deque<mat_rsrc_ptr> mats);
+  void update_conc_hist(int the_time, mat_rsrc_ptr mat);
 
   /** 
     concentration calculator for this->formulation_ model

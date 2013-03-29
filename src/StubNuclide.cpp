@@ -16,7 +16,7 @@ using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 StubNuclide::StubNuclide(){
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
@@ -24,7 +24,7 @@ StubNuclide::StubNuclide(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 StubNuclide::StubNuclide(QueryEngine* qe){
-  wastes_ = deque<mat_rsrc_ptr>();
+  wastes_ = mat_rsrc_ptr(new Material());
   set_geom(GeometryPtr(new Geometry()));
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
@@ -69,7 +69,7 @@ mat_rsrc_ptr StubNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_rem
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRSNuc") << "StubNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
+  mat_rsrc_ptr to_ret = wastes_->extract(comp_to_rem, kg_to_rem);
   update(TI->time());
   return to_ret;
 }

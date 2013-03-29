@@ -369,8 +369,6 @@ TEST_F(LumpedNuclideTest, getVolume) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, C_DM){
-  deque<mat_rsrc_ptr> mats;
-  mats.push_back(test_mat_);
   double Pe = 0.1;
   lumped_ptr_->set_Pe(Pe);
   lumped_ptr_->set_formulation(DM);
@@ -384,7 +382,7 @@ TEST_F(LumpedNuclideTest, C_DM){
   expected[95242] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
 
 
-  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, test_mat_));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
   EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_DM( conc_map, time_ )[u235_]);
   EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_DM( conc_map, time_ )[95242]);
@@ -394,8 +392,6 @@ TEST_F(LumpedNuclideTest, C_DM){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, C_EM){
-  deque<mat_rsrc_ptr> mats;
-  mats.push_back(test_mat_);
   lumped_ptr_->set_formulation(EM);
 
   IsoConcMap conc_map;
@@ -406,7 +402,7 @@ TEST_F(LumpedNuclideTest, C_EM){
   expected[u235_] = 10/(1+time_);
   expected[95242] = 10/(1+time_);
 
-  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, test_mat_));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
   EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_EM( conc_map, time_ )[u235_]);
   EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_EM( conc_map, time_ )[95242]);
@@ -415,8 +411,6 @@ TEST_F(LumpedNuclideTest, C_EM){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, C_PFM){
-  deque<mat_rsrc_ptr> mats;
-  mats.push_back(test_mat_);
   lumped_ptr_->set_formulation(PFM);
 
   IsoConcMap conc_map;
@@ -427,7 +421,7 @@ TEST_F(LumpedNuclideTest, C_PFM){
   expected[u235_] = 10*exp(-time_);
   expected[95242] = 10*exp(-time_);
 
-  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
+  EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, test_mat_));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
   EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_PFM( conc_map, time_ )[u235_]);
   EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_PFM( conc_map, time_ )[95242]);
@@ -436,10 +430,8 @@ TEST_F(LumpedNuclideTest, C_PFM){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, C_LAST_FORMULATION_TYPE){
-  deque<mat_rsrc_ptr> mats;
-  mats.push_back(test_mat_);
   lumped_ptr_->set_formulation(LAST_FORMULATION_TYPE);
-  EXPECT_THROW(lumped_ptr_->update_conc_hist(time_, mats), CycException);
+  EXPECT_THROW(lumped_ptr_->update_conc_hist(time_, test_mat_), CycException);
 }
 
 
