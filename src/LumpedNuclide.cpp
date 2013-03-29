@@ -22,6 +22,7 @@ LumpedNuclide::LumpedNuclide() :
   v_(0),
   formulation_(LAST_FORMULATION_TYPE) 
 { 
+  wastes_=mat_rsrc_ptr(new Material());
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
@@ -39,6 +40,7 @@ LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
+  wastes_=mat_rsrc_ptr(new Material());
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
