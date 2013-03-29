@@ -25,11 +25,11 @@ def configure_infile(xml_in, xml, param, val) :
     f_new.close()
     return xml
      
-def configure_infiles(xml_in, param, val_list) :
+def configure_infiles(xml_in, out_path, param, val_list) :
     """ takes a list of values, each of which will result in runnable xml. """
     xml_list = []
     for val in val_list:
-        xml = change_extension(xml_in, str(val)+".xml")
+        xml = out_path+"/"+change_extension(xml_in, str(val)+".xml")
         xml_list.append(configure_infile(xml_in, xml, param, val))
     return xml_list
 
@@ -67,7 +67,7 @@ def make_param_range(low, upper, number):
 
 def perturb(xml_in, out_path, param, val_list) :
     make_dir(out_path)
-    in_file_list = configure_infiles(xml_in, param, val_list)
+    in_file_list = configure_infiles(xml_in, out_path, param, val_list)
     run_cyclus(in_file_list, out_path)
 
 def main() :
