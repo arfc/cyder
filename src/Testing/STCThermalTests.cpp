@@ -181,7 +181,7 @@ TEST_F(STCThermalTest, set_spacing){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, get_temp_change){
-  for(int the_time = 1; the_time<10; ++the_time) {
+  for(int the_time = 1; the_time<2; ++the_time) {
     EXPECT_GT(stc_ptr_->getTempChange(Cs137_, the_time), 0);
     EXPECT_FLOAT_EQ(1, stc_ptr_->getTempChange(Cs137_, the_time));
     EXPECT_NO_THROW(stc_ptr_->getTempChange(hot_mat_, the_time));
@@ -248,7 +248,7 @@ TEST_F(STCThermalTest, getVolume) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(STCThermalTest, superimposeIsos){
   Temp cs135, cs137, cs;
-  for(int the_time = 1; the_time<10; ++the_time) {
+  for(int the_time = 1; the_time<2; ++the_time) {
     cs137=stc_ptr_->getTempChange(cs137_mat_, the_time);
     cs135=stc_ptr_->getTempChange(cs135_mat_, the_time);
     cs=stc_ptr_->getTempChange(cs_mat_, the_time);
