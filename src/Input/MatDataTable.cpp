@@ -15,7 +15,6 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MatDataTable::MatDataTable() :
   mat_(""),
-  elem_len_(0)
   elem_len_(0),
   initialized_(false)
 {
