@@ -64,11 +64,11 @@ void Component::initModuleMembers(QueryEngine* qe){
   QueryEngine* mat_data = qe->queryElement("material_data");
   string mat = mat_data->getElementName();
 
-  int n_disp = mat_data->nElementsMatchingQuery("ref_disp_lim");
+  int n_disp = mat_data->nElementsMatchingQuery("ref_disp");
   double ref_disp = NULL;
   if( n_disp!=0 ) { ref_disp=lexical_cast<double>(mat_data->getElementContent("ref_disp")); };
 
-  int n_kd = mat_data->nElementsMatchingQuery("ref_kd_lim");
+  int n_kd = mat_data->nElementsMatchingQuery("ref_kd");
   double ref_kd = NULL;
   if( n_kd!=0 ) { ref_kd=lexical_cast<double>(mat_data->getElementContent("ref_kd")); };
 
@@ -103,6 +103,9 @@ void Component::init(string name, ComponentType type, string mat, double
   } else { 
     thermal_model->set_geom(GeometryPtr(geom()));
     nuclide_model->set_geom(GeometryPtr(geom()));
+
+    thermal_model->set_mat_table(MatDataTablePtr(mat_table()));
+    nuclide_model->set_mat_table(MatDataTablePtr(mat_table()));
 
     set_thermal_model(thermal_model);
     set_nuclide_model(nuclide_model);
