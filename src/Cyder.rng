@@ -194,14 +194,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     </element>
   </define>
 
-  <define name ="eta_ratio">
-    <element name="eta_ratio">
-      <data type="double">
-        <param name="minInclusive">1</param>
-      </data>
-    </element>
-  </define>
-
   <define name="initial_concentration">
     <element name="initial_concentration">
       <data type="double">
@@ -343,6 +335,27 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
           <text/>
         </element>
       </choice>
+      <optional>
+        <element name="ref_disp">
+          <data type="double">
+            <param name="minInclusive">0</param>
+          </data>
+        </element>
+      </optional>
+      <optional>
+        <element name="ref_kd">
+          <data type="double">
+            <param name="minInclusive">0</param>
+          </data>
+        </element>
+      </optional>
+      <optional>
+        <element name="ref_sol_lim">
+          <data type="double">
+            <param name="minInclusive">0</param>
+          </data>
+        </element>
+      </optional>
     </element>
   </define>
 

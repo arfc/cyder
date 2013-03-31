@@ -16,6 +16,9 @@ class ComponentTest : public ::testing::Test {
     Temp OneHundredCinK;
     string name_;
     string mat_;
+    double ref_disp_;
+    double ref_sol_;
+    double ref_kd_;
     ComponentType type_;
     Radius inner_radius_, outer_radius_;
     double length_;
@@ -29,6 +32,9 @@ class ComponentTest : public ::testing::Test {
       name_ = "Test";
       type_ = BUFFER;
       mat_ = "clay";
+      ref_disp_ = 1;
+      ref_sol_ = 2;
+      ref_kd_ = 3;
       inner_radius_ = 2;
       outer_radius_ = 10;
       length_ = 100;
@@ -64,8 +70,8 @@ TEST_F(ComponentTest, defaultConstructor) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(ComponentTest, initFunctionNoXML) { 
-  test_component_->init(name_, type_, mat_, inner_radius_, outer_radius_, thermal_model_, nuclide_model_);
-  EXPECT_NO_THROW(test_component_->init(name_, type_, mat_, inner_radius_, outer_radius_, 
+  test_component_->init(name_, type_, mat_, ref_disp_, ref_kd_, ref_sol_, inner_radius_, outer_radius_, thermal_model_, nuclide_model_);
+  EXPECT_NO_THROW(test_component_->init(name_, type_, mat_, ref_disp_, ref_kd_, ref_sol_, inner_radius_, outer_radius_, 
         thermal_model_, nuclide_model_));
   ASSERT_EQ(name_, test_component_->name());
   ASSERT_EQ(type_, test_component_->type());
@@ -82,7 +88,7 @@ TEST_F(ComponentTest, copy) {
   EXPECT_EQ("STUB_THERMAL", test_copy->thermal_model()->name());
   EXPECT_EQ("STUB_NUCLIDE", test_copy->nuclide_model()->name());
 
-  EXPECT_NO_THROW(test_component_->init(name_, type_, mat_, inner_radius_, outer_radius_, 
+  EXPECT_NO_THROW(test_component_->init(name_, type_, mat_, ref_disp_, ref_kd_, ref_sol_, inner_radius_, outer_radius_, 
         thermal_model_, nuclide_model_));
   EXPECT_NO_THROW(test_copy->copy(test_component_));
 

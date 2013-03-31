@@ -1,9 +1,11 @@
 // MaterialDB.h
 #if !defined(_MATERIALDB)
+
 #define _MATERIALDB
 
 #include <string>
 #include <map>
+#include <boost/multi_array.hpp>
 #include "SqliteDb.h"
 #include "MatDataTable.h"
 
@@ -28,6 +30,9 @@ private:
     this database's file path
    */
   std::string file_path_;
+
+  /// the current table id
+  static int table_id_;
 
 public:
   /** 
@@ -117,9 +122,14 @@ public:
 
      @return a MatDataTablePtr holding the data associated with the mat
      */
-  MatDataTablePtr table(std::string mat);
+  MatDataTablePtr table( std::string mat, double ref_disp=NULL, double 
+      ref_kd=NULL, double ref_sol=NULL);
 
-protected:
+  std::string tableID(std::string mat, double ref_disp=NULL, double ref_kd=NULL, double 
+      ref_sol=NULL);
+
+  int ref_ind(double ref, ChemDataType data);
+
   /**
      checks whether a table associated with a particular mat has been created
 
@@ -133,7 +143,20 @@ protected:
 
      @param mat the string indicatin the material this table should represent
    */
-  MatDataTablePtr initializeFromSQL(std::string mat);
+  MatDataTablePtr initializeFromSQL(std::string mat, double ref_disp=NULL, double 
+      ref_kd=NULL, double ref_sol=NULL);
+
+  int curr_table_id(){return table_id_;};
+
+  void clearTables();
+
+protected:
+  std::map<int, std::map<int, std::map<int,int> > > table_id_array_;
+
+  std::map<double, int> disp_ind_map_;
+  std::map<double, int> kd_ind_map_;
+  std::map<double, int> sol_ind_map_;
+
 
 };
 

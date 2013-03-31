@@ -272,7 +272,9 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
     for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
       source_term = (*daughter)->source_term_bc();
       if( source_term.second > 0 ){
-        absorb((*daughter)->extract(source_term.first.comp(), source_term.second));
+        CompMapPtr comp_to_ext = CompMapPtr(source_term.first.comp());
+        double kg_to_ext=source_term.second;
+        absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
       }
     }
   }

@@ -67,7 +67,6 @@
           <material_data>
             <clay/>
             <ref_kd>0.1</ref_kd>
-            <ref_sol_lim>0.001</ref_sol_lim>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -78,7 +77,7 @@
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
               <porosity>0.1</porosity>
-              <sol_limited>1</sol_limited>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
@@ -91,6 +90,7 @@
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -101,7 +101,7 @@
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
               <porosity>0.1</porosity>
-              <sol_limited>1</sol_limited>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
@@ -114,6 +114,7 @@
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -124,7 +125,7 @@
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
               <porosity>0.1</porosity>
-              <sol_limited>1</sol_limited>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
         </component>
@@ -136,6 +137,7 @@
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -146,7 +148,7 @@
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
               <porosity>0.1</porosity>
-              <sol_limited>1</sol_limited>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
         </component>

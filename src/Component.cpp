@@ -57,26 +57,43 @@ void Component::initModuleMembers(QueryEngine* qe){
 
   string name = qe->getElementContent("name");
   ComponentType type = componentEnum(qe->getElementContent("componenttype"));
-  string mat = qe->queryElement("material_data")->getElementName();
   Radius inner_radius = lexical_cast<double>(qe->getElementContent("innerradius"));
   Radius outer_radius = lexical_cast<double>(qe->getElementContent("outerradius"));
 
+
+  QueryEngine* mat_data = qe->queryElement("material_data");
+  string mat = mat_data->getElementName();
+
+  int n_disp = mat_data->nElementsMatchingQuery("ref_disp");
+  double ref_disp = NULL;
+  if( n_disp!=0 ) { ref_disp=lexical_cast<double>(mat_data->getElementContent("ref_disp")); };
+
+  int n_kd = mat_data->nElementsMatchingQuery("ref_kd");
+  double ref_kd = NULL;
+  if( n_kd!=0 ) { ref_kd=lexical_cast<double>(mat_data->getElementContent("ref_kd")); };
+
+  int n_sol = mat_data->nElementsMatchingQuery("ref_sol_lim");
+  double ref_sol = NULL;
+  if( n_sol!=0 ) { ref_sol=lexical_cast<double>(mat_data->getElementContent("ref_sol_lim")); };
+
+
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
 
-  shared_from_this()->init(name, type, mat, inner_radius, outer_radius, 
+  shared_from_this()->init(name, type, mat, ref_disp, ref_kd, ref_sol, inner_radius, outer_radius, 
       thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Component::init(string name, ComponentType type, string mat,
-    Radius inner_radius, Radius outer_radius, ThermalModelPtr thermal_model, 
-    NuclideModelPtr nuclide_model){
+void Component::init(string name, ComponentType type, string mat, double 
+    ref_disp, double ref_kd, double ref_sol, Radius inner_radius, Radius 
+    outer_radius, ThermalModelPtr thermal_model, NuclideModelPtr 
+    nuclide_model){
 
   ID_=nextID_++;
   
   name_ = name;
   type_ = type;
-  set_mat_table(mat);
+  set_mat_table(mat, ref_disp, ref_kd, ref_sol);
   geom()->set_radius(INNER, inner_radius);
   geom()->set_radius(OUTER, outer_radius);
 
@@ -86,6 +103,9 @@ void Component::init(string name, ComponentType type, string mat,
   } else { 
     thermal_model->set_geom(GeometryPtr(geom()));
     nuclide_model->set_geom(GeometryPtr(geom()));
+
+    thermal_model->set_mat_table(MatDataTablePtr(mat_table()));
+    nuclide_model->set_mat_table(MatDataTablePtr(mat_table()));
 
     set_thermal_model(thermal_model);
     set_nuclide_model(nuclide_model);
@@ -307,8 +327,9 @@ const int Component::ID(){return ID_;}
 const std::string Component::name(){return name_;} 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void Component::set_mat_table(std::string mat){
-  mat_table_ = MatDataTablePtr(MDB->table(mat));
+void Component::set_mat_table(std::string mat, double ref_disp, double ref_kd, 
+    double ref_sol){
+  mat_table_ = MatDataTablePtr(MDB->table(mat, ref_disp, ref_kd, ref_sol));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
