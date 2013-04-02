@@ -54,6 +54,7 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, deque<mat_rsrc_ptr>& mat_list){
+  comp_to_rem->normalize();
   mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material(comp_to_rem));
   left_over->setQuantity(0);
   while(!mat_list.empty()) { 
@@ -73,19 +74,29 @@ IsoConcMap MatTools::comp_to_conc_map(CompMapPtr comp, double mass, double vol){
   MatTools::validate_finite_pos(mass);
 
   IsoConcMap to_ret;
-  int iso;
-  double m_iso;
-  CompMap::const_iterator it;
-  it=(*comp).begin();
-  while(it!= (*comp).end() ){
-    iso = (*it).first;
-    m_iso=((*it).second)*mass;
-    to_ret.insert(make_pair(iso, m_iso/vol));
-    ++it;
-  } 
+  if( vol==0 ) {
+    to_ret = zeroConcMap();
+  } else {
+    int iso;
+    double m_iso;
+    CompMap::const_iterator it;
+    it=(*comp).begin();
+    while(it!= (*comp).end() ){
+      iso = (*it).first;
+      m_iso=((*it).second)*mass;
+      to_ret.insert(make_pair(iso, m_iso/vol));
+      ++it;
+    } 
+  }
   return to_ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap MatTools::zeroConcMap(){
+  IsoConcMap to_ret;
+  to_ret[92235] = 0;
+  return to_ret;
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol){
   MatTools::validate_finite_pos(vol);
@@ -209,3 +220,8 @@ IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
   return to_ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+int MatTools::isoToElem(int iso) { 
+  int N = iso % 1000;
+  return (iso-N)/1000;
+}

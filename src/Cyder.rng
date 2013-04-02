@@ -122,7 +122,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="LumpedNuclide">
       <ref name="advective_velocity"/>
       <ref name="porosity"/>
-      <ref name="transit_time"/>
       <element name="formulation">
         <choice>
           <element name="EM">
@@ -130,9 +129,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
           </element>
           <element name="PFM">
             <text/>
-          </element>
-          <element name="EPM">
-            <ref name="eta_ratio"/>
           </element>
           <element name="DM">
             <ref name="peclet"/>
@@ -194,14 +190,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <data type="double">
         <param name="minInclusive">0</param>
         <param name="maxInclusive">1</param>
-      </data>
-    </element>
-  </define>
-
-  <define name ="eta_ratio">
-    <element name="eta_ratio">
-      <data type="double">
-        <param name="minInclusive">1</param>
       </data>
     </element>
   </define>
@@ -313,14 +301,6 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   </define>
 
 
-  <define name="transit_time">
-    <element name="transit_time">
-      <data type="double">
-        <param name="minInclusive">0</param>
-      </data>
-    </element>
-  </define>
-
   <define name="material_data">
     <element name="material_data">
       <choice>
@@ -355,6 +335,27 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
           <text/>
         </element>
       </choice>
+      <optional>
+        <element name="ref_disp">
+          <data type="double">
+            <param name="minInclusive">0</param>
+          </data>
+        </element>
+      </optional>
+      <optional>
+        <element name="ref_kd">
+          <data type="double">
+            <param name="minInclusive">0</param>
+          </data>
+        </element>
+      </optional>
+      <optional>
+        <element name="ref_sol_lim">
+          <data type="double">
+            <param name="minInclusive">0</param>
+          </data>
+        </element>
+      </optional>
     </element>
   </define>
 

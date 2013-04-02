@@ -93,8 +93,8 @@ NuclideModelPtr NuclideModelFactory::nuclideModel(NuclideModelPtr src,
       throw CycException("Unknown nuclide model enum value encountered when copying."); 
   }      
   to_ret->copy(*src);
-  to_ret->set_mat_table(mat_table);
-  to_ret->set_geom(geom);
+  to_ret->set_mat_table(MatDataTablePtr(mat_table));
+  to_ret->set_geom(GeometryPtr(geom));
   return to_ret;
 }
 

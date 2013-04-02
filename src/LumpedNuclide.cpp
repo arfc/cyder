@@ -17,16 +17,14 @@ using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide() : 
-  t_t_(0),
   Pe_(0),
   porosity_(0),
+  v_(0),
   formulation_(LAST_FORMULATION_TYPE) 
 { 
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
-  t_t_ = 0;
-  v_ = 0;
   Pe_ = 0;
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
@@ -35,9 +33,9 @@ LumpedNuclide::LumpedNuclide() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LumpedNuclide::LumpedNuclide(QueryEngine* qe):
-  t_t_(0),
   Pe_(0),
   porosity_(0),
+  v_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -56,7 +54,6 @@ LumpedNuclide::~LumpedNuclide(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
-  t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
 
@@ -102,11 +99,11 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   const LumpedNuclide* src_ptr = dynamic_cast<const LumpedNuclide*>(&src);
 
   set_last_updated(0);
-  set_t_t(src_ptr->t_t());
   set_Pe(src_ptr->Pe());
   set_porosity(src_ptr->porosity());
   set_formulation(src_ptr->formulation());
   set_C_0(IsoConcMap());
+  v_=src_ptr->v();
 
   // copy the geometry AND the centroid, it should be reset later.
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
@@ -409,6 +406,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
   
   pair<IsoVector, double> st;
   pair<IsoVector, double> mixed;
+  mixed = make_pair(IsoVector(), 0);
   Volume vol(0);
   Volume vol_sum(0);
   IsoConcMap C_0;
@@ -420,14 +418,15 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
       st = (*daughter)->source_term_bc();
       vol = (*daughter)->V_ff();
       vol_sum += vol;
-      if(mixed.second==0){
+      if(mixed.second == 0){
         mixed.first=st.first;
         mixed.second=st.second;
       } else {
-        absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
         mixed.second +=st.second;
         mixed.first.mix(st.first,mixed.second/st.second);
       }
+      // @TODO use timestep len
+      absorb(mat_rsrc_ptr(extractIntegratedMass((*daughter), 1))); 
     }
     C_0 = MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
   }
@@ -437,7 +436,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
-  double theta = daughter->V_ff()/daughter->geom()->length();
+  double theta = daughter->V_ff()/daughter->V_T();
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
       dt*theta*v());
 

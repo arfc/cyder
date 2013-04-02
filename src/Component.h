@@ -84,13 +84,18 @@ public:
      @param name  the name_ data member, a string
      @param type the type_ data member, a ComponentType enum value
      @param mat the name to initialize the mat_table_ data member, a string
+     @param ref_disp a reference (hydrogen) dispersion coefficient 
+     @param ref_kd a reference (hydrogen) K_d coefficient 
+     @param ref_sol a reference (hydrogen) Solubility coefficient 
      @param inner_radius the inner_radius_ data member, in meters
      @param outer_radius the outer_radius_ data member, in meters 
      @param thermal_model the thermal_model_ data member, a pointer
      @param nuclide_model the nuclide_model_ data member, a pointer
    */
-  void init(std::string name, ComponentType type, std::string mat, Radius inner_radius,
-      Radius outer_radius, ThermalModelPtr thermal_model, NuclideModelPtr nuclide_model); 
+  void init(std::string name, ComponentType type, std::string mat, double 
+      ref_disp, double ref_kd, double ref_sol, Radius inner_radius, Radius 
+      outer_radius, ThermalModelPtr thermal_model, NuclideModelPtr 
+      nuclide_model); 
 
   /**
      copies a component and its parameters from another
@@ -243,8 +248,11 @@ public:
      and retrieves the appropriate MatDataTablePtr
 
      @param mat the name of the material type (clay, salt, glass, etc.)
+     @param ref_disp a reference (related to hydrogen) dispersion parameter 
+     @param ref_kd a reference (related to hydrogen) K_d value
+     @param ref_sol a reference (related to hydrogen) S value
    */
-  void set_mat_table(std::string mat);
+  void set_mat_table(std::string mat, double ref_disp, double ref_kd, double ref_sol);
 
   /**
      set the material type that this component is made of (clay, salt, glass, etc.)
