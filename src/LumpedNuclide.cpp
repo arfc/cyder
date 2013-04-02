@@ -20,6 +20,7 @@ LumpedNuclide::LumpedNuclide() :
   Pe_(0),
   porosity_(0),
   v_(0),
+  t_t_(0),
   formulation_(LAST_FORMULATION_TYPE) 
 { 
   set_geom(GeometryPtr(new Geometry()));
@@ -36,6 +37,7 @@ LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   Pe_(0),
   porosity_(0),
   v_(0),
+  t_t_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -56,6 +58,7 @@ LumpedNuclide::~LumpedNuclide(){
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
+  t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
 
   Pe_=NULL;
 
@@ -390,7 +393,7 @@ IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
-  double scale = exp(-the_time);
+  double scale = (the_time - t_t_)*exp(-t_t_);
   return MatTools::scaleConcMap(C_0, scale);
 }
 
