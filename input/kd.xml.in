@@ -66,6 +66,7 @@
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -73,10 +74,10 @@
           <nuclidemodel>
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0</degradation>
+              <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
-              <porosity>0.001</porosity>
-              <sol_limited>1</sol_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
@@ -89,6 +90,7 @@
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -98,8 +100,8 @@
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
-              <porosity>0.001</porosity>
-              <sol_limited>1</sol_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
@@ -112,6 +114,7 @@
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -121,8 +124,8 @@
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
-              <porosity>0.001</porosity>
-              <sol_limited>1</sol_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
         </component>
@@ -134,6 +137,7 @@
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.1</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -143,8 +147,8 @@
               <advective_velocity>0.000631</advective_velocity>
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
-              <porosity>0.001</porosity>
-              <sol_limited>1</sol_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
             </MixedCellNuclide>
           </nuclidemodel>
         </component>
@@ -179,7 +183,6 @@
       </model>
     </institution>
   </region>
-
 
   <recipe>
     <name>lwr_used_fuel_recipe</name>
@@ -237,4 +240,5 @@
       <comp>1.263</comp>
     </isotope>
   </recipe>
+
 </simulation>

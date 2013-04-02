@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<!-- 1 SourceFacility Source, 1 GenericRepository Sink -->
+<!-- 1 SourceFacility Source, 1 Cyder Sink -->
 
 <simulation>
   <control>
-    <duration>10</duration>
+    <duration>100</duration>
     <startmonth>1</startmonth>
     <startyear>2000</startyear>
     <simstart>0</simstart>
@@ -41,9 +41,9 @@
     <name>Repository</name>
     <model>
       <Cyder>
-        <x>0</x>
-        <y>0</y>
-        <z>0</z>
+        <x>10000</x>
+        <y>10000</y>
+        <z>10000</z>
         <dx>100</dx>
         <dy>100</dy>
         <dz>100</dz>
@@ -66,19 +66,19 @@
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.0</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.00001</porosity>
-              <transit_time>1</transit_time>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>1</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
         </component>
@@ -90,19 +90,19 @@
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.0</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.00001</porosity>
-              <transit_time>1</transit_time>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>1</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
         </component>
@@ -114,19 +114,19 @@
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.0</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.00001</porosity>
-              <transit_time>1</transit_time>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>1</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -137,19 +137,19 @@
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>
+            <ref_kd>0.0</ref_kd>
           </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.00001</porosity>
-              <transit_time>1</transit_time>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>1</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
       </Cyder>
@@ -183,7 +183,6 @@
       </model>
     </institution>
   </region>
-
 
   <recipe>
     <name>lwr_used_fuel_recipe</name>
@@ -241,4 +240,5 @@
       <comp>1.263</comp>
     </isotope>
   </recipe>
+
 </simulation>

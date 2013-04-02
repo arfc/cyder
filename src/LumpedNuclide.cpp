@@ -429,7 +429,8 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
         mixed.second +=st.second;
         mixed.first.mix(st.first,mixed.second/st.second);
       }
-      absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
+      // @TODO use timestep len
+      absorb(mat_rsrc_ptr(extractIntegratedMass((*daughter), 1))); 
     }
     C_0 = MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
   }

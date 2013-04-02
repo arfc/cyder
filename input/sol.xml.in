@@ -29,7 +29,7 @@
       <SourceFacility>
         <output>
           <outcommodity>waste</outcommodity>
-          <output_capacity>1</output_capacity>
+          <output_capacity>1000</output_capacity>
           <recipe>lwr_used_fuel_recipe</recipe>
         </output>
       </SourceFacility>
@@ -48,10 +48,10 @@
         <dy>100</dy>
         <dz>100</dz>
         <advective_velocity>0.000631</advective_velocity>
-        <capacity>1</capacity>
+        <capacity>1000</capacity>
         <limiting_temp>1000</limiting_temp>
         <incommodity>waste</incommodity>
-        <inventorysize>20</inventorysize>
+        <inventorysize>2000</inventorysize>
         <lifetime>1000</lifetime>
         <startOperMonth>1</startOperMonth>
         <startOperYear>2000</startOperYear>
@@ -66,18 +66,19 @@
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
+            <ref_sol_lim>0</ref_sol_lim>
           </material_data>
           <thermalmodel>
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
-              <formulation>
-                <PFM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>1</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
         </component>
@@ -94,13 +95,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
-              <formulation>
-                <PFM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>1</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
         </component>
@@ -117,13 +118,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
-              <formulation>
-                <PFM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>1</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -139,13 +140,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
-              <formulation>
-                <PFM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>1</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
       </Cyder>

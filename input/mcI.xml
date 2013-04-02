@@ -71,13 +71,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.5</porosity>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
         </component>
@@ -94,13 +94,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.5</porosity>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
         </component>
@@ -117,13 +117,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.5</porosity>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -139,13 +139,13 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.5</porosity>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
+              <porosity>0.1</porosity>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
       </Cyder>
@@ -179,6 +179,7 @@
       </model>
     </institution>
   </region>
+
 
   <recipe>
     <name>lwr_used_fuel_recipe</name>
@@ -236,5 +237,4 @@
       <comp>1.263</comp>
     </isotope>
   </recipe>
-
 </simulation>

@@ -29,7 +29,7 @@
       <SourceFacility>
         <output>
           <outcommodity>waste</outcommodity>
-          <output_capacity>5</output_capacity>
+          <output_capacity>1</output_capacity>
           <recipe>lwr_used_fuel_recipe</recipe>
         </output>
       </SourceFacility>
@@ -48,11 +48,11 @@
         <dy>100</dy>
         <dz>100</dz>
         <advective_velocity>0.000631</advective_velocity>
-        <capacity>5</capacity>
+        <capacity>1</capacity>
         <limiting_temp>100</limiting_temp>
         <incommodity>waste</incommodity>
-        <inventorysize>200</inventorysize>
-        <lifetime>10000</lifetime>
+        <inventorysize>20</inventorysize>
+        <lifetime>1000</lifetime>
         <startOperMonth>1</startOperMonth>
         <startOperYear>2000</startOperYear>
         <thermalmodel>
@@ -73,9 +73,9 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.5</porosity>
+              <porosity>0.1</porosity>
               <formulation>
-                <EM/>
+                <PFM/>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -96,9 +96,9 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.5</porosity>
+              <porosity>0</porosity>
               <formulation>
-                <EM/>
+                <PFM/>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -119,9 +119,9 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.5</porosity>
+              <porosity>0.1</porosity>
               <formulation>
-                <EM/>
+                <PFM/>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -141,9 +141,9 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.0</porosity>
+              <porosity>0.1</porosity>
               <formulation>
-                <EM/>
+                <PFM/>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
