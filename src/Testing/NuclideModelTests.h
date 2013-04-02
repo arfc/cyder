@@ -30,6 +30,7 @@ class NuclideModelTests : public TestWithParam<NuclideModelConstructor*> {
     point_t origin_ = {0,0,0}; 
     len_five_ = 5;
     geom_ = GeometryPtr(new Geometry(r_four_, r_five_, origin_, len_five_));
+    nuclide_model_->set_geom(geom_);
 
     // other vars
     time_ = 0;

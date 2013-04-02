@@ -356,6 +356,7 @@ public:
   };
 
   virtual double V_ff()=0;
+  virtual double V_T()=0;
 
 protected:
   /// A vector of the wastes contained by this component

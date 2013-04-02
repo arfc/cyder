@@ -21,14 +21,7 @@ void StubThermal::initModuleMembers(QueryEngine* qe){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-StubThermalPtr StubThermal::deepCopy(){
-  StubThermalPtr toRet = StubThermalPtr(new StubThermal());
-  toRet->copy(StubThermalPtr(this));
-  return toRet;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void StubThermal::copy(ThermalModelPtr src){
+void StubThermal::copy(const ThermalModel& src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -48,6 +41,12 @@ Temp StubThermal::peak_temp(){
   TempHist::iterator stop = temp_hist_.end();
   TempHist::iterator max = max_element(start, stop);
   return (*max).second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+bool StubThermal::mat_acceptable(mat_rsrc_ptr mat, Radius r_lim, Temp t_lim){
+  /// @TODO obviously, put some logic here.
+  return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

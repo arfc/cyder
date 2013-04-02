@@ -16,9 +16,10 @@ class ComponentTest : public ::testing::Test {
     Temp OneHundredCinK;
     string name_;
     string mat_;
-    double infty_;
     ComponentType type_;
     Radius inner_radius_, outer_radius_;
+    double length_;
+    GeometryPtr geom_;
     ThermalModelPtr thermal_model_;
     NuclideModelPtr nuclide_model_;
 
@@ -26,11 +27,13 @@ class ComponentTest : public ::testing::Test {
       test_component_ = ComponentPtr(new Component(NULL));
       OneHundredCinK=373;
       name_ = "Test";
-      infty_ = numeric_limits<double>::infinity();
       type_ = BUFFER;
       mat_ = "clay";
       inner_radius_ = 2;
       outer_radius_ = 10;
+      length_ = 100;
+      point_t origin = {0,0,0};
+      geom_ = GeometryPtr(new Geometry(inner_radius_, outer_radius_, origin, length_));
       thermal_model_ = StubThermal::create();
       nuclide_model_ = DegRateNuclide::create();
     }
@@ -43,7 +46,7 @@ TEST_F(ComponentTest, defaultConstructor) {
   ASSERT_EQ("", test_component_->name());
   ASSERT_EQ(LAST_EBS, test_component_->type());
   ASSERT_FLOAT_EQ(0,test_component_->inner_radius());
-  ASSERT_EQ(infty_, test_component_->outer_radius());
+  ASSERT_FLOAT_EQ(0, test_component_->outer_radius());
 
   ASSERT_FLOAT_EQ(0, test_component_->centroid().x_);
   ASSERT_FLOAT_EQ(0, test_component_->centroid().y_);

@@ -1,7 +1,8 @@
 SET(Cyder_SRC ${Cyder_SRC} 
   ${CMAKE_CURRENT_SOURCE_DIR}/MaterialDB.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MatDataTable.cpp
-  #${CMAKE_CURRENT_SOURCE_DIR}/SqliteDb.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/STCDB.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/STCDataTable.cpp
   PARENT_SCOPE 
   )
 
@@ -22,4 +23,18 @@ INSTALL(FILES
   COMPONENT cyder
   )
   
+
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/stc_data.sqlite
+  ${CYDER_BINARY_DIR}/share/stc_data.sqlite
+  COPYONLY
+  )
+  
+INSTALL(FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/stc_data.sqlite
+  DESTINATION ${CYCLUS_CORE_SHARE_DIR}
+  COMPONENT cyder
+  )
+  
+
 

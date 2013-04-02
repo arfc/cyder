@@ -23,7 +23,7 @@ DegRateNuclide::DegRateNuclide():
   deg_rate_(0),
   v_(0),
   tot_deg_(0),
-  last_degraded_(0)
+  last_degraded_(-1)
 {
   wastes_ = deque<mat_rsrc_ptr>();
 
@@ -39,7 +39,7 @@ DegRateNuclide::DegRateNuclide(QueryEngine* qe):
   deg_rate_(0),
   v_(0),
   tot_deg_(0),
-  last_degraded_(0)
+  last_degraded_(-1)
 {
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
@@ -66,15 +66,14 @@ void DegRateNuclide::initModuleMembers(QueryEngine* qe){
 NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
   const DegRateNuclide* src_ptr = dynamic_cast<const DegRateNuclide*>(&src);
 
-  set_v(src_ptr->v());
   set_deg_rate(src_ptr->deg_rate());
+  set_v(src_ptr->v());
   set_tot_deg(0);
-  set_last_degraded(TI->time());
+  set_last_degraded(-1);
 
   // copy the geometry AND the centroid. It should be reset later.
   set_geom(GeometryPtr(new Geometry()));
   geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid());
-  update(TI->time());
 
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
@@ -150,8 +149,8 @@ double DegRateNuclide::contained_mass(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::source_term_bc(){
-  return make_pair(contained_vec(last_degraded()), 
-      tot_deg()*shared_from_this()->contained_mass(last_degraded()));
+  return make_pair(contained_vec(last_updated()), 
+      tot_deg()*shared_from_this()->contained_mass(last_updated()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -226,32 +225,33 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
   pair<IsoVector, double> sum_pair; 
   sum_pair = vec_hist_[the_time];
 
-  int iso;
-  double conc;
   if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
     double scale = sum_pair.second/geom_->volume();
     CompMapPtr curr_comp = sum_pair.first.comp();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
     while(it != (*curr_comp).end() ) {
-      iso = (*it).first;
-      conc = (*it).second;
+      int iso((*it).first);
+      double conc((*it).second);
       to_ret.insert(make_pair(iso, conc*scale));
       ++it;
     }
   } else {
     to_ret[ 92235 ] = 0; 
   }
-  conc_hist_[the_time] = to_ret ;
+  conc_hist_[the_time] = to_ret;
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double DegRateNuclide::update_degradation(int the_time, double cur_rate){
   assert(last_degraded() <= the_time);
+  if( last_degraded() == -1 ){ 
+    set_last_degraded(the_time);
+  } 
   if(cur_rate != deg_rate()){
     set_deg_rate(cur_rate);
-  };
+  }
   double total = tot_deg() + deg_rate()*(the_time - last_degraded());
   set_tot_deg(min(1.0, total));
   set_last_degraded(the_time);
@@ -266,13 +266,14 @@ void DegRateNuclide::update_vec_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
-  std::map<NuclideModelPtr, std::pair<IsoVector,double> > to_ret;
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
-  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    source_term = (*daughter)->source_term_bc();
-    if( source_term.second > 0 ){
-      absorb((*daughter)->extract(source_term.first.comp(), source_term.second));
+  if( !daughters.empty() ){
+    for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+      source_term = (*daughter)->source_term_bc();
+      if( source_term.second > 0 ){
+        absorb((*daughter)->extract(source_term.first.comp(), source_term.second));
+      }
     }
   }
 }

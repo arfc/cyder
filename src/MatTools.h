@@ -106,6 +106,9 @@ public:
   static std::pair<CompMapPtr, double> conc_to_comp_map(const 
       IsoConcMap conc, double vol); 
 
+  /// Returns an empty IsoConcMap
+  static IsoConcMap zeroConcMap();
+
   /**
     Returns the fluid volume [m^3] based on the total volume and the porosity
 
@@ -189,6 +192,21 @@ public:
     */
   static void validate_finite_pos(double pos);
 
+  /**
+     Confirms whether or not the provided value is positive(0<=pos)
+
+     @param pos the value to test
+     @throws CycRangeException if pos<0
+    */
+  static void validate_pos(double pos);
+
+  /**
+     Confirms whether or not the provided value is zero 
+
+     @param nonzero the value to test
+     @throws CycRangeException
+    */
+  static void validate_nonzero(double nonzero);
 
   /**
     This is a helper function that scales an IsoConcMap with a scalar
@@ -197,6 +215,25 @@ public:
     @param scalar the scalar by which to multiply each element of C_0 [-]
     */
   static IsoConcMap scaleConcMap(IsoConcMap C_0, double scalar);
+
+  /**
+    This is a helper function that returns the sum of two IsoConcMaps
+
+    @param orig the original IsoConcMap (not modified in this function)
+    @param to_add  IsoConcMap to add (not modified in this function)
+
+    @return to_ret the sum of orig and to_add
+    */
+  static IsoConcMap addConcMaps(IsoConcMap orig, IsoConcMap to_add);
+
+  /** 
+    Converts a standard isoid into an element. 
+
+    @param iso the isotope id (i.e. 92235) to convert
+
+    @return elem the element id (i.e. 92) that corresponds to iso
+    */
+  static int isoToElem(int iso);
   
 };
 #endif

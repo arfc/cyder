@@ -27,7 +27,6 @@ void LumpedNuclideTest::SetUp(){
   theta_ = 0.3; // percent porosity
   adv_vel_ = 1; // m/yr
   time_ = 0;
-  t_t_ = 1;
 
   // composition set up
   u_=92;
@@ -48,6 +47,7 @@ void LumpedNuclideTest::SetUp(){
   mat_table_ = MDB->table("clay");
   lumped_ptr_=LumpedNuclidePtr(initNuclideModel());
   lumped_ptr_->set_mat_table(mat_table_);
+  lumped_ptr_->set_geom(geom_);
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(lumped_ptr_);
   nuc_model_ptr_->set_mat_table(mat_table_);
   default_lumped_ptr_ = LumpedNuclidePtr(LumpedNuclide::create());
@@ -69,7 +69,6 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <porosity>" << theta_ << "</porosity>"
-     << "  <transit_time>" << t_t_ << "</transit_time>"
      << "  <formulation>"
      << "    <EM/>"
      << "  </formulation>"
@@ -85,13 +84,15 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, initial_state){
-  EXPECT_EQ(t_t_, lumped_ptr_->t_t());
+  EXPECT_EQ(FormulationType(EM), lumped_ptr_->formulation());
+  EXPECT_EQ(adv_vel_, lumped_ptr_->v());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, defaultConstructor) {
-  ASSERT_EQ("LUMPED_NUCLIDE", nuc_model_ptr_->name());
-  ASSERT_EQ(LUMPED_NUCLIDE, nuc_model_ptr_->type());
-  ASSERT_FLOAT_EQ(0, lumped_ptr_->geom()->length());
+  ASSERT_EQ("LUMPED_NUCLIDE", default_nuc_model_ptr_->name());
+  ASSERT_EQ(LUMPED_NUCLIDE, default_nuc_model_ptr_->type());
+  ASSERT_FLOAT_EQ(0, default_lumped_ptr_->geom()->length());
+  ASSERT_FLOAT_EQ(0, default_lumped_ptr_->v());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -102,7 +103,6 @@ TEST_F(LumpedNuclideTest, copy) {
   NuclideModelPtr nuc_model_shared_ptr = NuclideModelPtr(nuc_model_ptr_);
   EXPECT_NO_THROW(test_copy->copy(*lumped_shared_ptr));
   EXPECT_NO_THROW(test_copy->copy(*nuc_model_shared_ptr));
-  EXPECT_FLOAT_EQ(lumped_ptr_->t_t(), test_copy->t_t());
   EXPECT_FLOAT_EQ(lumped_ptr_->V_T(), test_copy->V_T());
   EXPECT_GT(test_copy->V_T(),0);
   EXPECT_FLOAT_EQ(lumped_ptr_->V_f(), test_copy->V_f());
@@ -110,6 +110,7 @@ TEST_F(LumpedNuclideTest, copy) {
   EXPECT_FLOAT_EQ(lumped_ptr_->porosity(), test_copy->porosity());
   EXPECT_EQ(lumped_ptr_->formulation(), test_copy->formulation());
   EXPECT_FLOAT_EQ(lumped_ptr_->last_updated(), test_copy->last_updated());
+  EXPECT_FLOAT_EQ(lumped_ptr_->v(), test_copy->v());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -362,8 +363,8 @@ TEST_F(LumpedNuclideTest, getVolume) {
   EXPECT_NEAR( vol , nuc_model_ptr_->geom()->volume(), 0.1);
   EXPECT_NO_THROW(lumped_ptr_->geom()->set_radius(OUTER, r_four_));
   EXPECT_FLOAT_EQ( 0 , nuc_model_ptr_->geom()->volume());
-  EXPECT_NO_THROW(lumped_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()));
-  EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), nuc_model_ptr_->geom()->volume());
+  EXPECT_THROW(lumped_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()), CycRangeException);
+  EXPECT_NO_THROW(nuc_model_ptr_->geom()->volume());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

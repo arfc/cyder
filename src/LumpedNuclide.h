@@ -206,12 +206,6 @@ public:
   /// Sets the peclet_ variable, the ratio of advective to diffusive transport.
   void set_Pe(double Pe);
 
-  /// Sets the transit time, t_t_, variable of the radioactive tracer through the cell [s?] 
-  void set_t_t(double t_t){t_t_ = t_t;};
-
-  /// Returns the transit time of the radioactive tracer through the cell [s?] 
-  const double t_t() const {return t_t_;};
-
   /// Returns the peclet number of the component [-]
   const double Pe() const {return Pe_;};
 
@@ -302,6 +296,15 @@ public:
      @param mats the materials that are part of the available concentration
     */
   void update_conc_hist(int the_time, std::deque<mat_rsrc_ptr> mats);
+
+  /** 
+    concentration calculator for this->formulation_ model
+
+     @param C_0 the incoming concentration map
+     @param the_time the length of the timestep over which to calculate
+     @return C_f the final concentration at the end of the timestep
+    */
+  IsoConcMap C_t(IsoConcMap C_0, int the_time);
 
 
 protected:

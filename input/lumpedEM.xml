@@ -30,7 +30,7 @@
         <output>
           <outcommodity>waste</outcommodity>
           <output_capacity>1</output_capacity>
-          <recipe>commod_recipe</recipe>
+          <recipe>lwr_used_fuel_recipe</recipe>
         </output>
       </SourceFacility>
     </model>
@@ -49,15 +49,20 @@
         <dz>100</dz>
         <advective_velocity>0.000631</advective_velocity>
         <capacity>1</capacity>
+        <limiting_temp>1000</limiting_temp>
         <incommodity>waste</incommodity>
         <inventorysize>20</inventorysize>
         <lifetime>1000</lifetime>
         <startOperMonth>1</startOperMonth>
         <startOperYear>2000</startOperYear>
+        <thermalmodel>
+          <StubThermal/>
+        </thermalmodel>
         <component>
           <name>WF</name>
           <innerradius>0</innerradius>
           <outerradius>1</outerradius>
+          <length>1</length>
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
@@ -69,7 +74,6 @@
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <porosity>0.5</porosity>
-              <transit_time>10</transit_time>
               <formulation>
                 <EM/>
               </formulation>
@@ -81,6 +85,7 @@
           <name>WP</name>
           <innerradius>1</innerradius>
           <outerradius>2</outerradius>
+          <length>1</length>
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
@@ -92,7 +97,6 @@
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <porosity>0.5</porosity>
-              <transit_time>10</transit_time>
               <formulation>
                 <EM/>
               </formulation>
@@ -104,6 +108,7 @@
           <name>BUFFER</name>
           <innerradius>2</innerradius>
           <outerradius>3</outerradius>
+          <length>1</length>
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
@@ -115,7 +120,6 @@
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <porosity>0.5</porosity>
-              <transit_time>10</transit_time>
               <formulation>
                 <EM/>
               </formulation>
@@ -126,6 +130,7 @@
           <name>FF</name>
           <innerradius>3</innerradius>
           <outerradius>100</outerradius>
+          <length>1</length>
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>
@@ -137,7 +142,6 @@
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <porosity>0.5</porosity>
-              <transit_time>10</transit_time>
               <formulation>
                 <EM/>
               </formulation>
@@ -177,19 +181,59 @@
   </region>
 
   <recipe>
-    <name>commod_recipe</name>
+    <name>lwr_used_fuel_recipe</name>
     <basis>mass</basis>
     <isotope>
       <id>92235</id>
-      <comp>0.05</comp>
+      <comp>156.729</comp>
+    </isotope>
+    <isotope>
+      <id>92236</id>
+      <comp>102.103</comp>
     </isotope>
     <isotope>
       <id>92238</id>
-      <comp>0.95</comp>
+      <comp>18280.324</comp>
     </isotope>
     <isotope>
-      <id>08016</id>
-      <comp>0.13</comp>
+      <id>93237</id>
+      <comp>13.656</comp>
+    </isotope>
+    <isotope>
+      <id>94238</id>
+      <comp>5.043</comp>
+    </isotope>
+    <isotope>
+      <id>94239</id>
+      <comp>106.343</comp>
+    </isotope>
+    <isotope>
+      <id>94240</id>
+      <comp>41.357</comp>
+    </isotope>
+    <isotope>
+      <id>94241</id>
+      <comp>36.477</comp>
+    </isotope>
+    <isotope>
+      <id>94242</id>
+      <comp>15.387</comp>
+    </isotope>
+    <isotope>
+      <id>95241</id>
+      <comp>1.234</comp>
+    </isotope>
+    <isotope>
+      <id>95243</id>
+      <comp>3.607</comp>
+    </isotope>
+    <isotope>
+      <id>96244</id>
+      <comp>0.431</comp>
+    </isotope>
+    <isotope>
+      <id>96245</id>
+      <comp>1.263</comp>
     </isotope>
   </recipe>
 
