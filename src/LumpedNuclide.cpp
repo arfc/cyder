@@ -336,7 +336,7 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       throw CycRangeException(msg_ss.str());
   }
 
-    double scale = sum_pair.second/geom_->volume();
+    double scale = sum_pair.second/V_ff();
     CompMapPtr curr_comp = sum_pair.first.comp();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
