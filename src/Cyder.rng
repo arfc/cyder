@@ -122,6 +122,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <element name="LumpedNuclide">
       <ref name="advective_velocity"/>
       <ref name="porosity"/>
+      <ref name="transit_time"/>
       <element name="formulation">
         <choice>
           <element name="EM">
@@ -294,6 +295,14 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
   <define name="spacing">
     <element name="spacing">
+      <data type="double">
+        <param name="minInclusive">0</param>
+      </data>
+    </element>
+  </define>
+
+  <define name="transit_time">
+    <element name="transit_time">
       <data type="double">
         <param name="minInclusive">0</param>
       </data>

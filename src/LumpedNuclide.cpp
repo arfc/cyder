@@ -382,13 +382,13 @@ void LumpedNuclide::update_conc_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_DM(IsoConcMap C_0, int the_time){
-  double arg = (Pe()/2.0)*(1-pow(1+4*the_time/Pe(), 0.5));
+  double arg = (Pe()/2.0)*(1-pow(1+4*t_t_/Pe(), 0.5));
   return MatTools::scaleConcMap(C_0, exp(arg));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
-  double scale = 1.0/(1.0+the_time);
+  double scale = 1.0/(1.0+t_t_);
   return MatTools::scaleConcMap(C_0, scale);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -441,9 +441,9 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
-      dt*v()*daughter->V_ff());
+      dt*v()*daughter->V_ff()/daughter->geom()->length());
 
   pair<CompMapPtr, double> to_rem = MatTools::conc_to_comp_map(conc, daughter->V_ff());
-  return daughter->extract(to_rem.first, to_rem.second); 
+  return mat_rsrc_ptr(daughter->extract(to_rem.first, to_rem.second)); 
 }
 
