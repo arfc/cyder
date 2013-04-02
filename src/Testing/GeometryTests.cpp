@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "Geometry.h"
+#define _USE_MATH_DEFINES
 
 using namespace std;
 
@@ -12,7 +13,6 @@ class GeometryTest : public ::testing::Test {
     Radius r_zero_, r_null_, r_five_, r_four_;
     Length len_zero_, len_null_, len_five_, len_four_;
     point_t origin_, x_offset_, y_offset_, z_offset_;
-    double infty_;
 
     virtual void SetUp(){
       r_zero_ = 0;
@@ -27,7 +27,6 @@ class GeometryTest : public ::testing::Test {
       point_t x_offset_ = {len_five_, 0, 0};
       point_t y_offset_ = {0, len_five_, 0};
       point_t z_offset_ = {0, 0, len_five_};
-      infty_ = numeric_limits<double>::infinity();
       default_geom_ = GeometryPtr(new Geometry());
       test_geom_ = GeometryPtr(new Geometry(r_four_, r_five_, x_offset_, len_five_));
     }
@@ -38,7 +37,7 @@ class GeometryTest : public ::testing::Test {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(GeometryTest, defaultConstructor) {
   EXPECT_FLOAT_EQ(0, default_geom_->inner_radius());
-  EXPECT_EQ( infty_, default_geom_->outer_radius());
+  EXPECT_EQ( 0, default_geom_->outer_radius());
 
   EXPECT_FLOAT_EQ(0, default_geom_->centroid().x_);
   EXPECT_FLOAT_EQ(0, default_geom_->centroid().y_);
@@ -66,8 +65,29 @@ TEST_F(GeometryTest, fullConstructor) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(GeometryTest, radial_midpoint ) {  
-  EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), default_geom_->radial_midpoint());
+  EXPECT_FLOAT_EQ( 0, default_geom_->radial_midpoint());
   Radius expected = r_four_ + (r_five_ - r_four_)/2.0;
   EXPECT_FLOAT_EQ( expected, test_geom_->radial_midpoint() ); 
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(GeometryTest, solid_volume ){
+  for(int r=0; r < 10; ++r) {
+    double radius = r*0.5;
+    for( int l=0; l < 10; ++l) { 
+      double length = l*0.5;
+      EXPECT_FLOAT_EQ(M_PI*radius*radius*length, test_geom_->solid_volume(radius, length));
+    }
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(GeometryTest, volume){
+  EXPECT_FLOAT_EQ(M_PI*len_five_*(r_five_*r_five_-r_four_*r_four_) , test_geom_->volume());
+
+  EXPECT_FLOAT_EQ(0 , default_geom_->volume());
+  EXPECT_NO_THROW(default_geom_->set_radius(INNER, r_four_));
+  EXPECT_NO_THROW(default_geom_->set_radius(OUTER, r_five_));
+  EXPECT_NO_THROW(default_geom_->set_length(len_five_));
+  EXPECT_FLOAT_EQ(M_PI*len_five_*(r_five_*r_five_-r_four_*r_four_) , default_geom_->volume());
+}

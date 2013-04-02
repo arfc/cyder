@@ -8,6 +8,7 @@
 #include <boost/math/constants/constants.hpp>
 
 #include "Geometry.h"
+#include "MatTools.h"
 #include "CycException.h"
 
 using namespace std;
@@ -15,7 +16,7 @@ using namespace std;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 Geometry::Geometry() {
   inner_radius_ = 0; // 0 indicates a solid
-  outer_radius_ = numeric_limits<double>::infinity(); // inf indicates an infinite object.
+  outer_radius_ = 0; // 0 indicates an uninitialized object.
   point_t origin = {0,0,0}; 
   centroid_ = origin; // by default, the origin is the centroid
   length_ = 0;
@@ -43,6 +44,16 @@ GeometryPtr Geometry::copy(GeometryPtr src, point_t centroid){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void Geometry::set_radius(BoundaryType boundary, Radius radius) { 
+  try {
+    MatTools::validate_finite_pos(radius);
+  } catch (CycRangeException& e) {
+    stringstream msg_ss;
+    msg_ss << " The set_radius value provided was ";
+    msg_ss << radius;
+    msg_ss << ", but is required to be both finite and positive.";
+    LOG(LEV_ERROR, "GRGeo") << msg_ss.str();
+    throw CycRangeException(msg_ss.str());
+  }
   switch(boundary){
     case INNER:
       inner_radius_ = radius;
@@ -88,13 +99,19 @@ const double Geometry::z(){return (centroid()).z_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Volume Geometry::volume(){
-  // infinite until proven finite
-  double infty = numeric_limits<double>::infinity(); 
-  Volume to_ret = infty; 
-  if( outer_radius() != infty ) { 
-    to_ret = solid_volume( outer_radius(), length() )
-           - solid_volume( inner_radius(), length() );
+  try {
+    MatTools::validate_finite_pos(outer_radius());
+  } catch (CycRangeException& e) {
+    stringstream msg_ss;
+    msg_ss << "To calculate volume the outer radius must be finite.";
+    msg_ss << " The value provided was ";
+    msg_ss << outer_radius();
+    msg_ss << ".";
+    LOG(LEV_ERROR, "GRGeo") << msg_ss.str();
+    throw CycRangeException(msg_ss.str());
   }
+  Volume to_ret = solid_volume( outer_radius(), length() )
+    - solid_volume( inner_radius(), length() );
   return to_ret;
 }
 

@@ -114,6 +114,9 @@ SET(Cyder_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/OneDimPPMNuclide.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/StubNuclide.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/StubThermal.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/STCThermal.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/NuclideModelFactory.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ThermalModelFactory.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/MatTools.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/SolLim.cpp
   )

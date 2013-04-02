@@ -16,11 +16,13 @@
 using namespace std;
 using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LumpedNuclide::LumpedNuclide() : t_t_(0),
+LumpedNuclide::LumpedNuclide() : 
+  t_t_(0),
   Pe_(0),
   porosity_(0),
-  formulation_(LAST_FORMULATION_TYPE)
-{ set_geom(GeometryPtr(new Geometry()));
+  formulation_(LAST_FORMULATION_TYPE) 
+{ 
+  set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
   t_t_ = 0;
@@ -68,7 +70,7 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 
   QueryEngine* formulation_qe = qe->queryElement("formulation");
   string formulation_string;
-  for( it=choices.begin(); it!=choices.end(); it++){
+  for( it=choices.begin(); it!=choices.end(); ++it){
     if (formulation_qe->nElementsMatchingQuery(*it) == 1){
       formulation_=enumerateFormulation(*it);
       formulation_string=(*it);
@@ -86,8 +88,8 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
     default:
       string err = "The formulation type '"; err += formulation_;
       err += "' is not supported.";
-      throw CycException(err);
       LOG(LEV_ERROR,"GRLNuc") << err;
+      throw CycException(err);
       break;
   }
 
@@ -99,7 +101,7 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
 NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   const LumpedNuclide* src_ptr = dynamic_cast<const LumpedNuclide*>(&src);
 
-  set_last_updated(TI->time());
+  set_last_updated(0);
   set_t_t(src_ptr->t_t());
   set_Pe(src_ptr->Pe());
   set_porosity(src_ptr->porosity());
@@ -112,13 +114,13 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   wastes_ = deque<mat_rsrc_ptr>();
   vec_hist_ = VecHist();
   conc_hist_ = ConcHist();
-  update(TI->time());
 
   return shared_from_this();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::update(int the_time){
+  assert(last_updated() <= the_time);
   update_vec_hist(the_time);
   update_conc_hist(the_time);
   set_last_updated(the_time);
@@ -160,7 +162,7 @@ void LumpedNuclide::transportNuclides(int the_time){
   // flux.  The convention will be that flux is positive in the radial 
   // direction
   // If these fluxes are negative, nuclides aphysically flow toward the waste 
-  // package It will send the adjacent components information?
+  // package.
   // The LumpedNuclide class should transport all nuclides
   update(the_time);
 }
@@ -277,7 +279,7 @@ void LumpedNuclide::set_Pe(double Pe){
 void LumpedNuclide::set_porosity(double porosity){
   try {
     MatTools::validate_percent(porosity);
-  } catch (CycRangeException e) {
+  } catch (CycRangeException& e) {
     stringstream msg_ss;
     msg_ss << "The LumpedNuclide porosity range is 0 to 1, inclusive.";
     msg_ss << " The value provided was ";
@@ -310,27 +312,66 @@ double LumpedNuclide::V_T(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
-  assert(last_updated() <= the_time);
+
   IsoConcMap to_ret;
 
+  pair<IsoVector, double> sum_pair; 
+  sum_pair = vec_hist_[the_time];
+
+  if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
+    try {
+      MatTools::validate_nonzero(geom_->volume());
+      MatTools::validate_finite_pos(geom_->volume());
+    } catch (CycRangeException& e) {
+      stringstream msg_ss;
+      msg_ss << "The LumpedNuclide requires finite, positive, nonzero volume.";
+      msg_ss << " The value provided was ";
+      msg_ss << geom_->volume();
+      msg_ss << geom_->inner_radius();
+      msg_ss << geom_->outer_radius();
+      msg_ss << geom_->length();
+      msg_ss <<  ".";
+      LOG(LEV_ERROR,"GRLNuc") << msg_ss.str();;
+      throw CycRangeException(msg_ss.str());
+  }
+
+    double scale = sum_pair.second/geom_->volume();
+    CompMapPtr curr_comp = sum_pair.first.comp();
+    CompMap::const_iterator it;
+    it=(*curr_comp).begin();
+    while(it != (*curr_comp).end() ) {
+      int iso((*it).first);
+      double conc((*it).second);
+      to_ret.insert(make_pair(iso, conc*scale));
+      ++it;
+    }
+  } else {
+    to_ret[ 92235 ] = 0; 
+  }
+  conc_hist_[the_time] = C_t(to_ret, the_time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap LumpedNuclide::C_t(IsoConcMap C_0, int the_time){
+  IsoConcMap to_ret;
   switch(formulation_){
     case DM :
-      to_ret = C_DM(C_0_, the_time);
+      to_ret = C_DM(C_0, the_time);
       break;
     case EM :
-      to_ret = C_EM(C_0_, the_time);
+      to_ret = C_EM(C_0, the_time);
       break;
     case PFM :
-      to_ret = C_PFM(C_0_, the_time);
+      to_ret = C_PFM(C_0, the_time);
       break;
     default:
       string err = "The formulation type '"; err += formulation_;
       err += "' is not supported.";
-      throw CycException(err);
       LOG(LEV_ERROR,"GRLNuc") << err;
+      throw CycException(err);
       break;
   }
-  conc_hist_[the_time] = to_ret;
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -368,30 +409,34 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
   
   pair<IsoVector, double> st;
   pair<IsoVector, double> mixed;
-  Volume vol;
-  Volume vol_sum;
-  
-  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    st = (*daughter)->source_term_bc();
-    vol = (*daughter)->V_ff();
-    vol_sum += vol;
-    if(mixed.second==0){
-      mixed.first=st.first;
-      mixed.second=st.second;
-    } else {
-      absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
-      mixed.second +=st.second;
-      mixed.first.mix(st.first,mixed.second/st.second);
-    }
-  }
-  set_C_0(MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum)); 
+  Volume vol(0);
+  Volume vol_sum(0);
+  IsoConcMap C_0;
 
+  if( daughters.empty() ){
+    C_0[92235] = 0;
+  } else {
+    for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+      st = (*daughter)->source_term_bc();
+      vol = (*daughter)->V_ff();
+      vol_sum += vol;
+      if(mixed.second==0){
+        mixed.first=st.first;
+        mixed.second=st.second;
+      } else {
+        absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
+        mixed.second +=st.second;
+        mixed.first.mix(st.first,mixed.second/st.second);
+      }
+    }
+    C_0 = MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
+  }
+  set_C_0(C_0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
-  IsoConcMap bc = daughter->dirichlet_bc();
   double theta = daughter->V_ff()/daughter->geom()->length();
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
       dt*theta*v());

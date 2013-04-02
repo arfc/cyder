@@ -119,6 +119,8 @@ you intend to develop for *Cyclus*, please visit it to learn more.
 Acknowledgements
 ------------------------------------------------------------------
     
+This work is supported by the U.S. Department of Energy, Basic Energy Sciences, 
+Office of Nuclear Energy, under contract # DE-AC02-06CH11357.
 
 
 .. _`Cyder Homepage`: http://cyder.github.com

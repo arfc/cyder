@@ -11,8 +11,8 @@
 
 #include "Material.h"
 #include "MaterialDB.h"
-#include "ThermalModel.h"
-#include "NuclideModel.h"
+#include "ThermalModelFactory.h"
+#include "NuclideModelFactory.h"
 #include "Geometry.h"
 #include "Model.h"
 
@@ -178,20 +178,6 @@ public:
    */
   ComponentType componentEnum(std::string type);
   
-  /**
-     Enumerates a string if it is one of the named ThermalModelTypes
-     
-     @param type the name of the ThermalModelType (i.e. StubThermal)
-   */
-  ThermalModelType thermalEnum(std::string type);
-
-  /** 
-     Enumerates a string if it is one of the named NuclideModelTypes
-     
-     @param type the name of the NuclideModelType (i.e. StubNuclide)
-   */
-  NuclideModelType nuclideEnum(std::string type);
-
   /** 
      Returns a new thermal model of the string type QueryEngine object
      
@@ -304,13 +290,6 @@ public:
   const Temp temp_lim();
 
   /**
-     get the maximum Toxicity this object allows at its boundaries 
-     
-     @return tox_lim_
-   */
-  const Tox tox_lim();
-
-  /**
      get the peak Temperature this object will experience during the simulation
      
      @param type indicates whether to return the inner or outer peak temp
@@ -408,12 +387,6 @@ protected:
    */
   static int nextID_;
 
-  /// ThermalModleType names list
-  static std::string thermal_type_names_[LAST_THERMAL];
-
-  /// NuclideModelType names list
-  static std::string nuclide_type_names_[LAST_NUCLIDE];
-
   /**
      The composition history of this Component, in the form of a map whose
      keys are integers representing the time at which this Component had a 
@@ -483,11 +456,6 @@ protected:
   Temp temp_lim_;
 
   /**
-     The toxlimit of this component 
-   */
-  Tox tox_lim_;
-
-  /**
      The peak temp achieved at the outer boundary 
    */
   Temp peak_outer_temp_;
@@ -496,11 +464,6 @@ protected:
      The peak temp achieved at the inner boundary 
    */
   Temp peak_inner_temp_;
-
-  /**
-     The peak tox achieved  
-   */
-  Tox peak_tox_;
 
   /**
      The temp taken to be the homogeneous temp of the whole 

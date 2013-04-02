@@ -49,15 +49,20 @@
         <dz>100</dz>
         <advective_velocity>0.000631</advective_velocity>
         <capacity>1</capacity>
+        <limiting_temp>1000</limiting_temp>
         <incommodity>waste</incommodity>
         <inventorysize>20</inventorysize>
         <lifetime>1000</lifetime>
         <startOperMonth>1</startOperMonth>
         <startOperYear>2000</startOperYear>
+        <thermalmodel>
+          <StubThermal/>
+        </thermalmodel>
         <component>
           <name>WF</name>
           <innerradius>0</innerradius>
           <outerradius>1</outerradius>
+          <length>1</length>
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
@@ -77,6 +82,7 @@
           <name>WP</name>
           <innerradius>1</innerradius>
           <outerradius>2</outerradius>
+          <length>1</length>
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
@@ -96,6 +102,7 @@
           <name>BUFFER</name>
           <innerradius>2</innerradius>
           <outerradius>3</outerradius>
+          <length>1</length>
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
@@ -114,6 +121,7 @@
           <name>FF</name>
           <innerradius>3</innerradius>
           <outerradius>100</outerradius>
+          <length>1</length>
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>

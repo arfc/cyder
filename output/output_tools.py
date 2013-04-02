@@ -143,14 +143,14 @@ class Query(object):
                          "Transactions.Time >= " + str(t0) + " AND " +
                          "Transactions.Time < " + str(tf)))
         elif 'contaminants' == queryType:
-            self.set_q_stmt(sql_stmt("cyder_6_contaminants.Time, " +
-                                     "cyder_6_contaminants.CompID, " +
-                                     "cyder_6_contaminants.IsoID, " +
-                                     "cyder_6_contaminants.MassKG",
-                                     "cyder_6_contaminants",
-                                     "cyder_6_contaminants.Time >= " +
+            self.set_q_stmt(sql_stmt("contaminants.Time, " +
+                                     "contaminants.CompID, " +
+                                     "contaminants.IsoID, " +
+                                     "contaminants.MassKG",
+                                     "contaminants",
+                                     "contaminants.Time >= " +
                                      str(t0) + " AND " +
-                                     "cyder_6_contaminants.Time < " +
+                                     "contaminants.Time < " +
                                      str(tf)))
 
         self.conn = sqlite3.connect(file)
@@ -437,7 +437,7 @@ class Query(object):
         return actList
 
 ###############################################################################
-    def get_comp_types(self):
+    def get_comp_names(self):
         """
         Count and record how many Components exist during the range of the
         calculation.
@@ -445,8 +445,8 @@ class Query(object):
         c = self.conn.cursor()
 
         compTypes = {}
-        c.execute("SELECT cyder_6_components.CompID, " +
-                  "cyder_6_components.Type FROM cyder_6_components")
+        c.execute("SELECT components.CompID, " +
+                  "components.name FROM components")
 
         for row in c:
             if row[0] not in compTypes:
@@ -464,8 +464,8 @@ class Query(object):
 
         compList = []
         c.execute(
-            "SELECT cyder_6_components.CompID FROM cyder_6_components, " +
-            "cyder_6_contaminants ")
+            "SELECT components.CompID FROM components, " +
+            "contaminants ")
 
         for row in c:
             if row[0] not in compList:
@@ -475,7 +475,7 @@ class Query(object):
         return compList
 
 ###############################################################################
-    def get_short_iso_list(self, table='cyder_6_contaminants'):
+    def get_short_iso_list(self, table='contaminants'):
         """
         Count and record how many IsoIDs exist in the table, and make a list
         """
@@ -650,7 +650,7 @@ class Query(object):
             # get the list of actors
             actList = self.get_comp_list()
             numActs = len(actList)
-            isos = self.get_short_iso_list('cyder_6_contaminants')
+            isos = self.get_short_iso_list('contaminants')
             for index, iso in enumerate(isos):
                 self.iso_to_ind[iso] = index
                 self.ind_to_iso[index] = iso
@@ -796,12 +796,10 @@ class Query(object):
 
         self.set_up_figure()
 
-        self.ax.set_title(self.data_axes[select_dim] + " = " + 
-            str(self.data_labels[select_dim].index(selectItem)))
 
         # For RANDOM colors:
         #colors = pylab.rand(len(stream_list),len(stream_list))
-
+        
         # get time dimension labels
         t = self.data_labels[time_dim]  
         run_sum = zeros(self.data.shape[time_dim])
@@ -810,21 +808,48 @@ class Query(object):
         indList = [0] * len(stream_list)
         for i, s in enumerate(stream_list):
             indList[i] = self.data_labels[stream_dim].index(s)
+
+        # get labels for the stream dimension
+        stream_labels = {}
+        if streamDim == 'CompID':
+            # get the component types
+            comp_names = self.get_comp_names()
+            for comp_id, comp_name in comp_names.iteritems() : 
+                # "WF3"
+                stream_labels[comp_id] = comp_name + str(comp_id)
+            print stream_labels
+            self.ax.set_title(self.data_axes[select_dim] + " = " + 
+                    str(selectItem))
+        elif streamDim == 'IsoID':
+            # get the isotope names
+            # "92235"
+            for i in self.data_labels[stream_dim] :
+              stream_labels[i] = str(i)
+            print stream_labels
+            self.ax.set_title(self.data_axes[select_dim] + " = " + 
+                    self.get_comp_names()[selectItem] + str(selectItem))
+        else : 
+            raise QueryException(
+                    "Error: Bar Plots are currently supported only for CompID \
+                    and IsoID streamDims.")
+
+            
         # Iterate through the streams and add them to the plot.
         legend_items=[]
         legend_ids=[]
         for ind in indList:
           if(max(plot_data[:, ind] > 0)):
             for time in t :
+              time-=self.t0
               the_plot = self.ax.bar(time,
                                      plot_data[time, ind], 
                                      width=1,
                                      bottom=run_sum[time], 
-                                     color=cm.jet(float(ind/20.), alpha=0.5), 
-                                     label=str(ind))
+                                     color=cm.jet(float(ind)/float(len(stream_list)), alpha=0.5), 
+                                     label=ind)
               run_sum[time] += plot_data[time, ind]
             legend_items.append(the_plot[0])
-            legend_ids.append(indList[ind])
+            legend_ids.append(stream_labels[self.data_labels[stream_dim][ind]])
 
         self.ax.set_xlim(left=0)
         self.ax.set_ylabel(self.data_units[3])

@@ -45,6 +45,7 @@ void DegRateNuclideTest::SetUp(){
   deg_rate_ptr_ = DegRateNuclidePtr(initNuclideModel()); //initializes deg_rate_ptr_
   nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(deg_rate_ptr_);
   deg_rate_ptr_->set_mat_table(mat_table_);
+  deg_rate_ptr_->set_geom(geom_);
   default_deg_rate_ptr_ = DegRateNuclidePtr(DegRateNuclide::create());
   default_nuc_model_ptr_ = boost::dynamic_pointer_cast<NuclideModel>(default_deg_rate_ptr_);
   default_deg_rate_ptr_->set_mat_table(mat_table_);
@@ -229,6 +230,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
 
   // TRANSPORT NUCLIDES 
   ASSERT_EQ(0, time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
@@ -310,6 +312,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
   ASSERT_EQ(0, time_);
+  EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
@@ -361,9 +364,9 @@ TEST_F(DegRateNuclideTest, updateDegradation){
   double deg_rate=0.1;
    
   for(int i=0; i<5; i++){
-    time_++;
     EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
     EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
+    time_++;
   }
   EXPECT_NO_THROW(deg_rate_ptr_->update_degradation(time_, deg_rate));
   EXPECT_EQ(time_*deg_rate,deg_rate_ptr_->tot_deg());
@@ -392,8 +395,8 @@ TEST_F(DegRateNuclideTest, getVolume) {
   EXPECT_NEAR( vol , nuc_model_ptr_->geom()->volume(), 0.1);
   EXPECT_NO_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, r_four_));
   EXPECT_FLOAT_EQ( 0 , nuc_model_ptr_->geom()->volume());
-  EXPECT_NO_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()));
-  EXPECT_FLOAT_EQ( numeric_limits<double>::infinity(), nuc_model_ptr_->geom()->volume());
+  EXPECT_THROW(deg_rate_ptr_->geom()->set_radius(OUTER, numeric_limits<double>::infinity()), CycRangeException);
+  EXPECT_NO_THROW(nuc_model_ptr_->geom()->volume());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

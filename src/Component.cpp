@@ -28,18 +28,6 @@ using boost::lexical_cast;
 // Static variables to be initialized.
 int Component::nextID_ = 0;
 
-string Component::thermal_type_names_[] = {
-  "LumpedThermal",
-  "StubThermal"
-};
-string Component::nuclide_type_names_[] = {
-  "DegRateNuclide",
-  "LumpedNuclide",
-  "MixedCellNuclide",
-  "OneDimPPMNuclide",
-  "StubNuclide", 
-};
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Component::Component(Model* creator) :
   name_(""),
@@ -49,8 +37,9 @@ Component::Component(Model* creator) :
   mat_table_(),
   parent_(),
   temp_(0),
-  temp_lim_(373),
-  tox_lim_(10) {
+  peak_inner_temp_(0),
+  peak_outer_temp_(0),
+  temp_lim_(373){
 
   creator_ = creator;
   set_geom(GeometryPtr(new Geometry()));
@@ -74,7 +63,8 @@ void Component::initModuleMembers(QueryEngine* qe){
 
   LOG(LEV_DEBUG2,"GRComp") << "The Component Class init(qe) function has been called.";;
 
-  shared_from_this()->init(name, type, mat, inner_radius, outer_radius, thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
+  shared_from_this()->init(name, type, mat, inner_radius, outer_radius, 
+      thermal_model(qe->queryElement("thermalmodel")), nuclide_model(qe->queryElement("nuclidemodel")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -94,8 +84,8 @@ void Component::init(string name, ComponentType type, string mat,
     string err = "The thermal or nuclide model provided is null " ;
     throw CycException(err);
   } else { 
-    thermal_model->set_geom(geom_);
-    nuclide_model->set_geom(geom_);
+    thermal_model->set_geom(GeometryPtr(geom()));
+    nuclide_model->set_geom(GeometryPtr(geom()));
 
     set_thermal_model(thermal_model);
     set_nuclide_model(nuclide_model);
@@ -103,7 +93,6 @@ void Component::init(string name, ComponentType type, string mat,
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
-  //addComponentToTable(shared_from_this());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -141,12 +130,9 @@ void Component::copy(const ComponentPtr& src){
 
   temp_ = src->temp_;
   temp_lim_ = src->temp_lim_ ;
-  tox_lim_ = src->tox_lim_ ;
 
   comp_hist_ = CompHistory();
   mass_hist_ = MassHistory();
-  //addComponentToTable(shared_from_this());
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -223,7 +209,7 @@ ComponentPtr Component::load(ComponentType type, ComponentPtr to_load) {
 bool Component::isFull() {
   // @TODO imperative, add better logic here 
   bool to_ret;
-  double wp_len;
+  double wp_len(0);
   std::vector<ComponentPtr>::iterator it;
   switch(type()) {
     case BUFFER : 
@@ -266,147 +252,23 @@ ComponentType Component::componentEnum(std::string type_name) {
   return toRet;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ThermalModelType Component::thermalEnum(std::string type_name) {
-  ThermalModelType toRet = LAST_THERMAL;
-  for(int type = 0; type < LAST_THERMAL; type++){
-    if(thermal_type_names_[type] == type_name){
-      toRet = (ThermalModelType)type;
-    } 
-  }
-  if (toRet == LAST_THERMAL){
-    string err_msg ="'";
-    err_msg += type_name;
-    err_msg += "' does not name a valid ThermalModelType.\n";
-    err_msg += "Options are:\n";
-    for(int name=0; name < LAST_THERMAL; name++){
-      err_msg += thermal_type_names_[name];
-      err_msg += "\n";
-    }     
-    throw CycException(err_msg);
-  }
-  return toRet;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-NuclideModelType Component::nuclideEnum(std::string type_name) {
-  NuclideModelType toRet = LAST_NUCLIDE;
-  for(int type = 0; type < LAST_NUCLIDE; type++){
-    if(nuclide_type_names_[type] == type_name){
-      toRet = (NuclideModelType)type;
-    }
-  }
-  if (toRet == LAST_NUCLIDE){
-    string err_msg ="'";
-    err_msg += type_name;
-    err_msg += "' does not name a valid NuclideModelType.\n";
-    err_msg += "Options are:\n";
-    for(int name=0; name < LAST_NUCLIDE; name++){
-      err_msg += nuclide_type_names_[name];
-      err_msg += "\n";
-    }
-    throw CycException(err_msg);
-  }
-  return toRet;
-}
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModelPtr Component::thermal_model(QueryEngine* qe){
-  ThermalModelPtr toRet;
-
-  string model_name = qe->getElementName();;
-  
-  switch(thermalEnum(model_name))
-  {
-    case LUMPED_THERMAL:
-      toRet = ThermalModelPtr(LumpedThermal::create(qe));
-      break;
-    case STUB_THERMAL:
-      toRet = ThermalModelPtr(StubThermal::create(qe));
-      break;
-    default:
-      throw CycException("Unknown thermal model enum value encountered."); 
-  }
-  toRet->set_mat_table(mat_table());
-  return toRet;
+  return ThermalModelFactory::thermalModel(qe, mat_table(), geom());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
-  NuclideModelPtr toRet;
-
-  string model_name = qe->getElementName();;
-  QueryEngine* input = qe->queryElement(model_name);
-
-  switch(nuclideEnum(model_name))
-  {
-    case DEGRATE_NUCLIDE:
-      toRet = NuclideModelPtr(DegRateNuclide::create(input));
-      break;
-    case LUMPED_NUCLIDE:
-      toRet = NuclideModelPtr(LumpedNuclide::create(input));
-      break;
-    case MIXEDCELL_NUCLIDE:
-      toRet = NuclideModelPtr(MixedCellNuclide::create(input));
-      break;
-    case ONEDIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(OneDimPPMNuclide::create(input));
-      break;
-    case STUB_NUCLIDE:
-      toRet = NuclideModelPtr(StubNuclide::create(input));
-      break;
-    default:
-      throw CycException("Unknown nuclide model enum value encountered."); 
-  }
-  toRet->set_mat_table(mat_table());
-  return toRet;
+  return NuclideModelFactory::nuclideModel(qe, mat_table(), geom());
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
-  ThermalModelPtr toRet;
-  switch( src->type() )
-  {
-    case LUMPED_THERMAL:
-      toRet = ThermalModelPtr(LumpedThermal::create());
-      break;
-    case STUB_THERMAL:
-      toRet = ThermalModelPtr(StubThermal::create());
-      break;
-    default:
-      throw CycException("Unknown thermal model enum value encountered when copying."); 
-  }      
-  toRet->copy(src);
-  toRet->set_mat_table(mat_table());
-  return toRet;
+  return ThermalModelFactory::thermalModel(src, mat_table(), geom());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
-  NuclideModelPtr toRet;
-  switch(src->type())
-  {
-    case DEGRATE_NUCLIDE:
-      toRet = NuclideModelPtr(DegRateNuclide::create());
-      break;
-    case LUMPED_NUCLIDE:
-      toRet = NuclideModelPtr(LumpedNuclide::create());
-      break;
-    case MIXEDCELL_NUCLIDE:
-      toRet = NuclideModelPtr(MixedCellNuclide::create());
-      break;
-    case ONEDIMPPM_NUCLIDE:
-      toRet = NuclideModelPtr(OneDimPPMNuclide::create());
-      break;
-    case STUB_NUCLIDE:
-      toRet = NuclideModelPtr(StubNuclide::create());
-      break;
-    default:
-      throw CycException("Unknown nuclide model enum value encountered when copying."); 
-  }      
-  toRet->copy(*src);
-  toRet->set_mat_table(mat_table());
-  return toRet;
+  return NuclideModelFactory::nuclideModel(src, mat_table(), geom());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -431,6 +293,7 @@ void Component::addComponentToTable(ComponentPtr comp){
     ->addVal("thermalmodel", comp->thermal_model()->name())
     ->addVal("innerradius", comp->inner_radius())
     ->addVal("outerradius", comp->outer_radius())
+    ->addVal("length", comp->geom()->length())
     ->addVal("x", comp->x())
     ->addVal("y", comp->y())
     ->addVal("z", comp->z())
@@ -469,9 +332,6 @@ const deque<mat_rsrc_ptr> Component::wastes(){return nuclide_model()->wastes();}
 const Temp Component::temp_lim(){return temp_lim_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const Tox Component::tox_lim(){return tox_lim_;}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const Temp Component::peak_temp(BoundaryType type) { 
   return (type==INNER)?peak_inner_temp_:peak_outer_temp_;}
 
@@ -503,8 +363,11 @@ NuclideModelPtr Component::nuclide_model(){return nuclide_model_;}
 ThermalModelPtr Component::thermal_model(){return thermal_model_;}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void Component::setPlacement(point_t centroid, double length){
-  geom_->set_centroid(centroid);
-  geom_->set_length(length); 
+void Component::setPlacement(point_t centroid, double the_length){
+  geom()->set_centroid(centroid);
+  geom()->set_length(the_length); 
+  assert(geom()->length()==the_length);
+  assert(nuclide_model_->geom()->length()==the_length);
+  nuclide_model_->update(0);
 };
 

@@ -182,6 +182,12 @@ protected:
     std::deque<std::string> in_commods_;
 
     /**
+       This thermal model determines the acceptability of a material
+       at radius r_lim_ due to temperature limit t_lim_
+     */
+    ThermalModelPtr thermal_model_;
+
+    /**
        A limit to how quickly the Cyder can accept waste.
        Units vary. It will be in the commodity unit per month.
      */
@@ -239,6 +245,16 @@ protected:
        (maybe this should just be in the deployment description?)
      */
     int start_op_mo_;
+
+    /**
+       The radius at which the thermally limiting temperature takes effect [m]
+     */
+    Radius r_lim_;
+
+    /**
+       The limiting temperature at the limiting radius [K]
+     */
+     Temp t_lim_;
 
     /**
        Reports true if the repository has reached capacity, false otherwise
@@ -382,6 +398,8 @@ protected:
        */
     void updateContaminantTable(int the_time) ;
 
+public:
+
     /**
        places the known variable names and types into member_types_ and member_refs_
        maps
@@ -392,11 +410,47 @@ protected:
     void mapVars(std::string name, boost::any val);
 
     /**
+       Returns a boolean confirming whether the mat can be accepted at this time.
+
+       @param mat the material whose acceptability is in question.
+
+       @return mat_acceptable (true if acceptable, false otherwise.)
+      */
+    bool mat_acceptable(mat_rsrc_ptr mat);
+
+    /**
+       Sets t_lim_ the thermal limiting temperature [K]
+
+       @param t_lim the temperature limit [K]
+      */
+    void set_t_lim(Temp t_lim);
+
+    /**
+       Returns the thermally limiting temperature [K]
+
+       @return t_lim_ the temperature limit [K]
+      */
+     Temp t_lim(){return t_lim_;};
+
+    /**
+       Sets r_lim_ [m], the limiting radius at which t_lim_ is the limiting temp
+
+       @param r_lim the limiting radius [m]
+      */
+    void set_r_lim(Radius r_lim);
+ 
+    /**
+       Returns the thermally limiting temperature [K]
+
+       @return r_lim_ the limiting radius [m]
+      */
+    Radius r_lim(){return r_lim_;};
+
+    /**
       This adds a row that uniquely defines this repository model
       */
     void addRowToParamsTable();
 
-public:
     /**
        get the commodity-specific capacity of the Cyder
        
