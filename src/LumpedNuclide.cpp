@@ -393,7 +393,7 @@ IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
-  double scale = (the_time - t_t_)*exp(-t_t_);
+  double scale = exp(-t_t_);
   return MatTools::scaleConcMap(C_0, scale);
 }
 
