@@ -27,6 +27,7 @@ void LumpedNuclideTest::SetUp(){
   theta_ = 0.3; // percent porosity
   adv_vel_ = 1; // m/yr
   time_ = 0;
+  t_t_ = 1; ///?  
 
   // composition set up
   u_=92;
@@ -69,6 +70,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <porosity>" << theta_ << "</porosity>"
+     << "  <transit_time>" << t_t_ << "</transit_time>"
      << "  <formulation>"
      << "    <EM/>"
      << "  </formulation>"
