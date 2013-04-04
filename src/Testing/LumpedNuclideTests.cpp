@@ -206,13 +206,13 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   lumped_ptr_->set_C_0(test_C_0_);
 
-  // check that half that material is offered as the source term in one timestep
+  // check that the expected amt of material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
   ASSERT_EQ(0, time_);
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  double expected_conc = test_C_0_[u235_]*exp(-time_);
+  double expected_conc = test_C_0_[u235_]*exp(-t_t_);
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
