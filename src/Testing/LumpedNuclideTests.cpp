@@ -27,6 +27,7 @@ void LumpedNuclideTest::SetUp(){
   theta_ = 0.3; // percent porosity
   adv_vel_ = 1; // m/yr
   time_ = 0;
+  t_t_ = 1; ///?  
 
   // composition set up
   u_=92;
@@ -69,6 +70,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
      << "  <porosity>" << theta_ << "</porosity>"
+     << "  <transit_time>" << t_t_ << "</transit_time>"
      << "  <formulation>"
      << "    <EM/>"
      << "  </formulation>"
@@ -204,13 +206,13 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
   lumped_ptr_->set_C_0(test_C_0_);
 
-  // check that half that material is offered as the source term in one timestep
+  // check that the expected amt of material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
   ASSERT_EQ(0, time_);
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  double expected_conc = test_C_0_[u235_]*exp(-time_);
+  double expected_conc = test_C_0_[u235_]*exp(-t_t_);
 
   // Source Term
   EXPECT_FLOAT_EQ(expected_conc*(lumped_ptr_->V_f()), nuc_model_ptr_->source_term_bc().second);
@@ -424,8 +426,8 @@ TEST_F(LumpedNuclideTest, C_PFM){
   conc_map[95242] = 10;
 
   IsoConcMap expected;
-  expected[u235_] = 10*exp(-time_);
-  expected[95242] = 10*exp(-time_);
+  expected[u235_] = 10*exp(-t_t_);
+  expected[95242] = 10*exp(-t_t_);
 
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
