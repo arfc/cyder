@@ -20,6 +20,7 @@ LumpedNuclide::LumpedNuclide() :
   Pe_(0),
   porosity_(0),
   v_(0),
+  t_t_(0),
   formulation_(LAST_FORMULATION_TYPE) 
 { 
   set_geom(GeometryPtr(new Geometry()));
@@ -36,6 +37,7 @@ LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   Pe_(0),
   porosity_(0),
   v_(0),
+  t_t_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -56,6 +58,7 @@ LumpedNuclide::~LumpedNuclide(){
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
+  t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
 
   Pe_=NULL;
 
@@ -311,6 +314,7 @@ double LumpedNuclide::V_T(){
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
 
   IsoConcMap to_ret;
+  int dt = max(the_time - last_updated(), 1);
 
   pair<IsoVector, double> sum_pair; 
   sum_pair = vec_hist_[the_time];
@@ -389,7 +393,7 @@ IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
-  double scale = exp(-the_time);
+  double scale = (the_time - t_t_)*exp(-t_t_);
   return MatTools::scaleConcMap(C_0, scale);
 }
 
@@ -425,7 +429,8 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
         mixed.second +=st.second;
         mixed.first.mix(st.first,mixed.second/st.second);
       }
-      absorb(extractIntegratedMass((*daughter), 1)); // @TODO use timestep len
+      // @TODO use timestep len
+      absorb(mat_rsrc_ptr(extractIntegratedMass((*daughter), 1))); 
     }
     C_0 = MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
   }
@@ -435,9 +440,8 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
-  double theta = daughter->V_ff()/daughter->V_T();
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
-      dt*theta*v());
+      dt*v()*daughter->V_ff());
 
   pair<CompMapPtr, double> to_rem = MatTools::conc_to_comp_map(conc, daughter->V_ff());
   return daughter->extract(to_rem.first, to_rem.second); 

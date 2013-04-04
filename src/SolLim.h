@@ -100,16 +100,13 @@ public:
   /**
     Returns m_aff the available contaminant mass in the free fluid volume [kg]
 
-    @param m_T the total mass of the element e
-    @param K_d the distribution coefficient [m^3/kg]
-    @param V_s the solid volume [m^3]
-    @param V_f the fluid volume [m^3]
-    @param d the amount this component has degraded (a fraction)
+    @param m_ff the contaminant mass int he free fluid volume [kg]
+    @param V_ff the free fluid volume [m^3]
     @param C_sol the solubility limit of the element e [kg/m^3]
 
     @return m_aff the available contaminant mass in the free fluid volume [kg]
     */
-  static double m_aff(double m_T, double K_d, double V_s, double V_f, double d, double C_sol);
+  static double m_aff(double m_ff, double V_ff, double C_sol);
 
   /**
     Returns m_ps the contaminant mass that has precipitated into a solid form [kg]
