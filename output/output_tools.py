@@ -156,7 +156,7 @@ class Query(object):
             self.set_q_stmt(sql_stmt("nucparams.Time, " +
                                      "nucparams.CompID, " +
                                      "nucparams.IsoID, " +
-                                     "nucparams.MassKG")
+                                     "nucparams.MassKG"))
 
 
         self.conn = sqlite3.connect(file)
@@ -693,6 +693,7 @@ class Query(object):
             self.data_labels[2] = self.ind_to_iso.values()
 
         elif 'params' == self.q_type:
+            return None
 
         self.is_executed = True
 

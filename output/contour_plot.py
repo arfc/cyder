@@ -261,10 +261,10 @@ class ContourData(object) :
         return self._data
 
     def get_x_val(query) : 
-        return query.get_param_val(x_label)
+        return query.get_param_val(self._x_label)
 
     def get_y_val(query) : 
-        return query.get_param_val(y_label)
+        return query.get_param_val(self._y_label)
 
     def get_z_val(query) : 
         return max(get_z_vec(query))
