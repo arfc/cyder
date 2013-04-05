@@ -152,7 +152,12 @@ class Query(object):
                                      str(t0) + " AND " +
                                      "contaminants.Time < " +
                                      str(tf)))
-        elif 'params' == queryType
+        elif 'nucparams' == queryType:
+            self.set_q_stmt(sql_stmt("nucparams.Time, " +
+                                     "nucparams.CompID, " +
+                                     "nucparams.IsoID, " +
+                                     "nucparams.MassKG")
+
 
         self.conn = sqlite3.connect(file)
 
