@@ -222,6 +222,7 @@ class ContourPlot(object) :
         return self._filename
 
 
+from output_tools import Query
 class ContourData(object) :
     """
     A class that holds a lot of data for the contour plot
@@ -235,32 +236,40 @@ class ContourData(object) :
     _x_label = ''
     _y_label = ''
 
-    def __init__(self
+    def __init__(self,
             root='diff_vel',
             x_label='diffcoeff',
-            y_label='advvel'
-            )
+            y_label='advvel') : 
+        self._froot = root
+        self._x=x
+        self._y=y
+        self._z=z
+        self._x_label = x_label
+        self._y_label = y_label
 
-    def get_(self, vec_data) : 
+
+    def data_ranges(self, vec_data) : 
         return min(vec_data), max(vec_data)
 
     def add_run(self, dbname) :
-        x = self.get_x_val(dbname)
-        y = self.get_y_val(dbname)
-        z = self.get_z_val(dbname)
+        query = Query(dbname, "contaminants", t0=0, tf=100)
+        x = self.get_x_val(query)
+        y = self.get_y_val(query)
+        z = self.get_z_val(query)
         self._data[x][y]=z 
         return self._data
 
-    def get_x_val(dbname) : 
+    def get_x_val(query) : 
+        return None 
 
-    def get_y_val(dbname) : 
+    def get_y_val(query) : 
+        return None
 
-    def get_z_val(dbname) : 
-        return max(get_z_vec(dbname))
-
+    def get_z_val(query) : 
+        return max(get_z_vec(query))
 
     def file_list(self) :
-
+        return None
 
 
 
