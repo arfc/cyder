@@ -247,7 +247,6 @@ class ContourData(object) :
         self._x_label = x_label
         self._y_label = y_label
 
-
     def data_ranges(self, vec_data) : 
         return min(vec_data), max(vec_data)
 
