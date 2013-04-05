@@ -82,9 +82,11 @@ class ContourPlot(object) :
             x = None,
             y = None,
             z = None,
-            xi = None,
-            yi = None,
-            zi = None,
+            ngridx = 100,
+            ngridy = 200,
+            npts = 200,
+            x_label = 'x',
+            y_label = 'y',
             ptitle = 'plottitle',
             fname = 'contour_plot.eps'
             ):
@@ -99,13 +101,18 @@ class ContourPlot(object) :
             self._y = self.set_y()
         if self._z is None : 
             self._z = self.set_z()
+
         if self._xi is None :
-            self._xi = self.set_xi(100)
+            self._xi = self.set_xi(ngridx)
         if self._yi is None :
-            self._yi = self.set_yi(100, 200)
+            self._yi = self.set_yi(ngridx, ngridy)
         if self._zi is None : 
             self._zi = self.set_zi()
-        
+
+        self._npts = npts
+
+        self._x_label = x_label
+        self._y_label = y_label
         self._title = ptitle
         self._filename = fname
         
@@ -149,6 +156,8 @@ class ContourPlot(object) :
         x_max=self._x_max 
         y_max=self._y_max
         title=self._title
+        x_label=self._x_label
+        y_label=self._y_label
 
         plt.subplot(212)
         triang = tri.Triangulation(x, y)
@@ -159,6 +168,8 @@ class ContourPlot(object) :
         plt.plot(x, y, 'ko', ms=3)
         plt.xlim(x_min, x_max)
         plt.ylim(y_min, y_max)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
         plt.title(title)
         print ('tricontour plotted')
 
@@ -211,5 +222,16 @@ class ContourPlot(object) :
         return self._filename
 
 
+class ContourData(object) :
+    """
+    A class that holds a lot of data for the contour plot
+    """
+    _x = None
+    _y = None
+    _z = None
+
+
+
 if __name__=="__main__" :
+    import sys
     ContourPlot()

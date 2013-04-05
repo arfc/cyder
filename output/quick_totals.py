@@ -65,11 +65,6 @@ def plot_all(dbname) :
     plot_all_comps(dbname, "bar", dbname.replace('.sqlite', ''))
     
 
-def plot_contour(root) :
-
-
-
-
 if __name__ == "__main__":
     import sys
     plot_all(str(sys.argv[1]))
