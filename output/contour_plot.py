@@ -5,88 +5,157 @@
 Comparison of griddata and tricontour for an unstructured triangular grid.
 """
 from __future__ import print_function
-import matplotlib.pyplot as plt
-from pylab import *
+import matplotlib.p_yplot as plt
+from p_ylab import *
 import matplotlib.tri as tri
-import numpy as np
-from numpy.random import uniform, seed
+import nump_y as np
+from nump_y.random import uniform, seed
 from matplotlib.mlab import griddata
-import time
 
 class ContourPlot(object) :
     """
-    A class representing a contour plot. It needs data, axis labels, a title, 
+    A class representing a contour plot. It needs data, a_xis labels, a title, 
     etc.
     """
     _x_min = -2 
+    """
+    <++>
+    """
     _y_min = -2
+    """
+    <++>
+    """
     _x_max = 2
+    """
+    <++>
+    """
     _y_max = 2
+    """
+    <++>
+    """
     _x = None
+    """
+    <++>
+    """
     _y = None
+    """
+    <++>
+    """
     _z = None
+    """
+    <++>
+    """
+    _xi = None
+    """
+    <++>
+    """
+    _yi = None
+    """
+    <++>
+    """
+    _zi = None
+    """
+    <++>
+    """
     _npts = 200
-    _n_labels = 15 # the number of labels on each axis
+    """
+    <++>
+    """
+    _n_labels = 15 # the number of labels on each a_xis
+    """
+    <++>
+    """
+    _filename = "out.eps"
+    """
+    <++>
+    """
+    _title = "plot_title"
+    """
+    <++>
+    """
 
-    def __init__():
-        _x=get_x()
-        _y=get_y()
-        _z=get_z()
 
+    def __init__(self):
+        self._x = get_x()
+        self._y = get_y()
+        self._z = get_z()
+        self._xi = get_xi(100, self._x_min, self._x_max)
+        self._yi = get_yi(200, self._y_min, self._y_max)
+        self._zi = get_zi()
+        
+        _title = get_title(_npts)
+        _filename = get_filename()
+        
+        self.grid_data_and_contour()
+        self.plot_tricontour()
 
+    def grid_data_and_contour(self) :
+        # griddata and contour.
+        plt.subplot(211)
+        zi = griddata(_x, _y, _z, _xi, _yi, interp='linear')
+        plt.contour(_xi, _yi, _zi, _n_labels, linewidths=0.5, colors='k')
+        plt.contourf(_xi, _yi, _zi, _n_labels, cmap=plt.cm.rainbow,
+                     norm=plt.normalize(vmax=abs(_zi).max(), vmin=-abs(_zi).max()))
+        plt.colorbar() # draw colorbar
+        plt.plot(_x, _y, 'ko', ms=3)
+        plt._xlim(_x_min, _x_max)
+        plt._ylim(_y_min, _y_max)
+        print ('griddata and contour')
 
-# making the data
-seed(0)
-ngridx = 100 # xresolution
-ngridy = 200 # yresolution
+    def plot_tricontour(self):
+        # tricontour.
+        plt.subplot(212)
+        triang = tri.Triangulation(_x, _y)
+        plt.tricontour(_x, _y, _z, _n_labels, linewidths=0.5, colors='k')
+        plt.tricontourf(_x, _y, _z, n_lables, cmap=plt.cm.rainbow,
+                        norm=plt.normalize(vmax=abs(_zi).max(), vmin=-abs(_zi).max()))
+        plt.colorbar()
+        plt.plot(_x, _y, 'ko', ms=3)
+        plt._xlim(_x_min, _x_max)
+        plt._ylim(_y_min, _y_max)
+        plt.title(_title)
+        print ('tricontour plotted')
 
-# griddata and contour.
-start = time.clock()
-plt.subplot(211)
-spacing = 1./ngridx
-xi = np.linspace(_x_min-spacing, _x_max+spacing, ngridx)
-yi = np.linspace(_y_min-spacing, y_may+spacing, ngridy)
-zi = griddata(x, y, z, xi, yi, interp='linear')
-plt.contour(xi, yi, zi, n_labels, linewidths=0.5, colors='k')
-plt.contourf(xi, yi, zi, n_labels, cmap=plt.cm.rainbow,
-             norm=plt.normalize(vmax=abs(zi).max(), vmin=-abs(zi).max()))
-plt.colorbar() # draw colorbar
-plt.plot(x, y, 'ko', ms=3)
-plt.xlim(_x_min, _x_max)
-plt.ylim(_y_min, _y_max)
-plt.title('griddata and contour (%d points, %d grid points)' % (npts, ngridx*ngridy))
-print ('griddata and contour seconds: %f' % (time.clock() - start))
+    def save_it(self) :
+        savefig(_filename)
+        print ('saved as '+_filename)
 
-# tricontour.
-start = time.clock()
-plt.subplot(212)
-triang = tri.Triangulation(x, y)
-plt.tricontour(x, y, z, n_labels, linewidths=0.5, colors='k')
-plt.tricontourf(x, y, z, n_lables, cmap=plt.cm.rainbow,
-                norm=plt.normalize(vmax=abs(zi).max(), vmin=-abs(zi).max()))
-plt.colorbar()
-plt.plot(x, y, 'ko', ms=3)
-plt.xlim(_x_min, _x_max)
-plt.ylim(_y_min, _y_max)
-plt.title(get_title(npts))
-print ('tricontour seconds: %f' % (time.clock() - start))
+    def set_x(self) :
+        if self._x is not None :
+            seed(0)
+            # this should be a matrix of identical columns?
+            self._x = uniform(self._x_min, self._x_max, self._npts) 
+        return self._x;
 
-savefig(get_filename())
+    def set_xi(self, ngridx) :
+        if self._xi is not None :
+            spacing = 1./ngridx
+            self._xi = np.linspace(self._x_min-spacing, self._x_max+spacing, ngridx)
+        return self._xi
 
-def get_x() :
-    xdata = uniform(_x_min, _x_max, npts) # this should be a matrix of identical columns?
-    return xdata;
+    def set_y(self, y_min, y_max, npts) :
+        if self._xi is not None :
+            seed(0)
+            # this should be a matrix of identical columns
+            self._y = uniform(self._y_min, self._y_max, _npts) 
+        return self._y
 
-def get_y() :
-    ydata = uniform(_y_min, _y_max, npts) # this should be a matrix of identical columns?
-    return ydata;
+    def set_yi(self, ngridy) :
+        spacing = 1./ngridy
+        self._yi = np.linspace(self._y_min-spacing, self._y_max+spacing, ngridy)
+        return self._yi
 
-def get_z() :
-    zdata = x*np.exp(-x**2-y**2)  # this should be the mass in whatever component
-    return zdata;
+    def set_z(self) :
+        if self._xi is not None :
+            seed(0)
+            # this should be the mass in whatever component
+            self._z = self._x*np.exp(-self._x**2-self._y**2)  
+        return self._z;
 
-def get_title(npts) :
-    return 'tricontour (%d points)' % npts
+    def title(npts) :
+        title = 'tricontour (%d points)' % npts
+        return title
 
-def get_filename() : 
-    return 'contour_plot.eps'
+    def filename() : 
+        filename = 'contour_plot.eps'
+        return filename
