@@ -167,6 +167,7 @@ public:
     Here, naively, it returns the total volume.
     */
   virtual double V_ff(){return geom_->volume();};
+  virtual double V_T(){return geom_->volume();};
 
 };
 #endif

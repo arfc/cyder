@@ -106,6 +106,9 @@ public:
   static std::pair<CompMapPtr, double> conc_to_comp_map(const 
       IsoConcMap conc, double vol); 
 
+  /// Returns an empty IsoConcMap
+  static IsoConcMap zeroConcMap();
+
   /**
     Returns the fluid volume [m^3] based on the total volume and the porosity
 
@@ -222,6 +225,15 @@ public:
     @return to_ret the sum of orig and to_add
     */
   static IsoConcMap addConcMaps(IsoConcMap orig, IsoConcMap to_add);
+
+  /** 
+    Converts a standard isoid into an element. 
+
+    @param iso the isotope id (i.e. 92235) to convert
+
+    @return elem the element id (i.e. 92) that corresponds to iso
+    */
+  static int isoToElem(int iso);
   
 };
 #endif

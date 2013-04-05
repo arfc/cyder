@@ -120,7 +120,7 @@ mat_rsrc_ptr MixedCellNuclide::extract(const CompMapPtr comp_to_rem, double kg_t
   // Get the given MixedCellNuclide's contaminant material.
   // add the material to it with the material extract function.
   // each nuclide model should override this function
-  LOG(LEV_DEBUG2,"GRDRNuc") << "MixedCellNuclide" << "is extracting composition: ";
+  LOG(LEV_DEBUG2,"GRDRNuc") << "MixedCellNuclide " << " is extracting composition: ";
   comp_to_rem->print() ;
   mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
   update(last_updated());
@@ -174,17 +174,57 @@ double MixedCellNuclide::contained_mass(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
-  return make_pair(contained_vec(last_degraded()), 
-      tot_deg()*shared_from_this()->contained_mass(last_degraded()));
+  //pair<CompMapPtr, double> comp_pair = 
+  //  MatTools::conc_to_comp_map(conc_hist(last_degraded()), V_ff());
+
+  int the_time = last_degraded();
+  pair<IsoVector, double> sum_pair; 
+  sum_pair = vec_hist_[the_time];
+  CompMapPtr to_ret;
+  to_ret = CompMapPtr(new CompMap(MASS));
+  double m_tot=0;
+
+  if(sum_pair.second != 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
+    int iso(0);
+    double m_ff(0);
+    double m_aff(0);
+    double mass(sum_pair.second);
+    CompMapPtr curr_comp = sum_pair.first.comp();
+    curr_comp->normalize();
+    CompMap::const_iterator it;
+    it=(*curr_comp).begin();
+    while(it != (*curr_comp).end() ) {
+      iso = (*it).first;
+      if(kd_limited()){
+        m_ff = sorb(the_time, iso, (*it).second*mass);
+      } else { 
+        m_ff = (*it).second*mass*tot_deg();
+      }
+      if(sol_limited()){
+        m_aff = precipitate(the_time, iso, m_ff);
+        assert(m_ff >= m_aff);
+      } else { 
+        m_aff = m_ff;
+      }
+      (*to_ret)[iso] = m_aff;
+      m_tot += m_aff;
+      ++it;
+    }
+  } else {
+    (*to_ret)[ 92235 ] = 0; 
+  }
+
+  to_ret->normalize();
+  return make_pair(IsoVector(to_ret), m_tot);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MixedCellNuclide::dirichlet_bc(){
-  IsoConcMap dirichlet, whole_vol;
-  whole_vol = conc_hist(last_degraded());
+  IsoConcMap dirichlet, c_ff;
+  c_ff = conc_hist(last_degraded());
   IsoConcMap::const_iterator it;
-  for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
-    dirichlet[(*it).first] = tot_deg()*(*it).second ;
+  for( it=c_ff.begin(); it!=c_ff.end(); ++it){
+    dirichlet[(*it).first] = (*it).second ;
   }
   return dirichlet;
 }
@@ -202,10 +242,10 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
     iso = (*it).first;
     if( c_ext.count(iso) != 0) {  
       // in both
-      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso]*tot_deg(), r_ext, r_int);
+      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
     } else {  
       // in c_int_only
-      to_ret[iso] = calc_conc_grad(0, c_int[iso]*tot_deg(), r_ext, r_int);
+      to_ret[iso] = calc_conc_grad(0, c_int[iso], r_ext, r_int);
     }
   }
   for( it=c_ext.begin(); it != c_ext.end(); ++it){
@@ -262,7 +302,7 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
       if(kd_limited()){
         m_ff = sorb(the_time, iso, (*it).second*mass);
       } else { 
-        m_ff = (*it).second*mass;
+        m_ff = (*it).second*mass*tot_deg();
       }
       if(sol_limited()){
         m_aff = precipitate(the_time, iso, m_ff);
@@ -310,7 +350,9 @@ void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
     source_term = (*daughter)->source_term_bc();
     if( source_term.second > 0 ){
-      absorb((*daughter)->extract(source_term.first.comp(), source_term.second));
+      CompMapPtr comp_to_ext = CompMapPtr(source_term.first.comp());
+      double kg_to_ext=source_term.second;
+      absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
     }
   }
 }
@@ -320,7 +362,8 @@ double MixedCellNuclide::sorb(int the_time, int iso, double mass){
   if(!kd_limited()){
     throw CycException("The sorb function was called, but kd_limited=false.");
   }
-  return SolLim::m_ff(mass, mat_table_->K_d(iso), V_s(), V_f(), tot_deg());
+  double kd = mat_table_->K_d(MatTools::isoToElem(iso));
+  return SolLim::m_ff(mass, mat_table_->K_d(MatTools::isoToElem(iso)), V_s(), V_f(), tot_deg());
 
 }
 
@@ -329,7 +372,8 @@ double MixedCellNuclide::precipitate(int the_time, int iso, double mass){
   if(!sol_limited()){
     throw CycException("The sorb function was called, but sol_limited=false.");
   }
-  return SolLim::m_aff(mass, mat_table_->K_d(iso), V_s(), V_f(), tot_deg(), mat_table_->S(iso));
+  double s = mat_table_->S(MatTools::isoToElem(iso));
+  return SolLim::m_aff(mass, V_ff(),s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

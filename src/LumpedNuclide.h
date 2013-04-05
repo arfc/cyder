@@ -206,12 +206,6 @@ public:
   /// Sets the peclet_ variable, the ratio of advective to diffusive transport.
   void set_Pe(double Pe);
 
-  /// Sets the transit time, t_t_, variable of the radioactive tracer through the cell [s?] 
-  void set_t_t(double t_t){t_t_ = t_t;};
-
-  /// Returns the transit time of the radioactive tracer through the cell [s?] 
-  const double t_t() const {return t_t_;};
-
   /// Returns the peclet number of the component [-]
   const double Pe() const {return Pe_;};
 

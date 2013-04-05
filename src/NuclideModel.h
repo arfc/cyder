@@ -237,7 +237,7 @@ public:
       it = vec_hist_.find(the_time);
       if( it != vec_hist_.end() ){
         to_ret = (*it).second;
-        assert(to_ret.second < 1000 );
+        assert(to_ret.second < 10000000 );
       } 
     } else { 
       CompMapPtr zero_comp = CompMapPtr(new CompMap(MASS));
@@ -356,6 +356,7 @@ public:
   };
 
   virtual double V_ff()=0;
+  virtual double V_T()=0;
 
 protected:
   /// A vector of the wastes contained by this component
