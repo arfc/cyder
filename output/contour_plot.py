@@ -252,9 +252,10 @@ class ContourData(object) :
         return min(vec_data), max(vec_data)
 
     def add_run(self, dbname) :
-        query = Query(dbname, "contaminants", t0=0, tf=100)
+        query = Query(dbname, "parameters", t0=0, tf=100)
         x = self.get_x_val(query)
         y = self.get_y_val(query)
+        query = Query(dbname, "contaminants", t0=0, tf=100)
         z = self.get_z_val(query)
         self._data[x][y]=z 
         return self._data

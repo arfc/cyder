@@ -152,6 +152,7 @@ class Query(object):
                                      str(t0) + " AND " +
                                      "contaminants.Time < " +
                                      str(tf)))
+        elif 'params' == queryType
 
         self.conn = sqlite3.connect(file)
 
@@ -685,6 +686,8 @@ class Query(object):
             self.data_labels[0] = range(self.t0, self.tf)
             self.data_labels[1] = actList
             self.data_labels[2] = self.ind_to_iso.values()
+
+        elif 'params' == self.q_type:
 
         self.is_executed = True
 
