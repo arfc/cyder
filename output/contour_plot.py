@@ -226,9 +226,41 @@ class ContourData(object) :
     """
     A class that holds a lot of data for the contour plot
     """
+    _froot = 'diffvel'
     _x = None
     _y = None
     _z = None
+    _title = 'real'
+    _filename = 'real.eps'
+    _x_label = ''
+    _y_label = ''
+
+    def __init__(self
+            root='diff_vel',
+            x_label='diffcoeff',
+            y_label='advvel'
+            )
+
+    def get_(self, vec_data) : 
+        return min(vec_data), max(vec_data)
+
+    def add_run(self, dbname) :
+        x = self.get_x_val(dbname)
+        y = self.get_y_val(dbname)
+        z = self.get_z_val(dbname)
+        self._data[x][y]=z 
+        return self._data
+
+    def get_x_val(dbname) : 
+
+    def get_y_val(dbname) : 
+
+    def get_z_val(dbname) : 
+        return max(get_z_vec(dbname))
+
+
+    def file_list(self) :
+
 
 
 
