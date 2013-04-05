@@ -5,11 +5,11 @@
 Comparison of griddata and tricontour for an unstructured triangular grid.
 """
 from __future__ import print_function
-import matplotlib.p_yplot as plt
-from p_ylab import *
+import matplotlib.pyplot as plt
+from pylab import *
 import matplotlib.tri as tri
-import nump_y as np
-from nump_y.random import uniform, seed
+import numpy as np
+from numpy.random import uniform, seed
 from matplotlib.mlab import griddata
 
 class ContourPlot(object) :
@@ -76,31 +76,43 @@ class ContourPlot(object) :
 
 
     def __init__(self):
-        self._x = get_x()
-        self._y = get_y()
-        self._z = get_z()
-        self._xi = get_xi(100, self._x_min, self._x_max)
-        self._yi = get_yi(200, self._y_min, self._y_max)
-        self._zi = get_zi()
+        self._x = self.set_x()
+        self._y = self.set_y()
+        self._z = self.set_z()
+        self._xi = self.set_xi(100)
+        self._yi = self.set_yi(200)
         
-        self._title = get_title(_npts)
+        self._title = get_title(self._npts)
         self._filename = get_filename()
         
         self.grid_data_and_contour()
         self.plot_tricontour()
+        self.save_it()
 
     def grid_data_and_contour(self) :
         # griddata and contour.
+        x=self._x 
+        y=self._y 
+        z=self._z
+        n_labels=self._n_labels
+        xi=self._xi
+        yi=self._yi
+        zi=self._zi
+        x_max=self._x_max 
+        y_max=self._y_max
+        grid_data_and_contour(x,y,z,xi,yi,n_labels,zi,x_min,x_max,y_min_y_max)
+
+    def grid_data_and_contour(x,y,z,xi,yi,n_labels,zi,x_min,x_max,y_min_y_max):
         plt.subplot(211)
-        zi = griddata(_x, _y, _z, _xi, _yi, interp='linear')
-        plt.contour(_xi, _yi, _zi, _n_labels, linewidths=0.5, colors='k')
-        plt.contourf(_xi, _yi, _zi, _n_labels, cmap=plt.cm.rainbow,
-                     norm=plt.normalize(vmax=abs(_zi).max(), vmin=-abs(_zi).max()))
+        zi = griddata(x, y, z, xi, yi, interp='linear')
+        plt.contour(xi, yi, zi, n_labels, linewidths=0.5, colors='k')
+        plt.contourf(xi, yi, zi, n_labels, cmap=plt.cm.rainbow,
+                     norm=plt.normalize(vmax=abs(zi).max(), vmin=-abs(zi).max()))
         plt.colorbar() # draw colorbar
-        plt.plot(_x, _y, 'ko', ms=3)
-        plt._xlim(_x_min, _x_max)
-        plt._ylim(_y_min, _y_max)
-        print ('griddata and contour')
+        plt.plot(x, y, 'ko', ms=3)
+        plt._xlim(x_min, x_max)
+        plt._ylim(y_min, y_max)
+        print ('griddata and contour plotted')
 
     def plot_tricontour(self):
         # tricontour.
@@ -114,17 +126,17 @@ class ContourPlot(object) :
         title=self._title
         plot_tricontour(x,y,z,n_labels,x_min, x_max, y_min, y_max, zi, title)
 
-    def plot_tricontour(x,y,z,n_labels,x_min, x_max, y_min, y_max, zi, title)
+    def plot_tricontour(x,y,z,n_labels,x_min, x_max, y_min, y_max, zi, title):
         plt.subplot(212)
-        triang = tri.Triangulation(_x, _y)
-        plt.tricontour(_x, _y, _z, _n_labels, linewidths=0.5, colors='k')
-        plt.tricontourf(_x, _y, _z, n_lables, cmap=plt.cm.rainbow,
-                        norm=plt.normalize(vmax=abs(_zi).max(), vmin=-abs(_zi).max()))
+        triang = tri.Triangulation(x, y)
+        plt.tricontour(x, y, z, n_labels, linewidths=0.5, colors='k')
+        plt.tricontourf(x, y, z, n_lables, cmap=plt.cm.rainbow,
+                        norm=plt.normalize(vmax=abs(zi).max(), vmin=-abs(zi).max()))
         plt.colorbar()
-        plt.plot(_x, _y, 'ko', ms=3)
-        plt._xlim(_x_min, _x_max)
-        plt._ylim(_y_min, _y_max)
-        plt.title(_title)
+        plt.plot(x, y, 'ko', ms=3)
+        plt._xlim(x_min, x_max)
+        plt._ylim(y_min, y_max)
+        plt.title(title)
         print ('tricontour plotted')
 
     def save_it(self) :
@@ -144,11 +156,11 @@ class ContourPlot(object) :
             self._xi = np.linspace(self._x_min-spacing, self._x_max+spacing, ngridx)
         return self._xi
 
-    def set_y(self, y_min, y_max, npts) :
+    def set_y(self) :
         if self._x is not None :
             seed(0)
             # this should be a matrix of identical columns
-            self._y = uniform(self._y_min, self._y_max, _npts) 
+            self._y = uniform(self._y_min, self._y_max, self._npts) 
         return self._y
 
     def set_yi(self, ngridy) :
@@ -171,3 +183,7 @@ class ContourPlot(object) :
     def filename() : 
         filename = 'contour_plot.eps'
         return filename
+
+
+if __name__=="__main__" :
+    ContourPlot()
