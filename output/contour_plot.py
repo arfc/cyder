@@ -74,17 +74,40 @@ class ContourPlot(object) :
     <++>
     """
 
-
-    def __init__(self):
-        self._x = self.set_x()
-        self._y = self.set_y()
-        self._z = self.set_z()
-        self._xi = self.set_xi(100)
-        self._yi = self.set_yi(100, 200)
-        self._zi = self.set_zi()
+    def __init__(self, 
+            x_min = -2, 
+            y_min = -2, 
+            x_max = 2, 
+            y_max = 2, 
+            x = None,
+            y = None,
+            z = None,
+            xi = None,
+            yi = None,
+            zi = None,
+            ptitle = 'plottitle',
+            fname = 'contour_plot.eps'
+            ):
         
-        self._title = self.set_title(self._npts)
-        self._filename = self.set_filename()
+        self._x_min = x_min
+        self._x_max = x_max
+        self._y_min = y_min
+        self._y_max = y_max
+        if self._x is None :
+            self._x = self.set_x()
+        if self._y is None :
+            self._y = self.set_y()
+        if self._z is None : 
+            self._z = self.set_z()
+        if self._xi is None :
+            self._xi = self.set_xi(100)
+        if self._yi is None :
+            self._yi = self.set_yi(100, 200)
+        if self._zi is None : 
+            self._zi = self.set_zi()
+        
+        self._title = ptitle
+        self._filename = fname
         
         self.grid_data_and_contour()
         self.plot_tricontour()
