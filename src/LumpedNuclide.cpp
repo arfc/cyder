@@ -20,6 +20,7 @@ LumpedNuclide::LumpedNuclide() :
   Pe_(0),
   porosity_(0),
   v_(0),
+  t_t_(0),
   formulation_(LAST_FORMULATION_TYPE) 
 { 
   set_geom(GeometryPtr(new Geometry()));
@@ -36,6 +37,7 @@ LumpedNuclide::LumpedNuclide(QueryEngine* qe):
   Pe_(0),
   porosity_(0),
   v_(0),
+  t_t_(0),
   formulation_(LAST_FORMULATION_TYPE)
 { 
 
@@ -56,6 +58,7 @@ LumpedNuclide::~LumpedNuclide(){
 void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   porosity_ = lexical_cast<double>(qe->getElementContent("porosity"));
+  t_t_ = lexical_cast<double>(qe->getElementContent("transit_time"));
 
   Pe_=NULL;
 
@@ -311,14 +314,15 @@ double LumpedNuclide::V_T(){
 void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
 
   IsoConcMap to_ret;
+  int dt = max(the_time - last_updated(), 1);
 
   pair<IsoVector, double> sum_pair; 
   sum_pair = vec_hist_[the_time];
 
-  if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
+  if(sum_pair.second != 0 && V_ff() > 0 && V_ff() != numeric_limits<double>::infinity()) { 
     try {
-      MatTools::validate_nonzero(geom_->volume());
-      MatTools::validate_finite_pos(geom_->volume());
+      MatTools::validate_nonzero(V_ff());
+      MatTools::validate_finite_pos(V_ff());
     } catch (CycRangeException& e) {
       stringstream msg_ss;
       msg_ss << "The LumpedNuclide requires finite, positive, nonzero volume.";
@@ -332,7 +336,7 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       throw CycRangeException(msg_ss.str());
   }
 
-    double scale = sum_pair.second/geom_->volume();
+    double scale = sum_pair.second/V_ff();
     CompMapPtr curr_comp = sum_pair.first.comp();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
@@ -378,18 +382,18 @@ void LumpedNuclide::update_conc_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_DM(IsoConcMap C_0, int the_time){
-  double arg = (Pe()/2.0)*(1-pow(1+4*the_time/Pe(), 0.5));
+  double arg = (Pe()/2.0)*(1-pow(1+4*t_t_/Pe(), 0.5));
   return MatTools::scaleConcMap(C_0, exp(arg));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
-  double scale = 1.0/(1.0+the_time);
+  double scale = 1.0/(1.0+t_t_);
   return MatTools::scaleConcMap(C_0, scale);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
-  double scale = exp(-the_time);
+  double scale = exp(-t_t_);
   return MatTools::scaleConcMap(C_0, scale);
 }
 
@@ -436,11 +440,10 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
     double dt){
-  double theta = daughter->V_ff()/daughter->V_T();
   IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
-      dt*theta*v());
+      dt*v()*daughter->V_ff()/daughter->geom()->length());
 
   pair<CompMapPtr, double> to_rem = MatTools::conc_to_comp_map(conc, daughter->V_ff());
-  return daughter->extract(to_rem.first, to_rem.second); 
+  return mat_rsrc_ptr(daughter->extract(to_rem.first, to_rem.second)); 
 }
 

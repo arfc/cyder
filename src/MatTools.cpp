@@ -117,7 +117,7 @@ pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol)
     ++it;
   } 
   (*comp).normalize();
-  pair<CompMapPtr, double> to_ret = make_pair(comp, mass);
+  pair<CompMapPtr, double> to_ret = make_pair(CompMapPtr(comp), mass);
   return to_ret;
 }
 

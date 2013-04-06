@@ -152,6 +152,15 @@ class Query(object):
                                      str(t0) + " AND " +
                                      "contaminants.Time < " +
                                      str(tf)))
+        elif 'nucparams' == queryType:
+            self.set_q_stmt(sql_stmt("nucparams.CompID, " +
+                                     "nucparams.Type, " +
+                                     "nucparams.ref_kd" +
+                                     "nucparams.ref_sol_lim" + 
+                                     "nucparams.ref_disp" +
+                                     "nucparams.ref_disp" +
+                                     "nucparams.adv_vel" ))
+
 
         self.conn = sqlite3.connect(file)
 
@@ -685,6 +694,9 @@ class Query(object):
             self.data_labels[0] = range(self.t0, self.tf)
             self.data_labels[1] = actList
             self.data_labels[2] = self.ind_to_iso.values()
+
+        elif 'nucparams' == self.q_type:
+            return None
 
         self.is_executed = True
 

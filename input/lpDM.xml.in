@@ -47,7 +47,7 @@
         <dx>100</dx>
         <dy>100</dy>
         <dz>100</dz>
-        <advective_velocity>0.000631</advective_velocity>
+        <advective_velocity>0.1</advective_velocity>
         <capacity>1</capacity>
         <limiting_temp>100</limiting_temp>
         <incommodity>waste</incommodity>
@@ -72,11 +72,13 @@
           </thermalmodel>
           <nuclidemodel>
             <LumpedNuclide>
-              <advective_velocity>0.000631</advective_velocity>
+              <advective_velocity>0.1</advective_velocity>
               <porosity>0.1</porosity>
               <transit_time>1</transit_time>
               <formulation>
-                <EM/>
+                <DM>
+                  <peclet>0.1</peclet>
+                </DM>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -96,11 +98,13 @@
           </thermalmodel>
           <nuclidemodel>
             <LumpedNuclide>
-              <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.1</porosity>
+              <advective_velocity>0.1</advective_velocity>
+              <porosity>0</porosity>
               <transit_time>1</transit_time>
               <formulation>
-                <EM/>
+                <DM>
+                  <peclet>0.1</peclet>
+                </DM>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -120,11 +124,13 @@
           </thermalmodel>
           <nuclidemodel>
             <LumpedNuclide>
-              <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
+              <advective_velocity>0.1</advective_velocity>
+              <porosity>0.1</porosity>
               <transit_time>1</transit_time>
               <formulation>
-                <EM/>
+                <DM>
+                  <peclet>0.1</peclet>
+                </DM>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -143,11 +149,13 @@
           </thermalmodel>
           <nuclidemodel>
             <LumpedNuclide>
-              <advective_velocity>0.000631</advective_velocity>
+              <advective_velocity>0.1</advective_velocity>
               <porosity>0.1</porosity>
               <transit_time>1</transit_time>
               <formulation>
-                <EM/>
+                <DM>
+                  <peclet>0.1</peclet>
+                </DM>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>

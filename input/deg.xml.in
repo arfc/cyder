@@ -49,7 +49,7 @@
         <dz>100</dz>
         <advective_velocity>0.000631</advective_velocity>
         <capacity>1</capacity>
-        <limiting_temp>100</limiting_temp>
+        <limiting_temp>1000</limiting_temp>
         <incommodity>waste</incommodity>
         <inventorysize>20</inventorysize>
         <lifetime>1000</lifetime>
@@ -71,14 +71,10 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.1</porosity>
-              <transit_time>1</transit_time>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0</degradation>
+            </DegRateNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
         </component>
@@ -95,14 +91,10 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.1</porosity>
-              <transit_time>1</transit_time>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+            </DegRateNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
         </component>
@@ -119,14 +111,10 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0</porosity>
-              <transit_time>1</transit_time>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+            </DegRateNuclide>
           </nuclidemodel>
         </component>
         <component>
@@ -142,14 +130,10 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <LumpedNuclide>
+            <DegRateNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <porosity>0.1</porosity>
-              <transit_time>1</transit_time>
-              <formulation>
-                <EM/>
-              </formulation>
-            </LumpedNuclide>
+              <degradation>0.1</degradation>
+            </DegRateNuclide>
           </nuclidemodel>
         </component>
       </Cyder>
@@ -183,6 +167,7 @@
       </model>
     </institution>
   </region>
+
 
   <recipe>
     <name>lwr_used_fuel_recipe</name>
