@@ -223,33 +223,48 @@ class ContourPlot(object) :
 
 
 from output_tools import Query
+import numpy as np
 class ContourData(object) :
     """
     A class that holds a lot of data for the contour plot
     """
-    _froot = 'diffvel'
-    _x = None
-    _y = None
-    _z = None
+    _data = None
+    _flist = None 
     _title = 'real'
     _filename = 'real.eps'
     _x_label = ''
     _y_label = ''
+    _z_label = ''
+
 
     def __init__(self,
             root='diff_vel',
-            x_label='diffcoeff',
-            y_label='advvel') : 
-        self._froot = root
-        self._x=x
-        self._y=y
-        self._z=z
-        self._x_label = x_label
-        self._y_label = y_label
-
-    def data_ranges(self, vec_data) : 
-        return min(vec_data), max(vec_data)
-
+            xlabel = 'diffcoeff',
+            ylabel = 'advvel',
+            zlabel = 'massKG',
+            ngrid=200) : 
+        self._x_label = xlabel
+        self._y_label = ylabel
+        self._z_label = zlabel
+        self._flist = collect_filenames(root)
+        self.extract_data(self._flist) 
+        ContourPlot(
+            x_min = min(self._data[0])
+            y_min = min(self._data[1])
+            x_max = max(self._data[0]), 
+            y_max = max(self._data[1]), 
+            x = self._data[0],
+            y = self._data[1],
+            z = self._data[2],
+            ngridx = ngrid,
+            ngridy = ngrid,
+            npts = self._data[0].size,
+            x_label = self._x_label,
+            y_label = self._y_label,
+            ptitle = self._title,
+            fname = self._filename
+            )
+        
     def add_run(self, dbname) :
         query = Query(dbname, "nucparams")
         x = self.get_x_val(query)
@@ -257,20 +272,32 @@ class ContourData(object) :
         query = Query(dbname, "contaminants", t0=0, tf=100)
         z = self.get_z_val(query)
         self._data[x][y]=z 
+        self._npts += 1
         return self._data
 
     def get_x_val(query) : 
+        # THIS ONE IS KEY
+        # FROM THE QUERY, GET THE VALUE OF THE XLABEL PARAM
         return query.get_param_val(self._x_label)
 
     def get_y_val(query) : 
+        # THIS ONE IS KEY
+        # FROM THE QUERY, GET THE VALUE OF THE YLABEL PARAM
         return query.get_param_val(self._y_label)
 
     def get_z_val(query) : 
+        # THIS ONE IS EASIER
+        # FROM THE CONTAMINANTS, GET THE MAX VALUE 
         return max(get_z_vec(query))
 
-    def file_list(self) :
-        return None
+    def collect_filenames(self, root) :
+        return self._flist
 
+    def extract_data(self, flist) : 
+        for f in flist :
+            self.add_run(f)
+
+     
 
 
 if __name__=="__main__" :
