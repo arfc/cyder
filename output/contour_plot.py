@@ -19,19 +19,19 @@ class ContourPlot(object) :
     """
     _x_min = -2 
     """
-    <++>
+    The minimum value of the values in the x dimension
     """
     _y_min = -2
     """
-    <++>
+    The minimum value of the values in the y dimension
     """
     _x_max = 2
     """
-    <++>
+    The maximum value of the values in the x dimension 
     """
     _y_max = 2
     """
-    <++>
+    The maximum value of the values in the x dimension 
     """
     _x = None
     """
@@ -224,12 +224,22 @@ class ContourPlot(object) :
 
 from output_tools import Query
 import numpy as np
+import glob
 class ContourData(object) :
     """
     A class that holds a lot of data for the contour plot
     """
+
     _data = None
-    _flist = None 
+    """
+    A 3xn numpy ndarray to hold n (x,y,z) data points
+    """
+
+    _flist = []
+    """
+    The list of sqlite files to be queried to fill the db.
+    n=the length of this list, unless there are duplicates
+    """
     _title = 'real'
     _filename = 'real.eps'
     _x_label = ''
@@ -266,11 +276,13 @@ class ContourData(object) :
             )
         
     def add_run(self, dbname) :
-        query = Query(dbname, "nucparams")
-        x = self.get_x_val(query)
-        y = self.get_y_val(query)
-        query = Query(dbname, "contaminants", t0=0, tf=100)
-        z = self.get_z_val(query)
+        param_query = Query(dbname, "nucparams")
+        x = self.get_x_val(param_query)
+        y = self.get_y_val(param_query)
+        param_query.execute()
+        vals_query = Query(dbname, "contaminants", t0=0, tf=100)
+        vals_query.execute()
+        z = self.get_z_val(vals_query)
         self._data[x][y]=z 
         self._npts += 1
         return self._data
@@ -291,6 +303,8 @@ class ContourData(object) :
         return max(get_z_vec(query))
 
     def collect_filenames(self, root) :
+        for name in glob.glob('dir/root*.sqlite'):
+            self._flist.append(name)
         return self._flist
 
     def extract_data(self, flist) : 
