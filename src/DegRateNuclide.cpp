@@ -67,9 +67,7 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
   const DegRateNuclide* src_ptr = dynamic_cast<const DegRateNuclide*>(&src);
 
   set_deg_rate(src_ptr->deg_rate());
-  shared_from_this()->addRowToNuclideParamsTable("degradation", deg_rate());
   set_v(src_ptr->v());
-  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
   set_tot_deg(0);
   set_last_degraded(-1);
 
@@ -82,6 +80,12 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
   conc_hist_ = ConcHist();
 
   return shared_from_this();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void DegRateNuclide::updateNuclideParamsTable(){
+  shared_from_this()->addRowToNuclideParamsTable("degradation", deg_rate());
+  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

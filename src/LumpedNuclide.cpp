@@ -103,14 +103,10 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
 
   set_last_updated(0);
   set_Pe(src_ptr->Pe());
-  shared_from_this()->addRowToNuclideParamsTable("peclet", Pe());
   set_porosity(src_ptr->porosity());
-  shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
   set_formulation(src_ptr->formulation());
-  shared_from_this()->addRowToNuclideParamsTable("formulation", formulation());
   set_C_0(IsoConcMap());
   v_=src_ptr->v();
-  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
 
   // copy the geometry AND the centroid, it should be reset later.
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
@@ -120,6 +116,15 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   conc_hist_ = ConcHist();
 
   return shared_from_this();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void LumpedNuclide::updateNuclideParamsTable(){
+  shared_from_this()->addRowToNuclideParamsTable("peclet", Pe());
+  shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
+  shared_from_this()->addRowToNuclideParamsTable("transit_time", t_t_);
+  shared_from_this()->addRowToNuclideParamsTable("formulation", formulation());
+  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

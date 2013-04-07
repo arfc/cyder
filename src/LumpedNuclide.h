@@ -178,6 +178,13 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext);
 
+  /**
+     Updates the NuclideParams table by adding appropriate rows to describe the 
+     parameters initializing this NuclideModel.
+     */
+  virtual void updateNuclideParamsTable();
+
+
   /// Returns the inner boundary condition 
   const IsoConcMap C_0() const {return C_0_;};
 

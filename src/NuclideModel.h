@@ -185,6 +185,13 @@ public:
   virtual ConcGradMap neumann_bc(IsoConcMap c_ext, Radius r_ext) = 0;
 
   /**
+     All NuclideModels should implement a function that updates the Params table 
+     just once, to be called from the NuclideModelFactor right after 
+     initialization.
+    */
+  virtual void updateNuclideParamsTable() = 0;
+
+  /**
      adds a row to the NuclideModelParams table.
 
      @param the name of the variable to record
@@ -192,14 +199,16 @@ public:
      */
   virtual void addRowToNuclideParamsTable(std::string param_name, boost::any param_val){
     event_ptr ev = EM->newEvent("NuclideModelParams")
-      ->addVal("compID", comp_id_);
+      ->addVal("compID", comp_id_)
+      ->addVal("param_name", param_name);
     if( param_val.type() == typeid(int*)) {
-      ev->addVal(param_name, *boost::any_cast<int*>(param_val));
-    } else if( param_val.type() == typeid(double*)) {
-      ev->addVal(param_name, *boost::any_cast<double*>(param_val));
-    } else if( param_val.type() == typeid(std::string*)) {
-      ev->addVal(param_name, *boost::any_cast<std::string*>(param_val));
+      ev->addVal("param_val", boost::any_cast<int>(param_val));
+    } else if( param_val.type() == typeid(double)) {
+      ev->addVal("param_val", boost::any_cast<double>(param_val));
+    } else if( param_val.type() == typeid(std::string)) {
+      ev->addVal("param_val", boost::any_cast<std::string>(param_val));
     }
+
     ev->record();
   };
 

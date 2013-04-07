@@ -73,15 +73,10 @@ NuclideModelPtr OneDimPPMNuclide::copy(const NuclideModel& src){
 
   set_last_updated(TI->time());
   set_porosity(src_ptr->porosity());
-  shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
   set_rho(src_ptr->rho());
-  shared_from_this()->addRowToNuclideParamsTable("bulk_density", rho());
   set_v(src_ptr->v());
-  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
   set_Ci(src_ptr->Ci());
-  shared_from_this()->addRowToNuclideParamsTable("intial_concentration", Ci());
   set_Co(src_ptr->Co());
-  shared_from_this()->addRowToNuclideParamsTable("source_concentration", Co());
 
 
   // copy the geometry AND the centroid. It should be reset later.
@@ -93,6 +88,15 @@ NuclideModelPtr OneDimPPMNuclide::copy(const NuclideModel& src){
   update_vec_hist(TI->time());
 
   return shared_from_this();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::updateNuclideParamsTable(){
+  shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
+  shared_from_this()->addRowToNuclideParamsTable("bulk_density", rho());
+  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
+  shared_from_this()->addRowToNuclideParamsTable("intial_concentration", Ci());
+  shared_from_this()->addRowToNuclideParamsTable("source_concentration", Co());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

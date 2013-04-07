@@ -103,7 +103,6 @@ void Component::init(string name, ComponentType type, string mat, double
   } else { 
     thermal_model->set_geom(GeometryPtr(geom()));
     nuclide_model->set_geom(GeometryPtr(geom()));
-    nuclide_model->set_comp_id(ID());
 
     thermal_model->set_mat_table(MatDataTablePtr(mat_table()));
     nuclide_model->set_mat_table(MatDataTablePtr(mat_table()));
@@ -279,7 +278,7 @@ ThermalModelPtr Component::thermal_model(QueryEngine* qe){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
-  return NuclideModelFactory::nuclideModel(qe, mat_table(), geom());
+  return NuclideModelFactory::nuclideModel(qe, mat_table(), geom(), ID());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -289,7 +288,7 @@ ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
-  return NuclideModelFactory::nuclideModel(src, mat_table(), geom());
+  return NuclideModelFactory::nuclideModel(src, mat_table(), geom(), ID());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

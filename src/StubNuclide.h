@@ -169,5 +169,11 @@ public:
   virtual double V_ff(){return geom_->volume();};
   virtual double V_T(){return geom_->volume();};
 
+  /**
+     Updates the NuclideParams table by adding appropriate rows to describe the 
+     parameters initializing this NuclideModel.
+     */
+  virtual void updateNuclideParamsTable();
+
 };
 #endif
