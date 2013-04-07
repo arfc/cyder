@@ -193,7 +193,13 @@ public:
   virtual void addRowToNuclideParamsTable(std::string param_name, boost::any param_val){
     event_ptr ev = EM->newEvent("NuclideModelParams")
       ->addVal("compID", comp_id_);
-    ev->addVal(param_name, *boost::any_cast<*param_val.type()>(param_val));
+    if( param_val.type() == typeid(int*)) {
+      ev->addVal(param_name, *boost::any_cast<int*>(param_val));
+    } else if( param_val.type() == typeid(double*)) {
+      ev->addVal(param_name, *boost::any_cast<double*>(param_val));
+    } else if( param_val.type() == typeid(std::string*)) {
+      ev->addVal(param_name, *boost::any_cast<std::string*>(param_val));
+    }
     ev->record();
   };
 
