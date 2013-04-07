@@ -67,7 +67,9 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
   const DegRateNuclide* src_ptr = dynamic_cast<const DegRateNuclide*>(&src);
 
   set_deg_rate(src_ptr->deg_rate());
+  shared_from_this()->updateParamsTable("degradation", deg_rate());
   set_v(src_ptr->v());
+  shared_from_this()->updateParamsTable("advective_velocity", v());
   set_tot_deg(0);
   set_last_degraded(-1);
 

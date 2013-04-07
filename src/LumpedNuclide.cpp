@@ -103,10 +103,14 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
 
   set_last_updated(0);
   set_Pe(src_ptr->Pe());
+  shared_from_this()->updateParamsTable("peclet", Pe());
   set_porosity(src_ptr->porosity());
+  shared_from_this()->updateParamsTable("porosity", porosity());
   set_formulation(src_ptr->formulation());
+  shared_from_this()->updateParamsTable("formulation", formulation());
   set_C_0(IsoConcMap());
   v_=src_ptr->v();
+  shared_from_this()->updateParamsTable("advective_velocity", v());
 
   // copy the geometry AND the centroid, it should be reset later.
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));

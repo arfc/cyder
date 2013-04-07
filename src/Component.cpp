@@ -103,6 +103,7 @@ void Component::init(string name, ComponentType type, string mat, double
   } else { 
     thermal_model->set_geom(GeometryPtr(geom()));
     nuclide_model->set_geom(GeometryPtr(geom()));
+    nuclide_model->set_comp_id(ID());
 
     thermal_model->set_mat_table(MatDataTablePtr(mat_table()));
     nuclide_model->set_mat_table(MatDataTablePtr(mat_table()));
