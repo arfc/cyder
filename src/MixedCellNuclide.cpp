@@ -73,15 +73,15 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
   const MixedCellNuclide* src_ptr = dynamic_cast<const MixedCellNuclide*>(&src);
 
   set_v(src_ptr->v());
-  shared_from_this()->updateParamsTable("advective_velocity", v());
+  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
   set_deg_rate(src_ptr->deg_rate());
-  shared_from_this()->updateParamsTable("degradation", deg_rate());
+  shared_from_this()->addRowToNuclideParamsTable("degradation", deg_rate());
   set_kd_limited(src_ptr->kd_limited());
-  shared_from_this()->updateParamsTable("kd_limited", kd_limited());
+  shared_from_this()->addRowToNuclideParamsTable("kd_limited", kd_limited());
   set_porosity(src_ptr->porosity());
-  shared_from_this()->updateParamsTable("porosity", porosity());
+  shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
   set_sol_limited(src_ptr->sol_limited());
-  shared_from_this()->updateParamsTable("sol_limited", sol_limited());
+  shared_from_this()->addRowToNuclideParamsTable("sol_limited", sol_limited());
   set_tot_deg(0);
   set_last_degraded(-1);
 
