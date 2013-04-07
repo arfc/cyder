@@ -15,7 +15,7 @@
 
 enum FormulationType{
   DM, 
-  EM, 
+  EXPM, 
   PFM, 
   LAST_FORMULATION_TYPE};
 
@@ -186,7 +186,7 @@ public:
 
   /** Returns the FormulationType corresponding to the string
    * 
-   * @param the name of the formulation type (EM, PFM, DM, etc.)
+   * @param the name of the formulation type (EXPM, PFM, DM, etc.)
    * @return the formulation type corresponding to the string
    */
   FormulationType enumerateFormulation(std::string formulation);
@@ -238,13 +238,13 @@ public:
   IsoConcMap C_DM(IsoConcMap C_0, int the_time);
 
   /**
-     EM model concentration calculator
+     EXPM model concentration calculator
 
      @param C_0 the incoming concentration map
      @param the_time the length of the timestep over which to calculate
      @return C_f the final concentration at the end of the timestep
      */
-  IsoConcMap C_EM(IsoConcMap C_0, int the_time);
+  IsoConcMap C_EXPM(IsoConcMap C_0, int the_time);
 
   /** 
     PFM model concentration calculator
@@ -314,7 +314,7 @@ protected:
   double v_;
   /**
    * The name of the lumped parameter model formulation. This can be 
-   * the Exponential Model (EM), Piston Flow Model (PFM), 
+   * the Exponential Model (EXPM), Piston Flow Model (PFM), 
    * or the Dispersion Model(DM).
    */
   FormulationType formulation_;

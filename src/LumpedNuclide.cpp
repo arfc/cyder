@@ -65,7 +65,7 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
   list<string> choices;
   list<string>::iterator it;
   choices.push_back ("DM");
-  choices.push_back ("EM");
+  choices.push_back ("EXPM");
   choices.push_back ("PFM");
 
   QueryEngine* formulation_qe = qe->queryElement("formulation");
@@ -81,7 +81,7 @@ void LumpedNuclide::initModuleMembers(QueryEngine* qe){
     case DM :
       Pe_ = lexical_cast<double>(ptr->getElementContent("peclet"));
       break;
-    case EM :
+    case EXPM :
       break;
     case PFM :
       break;
@@ -239,7 +239,7 @@ IsoFluxMap LumpedNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 FormulationType LumpedNuclide::enumerateFormulation(string type_name) {
   FormulationType toRet = LAST_FORMULATION_TYPE;
-  string formulation_type_names[] = {"DM", "EM", "PFM", 
+  string formulation_type_names[] = {"DM", "EXPM", "PFM", 
     "LAST_FORMULATION_TYPE"};
   for(int type = 0; type < LAST_FORMULATION_TYPE; type++){
     if(formulation_type_names[type] == type_name){
@@ -363,8 +363,8 @@ IsoConcMap LumpedNuclide::C_t(IsoConcMap C_0, int the_time){
     case DM :
       to_ret = C_DM(C_0, the_time);
       break;
-    case EM :
-      to_ret = C_EM(C_0, the_time);
+    case EXPM :
+      to_ret = C_EXPM(C_0, the_time);
       break;
     case PFM :
       to_ret = C_PFM(C_0, the_time);
@@ -391,7 +391,7 @@ IsoConcMap LumpedNuclide::C_DM(IsoConcMap C_0, int the_time){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap LumpedNuclide::C_EM(IsoConcMap C_0, int the_time){
+IsoConcMap LumpedNuclide::C_EXPM(IsoConcMap C_0, int the_time){
   double scale = 1.0/(1.0+t_t_);
   return MatTools::scaleConcMap(C_0, scale);
 }
