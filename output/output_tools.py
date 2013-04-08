@@ -153,13 +153,9 @@ class Query(object):
                                      "contaminants.Time < " +
                                      str(tf)))
         elif 'nucparams' == queryType:
-            self.set_q_stmt(sql_stmt("nucparams.CompID, " +
-                                     "nucparams.Type, " +
-                                     "nucparams.ref_kd" +
-                                     "nucparams.ref_sol_lim" + 
-                                     "nucparams.ref_disp" +
-                                     "nucparams.ref_disp" +
-                                     "nucparams.adv_vel" ))
+            self.set_q_stmt(sql_stmt("nuclidemodelparams.CompID, " +
+                                     "nuclidemodelparams.param_name, " +
+                                     "nuclidemodelparams.param_val" ))
 
 
         self.conn = sqlite3.connect(file)
@@ -184,6 +180,9 @@ class Query(object):
         elif self.q_type == 'contaminants':
             self.data_axes = ['time', 'CompID', 'IsoID', 'MassKG']
             self.data_units = ['months', 'CompID', 'IsoID', "kg"]
+        elif self.q_type == 'nucparams':
+            self.data_axes = ['CompID', 'param_name', 'param_val']
+            self.data_units = ['CompID', 'name', 'val']
 
 ###############################################################################
     def set_q_stmt(self, q_stmt):
@@ -484,6 +483,19 @@ class Query(object):
         return compList
 
 ###############################################################################
+    def get_param_val(self, compID, param_name):
+        """
+        Gets the parameter value of the parameter specified in the CompID component 
+        """
+
+        c = self.conn.cursor()
+
+        c.execute(
+            "SELECT nuclidemodelparams.param_val"+ 
+            " FROM nuclidemodelparams, WHERE nuclidemodelparams.CompID=" + str(compID) + 
+            " AND nuclidemodelparams.param_name=" + str(param_name))
+
+###############################################################################
     def get_short_iso_list(self, table='contaminants'):
         """
         Count and record how many IsoIDs exist in the table, and make a list
@@ -696,6 +708,10 @@ class Query(object):
             self.data_labels[2] = self.ind_to_iso.values()
 
         elif 'nucparams' == self.q_type:
+            c.execute(str(self.q_stmt))
+            for row in c : 
+              param_val = row[0]
+              self.data = param_val
             return None
 
         self.is_executed = True
