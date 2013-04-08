@@ -98,6 +98,16 @@ class Query(object):
     """
     Stores the figure formed by plotting the data in this Query.
     """
+
+    param_ind_to_name = {}
+    """
+    A mapping of indices to param names for the param dimension
+    """
+    param_name_to_ind = {}
+    """
+    A mapping of param names to indices for the param dimension
+    """
+
 ###############################################################################
 
     def __init__(self, file, queryType, t0=0, tf=1200):
@@ -464,7 +474,7 @@ class Query(object):
         return compTypes
 
 ###############################################################################
-    def get_comp_list(self):
+    def get_comp_list(self, table='contaminants'):
         """
         Count and record how many Components exist during the range of the
         calculation.
@@ -474,7 +484,7 @@ class Query(object):
         compList = []
         c.execute(
             "SELECT components.CompID FROM components, " +
-            "contaminants ")
+            table)
 
         for row in c:
             if row[0] not in compList:
@@ -482,6 +492,40 @@ class Query(object):
 
         compList.sort()
         return compList
+
+###############################################################################
+    def get_param_val(self, compID, param_name):
+        """
+        Gets the parameter value of the parameter specified in the CompID component 
+        """
+
+        c = self.conn.cursor()
+
+        c.execute(
+            "SELECT nuclidemodelparams.param_val"+ 
+            " FROM nuclidemodelparams, WHERE nuclidemodelparams.CompID=" + str(compID) + 
+            " AND nuclidemodelparams.param_name=" + str(param_name))
+
+        for row in c : 
+            param_val = row[0]
+        return param_val
+
+###############################################################################
+    def get_short_params_list(self, table='nuclidemodelparams'):
+        """
+        Count and record how many IsoIDs exist in the table, and make a list
+        """
+        c = self.conn.cursor()
+
+        param_list = []
+        c.execute("SELECT " + table + ".param_name FROM " + table)
+
+        for row in c:
+            if row[0] not in param_list:
+                param_list.append(row[0])
+
+        param_list.sort()
+        return param_list
 
 ###############################################################################
     def get_short_iso_list(self, table='contaminants'):
@@ -657,6 +701,7 @@ class Query(object):
             # time (tf - t0) X iso (numIsos) X components
 
             # get the list of actors
+            # Perform the SQL query.
             actList = self.get_comp_list()
             numActs = len(actList)
             isos = self.get_short_iso_list('contaminants')
@@ -675,7 +720,6 @@ class Query(object):
                                      str(numActs) + " x " + str(numIsos) +
                                      ". That's too large.")
 
-            # Perform the SQL query.
             c.execute(str(self.q_stmt))
 
             # Load the results into the array.
@@ -696,7 +740,34 @@ class Query(object):
             self.data_labels[2] = self.ind_to_iso.values()
 
         elif 'nucparams' == self.q_type:
-            return None
+            actList = self.get_comp_list('nuclidemodelparams')
+            numActs = len(actList)
+            params = self.get_short_param_list('nuclidemodelparams')
+            for index, param in enumerate(params):
+                self.param_ind_to_name[index] = param
+                self.param_name_to_ind[param] = index
+            numParams = len(params)
+
+            # Initialize the array.
+            try:
+                self.data = zeros((numActs, numParams))
+            except ValueError:
+                raise QueryException("Error: you've executed a Query whose " +
+                                     "array representation would be " +
+                                     str(numActs) + " x " +
+                                     str(numParams) + ". That's too large.")
+
+
+            c.execute(str(self.q_stmt))
+            compInd = -1
+            for row in c : 
+              comp = row[0]
+              param_name = row[1]
+              param_val = row[2]
+
+              compInd = actList.index(comp)
+              paramInd = param_name_to_ind[param]
+              self.data[compInd][paramInd] = param_val
 
         self.is_executed = True
 

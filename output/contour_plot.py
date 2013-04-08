@@ -235,17 +235,20 @@ class ContourData(object) :
     _filename = 'real.eps'
     _x_label = ''
     _y_label = ''
+    _comp_id = 0
 
     def __init__(self,
             root='diff_vel',
             x_label='diffcoeff',
-            y_label='advvel') : 
+            y_label='advvel',
+            comp_id=0) : 
         self._froot = root
         self._x=x
         self._y=y
         self._z=z
         self._x_label = x_label
         self._y_label = y_label
+        self._comp_id = comp_id
 
     def data_ranges(self, vec_data) : 
         return min(vec_data), max(vec_data)
@@ -260,13 +263,16 @@ class ContourData(object) :
         return self._data
 
     def get_x_val(query) : 
-        return query.get_param_val(self._x_label)
+        return query.get_param_val(self._comp_id, self._x_label)
 
     def get_y_val(query) : 
-        return query.get_param_val(self._y_label)
+        return query.get_param_val(self._comp_id, self._y_label)
 
     def get_z_val(query) : 
-        return max(get_z_vec(query))
+        query.collapse_isos()
+        data = query.get_data()
+        mass_slice = data[:,comp_list.index(self._comp_id)]
+        return max(max_slice)
 
     def file_list(self) :
         return None
