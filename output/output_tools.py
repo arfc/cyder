@@ -163,10 +163,10 @@ class Query(object):
                                      "contaminants.Time < " +
                                      str(tf)))
         elif 'nucparams' == queryType:
-            self.set_q_stmt(sql_stmt("nuclidemodelparams.CompID, " +
-                                     "nuclidemodelparams.param_name, " +
-                                     "nuclidemodelparams.param_val",
-                                     "nuclidemodelparams"))
+            self.set_q_stmt(sql_stmt("NuclideModelParams.CompID, " +
+                                     "NuclideModelParams.ParamName, " +
+                                     "NuclideModelParams.ParamVal",
+                                     "NuclideModelParams"))
 
 
         self.conn = sqlite3.connect(filename)
@@ -192,7 +192,7 @@ class Query(object):
             self.data_axes = ['time', 'CompID', 'IsoID', 'MassKG']
             self.data_units = ['months', 'CompID', 'IsoID', "kg"]
         elif self.q_type == 'nucparams':
-            self.data_axes = ['CompID', 'param_name', 'param_val']
+            self.data_axes = ['CompID', 'ParamName', 'ParamVal']
             self.data_units = ['CompID', 'name', 'val']
 
 ###############################################################################
@@ -483,7 +483,7 @@ class Query(object):
 
         compList = []
         c.execute(
-            "SELECT components.CompID FROM components, " +
+            "SELECT "+table+".CompID FROM components, " +
             table)
 
         for row in c:
@@ -511,14 +511,14 @@ class Query(object):
         return param_val
 
 ###############################################################################
-    def get_short_params_list(self, table='nuclidemodelparams'):
+    def get_short_param_list(self, table='NuclideModelParams'):
         """
         Count and record how many IsoIDs exist in the table, and make a list
         """
         c = self.conn.cursor()
 
         param_list = []
-        c.execute("SELECT " + table + ".param_name FROM " + table)
+        c.execute("SELECT " + table + ".ParamName FROM " + table)
 
         for row in c:
             if row[0] not in param_list:
@@ -740,9 +740,9 @@ class Query(object):
             self.data_labels[2] = self.ind_to_iso.values()
 
         elif 'nucparams' == self.q_type:
-            actList = self.get_comp_list('nuclidemodelparams')
+            actList = self.get_comp_list('NuclideModelParams')
             numActs = len(actList)
-            params = self.get_short_param_list('nuclidemodelparams')
+            params = self.get_short_param_list('NuclideModelParams')
             for index, param in enumerate(params):
                 self.param_ind_to_name[index] = param
                 self.param_name_to_ind[param] = index
@@ -766,7 +766,7 @@ class Query(object):
               param_val = row[2]
 
               compInd = actList.index(comp)
-              paramInd = param_name_to_ind[param]
+              paramInd = self.param_name_to_ind[param]
               self.data[compInd][paramInd] = param_val
 
         self.is_executed = True

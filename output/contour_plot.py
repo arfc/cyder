@@ -246,6 +246,7 @@ class ContourData(object) :
     _y_label = ''
     _z_label = ''
     _comp_id = 7
+    _npts = 0
 
 
     def __init__(self,
@@ -260,6 +261,7 @@ class ContourData(object) :
         self._y_label = ylabel
         self._z_label = zlabel
         self._flist = self.collect_filenames(root)
+        self._data = np.zeros((3,len(self._flist)))
         self.extract_data(self._flist) 
         ContourPlot(
             x_min = min(self._data[0]),
@@ -287,14 +289,10 @@ class ContourData(object) :
         x = self.get_x_val(param_query)
         y = self.get_y_val(param_query)
         param_query.execute()
-        vals_query = Query(dbname, "contaminants", t0=0, tf=100)
+        vals_query = output_tools.Query(dbname, "contaminants", t0=0, tf=100)
         vals_query.execute()
         z = self.get_z_val(vals_query)
-        self._data[x][y]=z 
-        print("X="+str(x))
-        print("Y="+str(y))
-        print("Z="+str(z))
-        self._npts += 1
+        self._data[x][y] = z 
         return self._data
 
     def get_x_val(self, query) : 
@@ -306,12 +304,14 @@ class ContourData(object) :
     def get_z_val(self, query) : 
         query.collapse_isos()
         data = query.get_data()
-        mass_slice = data[:,comp_list.index(self._comp_id)]
-        return max(max_slice)
+        mass_slice = data[:,query.get_comp_list().index(self._comp_id)]
+        return mass_slice.max()
 
     def collect_filenames(self, root) :
         for name in glob.glob(root+'*.sqlite'):
             self._flist.append(name)
+            print(name)
+            self._npts += 1
         return self._flist
 
 
