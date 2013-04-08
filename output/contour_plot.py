@@ -288,19 +288,13 @@ class ContourData(object) :
         return self._data
 
     def get_x_val(query) : 
-        # THIS ONE IS KEY
-        # FROM THE QUERY, GET THE VALUE OF THE XLABEL PARAM
-        return query.get_param_val(self._x_label)
+        return query.get_param_val(self._comp_id, self._x_label)
 
     def get_y_val(query) : 
-        # THIS ONE IS KEY
-        # FROM THE QUERY, GET THE VALUE OF THE YLABEL PARAM
-        return query.get_param_val(self._y_label)
+        return query.get_param_val(self._comp_id, self._y_label)
 
     def get_z_val(query) : 
-        # THIS ONE IS EASIER
-        # FROM THE CONTAMINANTS, GET THE MAX VALUE 
-        return max(get_z_vec(query))
+        return max(query.get_data()[:,query.comp_to_ind(self._comp_id)][query.iso_to_ind(92325)])
 
     def collect_filenames(self, root) :
         for name in glob.glob('dir/root*.sqlite'):
