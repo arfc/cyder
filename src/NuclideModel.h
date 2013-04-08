@@ -201,12 +201,10 @@ public:
     event_ptr ev = EM->newEvent("NuclideModelParams")
       ->addVal("compID", comp_id_)
       ->addVal("param_name", param_name);
-    if( param_val.type() == typeid(int*)) {
-      ev->addVal("param_val", boost::any_cast<int>(param_val));
-    } else if( param_val.type() == typeid(double)) {
+    if( param_val.type() == typeid(double)) {
       ev->addVal("param_val", boost::any_cast<double>(param_val));
-    } else if( param_val.type() == typeid(std::string)) {
-      ev->addVal("param_val", boost::any_cast<std::string>(param_val));
+    } else { 
+      throw CycException("The NuclideModelParams table needs double type param values");
     }
 
     ev->record();

@@ -110,7 +110,7 @@ class Query(object):
 
 ###############################################################################
 
-    def __init__(self, file, queryType, t0=0, tf=1200):
+    def __init__(self, filename, queryType, t0=0, tf=1200):
         """
         Creates the Query object by connecting to the database, checking that
         the Query type specified is valid, and initializing a partial SQL
@@ -124,7 +124,7 @@ class Query(object):
         self.tf = tf
 
         # Check type.
-        q_types = ['material', 'resource', 'contaminants']
+        q_types = ['material', 'resource', 'contaminants', 'nucparams']
         if (queryType in q_types):
             self.q_type = queryType
         else:
@@ -165,10 +165,11 @@ class Query(object):
         elif 'nucparams' == queryType:
             self.set_q_stmt(sql_stmt("nuclidemodelparams.CompID, " +
                                      "nuclidemodelparams.param_name, " +
-                                     "nuclidemodelparams.param_val" ))
+                                     "nuclidemodelparams.param_val",
+                                     "nuclidemodelparams"))
 
 
-        self.conn = sqlite3.connect(file)
+        self.conn = sqlite3.connect(filename)
 
         # Record the labels and the (default) units for the Query.
         if self.q_type == 'material':

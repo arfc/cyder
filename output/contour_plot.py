@@ -222,7 +222,7 @@ class ContourPlot(object) :
         return self._filename
 
 
-from output_tools import Query
+import output_tools
 import numpy as np
 import glob
 class ContourData(object) :
@@ -245,19 +245,21 @@ class ContourData(object) :
     _x_label = ''
     _y_label = ''
     _z_label = ''
-    _comp_id = 0
+    _comp_id = 7
 
 
     def __init__(self,
-            root='diff_vel',
-            xlabel = 'diffcoeff',
-            ylabel = 'advvel',
+            root='deg',
+            xlabel = 'degradation',
+            ylabel = 'advective_velocity',
             zlabel = 'massKG',
-            ngrid=200) : 
+            ngrid=200,
+            title = 'deg-adv_vel'
+            ): 
         self._x_label = xlabel
         self._y_label = ylabel
         self._z_label = zlabel
-        self._flist = collect_filenames(root)
+        self._flist = self.collect_filenames(root)
         self.extract_data(self._flist) 
         ContourPlot(
             x_min = min(self._data[0]),
@@ -276,8 +278,12 @@ class ContourData(object) :
             fname = self._filename
             )
         
+    def extract_data(self, flist) : 
+        for f in flist :
+            self.add_run(f)
+     
     def add_run(self, dbname) :
-        param_query = Query(dbname, "nucparams")
+        param_query = output_tools.Query(filename=dbname, queryType='nucparams')
         x = self.get_x_val(param_query)
         y = self.get_y_val(param_query)
         param_query.execute()
@@ -285,6 +291,9 @@ class ContourData(object) :
         vals_query.execute()
         z = self.get_z_val(vals_query)
         self._data[x][y]=z 
+        print("X="+str(x))
+        print("Y="+str(y))
+        print("Z="+str(z))
         self._npts += 1
         return self._data
 
@@ -301,15 +310,10 @@ class ContourData(object) :
         return max(max_slice)
 
     def collect_filenames(self, root) :
-        for name in glob.glob('dir/root*.sqlite'):
+        for name in glob.glob(root+'*.sqlite'):
             self._flist.append(name)
         return self._flist
 
-    def extract_data(self, flist) : 
-        for f in flist :
-            self.add_run(f)
-
-     
 
 
 if __name__=="__main__" :
