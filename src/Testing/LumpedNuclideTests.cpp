@@ -379,8 +379,8 @@ TEST_F(LumpedNuclideTest, C_DM){
   conc_map[95242] = 10;
 
   IsoConcMap expected;
-  expected[u235_] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
-  expected[95242] = 10*exp(Pe*(1-pow(1+4*time_/Pe,0.5))/2);
+  expected[u235_] = 10*exp(Pe*(1-pow(1+4*t_t_/Pe,0.5))/2);
+  expected[95242] = 10*exp(Pe*(1-pow(1+4*t_t_/Pe,0.5))/2);
 
 
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
@@ -402,8 +402,8 @@ TEST_F(LumpedNuclideTest, C_EM){
   conc_map[95242] = 10;
 
   IsoConcMap expected;
-  expected[u235_] = 10/(1+time_);
-  expected[95242] = 10/(1+time_);
+  expected[u235_] = 10/(1+t_t_);
+  expected[95242] = 10/(1+t_t_);
 
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
