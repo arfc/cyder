@@ -22,20 +22,16 @@ TEST_F(MaterialDBTest, DISABLED_listAvailableMats){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MaterialDBTest, tableID){
-  //int start = MDB->curr_table_id();
-  //std::string mat = "clay";
-  //std::string exp_id = mat;
-  //exp_id = mat+boost::lexical_cast<std::string>(0);
-  //EXPECT_EQ(exp_id, MDB->tableID(mat,0,0,0) );
-  //for ( int i=start; i<10; i++) {
-  //  exp_id = mat+boost::lexical_cast<std::string>(i);
-  //  EXPECT_EQ(exp_id, MDB->tableID(mat,i,i,i) );
-  //}
+  int start = MDB->curr_table_id();
+  std::string mat = "clay";
+  std::string exp_id = mat;
+  exp_id = mat+boost::lexical_cast<std::string>(0);
+  EXPECT_EQ(exp_id, MDB->tableID(mat,0,0,0) );
+  for ( int i=start; i<10; i++) {
+    exp_id = mat+boost::lexical_cast<std::string>(start+i);
+    EXPECT_EQ(exp_id, MDB->tableID(mat,i,i,i) );
+  }
   EXPECT_EQ("clay0", MDB->tableID("clay",0,0,0) );
-  EXPECT_EQ("clay1", MDB->tableID("clay",2,1,1) );
-  EXPECT_EQ("clay2", MDB->tableID("clay",3,1,1) );
-  EXPECT_EQ("clay3", MDB->tableID("clay",4,1,1) );
-  EXPECT_EQ("clay4", MDB->tableID("clay",1,1,1) );
   EXPECT_EQ("clay0", MDB->tableID("clay",0,0,0) );
 }
 
