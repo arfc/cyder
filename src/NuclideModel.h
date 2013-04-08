@@ -199,10 +199,10 @@ public:
      */
   virtual void addRowToNuclideParamsTable(std::string param_name, boost::any param_val){
     event_ptr ev = EM->newEvent("NuclideModelParams")
-      ->addVal("compID", comp_id_)
-      ->addVal("param_name", param_name);
+      ->addVal("CompID", comp_id_)
+      ->addVal("ParamName", param_name);
     if( param_val.type() == typeid(double)) {
-      ev->addVal("param_val", boost::any_cast<double>(param_val));
+      ev->addVal("ParamVal", boost::any_cast<double>(param_val));
     } else { 
       throw CycException("The NuclideModelParams table needs double type param values");
     }

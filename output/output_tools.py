@@ -501,10 +501,10 @@ class Query(object):
 
         c = self.conn.cursor()
 
-        c.execute(
-            "SELECT nuclidemodelparams.param_val"+ 
-            " FROM nuclidemodelparams, WHERE nuclidemodelparams.CompID=" + str(compID) + 
-            " AND nuclidemodelparams.param_name=" + str(param_name))
+        c.execute("SELECT NuclideModelParams.ParamVal " +
+            "FROM NuclideModelParams "+
+            "WHERE NuclideModelParams.CompID=" + str(compID) + " " +
+            "AND NuclideModelParams.ParamName='" + str(param_name) + "' ")
 
         for row in c : 
             param_val = row[0]

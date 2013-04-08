@@ -297,13 +297,13 @@ class ContourData(object) :
         self._npts += 1
         return self._data
 
-    def get_x_val(query) : 
+    def get_x_val(self, query) : 
         return query.get_param_val(self._comp_id, self._x_label)
 
-    def get_y_val(query) : 
+    def get_y_val(self, query) : 
         return query.get_param_val(self._comp_id, self._y_label)
 
-    def get_z_val(query) : 
+    def get_z_val(self, query) : 
         query.collapse_isos()
         data = query.get_data()
         mass_slice = data[:,comp_list.index(self._comp_id)]
