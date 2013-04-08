@@ -201,6 +201,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
   IsoConcMap zero_conc_map;
   zero_conc_map[u235_] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
+  double radial_mid = geom_->radial_midpoint();
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
@@ -255,7 +256,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   time_++;
   ASSERT_EQ(1, time_);
   EXPECT_NO_THROW(nuc_model_ptr_->transportNuclides(time_));
-  double pow_arg = (Pe/2)*(1-pow(1+4*time_/Pe, 0.5));
+  double pow_arg = (Pe/2)*(1-pow(1+4*t_t_/Pe, 0.5));
   double exponent = exp(pow_arg);
   double expected_conc = (test_C_0_[u235_]*exponent);
 
@@ -430,6 +431,7 @@ TEST_F(LumpedNuclideTest, C_PFM){
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
   EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_PFM( conc_map, time_ )[u235_]);
   EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_PFM( conc_map, time_ )[95242]);
+  EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_t( conc_map, time_ )[95242]);
   time_++;
 }
 

@@ -317,7 +317,7 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   int dt = max(the_time - last_updated(), 1);
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist_[the_time];
+  sum_pair = MatTools::sum_mats(mats);
 
   if(sum_pair.second != 0 && V_T() > 0 && V_T() != numeric_limits<double>::infinity()) { 
     try {
