@@ -278,7 +278,7 @@ ThermalModelPtr Component::thermal_model(QueryEngine* qe){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
-  return NuclideModelFactory::nuclideModel(qe, mat_table(), geom());
+  return NuclideModelFactory::nuclideModel(qe, mat_table(), geom(), ID());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -288,7 +288,7 @@ ThermalModelPtr Component::copyThermalModel(ThermalModelPtr src){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::copyNuclideModel(NuclideModelPtr src){
-  return NuclideModelFactory::nuclideModel(src, mat_table(), geom());
+  return NuclideModelFactory::nuclideModel(src, mat_table(), geom(), ID());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

@@ -61,16 +61,18 @@ NuclideModelPtr NuclideModelFactory::nuclideModel(QueryEngine* qe){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr NuclideModelFactory::nuclideModel(QueryEngine* qe, MatDataTablePtr 
-    mat_table, GeometryPtr geom){
+    mat_table, GeometryPtr geom, int comp_id){
     NuclideModelPtr to_ret = nuclideModel(qe);
     to_ret->set_mat_table(mat_table);
     to_ret->set_geom(geom);
+    to_ret->set_comp_id(comp_id);
+    to_ret->updateNuclideParamsTable();
     return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr NuclideModelFactory::nuclideModel(NuclideModelPtr src, 
-    MatDataTablePtr mat_table, GeometryPtr geom){
+    MatDataTablePtr mat_table, GeometryPtr geom, int comp_id){
   NuclideModelPtr to_ret;
   switch(src->type())
   {
@@ -95,6 +97,8 @@ NuclideModelPtr NuclideModelFactory::nuclideModel(NuclideModelPtr src,
   to_ret->copy(*src);
   to_ret->set_mat_table(MatDataTablePtr(mat_table));
   to_ret->set_geom(GeometryPtr(geom));
+  to_ret->set_comp_id(comp_id);
+  to_ret->updateNuclideParamsTable();
   return to_ret;
 }
 

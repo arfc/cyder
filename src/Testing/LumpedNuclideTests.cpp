@@ -72,7 +72,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
      << "  <porosity>" << theta_ << "</porosity>"
      << "  <transit_time>" << t_t_ << "</transit_time>"
      << "  <formulation>"
-     << "    <EM/>"
+     << "    <EXPM/>"
      << "  </formulation>"
      << "</start>";
 
@@ -86,7 +86,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, initial_state){
-  EXPECT_EQ(FormulationType(EM), lumped_ptr_->formulation());
+  EXPECT_EQ(FormulationType(EXPM), lumped_ptr_->formulation());
   EXPECT_EQ(adv_vel_, lumped_ptr_->v());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -184,8 +184,8 @@ TEST_F(LumpedNuclideTest, set_porosity){
 TEST_F(LumpedNuclideTest, set_formulation){
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(DM));
   EXPECT_EQ(DM, lumped_ptr_->formulation());
-  EXPECT_NO_THROW(lumped_ptr_->set_formulation(EM));
-  EXPECT_EQ(EM, lumped_ptr_->formulation());
+  EXPECT_NO_THROW(lumped_ptr_->set_formulation(EXPM));
+  EXPECT_EQ(EXPM, lumped_ptr_->formulation());
   EXPECT_NO_THROW(lumped_ptr_->set_formulation(PFM));
   EXPECT_EQ(PFM, lumped_ptr_->formulation());
   EXPECT_THROW(lumped_ptr_->set_formulation("OTHER"), CycException);
@@ -284,9 +284,9 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
   /// @TODO add behavior for later timesteps.
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, transportNuclidesEM){ 
+TEST_F(LumpedNuclideTest, transportNuclidesEXPM){ 
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
-  EXPECT_NO_THROW(lumped_ptr_->set_formulation(EM));
+  EXPECT_NO_THROW(lumped_ptr_->set_formulation(EXPM));
   IsoConcMap zero_conc_map;
   zero_conc_map[u235_] = 0;
   double outer_radius = nuc_model_ptr_->geom()->outer_radius();
@@ -330,7 +330,7 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
 TEST_F(LumpedNuclideTest, updateVecHist){ 
   time_++;
   EXPECT_NO_THROW(lumped_ptr_->set_geom(geom_));
-  EXPECT_NO_THROW(lumped_ptr_->set_formulation(EM));
+  EXPECT_NO_THROW(lumped_ptr_->set_formulation(EXPM));
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
@@ -393,10 +393,10 @@ TEST_F(LumpedNuclideTest, C_DM){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(LumpedNuclideTest, C_EM){
+TEST_F(LumpedNuclideTest, C_EXPM){
   deque<mat_rsrc_ptr> mats;
   mats.push_back(test_mat_);
-  lumped_ptr_->set_formulation(EM);
+  lumped_ptr_->set_formulation(EXPM);
 
   IsoConcMap conc_map;
   conc_map[u235_] = 10;
@@ -408,8 +408,8 @@ TEST_F(LumpedNuclideTest, C_EM){
 
   EXPECT_NO_THROW(lumped_ptr_->update_conc_hist(time_, mats));
   EXPECT_NO_THROW(lumped_ptr_->C_DM( conc_map, time_ ));
-  EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_EM( conc_map, time_ )[u235_]);
-  EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_EM( conc_map, time_ )[95242]);
+  EXPECT_FLOAT_EQ(expected[u235_],  lumped_ptr_->C_EXPM( conc_map, time_ )[u235_]);
+  EXPECT_FLOAT_EQ(expected[95242],  lumped_ptr_->C_EXPM( conc_map, time_ )[95242]);
   time_++;
 }
 

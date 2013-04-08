@@ -92,6 +92,15 @@ NuclideModelPtr MixedCellNuclide::copy(const NuclideModel& src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void MixedCellNuclide::updateNuclideParamsTable(){
+  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
+  shared_from_this()->addRowToNuclideParamsTable("degradation", deg_rate());
+  shared_from_this()->addRowToNuclideParamsTable("kd_limited", kd_limited());
+  shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
+  shared_from_this()->addRowToNuclideParamsTable("sol_limited", sol_limited());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MixedCellNuclide::update(int the_time) {
   update_vec_hist(the_time);
   update_conc_hist(the_time);

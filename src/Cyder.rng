@@ -125,7 +125,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <ref name="transit_time"/>
       <element name="formulation">
         <choice>
-          <element name="EM">
+          <element name="EXPM">
             <text/>
           </element>
           <element name="PFM">

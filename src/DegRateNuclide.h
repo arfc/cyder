@@ -162,6 +162,12 @@ public:
     */
   virtual void update(int the_time);
 
+  /**
+     Updates the NuclideParams table by adding appropriate rows to describe the 
+     parameters initializing this NuclideModel.
+     */
+  virtual void updateNuclideParamsTable();
+
   /*----------------------------*/
   /* This NuclideModel class    */
   /* has the following members  */

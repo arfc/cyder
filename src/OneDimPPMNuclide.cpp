@@ -91,6 +91,15 @@ NuclideModelPtr OneDimPPMNuclide::copy(const NuclideModel& src){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::updateNuclideParamsTable(){
+  shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
+  shared_from_this()->addRowToNuclideParamsTable("bulk_density", rho());
+  shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
+  shared_from_this()->addRowToNuclideParamsTable("intial_concentration", Ci());
+  shared_from_this()->addRowToNuclideParamsTable("source_concentration", Co());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::print(){
     LOG(LEV_DEBUG2,"GR1DNuc") << "OneDimPPMNuclide Model";;
 }

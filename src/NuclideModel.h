@@ -6,9 +6,11 @@
 #define _NUCLIDEMODEL_H
 
 #include <deque>
+#include <boost/any.hpp>
 
-#include "Material.h"
+#include "EventManager.h"
 #include "Geometry.h"
+#include "Material.h"
 #include "MatTools.h"
 #include "MatDataTable.h"
 
@@ -183,6 +185,34 @@ public:
   virtual ConcGradMap neumann_bc(IsoConcMap c_ext, Radius r_ext) = 0;
 
   /**
+     All NuclideModels should implement a function that updates the Params table 
+     just once, to be called from the NuclideModelFactor right after 
+     initialization.
+    */
+  virtual void updateNuclideParamsTable() = 0;
+
+  /**
+     adds a row to the NuclideModelParams table.
+
+     @param the name of the variable to record
+     @param the variable value, to be cast with boost::any_cast
+     */
+  virtual void addRowToNuclideParamsTable(std::string param_name, boost::any param_val){
+    event_ptr ev = EM->newEvent("NuclideModelParams")
+      ->addVal("compID", comp_id_)
+      ->addVal("param_name", param_name);
+    if( param_val.type() == typeid(int*)) {
+      ev->addVal("param_val", boost::any_cast<int>(param_val));
+    } else if( param_val.type() == typeid(double)) {
+      ev->addVal("param_val", boost::any_cast<double>(param_val));
+    } else if( param_val.type() == typeid(std::string)) {
+      ev->addVal("param_val", boost::any_cast<std::string>(param_val));
+    }
+
+    ev->record();
+  };
+
+  /**
      returns the concentration gradient at the boundary, the Neumann bc
     
      @param c_ext the external concentration in the parent component
@@ -206,6 +236,9 @@ public:
     return(found != this->cauchy_bc(c_ext, r_ext).end() ? (*found).second : 0);
   };
     
+
+  /// Allows the component id data member to be set 
+  void set_comp_id(int id){comp_id_ = id;};
 
   /// Allows the geometry object to be set
   void set_geom(GeometryPtr geom){ geom_=geom; };
@@ -331,6 +364,11 @@ public:
     return to_ret;
   }
 
+  /** 
+     sends a pointer to the material table used by this component
+
+     @param mat_table the mat table data pointer for this component.
+   **/
   void set_mat_table(MatDataTablePtr mat_table){mat_table_ = MatDataTablePtr(mat_table);}
 
   /// Returns wastes_
@@ -378,5 +416,7 @@ protected:
   /// the time at which the histories were last updated
   int last_updated_;
 
+  /// the id of the component that this nuclidemodel is a part of
+  int comp_id_;
 };
 #endif
