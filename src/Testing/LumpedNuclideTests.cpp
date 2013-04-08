@@ -204,7 +204,6 @@ TEST_F(LumpedNuclideTest, transportNuclidesPFM){
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //lumped_ptr_->set_C_0(test_C_0_);
 
   // check that the expected amt of material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
@@ -249,7 +248,6 @@ TEST_F(LumpedNuclideTest, transportNuclidesDM){
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //lumped_ptr_->set_C_0(test_C_0_);
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES
@@ -294,7 +292,6 @@ TEST_F(LumpedNuclideTest, transportNuclidesEM){
 
   // fill it with some material
   EXPECT_NO_THROW(nuc_model_ptr_->absorb(test_mat_));
-  //lumped_ptr_->set_C_0(test_C_0_);
 
   // check that half that material is offered as the source term in one timestep
   // TRANSPORT NUCLIDES

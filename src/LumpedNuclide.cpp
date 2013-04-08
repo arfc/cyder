@@ -319,10 +319,10 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   pair<IsoVector, double> sum_pair; 
   sum_pair = vec_hist_[the_time];
 
-  if(sum_pair.second != 0 && V_ff() > 0 && V_ff() != numeric_limits<double>::infinity()) { 
+  if(sum_pair.second != 0 && V_T() > 0 && V_T() != numeric_limits<double>::infinity()) { 
     try {
-      MatTools::validate_nonzero(V_ff());
-      MatTools::validate_finite_pos(V_ff());
+      MatTools::validate_nonzero(V_T());
+      MatTools::validate_finite_pos(V_T());
     } catch (CycRangeException& e) {
       stringstream msg_ss;
       msg_ss << "The LumpedNuclide requires finite, positive, nonzero volume.";
@@ -336,7 +336,7 @@ void LumpedNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
       throw CycRangeException(msg_ss.str());
   }
 
-    double scale = sum_pair.second/V_ff();
+    double scale = sum_pair.second/V_T();
     CompMapPtr curr_comp = sum_pair.first.comp();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
