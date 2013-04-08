@@ -34,9 +34,10 @@ public:
      @param qe query engine pointer describing the nuclide model
      @param mat_table a pointer to the material table
      @param geom a pointer to the Geometry object 
+     @param comp_id the id number of the owning component
     */
   static NuclideModelPtr nuclideModel(QueryEngine* qe, MatDataTablePtr mat_table, 
-      GeometryPtr geom);
+      GeometryPtr geom, int comp_id);
 
   /** 
      Creates a copy of a NuclideModel from another NuclideModel as well as 
@@ -45,9 +46,10 @@ public:
      @param src the original NuclideModel
      @param mat_table a pointer to the material table
      @param geom a pointer to the Geometry object 
+     @param comp_id the id number of the owning component
      */
   static NuclideModelPtr nuclideModel(NuclideModelPtr src, MatDataTablePtr mat_table, 
-      GeometryPtr geom);
+      GeometryPtr geom, int comp_id);
 
 protected:
   /** 

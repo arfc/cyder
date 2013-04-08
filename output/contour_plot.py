@@ -19,19 +19,19 @@ class ContourPlot(object) :
     """
     _x_min = -2 
     """
-    <++>
+    The minimum value of the values in the x dimension
     """
     _y_min = -2
     """
-    <++>
+    The minimum value of the values in the y dimension
     """
     _x_max = 2
     """
-    <++>
+    The maximum value of the values in the x dimension 
     """
     _y_max = 2
     """
-    <++>
+    The maximum value of the values in the x dimension 
     """
     _x = None
     """
@@ -223,43 +223,69 @@ class ContourPlot(object) :
 
 
 from output_tools import Query
+import numpy as np
+import glob
 class ContourData(object) :
     """
     A class that holds a lot of data for the contour plot
     """
-    _froot = 'diffvel'
-    _x = None
-    _y = None
-    _z = None
+
+    _data = None
+    """
+    A 3xn numpy ndarray to hold n (x,y,z) data points
+    """
+
+    _flist = []
+    """
+    The list of sqlite files to be queried to fill the db.
+    n=the length of this list, unless there are duplicates
+    """
     _title = 'real'
     _filename = 'real.eps'
     _x_label = ''
     _y_label = ''
+    _z_label = ''
     _comp_id = 0
+
 
     def __init__(self,
             root='diff_vel',
-            x_label='diffcoeff',
-            y_label='advvel',
-            comp_id=0) : 
-        self._froot = root
-        self._x=x
-        self._y=y
-        self._z=z
-        self._x_label = x_label
-        self._y_label = y_label
-        self._comp_id = comp_id
-
-    def data_ranges(self, vec_data) : 
-        return min(vec_data), max(vec_data)
-
+            xlabel = 'diffcoeff',
+            ylabel = 'advvel',
+            zlabel = 'massKG',
+            ngrid=200) : 
+        self._x_label = xlabel
+        self._y_label = ylabel
+        self._z_label = zlabel
+        self._flist = collect_filenames(root)
+        self.extract_data(self._flist) 
+        ContourPlot(
+            x_min = min(self._data[0]),
+            y_min = min(self._data[1]),
+            x_max = max(self._data[0]), 
+            y_max = max(self._data[1]), 
+            x = self._data[0],
+            y = self._data[1],
+            z = self._data[2],
+            ngridx = ngrid,
+            ngridy = ngrid,
+            npts = self._data[0].size,
+            x_label = self._x_label,
+            y_label = self._y_label,
+            ptitle = self._title,
+            fname = self._filename
+            )
+        
     def add_run(self, dbname) :
-        query = Query(dbname, "nucparams")
-        x = self.get_x_val(query)
-        y = self.get_y_val(query)
-        query = Query(dbname, "contaminants", t0=0, tf=100)
-        z = self.get_z_val(query)
+        param_query = Query(dbname, "nucparams")
+        x = self.get_x_val(param_query)
+        y = self.get_y_val(param_query)
+        param_query.execute()
+        vals_query = Query(dbname, "contaminants", t0=0, tf=100)
+        vals_query.execute()
+        z = self.get_z_val(vals_query)
         self._data[x][y]=z 
+        self._npts += 1
         return self._data
 
     def get_x_val(query) : 
@@ -274,9 +300,16 @@ class ContourData(object) :
         mass_slice = data[:,comp_list.index(self._comp_id)]
         return max(max_slice)
 
-    def file_list(self) :
-        return None
+    def collect_filenames(self, root) :
+        for name in glob.glob('dir/root*.sqlite'):
+            self._flist.append(name)
+        return self._flist
 
+    def extract_data(self, flist) : 
+        for f in flist :
+            self.add_run(f)
+
+     
 
 
 if __name__=="__main__" :

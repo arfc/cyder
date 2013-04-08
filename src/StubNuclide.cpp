@@ -40,6 +40,10 @@ void StubNuclide::initModuleMembers(QueryEngine* qe){
   LOG(LEV_DEBUG2,"GRSNuc") << "The StubNuclide Class initModuleMembers(qe) function has been called";;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void StubNuclide::updateNuclideParamsTable(){
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NuclideModelPtr StubNuclide::copy(const NuclideModel& src){
   StubNuclidePtr toRet = StubNuclidePtr(new StubNuclide());

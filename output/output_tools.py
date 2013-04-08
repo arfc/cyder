@@ -163,13 +163,9 @@ class Query(object):
                                      "contaminants.Time < " +
                                      str(tf)))
         elif 'nucparams' == queryType:
-            self.set_q_stmt(sql_stmt("nucparams.CompID, " +
-                                     "nucparams.Type, " +
-                                     "nucparams.ref_kd" +
-                                     "nucparams.ref_sol_lim" + 
-                                     "nucparams.ref_disp" +
-                                     "nucparams.ref_disp" +
-                                     "nucparams.adv_vel" ))
+            self.set_q_stmt(sql_stmt("nuclidemodelparams.CompID, " +
+                                     "nuclidemodelparams.param_name, " +
+                                     "nuclidemodelparams.param_val" ))
 
 
         self.conn = sqlite3.connect(file)
@@ -194,6 +190,9 @@ class Query(object):
         elif self.q_type == 'contaminants':
             self.data_axes = ['time', 'CompID', 'IsoID', 'MassKG']
             self.data_units = ['months', 'CompID', 'IsoID', "kg"]
+        elif self.q_type == 'nucparams':
+            self.data_axes = ['CompID', 'param_name', 'param_val']
+            self.data_units = ['CompID', 'name', 'val']
 
 ###############################################################################
     def set_q_stmt(self, q_stmt):
