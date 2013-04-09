@@ -2,6 +2,7 @@ import os
 from subprocess import call
 import fileinput, sys
 import re
+from argparse import ArgumentParser
 from optparse import OptionParser
 import numpy as np
 
@@ -71,23 +72,23 @@ def perturb(xml_in, out_path, param, val_list) :
     run_cyclus(in_file_list, out_path)
 
 def main() :
-    usage = "usage: %perturb.py -i foo.xml.in -o ./foo -p ref_sol_lim -l 0 -h 1 -s 0.001 "
-    parser = OptionParser(usage)
-    parser.add_option("-i", "--xml_in", dest="xml_in",
+    arg_parser = ArgumentParser(description="Perturb 1 or 2 variables and run \
+    cyclus")
+    arg_parser.add_argument("-i", metavar="infile", type=str, nargs=1, dest="xml_in",
                       help="read data from foo.xml.in")
-    parser.add_option("-o", "--out_path", dest="out_path",
+    arg_parser.add_argument("-o", "--out_path", type=str, nargs=1, dest="out_path",
                       help="place sqlite files in out_path")
-    parser.add_option("-p", "--param", dest="param",
+    arg_parser.add_argument("-p", "--param", type=str, nargs=1, dest="param",
                       help="the parameter to perturb")
-    parser.add_option("-l", "--low", dest="low",
+    arg_parser.add_argument("-l", "--low", type=float, nargs=1, dest="low",
                       help="the low value of the param range")
-    parser.add_option("-u", "--upper", dest="upper",
+    arg_parser.add_argument("-u", "--upper", type=float, nargs=1, dest="upper",
                       help="the upper value of the param range")
-    parser.add_option("-n", "--num", dest="number",
+    arg_parser.add_argument("-n", "--num", type=int, nargs=1, dest="number",
                       help="number of values of the param range")
-    (o, args) = parser.parse_args()
-    param_range = make_param_range(o.low, o.upper, o.number)
-    perturb(o.xml_in, o.out_path, o.param, param_range)
+    args = arg_parser.parse_args()
+    param_range = make_param_range(args.low[0], args.upper[0], args.number[0])
+    perturb(args.xml_in[0], args.out_path[0], args.param[0], param_range)
 
 
 if __name__ == "__main__":
