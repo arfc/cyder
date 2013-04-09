@@ -78,17 +78,17 @@ def main() :
                       help="read data from foo.xml.in")
     arg_parser.add_argument("-o", "--out_path", type=str, nargs=1, dest="out_path",
                       help="place sqlite files in out_path")
-    arg_parser.add_argument("-p", "--param", type=str, nargs='*', dest="param",
+    arg_parser.add_argument("-p", "--param", type=str, nargs='*', dest="params",
                       help="the parameter to perturb")
-    arg_parser.add_argument("-l", "--low", type=float, nargs='*', dest="low",
+    arg_parser.add_argument("-l", "--low", type=float, nargs='*', dest="lows",
                       help="the low value of the param range")
-    arg_parser.add_argument("-u", "--upper", type=float, nargs='*', dest="upper",
+    arg_parser.add_argument("-u", "--upper", type=float, nargs='*',dest="uppers",
                       help="the upper value of the param range")
-    arg_parser.add_argument("-n", "--num", type=int, nargs='*', dest="number",
+    arg_parser.add_argument("-n", "--num", type=int, nargs='*', dest="numbers",
                       help="number of values of the param range")
     args = arg_parser.parse_args()
-    param_range = make_param_range(args.low[0], args.upper[0], args.number[0])
-    perturb(args.xml_in[0], args.out_path[0], args.param[0], param_range)
+    param_range = make_param_range(args.lows[0], args.uppers[0], args.numbers[0])
+    perturb(args.xml_in[0], args.out_path[0], args.params[0], param_range)
 
 
 if __name__ == "__main__":
