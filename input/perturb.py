@@ -78,13 +78,13 @@ def main() :
                       help="read data from foo.xml.in")
     arg_parser.add_argument("-o", "--out_path", type=str, nargs=1, dest="out_path",
                       help="place sqlite files in out_path")
-    arg_parser.add_argument("-p", "--param", type=str, nargs=1, dest="param",
+    arg_parser.add_argument("-p", "--param", type=str, nargs='*', dest="param",
                       help="the parameter to perturb")
-    arg_parser.add_argument("-l", "--low", type=float, nargs=1, dest="low",
+    arg_parser.add_argument("-l", "--low", type=float, nargs='*', dest="low",
                       help="the low value of the param range")
-    arg_parser.add_argument("-u", "--upper", type=float, nargs=1, dest="upper",
+    arg_parser.add_argument("-u", "--upper", type=float, nargs='*', dest="upper",
                       help="the upper value of the param range")
-    arg_parser.add_argument("-n", "--num", type=int, nargs=1, dest="number",
+    arg_parser.add_argument("-n", "--num", type=int, nargs='*', dest="number",
                       help="number of values of the param range")
     args = arg_parser.parse_args()
     param_range = make_param_range(args.low[0], args.upper[0], args.number[0])
