@@ -269,7 +269,7 @@ class ContourData(object) :
         self._y_label = ylabel
         self._z_label = zlabel
         self._title = title
-        self._filename = str(filename)+".eps"
+        self._filename = str(filename)
         self._flist = self.collect_filenames(root)
         self.extract_data(self._flist) 
         ContourPlot(
