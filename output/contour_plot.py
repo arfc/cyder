@@ -262,7 +262,7 @@ class ContourData(object) :
             ylabel = 'advective_velocity',
             zlabel = 'massKG',
             ngrid=200,
-            title = 'Degradation Rate vs. Advective Velocity'
+            title = 'Degradation Rate vs. Advective Velocity',
             filename = 'deg_rate.eps'
             ): 
         self._x_label = xlabel
