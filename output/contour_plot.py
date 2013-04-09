@@ -165,6 +165,7 @@ class ContourPlot(object) :
         y_label=self._y_label
 
         plt.subplot(111) # change this if you want to plot both
+        pdb.set_trace()
         triang = tri.Triangulation(x, y)
         plt.tricontour(x, y, z, n_labels, linewidths=0.5, colors='k')
         plt.tricontourf(x, y, z, n_labels, cmap=plt.cm.rainbow,
@@ -252,7 +253,7 @@ class ContourData(object) :
     _x_label = ''
     _y_label = ''
     _z_label = ''
-    _comp_id = 7
+    _comp_id = 4
     _npts = 0
 
 
@@ -312,7 +313,8 @@ class ContourData(object) :
     def get_z_val(self, query) : 
         query.collapse_isos()
         data = query.get_data()
-        mass_slice = data[:,query.get_comp_list().index(self._comp_id)]
+        comp_list=query.get_comp_list()
+        mass_slice = data[:,comp_list.index(self._comp_id)]
         return mass_slice.max()
 
     def collect_filenames(self, root) :
