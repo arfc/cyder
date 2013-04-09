@@ -66,10 +66,18 @@ def make_param_range(low, upper, number):
     arr = np.linspace(float(low), float(upper), int(number))
     return arr.tolist()
 
-def perturb(xml_in, out_path, param, val_list) :
-    make_dir(out_path)
-    in_file_list = configure_infiles(xml_in, out_path, param, val_list)
-    run_cyclus(in_file_list, out_path)
+def perturb(args) :
+    make_dir(args.out_path[0])
+    in_file_list = args.xml_in
+    for param in args.params :
+        ind = args.params.index(param)
+        param_range = make_param_range(args.lows[ind], args.uppers[ind], 
+                args.numbers[ind])
+        curr_list = list(in_file_list)
+        for f in curr_list : 
+            in_file_list.extend(configure_infiles(f, args.out_path[0], param, 
+                param_range))
+    run_cyclus(in_file_list, args.out_path[0])
 
 def main() :
     arg_parser = ArgumentParser(description="Perturb 1 or 2 variables and run "
@@ -87,16 +95,7 @@ def main() :
     arg_parser.add_argument("-n", "--num", type=int, nargs='*', dest="numbers",
                       help="number of values of the param range")
     args = arg_parser.parse_args()
-    make_dir(args.out_path[0])
-    in_file_list = args.xml_in
-    for param in args.params :
-        ind = args.params.index(param)
-        param_range = make_param_range(args.lows[ind], args.uppers[ind], 
-                args.numbers[ind])
-        curr_list = list(in_file_list)
-        for f in curr_list : 
-            in_file_list.extend(configure_infiles(f, args.out_path[0], param, 
-                param_range))
+    perturb(args)
 
 
 if __name__ == "__main__":
