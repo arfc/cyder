@@ -11,6 +11,7 @@ import matplotlib.tri as tri
 import numpy as np
 from numpy.random import uniform, seed
 from matplotlib.mlab import griddata
+import pdb
 
 class ContourPlot(object) :
     """
@@ -95,6 +96,10 @@ class ContourPlot(object) :
         self._x_max = x_max
         self._y_min = y_min
         self._y_max = y_max
+        self._x=x
+        self._y=y
+        self._z=z
+
         if self._x is None :
             self._x = self.set_x()
         if self._y is None :
@@ -229,7 +234,6 @@ class ContourData(object) :
     """
     A class that holds a lot of data for the contour plot
     """
-
     _data = None
     """
     A 3xn numpy ndarray to hold n (x,y,z) data points
@@ -242,6 +246,9 @@ class ContourData(object) :
     """
     _title = 'real'
     _filename = 'real.eps'
+    _x=[]
+    _y=[]
+    _z=[]
     _x_label = ''
     _y_label = ''
     _z_label = ''
@@ -261,21 +268,20 @@ class ContourData(object) :
         self._y_label = ylabel
         self._z_label = zlabel
         self._flist = self.collect_filenames(root)
-        self._data = np.zeros((3,len(self._flist)))
         self.extract_data(self._flist) 
         ContourPlot(
-            x_min = min(self._data[0]),
-            y_min = min(self._data[1]),
-            x_max = max(self._data[0]), 
-            y_max = max(self._data[1]), 
-            x = self._data[0],
-            y = self._data[1],
-            z = self._data[2],
+            x_min = min(self._x),
+            y_min = min(self._y),
+            x_max = max(self._x), 
+            y_max = max(self._y), 
+            x = self._x,
+            y = self._y,
+            z = self._z,
             ngridx = ngrid,
             ngridy = ngrid,
-            npts = self._data[0].size,
+            npts = len(self._z),
             x_label = self._x_label,
-            y_label = self._y_label,
+            y_label = "advective\_velocity",
             ptitle = self._title,
             fname = self._filename
             )
@@ -286,14 +292,13 @@ class ContourData(object) :
      
     def add_run(self, dbname) :
         param_query = output_tools.Query(filename=dbname, queryType='nucparams')
-        x = self.get_x_val(param_query)
-        y = self.get_y_val(param_query)
+        self._x.append( self.get_x_val(param_query))
+        self._y.append( self.get_y_val(param_query))
         param_query.execute()
         vals_query = output_tools.Query(dbname, "contaminants", t0=0, tf=100)
         vals_query.execute()
-        z = self.get_z_val(vals_query)
-        self._data[x][y] = z 
-        return self._data
+        self._z.append( self.get_z_val(vals_query))
+        return self._x, self._y, self._z
 
     def get_x_val(self, query) : 
         return query.get_param_val(self._comp_id, self._x_label)
