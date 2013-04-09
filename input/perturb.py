@@ -30,7 +30,7 @@ def configure_infiles(xml_in, out_path, param, val_list) :
     """ takes a list of values, each of which will result in runnable xml. """
     xml_list = []
     for val in val_list:
-        xml = out_path+"/"+change_extension(xml_in, str(val)+".xml")
+        xml = out_path+"/"+change_extension(xml_in, "_"+str(val)+".xml")
         xml_list.append(configure_infile(xml_in, xml, param, val))
     return xml_list
 
@@ -87,11 +87,16 @@ def main() :
     arg_parser.add_argument("-n", "--num", type=int, nargs='*', dest="numbers",
                       help="number of values of the param range")
     args = arg_parser.parse_args()
+    make_dir(args.out_path[0])
+    in_file_list = args.xml_in
     for param in args.params :
         ind = args.params.index(param)
         param_range = make_param_range(args.lows[ind], args.uppers[ind], 
                 args.numbers[ind])
-        perturb(args.xml_in[0], args.out_path[0], param, param_range)
+        curr_list = list(in_file_list)
+        for f in curr_list : 
+            in_file_list.extend(configure_infiles(f, args.out_path[0], param, 
+                param_range))
 
 
 if __name__ == "__main__":
