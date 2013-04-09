@@ -72,8 +72,8 @@ def perturb(xml_in, out_path, param, val_list) :
     run_cyclus(in_file_list, out_path)
 
 def main() :
-    arg_parser = ArgumentParser(description="Perturb 1 or 2 variables and run \
-    cyclus")
+    arg_parser = ArgumentParser(description="Perturb 1 or 2 variables and run "
+            "cyclus")
     arg_parser.add_argument("-i", metavar="infile", type=str, nargs=1, dest="xml_in",
                       help="read data from foo.xml.in")
     arg_parser.add_argument("-o", "--out_path", type=str, nargs=1, dest="out_path",
