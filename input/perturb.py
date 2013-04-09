@@ -87,8 +87,11 @@ def main() :
     arg_parser.add_argument("-n", "--num", type=int, nargs='*', dest="numbers",
                       help="number of values of the param range")
     args = arg_parser.parse_args()
-    param_range = make_param_range(args.lows[0], args.uppers[0], args.numbers[0])
-    perturb(args.xml_in[0], args.out_path[0], args.params[0], param_range)
+    for param in args.params :
+        ind = args.params.index(param)
+        param_range = make_param_range(args.lows[ind], args.uppers[ind], 
+                args.numbers[ind])
+        perturb(args.xml_in[0], args.out_path[0], param, param_range)
 
 
 if __name__ == "__main__":
