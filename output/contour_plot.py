@@ -121,7 +121,7 @@ class ContourPlot(object) :
         self._title = ptitle
         self._filename = fname
         
-        self.grid_data_and_contour()
+        #self.grid_data_and_contour()
         self.plot_tricontour()
         self.save_it()
 
@@ -164,7 +164,7 @@ class ContourPlot(object) :
         x_label=self._x_label
         y_label=self._y_label
 
-        plt.subplot(212)
+        plt.subplot(111)
         triang = tri.Triangulation(x, y)
         plt.tricontour(x, y, z, n_labels, linewidths=0.5, colors='k')
         plt.tricontourf(x, y, z, n_labels, cmap=plt.cm.rainbow,
