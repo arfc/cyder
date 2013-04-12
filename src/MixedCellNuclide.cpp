@@ -98,6 +98,9 @@ void MixedCellNuclide::updateNuclideParamsTable(){
   shared_from_this()->addRowToNuclideParamsTable("kd_limited", double(kd_limited()));
   shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
   shared_from_this()->addRowToNuclideParamsTable("sol_limited", double(sol_limited()));
+  shared_from_this()->addRowToNuclideParamsTable("ref_disp", mat_table_->ref_disp());
+  shared_from_this()->addRowToNuclideParamsTable("ref_kd", mat_table_->ref_kd());
+  shared_from_this()->addRowToNuclideParamsTable("ref_sol", mat_table_->ref_sol());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

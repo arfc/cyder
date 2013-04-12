@@ -86,8 +86,7 @@ void Component::initModuleMembers(QueryEngine* qe){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::init(string name, ComponentType type, string mat, double 
     ref_disp, double ref_kd, double ref_sol, Radius inner_radius, Radius 
-    outer_radius, ThermalModelPtr thermal_model, NuclideModelPtr 
-    nuclide_model){
+    outer_radius, ThermalModelPtr t_model, NuclideModelPtr n_model){
 
   ID_=nextID_++;
   
@@ -97,18 +96,12 @@ void Component::init(string name, ComponentType type, string mat, double
   geom()->set_radius(INNER, inner_radius);
   geom()->set_radius(OUTER, outer_radius);
 
-  if ( !(thermal_model) || !(nuclide_model) ) {
+  if ( !(t_model) || !(n_model) ) {
     string err = "The thermal or nuclide model provided is null " ;
     throw CycException(err);
   } else { 
-    thermal_model->set_geom(GeometryPtr(geom()));
-    nuclide_model->set_geom(GeometryPtr(geom()));
-
-    thermal_model->set_mat_table(MatDataTablePtr(mat_table()));
-    nuclide_model->set_mat_table(MatDataTablePtr(mat_table()));
-
-    set_thermal_model(thermal_model);
-    set_nuclide_model(nuclide_model);
+    set_thermal_model(copyThermalModel(t_model));
+    set_nuclide_model(copyNuclideModel(n_model)); 
   }
 
   comp_hist_ = CompHistory();
@@ -274,11 +267,11 @@ ComponentType Component::componentEnum(std::string type_name) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ThermalModelPtr Component::thermal_model(QueryEngine* qe){
-  return ThermalModelFactory::thermalModel(qe, mat_table(), geom());
+  return ThermalModelFactory::thermalModel(qe);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 NuclideModelPtr Component::nuclide_model(QueryEngine* qe){
-  return NuclideModelFactory::nuclideModel(qe, mat_table(), geom(), ID());
+  return NuclideModelFactory::nuclideModel(qe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

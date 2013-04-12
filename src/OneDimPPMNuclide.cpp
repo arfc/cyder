@@ -97,6 +97,9 @@ void OneDimPPMNuclide::updateNuclideParamsTable(){
   shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
   shared_from_this()->addRowToNuclideParamsTable("intial_concentration", Ci());
   shared_from_this()->addRowToNuclideParamsTable("source_concentration", Co());
+  shared_from_this()->addRowToNuclideParamsTable("ref_disp", mat_table_->ref_disp());
+  shared_from_this()->addRowToNuclideParamsTable("ref_kd", mat_table_->ref_kd());
+  shared_from_this()->addRowToNuclideParamsTable("ref_sol", mat_table_->ref_sol());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

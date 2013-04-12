@@ -86,6 +86,9 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
 void DegRateNuclide::updateNuclideParamsTable(){
   shared_from_this()->addRowToNuclideParamsTable("degradation", deg_rate());
   shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
+  shared_from_this()->addRowToNuclideParamsTable("ref_disp", mat_table_->ref_disp());
+  shared_from_this()->addRowToNuclideParamsTable("ref_kd", mat_table_->ref_kd());
+  shared_from_this()->addRowToNuclideParamsTable("ref_sol", mat_table_->ref_sol());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

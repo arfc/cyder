@@ -77,8 +77,8 @@ TEST_F(ComponentTest, initFunctionNoXML) {
   ASSERT_EQ(type_, test_component_->type());
   ASSERT_EQ(inner_radius_, test_component_->inner_radius());
   ASSERT_EQ(outer_radius_, test_component_->outer_radius());
-  ASSERT_EQ(thermal_model_, test_component_->thermal_model());
-  ASSERT_EQ(nuclide_model_, test_component_->nuclide_model());
+  ASSERT_EQ(thermal_model_->type(), test_component_->thermal_model()->type());
+  ASSERT_EQ(nuclide_model_->type(), test_component_->nuclide_model()->type());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
