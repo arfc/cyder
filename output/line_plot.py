@@ -233,6 +233,34 @@ class LinearData(object) :
             self._npts += 1
         return self._flist
 
+from argparse import ArgumentParser
+
+    
+def main():
+    arg_parser = ArgumentParset(description="Plots 1D data from the"
+    " contaminants table, when parameterized by data in the nucparams"
+    " table.")
+    arg_parser.add_argument("-r", metavar="root", type=str, nargs=1, 
+            dest="root", help="This is the name root for the sqlite files to plot.")
+    arg_parser.add_argument("-xp", metavar="x_param", type=str, nargs=1, 
+            dest="x_param", help="This is the x parameter name in the sqlite database.")
+    arg_parser.add_argument("-xl", metavar="x_label", type=str, nargs=1, 
+            dest="x_label", help="This is the x parameter name as plotted")
+    arg_parser.add_argument("-yl", metavar="y_label", type=str, nargs=1, 
+            dest="y_label", help="This is the y label name as plotted")
+    arg_parser.add_argument("-t", metavar="title", type=str, nargs=1, 
+            dest="title", help="This is the title of the plot")
+    arg_parser.add_argument("-o", metavar="filename", type=str, nargs=1, 
+            dest="filename", help="This is the output filename. Include eps.")
+    args=arg_parser.parse_args()
+    LinearData(
+            args.root,
+            args.xparam,
+            args.xlabel,
+            args.ylabel,
+            args.title,
+            args.filename
+            )
+
 if __name__=="__main__" :
-    import sys
-    LinearPlot()
+    main()
