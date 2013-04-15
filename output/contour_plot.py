@@ -165,7 +165,6 @@ class ContourPlot(object) :
         y_label=self._y_label
 
         plt.subplot(111) # change this if you want to plot both
-        pdb.set_trace()
         triang = tri.Triangulation(x, y)
         plt.tricontour(x, y, z, n_labels, linewidths=0.5, colors='k')
         plt.tricontourf(x, y, z, n_labels, cmap=plt.cm.rainbow,
@@ -250,6 +249,8 @@ class ContourData(object) :
     _x=[]
     _y=[]
     _z=[]
+    _x_param = ''
+    _y_param = ''
     _x_label = ''
     _y_label = ''
     _z_label = ''
@@ -259,14 +260,18 @@ class ContourData(object) :
 
     def __init__(self,
             root='deg',
+            xparam = 'degradation',
             xlabel = 'degradation',
+            yparam = 'advective_velocity',
             ylabel = 'advective_velocity',
             zlabel = 'massKG',
             ngrid=200,
             title = 'Degradation Rate vs. Advective Velocity',
             filename = 'deg_rate.eps'
             ): 
+        self._x_param = xparam
         self._x_label = xlabel
+        self._y_param = yparam
         self._y_label = ylabel
         self._z_label = zlabel
         self._title = title
@@ -285,7 +290,7 @@ class ContourData(object) :
             ngridy = ngrid,
             npts = len(self._z),
             x_label = self._x_label,
-            y_label = "advective\_velocity",
+            y_label = self._y_label,
             ptitle = self._title,
             fname = self._filename
             )
@@ -305,10 +310,10 @@ class ContourData(object) :
         return self._x, self._y, self._z
 
     def get_x_val(self, query) : 
-        return query.get_param_val(self._comp_id, self._x_label)
+        return query.get_param_val(self._comp_id, self._x_param)
 
     def get_y_val(self, query) : 
-        return query.get_param_val(self._comp_id, self._y_label)
+        return query.get_param_val(self._comp_id, self._y_param)
 
     def get_z_val(self, query) : 
         query.collapse_isos()

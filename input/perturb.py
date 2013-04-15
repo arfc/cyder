@@ -74,6 +74,7 @@ def perturb(args) :
         param_range = make_param_range(args.lows[ind], args.uppers[ind], 
                 args.numbers[ind])
         curr_list = list(in_file_list)
+        in_file_list = []
         for f in curr_list : 
             in_file_list.extend(configure_infiles(f, args.out_path[0], param, 
                 param_range))
