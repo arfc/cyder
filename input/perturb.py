@@ -19,7 +19,7 @@ def configure_infile(xml_in, xml, param, val) :
     f_old = open(xml_in, 'r') 
     f_new = open(xml, 'w') 
     old = "<"+param+">[^<]*</"+param+">"
-    new = "<"+param+">"+str(val)+"</"+param+">"
+    new = "<"+param+">"+'{0:f}'.format(val)+"</"+param+">"
     for line in f_old :
         f_new.write(re.sub(old, new, line))
     f_old.close()
@@ -30,7 +30,7 @@ def configure_infiles(xml_in, out_path, param, val_list) :
     """ takes a list of values, each of which will result in runnable xml. """
     xml_list = []
     for val in val_list:
-        xml = out_path+"/"+change_extension(xml_in, "_"+str(val)+".xml")
+        xml = out_path+"/"+change_extension(xml_in, "_"+'{0:f}'.format(val)+".xml")
         xml_list.append(configure_infile(xml_in, xml, param, val))
     return xml_list
 

@@ -170,7 +170,7 @@ class LinearData(object) :
     _y=[]
     _x_label = ''
     _y_label = ''
-    _comp_id = 2
+    _comp_id = 4
     _npts = 0
 
 
@@ -218,10 +218,13 @@ class LinearData(object) :
         return query.get_param_val(self._comp_id, self._x_label)
 
     def get_y_val(self, query) : 
-        query.collapse_isos()
         data = query.get_data()
-        mass_slice = data[:,query.get_comp_list().index(self._comp_id)]
-        return mass_slice.max()
+        #print(shape(data))
+        collapsed_isos = sum(data,axis=2)
+        #print(shape(collapsed_isos))
+        mass_slice = collapsed_isos[30,query.get_comp_list().index(self._comp_id)]
+        #print(shape(mass_slice))
+        return mass_slice
 
     def collect_filenames(self, root) :
         for name in glob.glob(root+'*.sqlite'):
