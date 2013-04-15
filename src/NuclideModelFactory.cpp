@@ -63,7 +63,7 @@ NuclideModelPtr NuclideModelFactory::nuclideModel(QueryEngine* qe){
 NuclideModelPtr NuclideModelFactory::nuclideModel(QueryEngine* qe, MatDataTablePtr 
     mat_table, GeometryPtr geom, int comp_id){
     NuclideModelPtr to_ret = nuclideModel(qe);
-    to_ret->set_mat_table(mat_table);
+    to_ret->set_mat_table(MatDataTablePtr(mat_table));
     to_ret->set_geom(geom);
     to_ret->set_comp_id(comp_id);
     to_ret->updateNuclideParamsTable();
