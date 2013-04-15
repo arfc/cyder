@@ -88,7 +88,7 @@ class LinearPlot(object) :
 
         self._npts = npts
 
-        self._x_label = 'solubility limit'
+        self._x_label = x_label
         self._y_label = y_label
         self._title = ptitle
         self._filename = fname
@@ -168,6 +168,7 @@ class LinearData(object) :
     _filename = 'real.eps'
     _x=[]
     _y=[]
+    _x_param = ''
     _x_label = ''
     _y_label = ''
     _comp_id = 4
@@ -176,11 +177,13 @@ class LinearData(object) :
 
     def __init__(self,
             root='deg',
-            xlabel = 'degradation',
+            xparam = 'ref_sol',
+            xlabel = 'Reference Solubility Limit $[kg/m^3]$',
             ylabel = 'massKG',
             title = 'Solubility Limitation',
             filename = 'sol.eps'
             ): 
+        self._x_param = xparam
         self._x_label = xlabel
         self._y_label = ylabel
         self._title = title
@@ -215,15 +218,12 @@ class LinearData(object) :
         return self._x, self._y
 
     def get_x_val(self, query) : 
-        return query.get_param_val(self._comp_id, self._x_label)
+        return query.get_param_val(self._comp_id, self._x_param)
 
     def get_y_val(self, query) : 
         data = query.get_data()
-        #print(shape(data))
         collapsed_isos = sum(data,axis=2)
-        #print(shape(collapsed_isos))
         mass_slice = collapsed_isos[30,query.get_comp_list().index(self._comp_id)]
-        #print(shape(mass_slice))
         return mass_slice
 
     def collect_filenames(self, root) :

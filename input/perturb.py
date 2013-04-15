@@ -77,6 +77,7 @@ def perturb(args) :
         for f in curr_list : 
             in_file_list.extend(configure_infiles(f, args.out_path[0], param, 
                 param_range))
+    in_file_list = [item for item in in_file_list if not item.endswith("xml.in")]
     run_cyclus(in_file_list, args.out_path[0])
 
 def main() :
