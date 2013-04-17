@@ -202,7 +202,7 @@ pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
     double m_aff(0);
     double mass(sum_pair.second);
     CompMapPtr curr_comp = sum_pair.first.comp();
-    curr_comp->normalize();
+    curr_comp->massify();
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
     while(it != (*curr_comp).end() ) {
@@ -297,33 +297,17 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
   // @TODO mats is unused in this (and analogous) functions.
   assert(last_degraded() <= the_time);
 
-  pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist_[the_time];
-  IsoConcMap to_ret;
+  pair<IsoVector, double> sum_pair = source_term_bc(); 
+
+  IsoConcMap to_ret; 
 
   if(sum_pair.second != 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
     int iso(0);
-    double m_ff(0);
     double m_aff(0);
     double mass(sum_pair.second);
     CompMapPtr curr_comp = sum_pair.first.comp();
-    CompMap::const_iterator it;
-    it=(*curr_comp).begin();
-    while(it != (*curr_comp).end() ) {
-      iso = (*it).first;
-      if(kd_limited()){
-        m_ff = sorb(the_time, iso, (*it).second*mass);
-      } else { 
-        m_ff = (*it).second*mass*tot_deg();
-      }
-      if(sol_limited()){
-        m_aff = precipitate(the_time, iso, m_ff);
-      } else { 
-        m_aff = m_ff;
-      }
-      to_ret.insert(make_pair(iso, m_aff/V_ff()));
-      ++it;
-    }
+    curr_comp->massify();
+    to_ret = MatTools::comp_to_conc_map(curr_comp, mass, V_ff());
   } else {
     to_ret[ 92235 ] = 0; 
   }
