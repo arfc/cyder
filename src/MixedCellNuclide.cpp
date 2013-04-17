@@ -191,7 +191,7 @@ pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
 
   int the_time = last_degraded();
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist_[the_time];
+  sum_pair = MatTools::sum_mats(wastes_);
   CompMapPtr to_ret;
   to_ret = CompMapPtr(new CompMap(MASS));
   double m_tot=0;
@@ -382,10 +382,10 @@ double MixedCellNuclide::sorb(int the_time, int iso, double mass){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::precipitate(int the_time, int iso, double mass){
   if(!sol_limited()){
-    throw CycException("The sorb function was called, but sol_limited=false.");
+    throw CycException("The precipitation function was called, but sol_limited=false.");
   }
   double s = mat_table_->S(MatTools::isoToElem(iso));
-  return SolLim::m_aff(mass, V_ff(),s);
+  return SolLim::m_aff(mass, V_ff(), s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
