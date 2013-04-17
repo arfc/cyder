@@ -237,7 +237,7 @@ from argparse import ArgumentParser
 
     
 def main():
-    arg_parser = ArgumentParset(description="Plots 1D data from the"
+    arg_parser = ArgumentParser(description="Plots 1D data from the"
     " contaminants table, when parameterized by data in the nucparams"
     " table.")
     arg_parser.add_argument("-r", metavar="root", type=str, nargs=1, 
@@ -254,12 +254,12 @@ def main():
             dest="filename", help="This is the output filename. Include eps.")
     args=arg_parser.parse_args()
     LinearData(
-            args.root,
-            args.xparam,
-            args.xlabel,
-            args.ylabel,
-            args.title,
-            args.filename
+            args.root[0],
+            args.x_param[0],
+            args.x_label[0],
+            args.y_label[0],
+            args.title[0],
+            args.filename[0]
             )
 
 if __name__=="__main__" :
