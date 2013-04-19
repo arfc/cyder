@@ -26,7 +26,12 @@ double SolLim::m_f(double m_T, double K_d, double V_s, double V_f){
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double SolLim::m_s(double m_T, double K_d, double V_s, double V_f){
-  return K_d*m_f(m_T,K_d,V_s,V_f)*(V_s/V_f);
+  if( m_f(m_T,K_d,V_s,V_f) == 0 ) {
+    return m_T;
+  } else {
+    return K_d*m_f(m_T,K_d,V_s,V_f)*(V_s/V_f);
+  }
+
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double SolLim::m_ds(double m_T, double K_d, double V_s, double V_f, double d){

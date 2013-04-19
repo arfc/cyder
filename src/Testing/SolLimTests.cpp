@@ -50,6 +50,7 @@ TEST_F(SolLimTest, m_f){
     V_f=0.1*i;
     V_s=0.1*i;
     m_T=10.*i;
+    // Generally meets expectations
     double expected = (m_T*V_s/V_f)*(1/(K_d_-K_d_*V_f/V_s + V_f/V_s));
     EXPECT_FLOAT_EQ(expected, SolLim::m_f(m_T, K_d_, V_s, V_f));
     // If the contaminant mass is zero, there is no m_f
@@ -72,7 +73,17 @@ TEST_F(SolLimTest, m_s){
     V_f=0.1*i;
     V_s=0.1*i;
     m_T=0.1*i;
-    EXPECT_FLOAT_EQ((K_d_*(V_s/V_f))*m_T/(1+K_d_*(V_s/V_f)), SolLim::m_s(m_T, K_d_, V_s, V_f));
+    // Generally meets expectations
+    double expected = K_d_*(V_s/V_f)*(m_T*V_s/V_f)*(1/(K_d_-K_d_*V_f/V_s + V_f/V_s));
+    EXPECT_FLOAT_EQ(expected, SolLim::m_s(m_T, K_d_, V_s, V_f));
+    // If the contaminant mass is zero, there is no m_T
+    EXPECT_FLOAT_EQ(0, SolLim::m_s(0, K_d_, V_s, V_f));
+    // If the K_d is zero, there is no sorption and m_s = 0.
+    EXPECT_FLOAT_EQ(0, SolLim::m_s(m_T, 0, V_s, V_f));
+    // If solid volume is zero, there is no sorption and m_s = 0
+    EXPECT_FLOAT_EQ(0, SolLim::m_s(m_T, K_d_, 0, V_f));
+    // If fluid volume is zero, sorption is total and m_s = m_T.
+    EXPECT_FLOAT_EQ(m_T, SolLim::m_s(m_T, K_d_, V_s, 0));
     EXPECT_FLOAT_EQ((K_d_*(V_s/V_f))*SolLim::m_f(m_T, K_d_,V_s, V_f), SolLim::m_s(m_T, K_d_, V_s, V_f));
   }
 }
