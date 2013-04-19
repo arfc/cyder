@@ -123,7 +123,6 @@ void LumpedNuclide::updateNuclideParamsTable(){
   shared_from_this()->addRowToNuclideParamsTable("peclet", Pe());
   shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
   shared_from_this()->addRowToNuclideParamsTable("transit_time", t_t_);
-  shared_from_this()->addRowToNuclideParamsTable("formulation", formulation());
   shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
   shared_from_this()->addRowToNuclideParamsTable("ref_disp", mat_table_->ref_disp());
   shared_from_this()->addRowToNuclideParamsTable("ref_kd", mat_table_->ref_kd());
