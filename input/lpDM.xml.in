@@ -99,7 +99,7 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>0.1</advective_velocity>
-              <porosity>0</porosity>
+              <porosity>0.1</porosity>
               <transit_time>1</transit_time>
               <formulation>
                 <DM>
