@@ -96,7 +96,6 @@ TEST_F(SolLimTest, m_ds){
     V_s=0.1*i;
     m_T=0.1*i;
     d=0.1*i;
-    EXPECT_FLOAT_EQ(d*(K_d_*(V_s/V_f))*m_T/(1+K_d_*(V_s/V_f)), SolLim::m_ds(m_T, K_d_, V_s, V_f, d));
     EXPECT_FLOAT_EQ(d*(K_d_*(V_s/V_f))*SolLim::m_f(m_T, K_d_,V_s, V_f), SolLim::m_ds(m_T, K_d_, V_s, V_f, d));
   }
 }
@@ -109,7 +108,6 @@ TEST_F(SolLimTest, m_ms){
     V_s=0.1*i;
     m_T=0.1*i;
     d=0.1*i;
-    EXPECT_FLOAT_EQ((1-d)*(K_d_*(V_s/V_f))*m_T/(1+K_d_*(V_s/V_f)), SolLim::m_ms(m_T, K_d_, V_s, V_f, d));
     EXPECT_FLOAT_EQ((1-d)*(K_d_*(V_s/V_f))*SolLim::m_f(m_T, K_d_,V_s, V_f), SolLim::m_ms(m_T, K_d_, V_s, V_f, d));
   }
 }
@@ -122,7 +120,6 @@ TEST_F(SolLimTest, m_ff){
     V_s=0.1*i;
     m_T=0.1*i;
     d=0.1*i;
-    EXPECT_FLOAT_EQ(d*m_T/(1+K_d_*(V_s/V_f)), SolLim::m_ff(m_T, K_d_, V_s, V_f, d));
     EXPECT_FLOAT_EQ(d*SolLim::m_f(m_T, K_d_,V_s, V_f), SolLim::m_ff(m_T, K_d_, V_s, V_f, d));
   }
 }
@@ -135,7 +132,6 @@ TEST_F(SolLimTest, m_mf){
     V_s=0.1*i;
     m_T=0.1*i;
     d=0.1*i;
-    EXPECT_FLOAT_EQ((1-d)*m_T/(1+K_d_*(V_s/V_f)), SolLim::m_mf(m_T, K_d_, V_s, V_f, d));
     EXPECT_FLOAT_EQ((1-d)*SolLim::m_f(m_T, K_d_,V_s, V_f), SolLim::m_mf(m_T, K_d_, V_s, V_f, d));
   }
 }
