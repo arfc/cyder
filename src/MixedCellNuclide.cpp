@@ -210,7 +210,7 @@ pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
       if(kd_limited()){
         m_ff = sorb(the_time, iso, (*it).second*mass);
       } else { 
-        m_ff = (*it).second*mass*tot_deg();
+        m_ff = SolLim::m_ff((*it).second, 0, V_s(), V_f(), tot_deg());
       }
       if(sol_limited()){
         m_aff = precipitate(the_time, iso, m_ff);
@@ -364,12 +364,12 @@ double MixedCellNuclide::sorb(int the_time, int iso, double mass){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double MixedCellNuclide::precipitate(int the_time, int iso, double mass){
+double MixedCellNuclide::precipitate(int the_time, int iso, double m_ff){
   if(!sol_limited()){
     throw CycException("The precipitation function was called, but sol_limited=false.");
   }
   double s = mat_table_->S(MatTools::isoToElem(iso));
-  return SolLim::m_aff(mass, V_ff(), s);
+  return SolLim::m_aff(m_ff, V_ff(), s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -383,7 +383,7 @@ double MixedCellNuclide::V_s(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::V_ff(){
-  return tot_deg()*(MatTools::V_f(V_T(),porosity()));
+  return MatTools::V_ff(V_T(),porosity(), tot_deg());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::V_T(){

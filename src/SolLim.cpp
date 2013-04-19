@@ -16,7 +16,13 @@ using namespace std;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double SolLim::m_f(double m_T, double K_d, double V_s, double V_f){
-  return m_T/(1+K_d*(V_s/V_f));
+  double theta;
+  if(V_s==0) { 
+    theta=1;
+  } else {
+    theta = V_f/V_s;
+  }
+  return m_T*theta*(1/(K_d-K_d*theta+theta));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double SolLim::m_s(double m_T, double K_d, double V_s, double V_f){
