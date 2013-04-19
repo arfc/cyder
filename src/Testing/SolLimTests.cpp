@@ -192,7 +192,7 @@ TEST_F(SolLimTest, m_ps){
     m_T=0.1*i;
     d=0.1*i;
     EXPECT_FLOAT_EQ(0, SolLim::m_ps(m_T, K_d_, V_s, V_f, d, 10000));
-    m_ff = (d)*m_T/(1+K_d_*(V_s/V_f)); 
+    m_ff = d*SolLim::m_f(m_T, 0, V_s, V_f);
     expected = m_ff - min(C_sol*V_f, m_ff);
     EXPECT_FLOAT_EQ(expected, SolLim::m_ps(m_T, K_d_, V_s, V_f, d, C_sol));
     EXPECT_FLOAT_EQ(expected, SolLim::m_ps(m_T, K_d_, V_s, V_f, d, C_sol));
