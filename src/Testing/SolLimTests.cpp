@@ -151,7 +151,7 @@ TEST_F(SolLimTest, m_aff){
       V_ff=V_f*d;
       mff= SolLim::m_ff(m_T, K_d_, V_s, V_f, d);
       EXPECT_FLOAT_EQ(0, SolLim::m_aff(mff, V_ff, 0));
-      expected = min(C_sol*V_ff, d*m_T/(1+K_d_*(V_s/V_f)));
+      expected = min(C_sol*V_ff, d*SolLim::m_f(m_T, K_d_, V_s, V_f));
       EXPECT_FLOAT_EQ(expected, SolLim::m_aff(mff, V_ff, C_sol));
       EXPECT_GE(mff, SolLim::m_aff(mff, V_ff, C_sol));
     }
@@ -173,7 +173,7 @@ TEST_F(SolLimTest, m_aff_kd0){
       V_ff=V_f*d;
       mff= SolLim::m_ff(m_T, 0, V_s, V_f, d);
       EXPECT_FLOAT_EQ(0, SolLim::m_aff(mff, V_ff, 0));
-      expected = min(C_sol*V_ff, d*m_T/(1+0*(V_s/V_f)));
+      expected = min(C_sol*V_ff, d*SolLim::m_f(m_T, 0, V_s, V_f));
       EXPECT_FLOAT_EQ(expected, SolLim::m_aff(mff, V_ff, C_sol));
       EXPECT_GE(mff, SolLim::m_aff(mff, V_ff, C_sol));
     }
