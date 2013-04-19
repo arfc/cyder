@@ -107,6 +107,7 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
   set_formulation(src_ptr->formulation());
   set_C_0(IsoConcMap());
   v_=src_ptr->v();
+  t_t_=src_ptr->t_t();
 
   // copy the geometry AND the centroid, it should be reset later.
   set_geom(geom_->copy(src_ptr->geom(), src_ptr->geom()->centroid()));
@@ -122,7 +123,7 @@ NuclideModelPtr LumpedNuclide::copy(const NuclideModel& src){
 void LumpedNuclide::updateNuclideParamsTable(){
   shared_from_this()->addRowToNuclideParamsTable("peclet", Pe());
   shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
-  shared_from_this()->addRowToNuclideParamsTable("transit_time", t_t_);
+  shared_from_this()->addRowToNuclideParamsTable("transit_time", t_t());
   shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
   shared_from_this()->addRowToNuclideParamsTable("ref_disp", mat_table_->ref_disp());
   shared_from_this()->addRowToNuclideParamsTable("ref_kd", mat_table_->ref_kd());
@@ -393,18 +394,18 @@ void LumpedNuclide::update_conc_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_DM(IsoConcMap C_0, int the_time){
-  double arg = (Pe()/2.0)*(1-pow(1+4*t_t_/Pe(), 0.5));
+  double arg = (Pe()/2.0)*(1-pow(1+4*t_t()/Pe(), 0.5));
   return MatTools::scaleConcMap(C_0, exp(arg));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_EXPM(IsoConcMap C_0, int the_time){
-  double scale = 1.0/(1.0+t_t_);
+  double scale = 1.0/(1.0+t_t());
   return MatTools::scaleConcMap(C_0, scale);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap LumpedNuclide::C_PFM(IsoConcMap C_0, int the_time){
-  double scale = exp(-t_t_);
+  double scale = exp(-t_t());
   return MatTools::scaleConcMap(C_0, scale);
 }
 

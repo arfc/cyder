@@ -216,6 +216,9 @@ public:
   /// Returns the peclet number of the component [-]
   const double Pe() const {return Pe_;};
 
+  /// Returns the transit time through the component [-]
+  const double t_t() const {return t_t_;};
+
   /**
     The advective velocity through this component. [m/s] 
    */

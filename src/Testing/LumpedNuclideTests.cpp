@@ -88,6 +88,7 @@ LumpedNuclidePtr LumpedNuclideTest::initNuclideModel(){
 TEST_F(LumpedNuclideTest, initial_state){
   EXPECT_EQ(FormulationType(EXPM), lumped_ptr_->formulation());
   EXPECT_EQ(adv_vel_, lumped_ptr_->v());
+  EXPECT_EQ(t_t_, lumped_ptr_->t_t());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(LumpedNuclideTest, defaultConstructor) {
@@ -95,6 +96,7 @@ TEST_F(LumpedNuclideTest, defaultConstructor) {
   ASSERT_EQ(LUMPED_NUCLIDE, default_nuc_model_ptr_->type());
   ASSERT_FLOAT_EQ(0, default_lumped_ptr_->geom()->length());
   ASSERT_FLOAT_EQ(0, default_lumped_ptr_->v());
+  ASSERT_FLOAT_EQ(0, default_lumped_ptr_->t_t());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -113,6 +115,7 @@ TEST_F(LumpedNuclideTest, copy) {
   EXPECT_EQ(lumped_ptr_->formulation(), test_copy->formulation());
   EXPECT_FLOAT_EQ(lumped_ptr_->last_updated(), test_copy->last_updated());
   EXPECT_FLOAT_EQ(lumped_ptr_->v(), test_copy->v());
+  EXPECT_FLOAT_EQ(lumped_ptr_->t_t(), test_copy->t_t());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
