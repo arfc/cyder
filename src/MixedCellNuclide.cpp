@@ -10,6 +10,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "CycException.h"
+#include "CycLimits.h"
 #include "Logger.h"
 #include "Timer.h"
 #include "MixedCellNuclide.h"
@@ -196,7 +197,7 @@ pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
   to_ret = CompMapPtr(new CompMap(MASS));
   double m_tot=0;
 
-  if(sum_pair.second != 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
+  if(sum_pair.second > 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
     int iso(0);
     double m_ff(0);
     double m_aff(0);
@@ -206,18 +207,20 @@ pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
     CompMap::const_iterator it;
     it=(*curr_comp).begin();
     while(it != (*curr_comp).end() ) {
-      iso = (*it).first;
-      m_ff = sorb(the_time, iso, (*it).second*mass);
-      m_aff = precipitate(the_time, iso, m_ff);
-      (*to_ret)[iso] = m_aff;
-      m_tot += m_aff;
+      if( (*it).second >= cyclus::eps_rsrc() ){
+        iso = (*it).first;
+        m_ff = sorb(the_time, iso, (*it).second*mass);
+        m_aff = precipitate(the_time, iso, m_ff);
+        (*to_ret)[iso] = m_aff;
+        m_tot += m_aff;
+      }
       ++it;
     }
   } else {
     (*to_ret)[ 92235 ] = 0; 
   }
 
-  to_ret->normalize();
+  to_ret->massify();
   return make_pair(IsoVector(to_ret), m_tot);
 }
 
