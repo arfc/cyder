@@ -498,22 +498,10 @@ TEST_F(MixedCellNuclideTest, sorb){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MixedCellNuclideTest, dont_sorb){
-  // if kd_limited = false, don't call sorb()
-  EXPECT_THROW( mixed_cell_ptr_->sorb(time_, u235_, 10), CycException);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MixedCellNuclideTest, precipitate){
   mixed_cell_ptr_->set_sol_limited(true);
   ASSERT_TRUE(mixed_cell_ptr_->sol_limited());
   EXPECT_NO_THROW(mixed_cell_ptr_->precipitate(time_, u235_, 10));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(MixedCellNuclideTest, dont_precipitate){
-  // if sol_limited = false, don't call precipitate()
-  EXPECT_THROW(mixed_cell_ptr_->precipitate(time_, u235_, 10), CycException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

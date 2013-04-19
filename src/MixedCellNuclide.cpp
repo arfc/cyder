@@ -207,17 +207,8 @@ pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
     it=(*curr_comp).begin();
     while(it != (*curr_comp).end() ) {
       iso = (*it).first;
-      if(kd_limited()){
-        m_ff = sorb(the_time, iso, (*it).second*mass);
-      } else { 
-        m_ff = SolLim::m_ff((*it).second, 0, V_s(), V_f(), tot_deg());
-      }
-      if(sol_limited()){
-        m_aff = precipitate(the_time, iso, m_ff);
-        assert(m_ff >= m_aff);
-      } else { 
-        m_aff = m_ff;
-      }
+      m_ff = sorb(the_time, iso, (*it).second*mass);
+      m_aff = precipitate(the_time, iso, m_ff);
       (*to_ret)[iso] = m_aff;
       m_tot += m_aff;
       ++it;
@@ -355,21 +346,22 @@ void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::sorb(int the_time, int iso, double mass){
-  if(!kd_limited()){
-    throw CycException("The sorb function was called, but kd_limited=false.");
+  double kd=0;
+  if(kd_limited()){
+    kd = mat_table_->K_d(MatTools::isoToElem(iso));
   }
-  double kd = mat_table_->K_d(MatTools::isoToElem(iso));
-  return SolLim::m_ff(mass, mat_table_->K_d(MatTools::isoToElem(iso)), V_s(), V_f(), tot_deg());
-
+  return SolLim::m_ff(mass, kd, V_s(), V_f(), tot_deg());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::precipitate(int the_time, int iso, double m_ff){
-  if(!sol_limited()){
-    throw CycException("The precipitation function was called, but sol_limited=false.");
+  double m_aff = m_ff;
+  if(sol_limited()){
+    double s = mat_table_->S(MatTools::isoToElem(iso));
+    m_aff = SolLim::m_aff(m_ff, V_ff(), s);
+    assert(m_ff >= m_aff);
   }
-  double s = mat_table_->S(MatTools::isoToElem(iso));
-  return SolLim::m_aff(m_ff, V_ff(), s);
+  return m_aff; 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
