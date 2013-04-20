@@ -3,7 +3,7 @@ cd input
 rm -r kd
 python perturb.py -i kd.xml.in -o ./kd/ -p ref_kd -l 0.0001 -u 1.0001 -n 101
 rm -r sol
-python perturb.py -i sol.xml.in -o ./sol/ -p ref_sol_lim -l 0.0000001 -u .0010001 -n 101
+python perturb.py -i sol.xml.in -o ./sol/ -p ref_sol_lim -l 0.001 -u 10.001 -n 101
 rm -r deg
 python perturb.py -i deg.xml.in -o ./deg/ -p degradation -l 0.0001 -u 0.1001 -n 101
 rm -r lpDM

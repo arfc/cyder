@@ -111,8 +111,8 @@ class LinearPlot(object) :
 
         plt.subplot(111)
         plt.plot(x, y, 'ko-')
-        plt.xlim(x_min, x_max)
-        plt.ylim(y_min, y_max)
+        plt.xlim(x_min, x_max*1.01)
+        plt.ylim(y_min, y_max*1.01)
         plt.xlabel(x_label)
         plt.ylabel(y_label)
         plt.title(title)
