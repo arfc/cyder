@@ -133,8 +133,8 @@ Volume Geometry::solid_volume(Radius radius, Length length){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-Area Geometry surface_area(){
-  return surface_area(radius_, length_);
+Area Geometry::surface_area(){
+  return surface_area(outer_radius_, length_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
