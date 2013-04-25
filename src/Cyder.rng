@@ -114,6 +114,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <define name="DegRateNuclide">
     <element name="DegRateNuclide">
       <ref name="advective_velocity"/>
+      <ref name="bc_type"/>
       <ref name="degradation"/>
     </element>
   </define>
@@ -142,6 +143,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <define name="MixedCellNuclide">
     <element name="MixedCellNuclide">
       <ref name="advective_velocity"/>
+      <ref name="bc_type"/>
       <ref name="degradation"/>
       <ref name="kd_limited"/> <!-- 0=false, 1=true -->
       <ref name="porosity"/>
@@ -183,6 +185,25 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
         <param name="minExclusive">0</param>
         <param name="maxInclusive">3</param>
       </data>
+    </element>
+  </define>
+
+  <define name="bc_type">
+    <element name="bc_type">
+      <choice>
+        <element name="SOURCE_TERM">
+            <text/>
+          </element>
+          <element name="DIRICHLET">
+            <text/>
+          </element>
+          <element name="NEUMANN">
+            <text/>
+          </element>
+          <element name="NEUMANN">
+            <text/>
+          </element>
+      </choice>
     </element>
   </define>
 

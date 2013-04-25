@@ -405,17 +405,17 @@ public:
   virtual double V_T()=0;
 
   /// spits out a number instead of a BCType
-  virtual enumerateBCType(string type_name) {
+  virtual BCType enumerateBCType(std::string type_name) {
     BCType to_ret = LAST_BC_TYPE;
-    string bc_type_names[] = {"SOURCE_TERM", "DIRICHLET", "NEUMANN", "CAUCHY"}
+    std::string bc_type_names[] = {"SOURCE_TERM", "DIRICHLET", "NEUMANN", "CAUCHY"};
     for(int type=0; type < LAST_BC_TYPE; type++){
       if( bc_type_names[type] == type_name ){
           to_ret = (BCType)type;
       } 
     }
     if( to_ret == LAST_BC_TYPE ) {
-      string err_msg = "'";
-      err_msg += type+name;
+      std::string err_msg = "'";
+      err_msg += type_name;
       err_msg += "' does not name a valid BCType.\n";
       err_msg +="Options are:\n";
       for(int name=0; name<LAST_BC_TYPE; name++){

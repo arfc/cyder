@@ -21,6 +21,7 @@ using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide():
   deg_rate_(0),
+  bc_type_(LAST_BC_TYPE),
   v_(0),
   tot_deg_(0),
   last_degraded_(-1)
@@ -37,6 +38,7 @@ DegRateNuclide::DegRateNuclide():
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(QueryEngine* qe):
   deg_rate_(0),
+  bc_type_(LAST_BC_TYPE),
   v_(0),
   tot_deg_(0),
   last_degraded_(-1)
@@ -59,6 +61,18 @@ DegRateNuclide::~DegRateNuclide(){
 void DegRateNuclide::initModuleMembers(QueryEngine* qe){
   set_v(lexical_cast<double>(qe->getElementContent("advective_velocity")));
   set_deg_rate(lexical_cast<double>(qe->getElementContent("degradation")));
+  QueryEngine* bc_type_qe = qe->queryElement("bc_type");
+  string bc_type_string;
+  list <string> choices;
+  list <string>::iterator it;
+  choices.push_back("SOURCE_TERM");
+  choices.push_back("NEUMANN");
+  choices.push_back("CAUCHY");
+  for( it=choices.begin(); it!=choices.end(); ++it) {
+    if( bc_type_qe->nElementsMatchingQuery(*it) == 1){
+      bc_type_ = enumerateBCType(*it);
+    }
+  }
   LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class initModuleMembers(qe) function has been called";;
 }
 
