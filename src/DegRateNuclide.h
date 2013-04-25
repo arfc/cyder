@@ -296,6 +296,8 @@ protected:
   /// the last timestamp at which this component was last degraded [integer timestamp]
   int last_degraded_;
 
+  /// The type of boundary condition with which to treat the inner boundary
+  BCType bc_type_;
 
 };
 #endif
