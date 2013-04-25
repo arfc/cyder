@@ -271,6 +271,7 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   }
   for( it=c_ext.begin(); it != c_ext.end(); ++it){
     iso = (*it).first;
+    Elem elem = iso/1000;
     if( c_int.count(iso) == 0) { 
       // in c_ext only
       to_ret[iso] = mat_table_->D(elem)*calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
