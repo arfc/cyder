@@ -353,26 +353,39 @@ void MixedCellNuclide::update_vec_hist(int the_time){
 void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
+  double sa;
+  IsoConcMap conc_map;
+  ConcGradMap grad_map;
+  pair<CompMapPtr, double> comp_pair;
+  CompMapPtr comp_to_ext;
+  double kg_to_ext;
+
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
     switch (bc_type_) {
       case SOURCE_TERM :
         source_term = (*daughter)->source_term_bc();
         if( source_term.second > 0 ){
-          CompMapPtr comp_to_ext = CompMapPtr(source_term.first.comp());
-          double kg_to_ext=source_term.second;
-          absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
+          comp_to_ext = CompMapPtr(source_term.first.comp());
+          kg_to_ext=source_term.second;
         }
         break;
       case NEUMANN :
-        double sa = (*daughter)->geom()->surface_area();
-        ConcGradMap grad_map = (*daughter)->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
-        IsoConcMap conc_map = scaleConcMap(grad_map, sa);
-        conc_to_comp_map(
+        sa = (*daughter)->geom()->surface_area();
+        grad_map = (*daughter)->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
+        conc_map = MatTools::scaleConcMap(grad_map, sa);
+        comp_pair = MatTools::conc_to_comp_map(conc_map, 1);
+        comp_to_ext = CompMapPtr(comp_pair.first);
+        kg_to_ext = comp_pair.second;
+        break;
       case CAUCHY :
         break;
       default :
         // throw an error
         break;
+
+      if(kg_to_ext > 0 ) {
+        absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
+      }
     }
   }
 }

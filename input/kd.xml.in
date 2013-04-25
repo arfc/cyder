@@ -74,6 +74,7 @@
           <nuclidemodel>
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
+              <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
               <porosity>0.1</porosity>
@@ -98,6 +99,7 @@
           <nuclidemodel>
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
+              <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
               <porosity>0.1</porosity>
@@ -122,6 +124,7 @@
           <nuclidemodel>
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
+              <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
               <porosity>0.1</porosity>
@@ -145,6 +148,7 @@
           <nuclidemodel>
             <MixedCellNuclide>
               <advective_velocity>0.000631</advective_velocity>
+              <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
               <kd_limited>1</kd_limited>
               <porosity>0.1</porosity>

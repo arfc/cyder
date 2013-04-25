@@ -64,6 +64,7 @@ DegRateNuclidePtr DegRateNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
+     << "  <bc_type><SOURCE_TERM/></bc_type>"
      << "  <degradation>" << deg_rate_ << "</degradation>"
      << "</start>";
 
