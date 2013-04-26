@@ -279,6 +279,13 @@ public:
   virtual double V_ff(){return MatTools::V_ff(geom_->volume(), 0, tot_deg());};
   virtual double V_T(){return geom_->volume();};
 
+  /// Sets the boundary condition type used on the inner boundary 
+  const BCType bc_type() const {return bc_type_;}
+
+  /// Sets the boundary condition type used on the inner boundary 
+  void set_bc_type(BCType bc_type){bc_type_ = bc_type;}
+
+
 protected:
   /**
     The advective velocity through this component [m/s]

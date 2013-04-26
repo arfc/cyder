@@ -250,6 +250,14 @@ public:
     */
   void update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters); 
 
+  /** 
+     Determines what IsoVector to remove from the daughter nuclide model
+     based on the neumann condition.
+
+     @param daughter nuclide_model of an internal component. there may be many.
+     */
+  std::pair<CompMapPtr, double> inner_neumann(NuclideModelPtr daughter);
+
   /**
      Update the isotopic vector history to incorporate sorption
 
@@ -331,6 +339,12 @@ public:
 
   /// Gets the free fluid volume, based on porosity and degradation rate
   virtual double V_ff();
+
+  /// Sets the boundary condition type used on the inner boundary 
+  const BCType bc_type() const {return bc_type_;}
+
+  /// Sets the boundary condition type used on the inner boundary 
+  void set_bc_type(BCType bc_type){bc_type_ = bc_type;}
 
 protected:
   /**

@@ -26,7 +26,7 @@ void DegRateNuclideTest::SetUp(){
   // other vars
   adv_vel_ = .1; // m/yr @TODO worry about units
   time_ = 0;
-  mat_table_=MDB->table("clay");
+  mat_table_=MDB->table("clay", 1, 1, 1);
 
   // composition set up
   u235_=92235;
@@ -242,13 +242,13 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Neumann
-  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
+  double expected_neumann= -(mat_table_->D(u_))*expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_GT(expected_conc, 0);
   EXPECT_GT(outer_radius, deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_GT(deg_rate_ptr_->geom()->radial_midpoint(), 0);
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
   // Cauchy
-  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
+  double expected_cauchy = -expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -266,10 +266,10 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Neumann 
-  expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
+  expected_neumann= -(mat_table_->D(u_))*expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
+  expected_cauchy = -expected_neumann + adv_vel_*expected_conc; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered
@@ -323,10 +323,10 @@ TEST_F(DegRateNuclideTest, transportNuclidesDR1){
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Neumann 
-  double expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
+  double expected_neumann= -(mat_table_->D(u_))*expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
-  double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
+  double expected_cauchy = -expected_neumann + adv_vel_*expected_conc; // @TODO fix
   EXPECT_FLOAT_EQ(expected_cauchy, nuc_model_ptr_->cauchy_bc(zero_conc_map, outer_radius*2, u235_));
 
   // remove the source term offered

@@ -70,7 +70,7 @@ void DegRateNuclide::initModuleMembers(QueryEngine* qe){
   choices.push_back("CAUCHY");
   for( it=choices.begin(); it!=choices.end(); ++it) {
     if( bc_type_qe->nElementsMatchingQuery(*it) == 1){
-      bc_type_ = enumerateBCType(*it);
+      set_bc_type(enumerateBCType(*it));
     }
   }
   LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class initModuleMembers(qe) function has been called";;
@@ -81,6 +81,7 @@ NuclideModelPtr DegRateNuclide::copy(const NuclideModel& src){
   const DegRateNuclide* src_ptr = dynamic_cast<const DegRateNuclide*>(&src);
 
   set_deg_rate(src_ptr->deg_rate());
+  set_bc_type(src_ptr->bc_type());
   set_v(src_ptr->v());
   set_tot_deg(0);
   set_last_degraded(-1);
@@ -198,19 +199,21 @@ ConcGradMap DegRateNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   IsoConcMap::iterator it;
   for( it=c_int.begin(); it != c_int.end(); ++it){
     iso = (*it).first;
+    Elem elem = iso/1000;
     if( c_ext.count(iso) != 0) {  
       // in both
-      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso]*tot_deg(), r_ext, r_int);
+      to_ret[iso] = (mat_table_->D(elem))*calc_conc_grad(c_ext[iso], c_int[iso]*tot_deg(), r_ext, r_int);
     } else {  
       // in c_int_only
-      to_ret[iso] = calc_conc_grad(0, c_int[iso]*tot_deg(), r_ext, r_int);
+      to_ret[iso] = (mat_table_->D(elem))*calc_conc_grad(0, c_int[iso]*tot_deg(), r_ext, r_int);
     }
   }
   for( it=c_ext.begin(); it != c_ext.end(); ++it){
     iso = (*it).first;
+    Elem elem = iso/1000;
     if( c_int.count(iso) == 0) { 
       // in c_ext only
-      to_ret[iso] = calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
+      to_ret[iso] = (mat_table_->D(elem))*calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
     }
   }
 
@@ -320,10 +323,9 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
       default :
         // throw an error
         break;
-
-      if(kg_to_ext > 0 ) {
+    }
+    if(kg_to_ext > 0 ) {
         absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
-      }
     }
   }
 }

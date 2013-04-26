@@ -1,5 +1,11 @@
 #!/bin/bash
 cd input
+rm -r kd_nbc
+python perturb.py -i kd_nbc.xml.in -o ./kd_nbc/ -p ref_kd -l 0.0001 -u 1.0001 -n 101
+rm -r sol_nbc
+python perturb.py -i sol_nbc.xml.in -o ./sol_nbc/ -p ref_sol_lim -l 0.001 -u 10.001 -n 101
+rm -r deg_nbc
+python perturb.py -i deg_nbc.xml.in -o ./deg_nbc/ -p degradation -l 0.0001 -u 0.1001 -n 101
 rm -r kd
 python perturb.py -i kd.xml.in -o ./kd/ -p ref_kd -l 0.0001 -u 1.0001 -n 101
 rm -r sol
@@ -16,6 +22,13 @@ rm -r lpPFM_t_t
 python perturb.py -i lpPFM.xml.in -o ./lpPFM_t_t/ -p transit_time -l 1. -u 101.  -n 101
 
 
+
+cd kd_nbc
+python ../../output/line_plot.py -r 'kd_nbc' -xp 'ref_kd' -xl 'Reference Distribution Coefficient' -yl 'Mass in Far Field $[kg]$' -t 'Reference Distribution Coefficient Sensitivity' -o 'kd_nbc.eps'
+cd ../sol_nbc
+python ../../output/line_plot.py -r 'sol_nbc' -xp 'ref_sol' -xl 'Reference Solubility Limit $[kg/m^3]$' -yl 'Mass in Far Field $[kg]$' -t 'Reference Solubility Limit Sensitivity' -o 'sol_nbc.eps'
+cd ../deg_nbc
+python ../../output/line_plot.py -r 'deg_nbc' -xp 'degradation' -xl 'Degradation Rate $[\%/month]$' -yl 'Mass in Far Field $[kg]$' -t 'Degradation Rate Sensitivity' -o 'deg_nbc.eps'
 cd kd
 python ../../output/line_plot.py -r 'kd' -xp 'ref_kd' -xl 'Reference Distribution Coefficient' -yl 'Mass in Far Field $[kg]$' -t 'Reference Distribution Coefficient Sensitivity' -o 'kd.eps'
 cd ../sol

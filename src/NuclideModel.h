@@ -23,16 +23,16 @@ enum NuclideModelType {
   MIXEDCELL_NUCLIDE, 
   ONEDIMPPM_NUCLIDE, 
   STUB_NUCLIDE, 
-
   LAST_NUCLIDE};
+
 /**
    enumerated list of boundary condition treatment types 
  */
 enum BCType { 
-  SOURCE_TERM,
+  CAUCHY,
   DIRICHLET,
   NEUMANN,
-  CAUCHY,
+  SOURCE_TERM,
   LAST_BC_TYPE};
 
 /** 
@@ -407,7 +407,7 @@ public:
   /// spits out a number instead of a BCType
   virtual BCType enumerateBCType(std::string type_name) {
     BCType to_ret = LAST_BC_TYPE;
-    std::string bc_type_names[] = {"SOURCE_TERM", "DIRICHLET", "NEUMANN", "CAUCHY"};
+    std::string bc_type_names[] = { "CAUCHY", "DIRICHLET", "NEUMANN", "SOURCE_TERM", "LAST_BC_TYPE" };
     for(int type=0; type < LAST_BC_TYPE; type++){
       if( bc_type_names[type] == type_name ){
           to_ret = (BCType)type;

@@ -200,7 +200,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
           <element name="NEUMANN">
             <text/>
           </element>
-          <element name="NEUMANN">
+          <element name="CAUCHY">
             <text/>
           </element>
       </choice>
