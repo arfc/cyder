@@ -247,6 +247,13 @@ public:
      */
   void update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters); 
 
+  /** 
+     Determines what to remove from a daughter nuclide, relying on neumann bc.
+
+     @param daughter nuclide_model of an internal component.
+     */
+  std::pair<CompMapPtr, double> inner_neumann(NuclideModelPtr daughter); 
+
   /// returns the total degradation of the component
   const double tot_deg() const {return tot_deg_;};
 
