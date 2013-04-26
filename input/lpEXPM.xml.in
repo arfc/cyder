@@ -66,6 +66,9 @@
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
+            <ref_disp>1</ref_disp>
+            <ref_kd>0.1</ref_kd>
+            <ref_sol_lim>1</ref_sol_lim>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -91,6 +94,9 @@
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
+            <ref_disp>1</ref_disp>
+            <ref_kd>0.1</ref_kd>
+            <ref_sol_lim>1</ref_sol_lim>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -116,6 +122,9 @@
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
+            <ref_disp>1</ref_disp>
+            <ref_kd>0.1</ref_kd>
+            <ref_sol_lim>1</ref_sol_lim>
           </material_data>
           <thermalmodel>
             <StubThermal/>
@@ -140,6 +149,9 @@
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>
+            <ref_disp>1</ref_disp>
+            <ref_kd>0.1</ref_kd>
+            <ref_sol_lim>1</ref_sol_lim>
           </material_data>
           <thermalmodel>
             <StubThermal/>
