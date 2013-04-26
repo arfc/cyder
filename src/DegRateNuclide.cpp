@@ -294,9 +294,6 @@ void DegRateNuclide::update_vec_hist(int the_time){
 void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
-  double sa;
-  IsoConcMap conc_map;
-  ConcGradMap grad_map;
   pair<CompMapPtr, double> comp_pair;
   CompMapPtr comp_to_ext;
   double kg_to_ext;
@@ -311,10 +308,7 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
         }
         break;
       case NEUMANN :
-        sa = (*daughter)->geom()->surface_area();
-        grad_map = (*daughter)->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
-        conc_map = MatTools::scaleConcMap(grad_map, sa);
-        comp_pair = MatTools::conc_to_comp_map(conc_map, 1);
+        comp_pair = inner_neumann(*daughter);
         comp_to_ext = CompMapPtr(comp_pair.first);
         kg_to_ext = comp_pair.second;
         break;
@@ -329,4 +323,26 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
     }
   }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+pair<CompMapPtr, double> DegRateNuclide::inner_neumann(NuclideModelPtr daughter){
+  double sa;
+  IsoConcMap conc_map;
+  ConcGradMap grad_map;
+  pair<CompMapPtr, double> comp_pair;
+  sa = daughter->geom()->surface_area();
+  grad_map = daughter->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
+  conc_map = MatTools::scaleConcMap(grad_map, sa);
+  // if enough material has moved, the concentration is greater outside. 
+  // don't move anything.
+  IsoConcMap::iterator it;
+  for( it=conc_map.begin(); it!=conc_map.end(); ++it) {
+    if((*it).second<0.0){
+      (*it).second = 0.0;
+    }
+  }
+  comp_pair= MatTools::conc_to_comp_map(conc_map, 1);
+  return comp_pair;
+}
+
 
