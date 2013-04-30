@@ -62,7 +62,7 @@ def plot_this_dir() :
 def plot_all(dbname) :
     plot_contaminants(dbname, "bar", dbname.replace('.sqlite', ''), 
             stream_dim='CompID', select_dim='IsoID', select_item=92235) 
-    #plot_all_comps(dbname, "bar", dbname.replace('.sqlite', ''))
+    plot_all_comps(dbname, "bar", dbname.replace('.sqlite', ''))
     
 
 if __name__ == "__main__":
