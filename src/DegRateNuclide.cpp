@@ -249,7 +249,7 @@ IsoConcMap DegRateNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> ma
   IsoConcMap to_ret;
 
   pair<IsoVector, double> sum_pair; 
-  sum_pair = vec_hist_[the_time];
+  sum_pair = MatTools::sum_mats(mats);
 
   if(sum_pair.second != 0 && geom_->volume() != numeric_limits<double>::infinity()) { 
     double scale = sum_pair.second/geom_->volume();
