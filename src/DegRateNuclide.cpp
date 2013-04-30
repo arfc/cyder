@@ -296,7 +296,7 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
   std::pair<IsoVector, double> source_term;
   pair<CompMapPtr, double> comp_pair;
   CompMapPtr comp_to_ext;
-  double kg_to_ext;
+  double kg_to_ext = 0;
 
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
     switch (bc_type_) {
