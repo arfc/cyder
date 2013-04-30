@@ -362,7 +362,7 @@ void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
     switch (bc_type_) {
       case SOURCE_TERM :
         source_term = (*daughter)->source_term_bc();
-        if( source_term.second > 0 ){
+        if( source_term.second >= 0 ){
           comp_to_ext = CompMapPtr(source_term.first.comp());
           kg_to_ext=source_term.second;
         }
