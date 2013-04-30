@@ -173,8 +173,9 @@ double DegRateNuclide::contained_mass(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> DegRateNuclide::source_term_bc(){
-  return make_pair(contained_vec(last_updated()), 
-      tot_deg()*shared_from_this()->contained_mass(last_updated()));
+  pair<IsoVector, double> curr_mats;
+  curr_mats=MatTools::sum_mats(wastes_);
+  return make_pair(curr_mats.first, tot_deg()*curr_mats.second);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -296,13 +297,13 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
   std::pair<IsoVector, double> source_term;
   pair<CompMapPtr, double> comp_pair;
   CompMapPtr comp_to_ext;
-  double kg_to_ext = 0;
+  double kg_to_ext=0;
 
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
     switch (bc_type_) {
       case SOURCE_TERM :
         source_term = (*daughter)->source_term_bc();
-        if( source_term.second > 0 ){
+        if( source_term.second >= 0 ){
           comp_to_ext = CompMapPtr(source_term.first.comp());
           kg_to_ext=source_term.second;
         }
