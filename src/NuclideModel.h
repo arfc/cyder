@@ -230,8 +230,9 @@ public:
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
   virtual ConcGrad neumann_bc( IsoConcMap c_ext, Radius r_ext, Iso tope) {
-    IsoConcMap::iterator found = shared_from_this()->neumann_bc(c_ext, r_ext).find(tope);
-    return((found != shared_from_this()->neumann_bc(c_ext, r_ext).end()) ? (*found).second : 0);
+    IsoConcMap neumann = shared_from_this()->neumann_bc(c_ext, r_ext);
+    IsoConcMap::iterator found = neumann.find(tope);
+    return((found != neumann.end()) ? (*found).second : 0);
   };
 
   /**
@@ -241,8 +242,9 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext) = 0;
   Flux cauchy_bc(IsoConcMap c_ext, Radius r_ext, Iso tope) {
-    IsoConcMap::iterator found = shared_from_this()->cauchy_bc(c_ext,r_ext).find(tope);
-    return(found != shared_from_this()->cauchy_bc(c_ext, r_ext).end() ? (*found).second : 0);
+    IsoConcMap cauchy = shared_from_this()->cauchy_bc(c_ext,r_ext);
+    IsoConcMap::iterator found = cauchy.find(tope);
+    return(found != cauchy.end() ? (*found).second : 0);
   };
     
 
