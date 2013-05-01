@@ -72,6 +72,7 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, d
 IsoConcMap MatTools::comp_to_conc_map(CompMapPtr comp, double mass, double vol){
   MatTools::validate_finite_pos(vol);
   MatTools::validate_finite_pos(mass);
+  comp->massify();
 
   IsoConcMap to_ret;
   if( vol==0 ) {

@@ -91,3 +91,14 @@ TEST_F(GeometryTest, volume){
   EXPECT_NO_THROW(default_geom_->set_length(len_five_));
   EXPECT_FLOAT_EQ(M_PI*len_five_*(r_five_*r_five_-r_four_*r_four_) , default_geom_->volume());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(GeometryTest, surface_area){
+  EXPECT_FLOAT_EQ(2*M_PI*r_five_*(r_five_+len_five_) , test_geom_->surface_area());
+
+  EXPECT_FLOAT_EQ(0 , default_geom_->surface_area());
+  EXPECT_NO_THROW(default_geom_->set_radius(INNER, r_four_));
+  EXPECT_NO_THROW(default_geom_->set_radius(OUTER, r_five_));
+  EXPECT_NO_THROW(default_geom_->set_length(len_five_));
+  EXPECT_FLOAT_EQ(2*M_PI*r_five_*(r_five_ + len_five_) , default_geom_->surface_area());
+}

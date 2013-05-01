@@ -158,9 +158,9 @@ public:
      @return C the concentration at the boundary in kg/m^3
    */
   double source_term_bc(Iso tope) { 
-    IsoVector st=this->source_term_bc().first;
+    IsoVector st=shared_from_this()->source_term_bc().first;
     double massfrac = st.massFraction(tope);
-    return( (massfrac == 0) ? massfrac*this->source_term_bc().second : 0);
+    return( (massfrac == 0) ? massfrac*shared_from_this()->source_term_bc().second : 0);
   };
 
   /**
@@ -180,8 +180,8 @@ public:
      @return C the concentration at the boundary in kg/m^3
    */
   Concentration dirichlet_bc(Iso tope) { 
-    IsoConcMap::iterator found = this->dirichlet_bc().find(tope);
-    return(found != this->dirichlet_bc().end() ? (*found).second : 0);
+    IsoConcMap::iterator found = shared_from_this()->dirichlet_bc().find(tope);
+    return(found != shared_from_this()->dirichlet_bc().end() ? (*found).second : 0);
   };
   
   /**
@@ -229,8 +229,8 @@ public:
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
   ConcGrad neumann_bc( IsoConcMap c_ext, Radius r_ext, Iso tope) {
-    IsoConcMap::iterator found = this->neumann_bc(c_ext, r_ext).find(tope);
-    return((found != this->neumann_bc(c_ext, r_ext).end()) ? (*found).second : 0);
+    IsoConcMap::iterator found = shared_from_this()->neumann_bc(c_ext, r_ext).find(tope);
+    return((found != shared_from_this()->neumann_bc(c_ext, r_ext).end()) ? (*found).second : 0);
   };
 
   /**
@@ -240,8 +240,8 @@ public:
    */
   virtual IsoFluxMap cauchy_bc(IsoConcMap c_ext, Radius r_ext) = 0;
   Flux cauchy_bc(IsoConcMap c_ext, Radius r_ext, Iso tope) {
-    IsoConcMap::iterator found = this->cauchy_bc(c_ext,r_ext).find(tope);
-    return(found != this->cauchy_bc(c_ext, r_ext).end() ? (*found).second : 0);
+    IsoConcMap::iterator found = shared_from_this()->cauchy_bc(c_ext,r_ext).find(tope);
+    return(found != shared_from_this()->cauchy_bc(c_ext, r_ext).end() ? (*found).second : 0);
   };
     
 
@@ -260,7 +260,7 @@ public:
      @param time the time to query the contained contaminant mass
      @return contained_mass_ throughout the component volume, in kg, at time
    */
-  double contained_mass(int the_time){return this->vec_hist(the_time).second;}
+  double contained_mass(int the_time){return shared_from_this()->vec_hist(the_time).second;}
 
   /**
      Returns the IsoVector mass pair for a certain time

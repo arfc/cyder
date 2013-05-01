@@ -244,7 +244,7 @@ IsoConcMap MixedCellNuclide::dirichlet_bc(){
   IsoConcMap c_ff;
   pair<IsoVector, double> source_term = source_term_bc();
   double m_ff = source_term.second;
-  c_ff = MatTools::comp_to_conc_map(source_term.first.comp(), m_ff, V_ff());
+  c_ff = MatTools::comp_to_conc_map(CompMapPtr(source_term.first.comp()), m_ff, V_ff());
   return c_ff;
 }
 
