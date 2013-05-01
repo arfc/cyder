@@ -241,20 +241,21 @@ pair<IsoVector, double> MixedCellNuclide::source_term_bc(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MixedCellNuclide::dirichlet_bc(){
-  IsoConcMap dirichlet, c_ff;
-  c_ff = conc_hist(last_degraded());
-  IsoConcMap::const_iterator it;
-  for( it=c_ff.begin(); it!=c_ff.end(); ++it){
-    dirichlet[(*it).first] = (*it).second ;
-  }
-  return dirichlet;
+  IsoConcMap c_ff;
+  pair<IsoVector, double> source_term = source_term_bc();
+  double m_ff = source_term.second;
+  c_ff = MatTools::comp_to_conc_map(source_term.first.comp(), m_ff, V_ff());
+  return c_ff;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   ConcGradMap to_ret;
 
-  IsoConcMap c_int = conc_hist(last_degraded());
+  IsoConcMap c_int;
+  pair<IsoVector, double> source_term = source_term_bc();
+  double m_ff = source_term.second;
+  c_int = MatTools::comp_to_conc_map(source_term.first.comp(), m_ff, V_ff());
   Radius r_int = geom_->radial_midpoint();
   
   int iso;
@@ -313,8 +314,6 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> 
   IsoConcMap to_ret; 
 
   if(sum_pair.second != 0 && V_ff()!=0 && geom_->volume() != numeric_limits<double>::infinity()) { 
-    int iso(0);
-    double m_aff(0);
     double mass(sum_pair.second);
     CompMapPtr curr_comp = sum_pair.first.comp();
     curr_comp->massify();
@@ -395,7 +394,7 @@ pair<CompMapPtr,double> MixedCellNuclide::inner_neumann(NuclideModelPtr daughter
   pair<CompMapPtr, double> comp_pair;
   sa = daughter->geom()->surface_area();
   grad_map = daughter->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
-  conc_map = MatTools::scaleConcMap(grad_map, sa);
+  conc_map = MatTools::scaleConcMap(grad_map, tot_deg()*sa);
   IsoConcMap::iterator it;
   for(it=conc_map.begin(); it!=conc_map.end(); ++it) {
     if((*it).second < 0.0){
