@@ -74,7 +74,7 @@
             <LumpedNuclide>
               <advective_velocity>0.000631</advective_velocity>
               <porosity>0.1</porosity>
-              <transit_time>1<transit_time>
+              <transit_time>1</transit_time>
               <formulation>
                 <DM>
                   <peclet>0.1</peclet>
