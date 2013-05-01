@@ -136,11 +136,10 @@
           <length>1</length>
           <componenttype>FF</componenttype>
           <material_data>
-            <clay>
-              <ref_disp>1</ref_disp>
-              <ref_kd>1</ref_kd>
-              <ref_sol_lim>1</ref_sol_lim>
-            </clay>
+            <clay/>
+            <ref_disp>1</ref_disp>
+            <ref_kd>1</ref_kd>
+            <ref_sol_lim>1</ref_sol_lim>
           </material_data>
           <thermalmodel>
             <StubThermal/>

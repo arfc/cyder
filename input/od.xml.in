@@ -76,7 +76,6 @@
           <nuclidemodel>
             <OneDimPPMNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0</degradation>
             </OneDimPPMNuclide>
           </nuclidemodel>
@@ -100,7 +99,6 @@
           <nuclidemodel>
             <OneDimPPMNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
             </OneDimPPMNuclide>
           </nuclidemodel>
@@ -124,7 +122,6 @@
           <nuclidemodel>
             <OneDimPPMNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
             </OneDimPPMNuclide>
           </nuclidemodel>
@@ -147,7 +144,6 @@
           <nuclidemodel>
             <OneDimPPMNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
             </OneDimPPMNuclide>
           </nuclidemodel>
