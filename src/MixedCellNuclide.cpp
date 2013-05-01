@@ -253,10 +253,10 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   ConcGradMap to_ret;
 
   IsoConcMap c_int;
-  pair<IsoVector, double> source_term = source_term_bc();
+  pair<IsoVector, double> source_term = shared_from_this()->source_term_bc();
   double m_ff = source_term.second;
-  c_int = MatTools::comp_to_conc_map(source_term.first.comp(), m_ff, V_ff());
-  Radius r_int = geom_->radial_midpoint();
+  c_int = MatTools::comp_to_conc_map(CompMapPtr(source_term.first.comp()), m_ff, V_ff());
+  Radius r_int = geom()->radial_midpoint();
   
   int iso;
   IsoConcMap::iterator it;

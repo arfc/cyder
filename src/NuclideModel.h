@@ -157,7 +157,7 @@ public:
      @param tope the isotope to query
      @return C the concentration at the boundary in kg/m^3
    */
-  double source_term_bc(Iso tope) { 
+  virtual double source_term_bc(Iso tope) { 
     IsoVector st=shared_from_this()->source_term_bc().first;
     double massfrac = st.massFraction(tope);
     return( (massfrac == 0) ? massfrac*shared_from_this()->source_term_bc().second : 0);
@@ -179,9 +179,10 @@ public:
      @param tope the isotope to query
      @return C the concentration at the boundary in kg/m^3
    */
-  Concentration dirichlet_bc(Iso tope) { 
-    IsoConcMap::iterator found = shared_from_this()->dirichlet_bc().find(tope);
-    return(found != shared_from_this()->dirichlet_bc().end() ? (*found).second : 0);
+  virtual Concentration dirichlet_bc(Iso tope) { 
+    IsoConcMap  dirichlet = shared_from_this()->dirichlet_bc();
+    IsoConcMap::iterator found = dirichlet.find(tope);
+    return(found != dirichlet.end() ? (*found).second : 0);
   };
   
   /**
@@ -228,7 +229,7 @@ public:
      @param tope the isotope to query
      @return dCdx the concentration gradient at the boundary in kg/m^3
    */
-  ConcGrad neumann_bc( IsoConcMap c_ext, Radius r_ext, Iso tope) {
+  virtual ConcGrad neumann_bc( IsoConcMap c_ext, Radius r_ext, Iso tope) {
     IsoConcMap::iterator found = shared_from_this()->neumann_bc(c_ext, r_ext).find(tope);
     return((found != shared_from_this()->neumann_bc(c_ext, r_ext).end()) ? (*found).second : 0);
   };
