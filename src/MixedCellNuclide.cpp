@@ -392,7 +392,7 @@ pair<CompMapPtr,double> MixedCellNuclide::inner_neumann(NuclideModelPtr daughter
   IsoConcMap conc_map;
   ConcGradMap grad_map;
   pair<CompMapPtr, double> comp_pair;
-  sa = daughter->geom()->surface_area();
+  sa =1;// daughter->geom()->surface_area();
   grad_map = daughter->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
   conc_map = MatTools::scaleConcMap(grad_map, tot_deg()*sa);
   IsoConcMap::iterator it;
