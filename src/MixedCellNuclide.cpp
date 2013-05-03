@@ -265,10 +265,10 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
     Elem elem = iso/1000;
     if( c_ext.count(iso) != 0) {  
       // in both
-      to_ret[iso] = -(mat_table_->D(elem))*calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
+      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
     } else {
       // in c_int_only
-      to_ret[iso] = -(mat_table_->D(elem))*calc_conc_grad(0, c_int[iso], r_ext, r_int);
+      to_ret[iso] = calc_conc_grad(0, c_int[iso], r_ext, r_int);
     }
   }
   for( it=c_ext.begin(); it != c_ext.end(); ++it){
@@ -276,7 +276,7 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
     Elem elem = iso/1000;
     if( c_int.count(iso) == 0) { 
       // in c_ext only
-      to_ret[iso] = -(mat_table_->D(elem))*calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
+      to_ret[iso] = calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
     }
   }
 
@@ -294,7 +294,7 @@ IsoFluxMap MixedCellNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   for( it = neumann.begin(); it != neumann.end(); ++it){
     iso = (*it).first;
     elem = iso/1000;
-    to_ret.insert(make_pair(iso, -(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
+    to_ret.insert(make_pair(iso, -mat_table_->D(elem)*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
   }
   return to_ret;
 }
