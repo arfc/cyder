@@ -388,7 +388,6 @@ void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<CompMapPtr,double> MixedCellNuclide::inner_neumann(NuclideModelPtr daughter) {
-  double sa;
   IsoConcMap conc_map;
   ConcGradMap grad_map;
   pair<CompMapPtr, double> comp_pair;
