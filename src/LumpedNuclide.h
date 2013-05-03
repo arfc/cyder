@@ -278,12 +278,12 @@ public:
      Extracts one timestep's mass from the daughter nuclidemodel.
 
      @param daughter the nuclide model from which to extract mass
-     @param dt the timestep length over which to integrate
+     @param the_time the current time [months].
 
      @return the material that has been extracted from daughter
      */
   mat_rsrc_ptr extractIntegratedMass(NuclideModelPtr daughter, 
-      double dt);
+      double the_time);
 
   /** 
      Updates the contained vector

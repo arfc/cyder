@@ -241,7 +241,6 @@ void OneDimPPMNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::conc_profile(IsoConcMap C_0, Radius r, int dt){
-
   // @TODO decay will accidentally get neglected here if you don't watch out. Fix.
   IsoConcMap to_ret;
   IsoConcMap::iterator it;

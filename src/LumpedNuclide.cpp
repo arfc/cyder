@@ -7,6 +7,7 @@
 #include <deque>
 #include <time.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/math/constants/constants.hpp>
 
 #include "CycException.h"
 #include "Logger.h"
@@ -431,7 +432,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
     C_0[92235] = 0;
   } else {
     for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-      st = (*daughter)->source_term_bc();
+      st = (*daughter)->source_term_bc() ;
       vol = (*daughter)->V_ff();
       vol_sum += vol;
       if(mixed.second == 0){
@@ -442,7 +443,7 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
         mixed.first.mix(st.first,mixed.second/st.second);
       }
       // @TODO use timestep len
-      absorb(mat_rsrc_ptr(extractIntegratedMass((*daughter), 1))); 
+      absorb(mat_rsrc_ptr(extractIntegratedMass((*daughter), the_time))); 
     }
     C_0 = MatTools::comp_to_conc_map(mixed.first.comp(), mixed.second, vol_sum); 
   }
@@ -451,11 +452,20 @@ void LumpedNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter, 
-    double dt){
-  IsoConcMap conc = MatTools::scaleConcMap(daughter->dirichlet_bc(),
-      dt*v()*daughter->V_ff()/daughter->geom()->length());
+    double the_time){
+  double pi = boost::math::constants::pi<double>();
+  double del_r = geom()->outer_radius() - geom()->inner_radius();
+  double len = geom()->length();
+  // scalar = 2*pi*l*theta*(r_j-r_i)^2
+  double scalar = 2*pi*porosity()*len*del_r*del_r;
+  IsoConcMap c_i_n = daughter->dirichlet_bc();
+  IsoConcMap c_j_n = C_t(C_0(), the_time);
+  // m_j = scalar*(((5c_j_n/6) - (c_i_n)/3) 
+  IsoConcMap c_j_scaled = MatTools::scaleConcMap(c_j_n, 5.0*scalar/6.0);
+  IsoConcMap c_i_scaled = MatTools::scaleConcMap(c_i_n, 0.5*scalar);
+  IsoConcMap scaled_concs = MatTools::addConcMaps(c_j_scaled, c_i_scaled);
+  pair<CompMapPtr, double> to_ext = MatTools::conc_to_comp_map(scaled_concs, 1) ;
 
-  pair<CompMapPtr, double> to_rem = MatTools::conc_to_comp_map(conc, daughter->V_ff());
-  return mat_rsrc_ptr(daughter->extract(to_rem.first, to_rem.second)); 
+  return mat_rsrc_ptr(daughter->extract(to_ext.first, to_ext.second)); 
 }
 
