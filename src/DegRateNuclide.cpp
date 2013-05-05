@@ -21,6 +21,7 @@ using boost::lexical_cast;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide():
   deg_rate_(0),
+  bc_type_(LAST_BC_TYPE),
   v_(0),
   tot_deg_(0),
   last_degraded_(-1)
@@ -37,6 +38,7 @@ DegRateNuclide::DegRateNuclide():
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DegRateNuclide::DegRateNuclide(QueryEngine* qe):
   deg_rate_(0),
+  bc_type_(LAST_BC_TYPE),
   v_(0),
   tot_deg_(0),
   last_degraded_(-1)
@@ -59,6 +61,18 @@ DegRateNuclide::~DegRateNuclide(){
 void DegRateNuclide::initModuleMembers(QueryEngine* qe){
   set_v(lexical_cast<double>(qe->getElementContent("advective_velocity")));
   set_deg_rate(lexical_cast<double>(qe->getElementContent("degradation")));
+  QueryEngine* bc_type_qe = qe->queryElement("bc_type");
+  string bc_type_string;
+  list <string> choices;
+  list <string>::iterator it;
+  choices.push_back("SOURCE_TERM");
+  choices.push_back("NEUMANN");
+  choices.push_back("CAUCHY");
+  for( it=choices.begin(); it!=choices.end(); ++it) {
+    if( bc_type_qe->nElementsMatchingQuery(*it) == 1){
+      bc_type_ = enumerateBCType(*it);
+    }
+  }
   LOG(LEV_DEBUG2,"GRDRNuc") << "The DegRateNuclide Class initModuleMembers(qe) function has been called";;
 }
 
@@ -277,12 +291,37 @@ void DegRateNuclide::update_vec_hist(int the_time){
 void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
-  if( !daughters.empty() ){
-    for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-      source_term = (*daughter)->source_term_bc();
-      if( source_term.second > 0 ){
-        CompMapPtr comp_to_ext = CompMapPtr(source_term.first.comp());
-        double kg_to_ext=source_term.second;
+  double sa;
+  IsoConcMap conc_map;
+  ConcGradMap grad_map;
+  pair<CompMapPtr, double> comp_pair;
+  CompMapPtr comp_to_ext;
+  double kg_to_ext;
+
+  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+    switch (bc_type_) {
+      case SOURCE_TERM :
+        source_term = (*daughter)->source_term_bc();
+        if( source_term.second > 0 ){
+          comp_to_ext = CompMapPtr(source_term.first.comp());
+          kg_to_ext=source_term.second;
+        }
+        break;
+      case NEUMANN :
+        sa = (*daughter)->geom()->surface_area();
+        grad_map = (*daughter)->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
+        conc_map = MatTools::scaleConcMap(grad_map, sa);
+        comp_pair = MatTools::conc_to_comp_map(conc_map, 1);
+        comp_to_ext = CompMapPtr(comp_pair.first);
+        kg_to_ext = comp_pair.second;
+        break;
+      case CAUCHY :
+        break;
+      default :
+        // throw an error
+        break;
+
+      if(kg_to_ext > 0 ) {
         absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
       }
     }

@@ -358,5 +358,8 @@ protected:
   /// Boolean indicates whether to incorporate sorption. (True = yes )
   bool kd_limited_;
 
+  /// The type of boundary condition with which to treat the inner bc
+  BCType bc_type_;
+
 };
 #endif

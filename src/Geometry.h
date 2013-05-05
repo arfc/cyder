@@ -17,6 +17,9 @@ typedef double Length;
 /// type definition for Volume in meters^3
 typedef double Volume;
 
+/// type definition for Area in meters^2
+typedef double Area;
+
 /// Enum for type of boundary.
 enum BoundaryType {INNER, OUTER};
 
@@ -147,6 +150,24 @@ public:
      @return the volume of a solid cylinder with radius=radius and length=length
     */
   Volume solid_volume(Radius radius, Length length); 
+
+  /**
+     Returns the surface area of the cylinder represented by this geometry.
+     
+     @return the surface area of the cylinder
+    */
+  Area surface_area();
+
+  /**
+     Returns the surface area of a cylinder, not explicitly the one 
+     represented by this geometry.
+     
+     @param radius the (outer) radius of the cylindrical volume [m]
+     @param length the length of the cylindrical volume [m]
+     @return the surface area of a cylinder with radius=radius and length=length
+    */
+  Area surface_area(Radius radius, Length length);
+
 
 protected:
 

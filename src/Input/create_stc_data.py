@@ -4,11 +4,12 @@ import os
 
 class DataRange :
     """This class describes the data ranges for each column"""
-    _alpha_range=list([1,2,3,4,5,6,7,8,9,10,20,30])
-    _k_range=list([0.1, 0.25, 0.5, 1., 2.5, 5.])
-    _spacing_range=list([2, 5,10, 15, 20, 25, 50])
+    _alpha_range=list(["%.8f" % (0.0000001*x) for x in 
+        [1.,2.,3.,4.,5.,6.,7.,8.,9.,10., 20.]])
+    _k_range=list([0.1, 0.5, 1., 1.5, 2, 2.5, 3., 3.5, 4.0, 4.5])
+    _spacing_range=list([2., 5., 10., 15., 20., 25., 50.])
     _r_calc_range=list([0.1, 0.25, 0.5, 1., 2., 5.])
-    _iso_range=list([ 96243, 96244, 96245, 96246,
+    _iso_range=list([ 96242, 96243, 96244, 96245, 96246,
         95241, 95243, 
         94238, 94240, 94241, 94242,
         55134, 55135, 55137, 

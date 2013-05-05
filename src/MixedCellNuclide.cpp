@@ -22,6 +22,7 @@ using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MixedCellNuclide::MixedCellNuclide():
+  bc_type_(LAST_BC_TYPE),
   deg_rate_(0),
   tot_deg_(0),
   last_degraded_(-1),
@@ -39,6 +40,7 @@ MixedCellNuclide::MixedCellNuclide():
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MixedCellNuclide::MixedCellNuclide(QueryEngine* qe) : 
+  bc_type_(LAST_BC_TYPE),
   deg_rate_(0),
   tot_deg_(0),
   last_degraded_(-1),
@@ -66,6 +68,18 @@ void MixedCellNuclide::initModuleMembers(QueryEngine* qe){
   set_kd_limited(lexical_cast<bool>(qe->getElementContent("kd_limited")));
   set_porosity(lexical_cast<double>(qe->getElementContent("porosity")));
   set_sol_limited(lexical_cast<bool>(qe->getElementContent("sol_limited")));
+  QueryEngine* bc_type_qe = qe->queryElement("bc_type");
+  string bc_type_string;
+  list <string> choices;
+  list <string>::iterator it;
+  choices.push_back("SOURCE_TERM");
+  choices.push_back("NEUMANN");
+  choices.push_back("CAUCHY");
+  for( it=choices.begin(); it!=choices.end(); ++it){
+    if( bc_type_qe->nElementsMatchingQuery(*it) ==1 ) {
+      bc_type_ = enumerateBCType(*it);
+    }
+  }
   LOG(LEV_DEBUG2,"GRDRNuc") << "The MixedCellNuclide Class initModuleMembers(qe) function has been called";;
 }
 
@@ -246,19 +260,21 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   IsoConcMap::iterator it;
   for( it=c_int.begin(); it != c_int.end(); ++it){
     iso = (*it).first;
+    Elem elem = iso/1000;
     if( c_ext.count(iso) != 0) {  
       // in both
-      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
+      to_ret[iso] = mat_table_->D(elem)*calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
     } else {  
       // in c_int_only
-      to_ret[iso] = calc_conc_grad(0, c_int[iso], r_ext, r_int);
+      to_ret[iso] = mat_table_->D(elem)*calc_conc_grad(0, c_int[iso], r_ext, r_int);
     }
   }
   for( it=c_ext.begin(); it != c_ext.end(); ++it){
     iso = (*it).first;
+    Elem elem = iso/1000;
     if( c_int.count(iso) == 0) { 
       // in c_ext only
-      to_ret[iso] = calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
+      to_ret[iso] = mat_table_->D(elem)*calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
     }
   }
 
@@ -337,12 +353,39 @@ void MixedCellNuclide::update_vec_hist(int the_time){
 void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
+  double sa;
+  IsoConcMap conc_map;
+  ConcGradMap grad_map;
+  pair<CompMapPtr, double> comp_pair;
+  CompMapPtr comp_to_ext;
+  double kg_to_ext;
+
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    source_term = (*daughter)->source_term_bc();
-    if( source_term.second > 0 ){
-      CompMapPtr comp_to_ext = CompMapPtr(source_term.first.comp());
-      double kg_to_ext=source_term.second;
-      absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
+    switch (bc_type_) {
+      case SOURCE_TERM :
+        source_term = (*daughter)->source_term_bc();
+        if( source_term.second > 0 ){
+          comp_to_ext = CompMapPtr(source_term.first.comp());
+          kg_to_ext=source_term.second;
+        }
+        break;
+      case NEUMANN :
+        sa = (*daughter)->geom()->surface_area();
+        grad_map = (*daughter)->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
+        conc_map = MatTools::scaleConcMap(grad_map, sa);
+        comp_pair = MatTools::conc_to_comp_map(conc_map, 1);
+        comp_to_ext = CompMapPtr(comp_pair.first);
+        kg_to_ext = comp_pair.second;
+        break;
+      case CAUCHY :
+        break;
+      default :
+        // throw an error
+        break;
+
+      if(kg_to_ext > 0 ) {
+        absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
+      }
     }
   }
 }

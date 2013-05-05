@@ -69,6 +69,7 @@ MixedCellNuclidePtr MixedCellNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << adv_vel_ << "</advective_velocity>"
+     << "  <bc_type><SOURCE_TERM/></bc_type>"
      << "  <degradation>" << deg_rate_ << "</degradation>"
      << "  <kd_limited>" << kd_limited_ << "</kd_limited>"
      << "  <porosity>" << porosity_ << "</porosity>"
@@ -284,7 +285,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Neumann
-  double expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
+  double expected_neumann= -(mat_table_->D(92))*expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
   // Cauchy
   double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere
@@ -307,7 +308,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDRhalf){
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Neumann 
-  expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
+  expected_neumann= -(mat_table_->D(92))*expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2, u235_));
   // Cauchy
   expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix
@@ -373,7 +374,7 @@ TEST_F(MixedCellNuclideTest, transportNuclidesDR1){
   // Dirichlet
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Neumann
-  double expected_neumann= -expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
+  double expected_neumann= -(mat_table_->D(92))*expected_conc/(outer_radius*2 - mixed_cell_ptr_->geom()->radial_midpoint());
   EXPECT_FLOAT_EQ(expected_neumann, nuc_model_ptr_->neumann_bc(zero_conc_map, outer_radius*2,u235_));
   // Cauchy
   double expected_cauchy = -mat_table_->D(u_)*expected_neumann + adv_vel_*expected_conc; // @TODO fix units everywhere

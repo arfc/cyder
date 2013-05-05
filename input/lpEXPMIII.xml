@@ -76,7 +76,7 @@
               <porosity>0.1</porosity>
               <transit_time>1</transit_time>
               <formulation>
-                <EM/>
+                <EXPM/>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -100,7 +100,7 @@
               <porosity>0.1</porosity>
               <transit_time>1</transit_time>
               <formulation>
-                <EM/>
+                <EXPM/>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -124,7 +124,7 @@
               <porosity>0.1</porosity>
               <transit_time>1</transit_time>
               <formulation>
-                <EM/>
+                <EXPM/>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>
@@ -147,7 +147,7 @@
               <porosity>0.0</porosity>
               <transit_time>1</transit_time>
               <formulation>
-                <EM/>
+                <EXPM/>
               </formulation>
             </LumpedNuclide>
           </nuclidemodel>

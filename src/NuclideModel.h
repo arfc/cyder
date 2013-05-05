@@ -23,7 +23,17 @@ enum NuclideModelType {
   MIXEDCELL_NUCLIDE, 
   ONEDIMPPM_NUCLIDE, 
   STUB_NUCLIDE, 
+
   LAST_NUCLIDE};
+/**
+   enumerated list of boundary condition treatment types 
+ */
+enum BCType { 
+  SOURCE_TERM,
+  DIRICHLET,
+  NEUMANN,
+  CAUCHY,
+  LAST_BC_TYPE};
 
 /** 
    type definition for a map from times to IsoConcMap
@@ -393,6 +403,30 @@ public:
 
   virtual double V_ff()=0;
   virtual double V_T()=0;
+
+  /// spits out a number instead of a BCType
+  virtual BCType enumerateBCType(std::string type_name) {
+    BCType to_ret = LAST_BC_TYPE;
+    std::string bc_type_names[] = {"SOURCE_TERM", "DIRICHLET", "NEUMANN", "CAUCHY"};
+    for(int type=0; type < LAST_BC_TYPE; type++){
+      if( bc_type_names[type] == type_name ){
+          to_ret = (BCType)type;
+      } 
+    }
+    if( to_ret == LAST_BC_TYPE ) {
+      std::string err_msg = "'";
+      err_msg += type_name;
+      err_msg += "' does not name a valid BCType.\n";
+      err_msg +="Options are:\n";
+      for(int name=0; name<LAST_BC_TYPE; name++){
+        err_msg += bc_type_names[name];
+        err_msg += "\n";
+      }
+      throw CycException(err_msg);
+    }
+    return to_ret;
+  }
+
 
 protected:
   /// A vector of the wastes contained by this component

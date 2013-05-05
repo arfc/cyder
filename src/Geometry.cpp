@@ -132,3 +132,15 @@ Volume Geometry::solid_volume(Radius radius, Length length){
   return pi*radius*radius*length;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+Area Geometry::surface_area(){
+  return surface_area(outer_radius_, length_);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+Area Geometry::surface_area(Radius radius, Length length){
+  const Volume pi = boost::math::constants::pi<double>();
+  return 2*pi*radius*(radius + length);
+}
+
+
