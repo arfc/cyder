@@ -36,7 +36,7 @@ class ContourPlot(object) :
     """
     _x = None
     """
-    
+
     """
     _y = None
     """
@@ -275,6 +275,7 @@ class ThermalPlotData(object) :
         table_name="mat"+str(matid)
         query =( "SELECT "+table_name+".time , "+table_name+".stc  FROM "+table_name+
         " WHERE "+table_name+".iso == "+str(iso))
+        print(query)
         q = self.execute(query)
         for row in q :
             t.append(row[0])
@@ -318,7 +319,7 @@ class ThermalPlotData(object) :
         clf()
 
     def set_up_and_plot(self, a, k, s, r):
-        title = "Maximum Temperature Sensitivity at "
+        title = "Maximum Temperature Sensitivity at"
         inparams = {
                 "a" : a, 
                 "k" : k, 
@@ -328,8 +329,6 @@ class ThermalPlotData(object) :
         y_range = None
         default = ''
         max_t=[]
-        x_vals=[]
-        y_vals=[]
         for key, v in inparams.iteritems() :
           if type(v) == ListType and x_range == None :
               x_key = key
