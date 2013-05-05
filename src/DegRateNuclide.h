@@ -254,6 +254,20 @@ public:
      */
   std::pair<CompMapPtr, double> inner_neumann(NuclideModelPtr daughter); 
 
+  /** 
+     Determines what to remove from a daughter nuclide, relying on dirichlet bc.
+
+     @param daughter nuclide_model of an internal component.
+     */
+  std::pair<CompMapPtr, double> inner_dirichlet(NuclideModelPtr daughter); 
+
+  /** 
+     Determines what to remove from a daughter nuclide, relying on cauchy bc.
+
+     @param daughter nuclide_model of an internal component.
+     */
+  std::pair<CompMapPtr, double> inner_cauchy(NuclideModelPtr daughter); 
+
   /// returns the total degradation of the component
   const double tot_deg() const {return tot_deg_;};
 

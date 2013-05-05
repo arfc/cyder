@@ -366,8 +366,18 @@ void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
           kg_to_ext=source_term.second;
         }
         break;
+      case DIRICHLET :
+        comp_pair = inner_dirichlet(*daughter);
+        comp_to_ext = CompMapPtr(comp_pair.first);
+        kg_to_ext = comp_pair.second;
+        break;
       case NEUMANN :
         comp_pair = inner_neumann(*daughter);
+        comp_to_ext = CompMapPtr(comp_pair.first);
+        kg_to_ext = comp_pair.second;
+        break;
+      case CAUCHY :
+        comp_pair = inner_cauchy(*daughter);
         comp_to_ext = CompMapPtr(comp_pair.first);
         kg_to_ext = comp_pair.second;
         break;
@@ -387,13 +397,34 @@ void MixedCellNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-pair<CompMapPtr,double> MixedCellNuclide::inner_neumann(NuclideModelPtr daughter) {
+pair<CompMapPtr, double> MixedCellNuclide::inner_neumann(NuclideModelPtr daughter){
   IsoConcMap conc_map;
   ConcGradMap grad_map;
   pair<CompMapPtr, double> comp_pair;
-  sa =1;// daughter->geom()->surface_area();
+  //flux area perpendicular to flow, timeps porosit, times D.
+  double int_factor =2*porosity()*(daughter->geom()->length())*(daughter->geom()->outer_radius());;
   grad_map = daughter->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
-  conc_map = MatTools::scaleConcMap(grad_map, tot_deg()*sa);
+  conc_map = MatTools::scaleConcMap(grad_map, tot_deg()*int_factor);
+  IsoConcMap disp_map;
+  int iso;
+  IsoConcMap::iterator it;
+  for(it=conc_map.begin(); it!=conc_map.end(); ++it) {
+    if((*it).second >= 0.0){
+      iso=(*it).first;
+      disp_map[iso] = conc_map[iso]*mat_table_->D(iso);
+    }
+  }
+  comp_pair = MatTools::conc_to_comp_map(disp_map, 1);
+  return comp_pair; 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+pair<CompMapPtr, double> MixedCellNuclide::inner_dirichlet(NuclideModelPtr daughter){
+  IsoConcMap conc_map;
+  pair<CompMapPtr, double> comp_pair;
+  //flux area perpendicular to flow, times porosity, times v.
+  double int_factor =2*v()*porosity()*(daughter->geom()->length())*(daughter->geom()->outer_radius());;
+  conc_map = MatTools::scaleConcMap(daughter->dirichlet_bc(), tot_deg()*int_factor);
   IsoConcMap::iterator it;
   for(it=conc_map.begin(); it!=conc_map.end(); ++it) {
     if((*it).second < 0.0){
@@ -401,7 +432,20 @@ pair<CompMapPtr,double> MixedCellNuclide::inner_neumann(NuclideModelPtr daughter
     }
   }
   comp_pair = MatTools::conc_to_comp_map(conc_map, 1);
-  return comp_pair;
+  return comp_pair; 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+pair<CompMapPtr, double> MixedCellNuclide::inner_cauchy(NuclideModelPtr daughter){
+  pair<CompMapPtr, double> to_ret;
+  pair<CompMapPtr, double> neumann = inner_neumann(daughter);
+  pair<CompMapPtr, double> dirichlet = inner_dirichlet(daughter);
+  double n_kg = neumann.second;
+  double d_kg = dirichlet.second;
+  IsoVector n_vec = IsoVector(neumann.first);
+  IsoVector d_vec = IsoVector(dirichlet.first);
+  n_vec.mix(d_vec, n_kg/d_kg);
+  return make_pair(n_vec.comp(),n_kg+d_kg);
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double MixedCellNuclide::sorb(int the_time, int iso, double mass){

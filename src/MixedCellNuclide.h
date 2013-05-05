@@ -258,6 +258,22 @@ public:
      */
   std::pair<CompMapPtr, double> inner_neumann(NuclideModelPtr daughter);
 
+  /** 
+     Determines what IsoVector to remove from the daughter nuclide model
+     based on the dirichlet condition.
+
+     @param daughter nuclide_model of an internal component. there may be many.
+     */
+  std::pair<CompMapPtr, double> inner_dirichlet(NuclideModelPtr daughter);
+
+  /** 
+     Determines what IsoVector to remove from the daughter nuclide model
+     based on the cauchy condition.
+
+     @param daughter nuclide_model of an internal component. there may be many.
+     */
+  std::pair<CompMapPtr, double> inner_cauchy(NuclideModelPtr daughter);
+
   /**
      Update the isotopic vector history to incorporate sorption
 
