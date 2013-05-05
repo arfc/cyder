@@ -65,9 +65,10 @@ void DegRateNuclide::initModuleMembers(QueryEngine* qe){
   string bc_type_string;
   list <string> choices;
   list <string>::iterator it;
+  choices.push_back("CAUCHY");
+  choices.push_back("DIRICHLET");
   choices.push_back("SOURCE_TERM");
   choices.push_back("NEUMANN");
-  choices.push_back("CAUCHY");
   for( it=choices.begin(); it!=choices.end(); ++it) {
     if( bc_type_qe->nElementsMatchingQuery(*it) == 1){
       set_bc_type(enumerateBCType(*it));
