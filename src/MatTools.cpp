@@ -62,7 +62,7 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, d
     mat_list.pop_back();
   }
   mat_rsrc_ptr to_ret = left_over->extract(comp_to_rem, kg_to_rem, KG);
-  if( left_over->mass(KG) + kg_to_rem >= kg_to_rem + cyclus::eps_rsrc()) {
+  if( left_over->mass(KG)/kg_to_rem >= cyclus::eps_rsrc()) {
       mat_list.push_back(left_over);
   }
   return to_ret;
