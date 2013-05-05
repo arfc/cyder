@@ -262,7 +262,7 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   IsoConcMap::iterator it;
   for( it=c_int.begin(); it != c_int.end(); ++it){
     iso = (*it).first;
-    Elem elem = iso/1000;
+    Elem elem = int(iso/1000.);
     if( c_ext.count(iso) != 0) {  
       // in both
       to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
@@ -273,7 +273,7 @@ ConcGradMap MixedCellNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   }
   for( it=c_ext.begin(); it != c_ext.end(); ++it){
     iso = (*it).first;
-    Elem elem = iso/1000;
+    Elem elem = int(iso/1000.);
     if( c_int.count(iso) == 0) { 
       // in c_ext only
       to_ret[iso] = calc_conc_grad(c_ext[iso], 0, r_ext, r_int);
@@ -293,7 +293,7 @@ IsoFluxMap MixedCellNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   Elem elem;
   for( it = neumann.begin(); it != neumann.end(); ++it){
     iso = (*it).first;
-    elem = iso/1000;
+    elem = int(iso/1000);
     to_ret.insert(make_pair(iso, -mat_table_->D(elem)*(*it).second + v()*shared_from_this()->dirichlet_bc(iso)));
   }
   return to_ret;
@@ -411,7 +411,7 @@ pair<CompMapPtr, double> MixedCellNuclide::inner_neumann(NuclideModelPtr daughte
   for(it=conc_map.begin(); it!=conc_map.end(); ++it) {
     if((*it).second >= 0.0){
       iso=(*it).first;
-      disp_map[iso] = conc_map[iso]*mat_table_->D(iso);
+      disp_map[iso] = conc_map[iso]*mat_table_->D(int(iso/1000.));
     }
   }
   comp_pair = MatTools::conc_to_comp_map(disp_map, 1);

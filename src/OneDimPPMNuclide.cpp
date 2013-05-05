@@ -5,9 +5,12 @@
 #include <iostream>
 #include <fstream>
 #include <deque>
+#include <vector>
 #include <time.h>
 #include <boost/lexical_cast.hpp>
 #include <boost/math/special_functions/erf.hpp>
+#include <boost/numeric/odeint.hpp>
+
 
 #include "CycException.h"
 #include "Logger.h"
@@ -254,9 +257,13 @@ IsoConcMap OneDimPPMNuclide::conc_profile(IsoConcMap C_0, Radius r, int dt){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, double r, Iso iso, int dt) {
+  B = 
+  double B_1
+
+
   double D_L = mat_table_->D(iso/1000);
   double pi = boost::math::constants::pi<double>();
-  double term_1_frac = (r-v_*dt)/2*pow(D_L*dt,0.5);
+  double term_1_frac = (r-v_*dt)/2*pow(D_L*R*dt,0.5);
   double term_1_scalar = boost::math::erfc(term_1_frac);
   double term_2_radical = (pow(v_,2)*dt/pi/D_L);
   double term_2_exp = exp( -pow(r-v_*dt,2)/(4*D_L*dt)); 
@@ -332,7 +339,7 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
   std::vector<NuclideModelPtr>::iterator daughter;
   std::pair<IsoVector, double> source_term;
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    source_term = (*daughter)->source_term_bc();
+    cauchy = (*daughter)->cauchy_bc(dirichlet_bc());
     if( source_term.second > 0 ){
       CompMapPtr comp_to_ext = CompMapPtr(source_term.first.comp());
       double kg_to_ext=source_term.second;

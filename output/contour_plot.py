@@ -331,7 +331,7 @@ class ContourData(object) :
 
 from argparse import ArgumentParser
 def main():
-    arg_parser = ArgumentParset(description="Plots 2D data from the"
+    arg_parser = ArgumentParser(description="Plots 2D data from the"
     " contaminants table, when parameterized by data in the nucparams"
     " table.")
     arg_parser.add_argument("-r", metavar="root", type=str, nargs=1, 
@@ -340,20 +340,29 @@ def main():
             dest="x_param", help="This is the x parameter name in the sqlite database.")
     arg_parser.add_argument("-xl", metavar="x_label", type=str, nargs=1, 
             dest="x_label", help="This is the x parameter name as plotted")
+    arg_parser.add_argument("-yp", metavar="y_param", type=str, nargs=1, 
+            dest="y_param", help="This is the y parameter name in the sqlite database.")
     arg_parser.add_argument("-yl", metavar="y_label", type=str, nargs=1, 
             dest="y_label", help="This is the y label name as plotted")
+    arg_parser.add_argument("-zl", metavar="z_label", type=str, nargs=1, 
+            dest="z_label", help="This is the z label name as plotted")
+    arg_parser.add_argument("-n", metavar="ngrid", type=int, nargs=1, 
+            dest="ngrid", help="This number adjusts the contour grid resolution")
     arg_parser.add_argument("-t", metavar="title", type=str, nargs=1, 
             dest="title", help="This is the title of the plot")
     arg_parser.add_argument("-o", metavar="filename", type=str, nargs=1, 
             dest="filename", help="This is the output filename. Include eps.")
     args=arg_parser.parse_args()
-    LinearData(
-            args.root,
-            args.xparam,
-            args.xlabel,
-            args.ylabel,
-            args.title,
-            args.filename
+    ContourData(
+            root = args.root[0],
+            xparam = args.x_param[0],
+            xlabel = args.x_label[0],
+            yparam = args.y_param[0],
+            ylabel = args.y_label[0],
+            zlabel = args.z_label[0],
+            ngrid = args.ngrid[0],
+            title = args.title[0],
+            filename = args.filename[0]
             )
 
 if __name__=="__main__" :
