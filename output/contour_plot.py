@@ -191,7 +191,7 @@ class ContourPlot(object) :
 
     def set_xi(self, ngridx) :
         if self._xi is None :
-            spacing = 10./ngridx
+            spacing = self._x_max/ngridx
             self._xi = np.linspace(self._x_min-spacing, self._x_max+spacing, ngridx)
         return self._xi
 
@@ -203,7 +203,7 @@ class ContourPlot(object) :
 
     def set_yi(self, ngridx, ngridy) :
         if self._yi is None :
-            spacing = 10./ngridx
+            spacing = self._y_max/ngridx
             self._yi = np.linspace(self._y_min-spacing, self._y_max+spacing, ngridy)
         return self._yi
 
