@@ -257,7 +257,7 @@ public:
      @param iso the isotope whose concentration is being queried [-]
      @param dt the change in time since C_0 was calculated [timestep]
     */
-  double calculate_conc(IsoConcMap C_0, double r_calc, int iso, int dt);
+  double calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r_calc, int iso, int t0, int t);
 
 
   /// sets the porosity_ variable, the percent void of the medium 

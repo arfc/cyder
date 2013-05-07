@@ -250,13 +250,14 @@ IsoConcMap OneDimPPMNuclide::conc_profile(IsoConcMap C_0, Radius r, int dt){
   Iso iso;
   for(it=C_0.begin(); it!=C_0.end(); ++it){
     iso = (*it).first;
-    to_ret[iso] = calculate_conc(C_0, r, iso, dt);
+    // @TODO FIX C_0 to C_i
+    to_ret[iso] = calculate_conc(C_0,C_0, r, iso, dt, dt+dt);
   }
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, double r, Iso iso, int t, int t0) {
+double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
   double D = mat_table_->D(iso/1000);
   double pi = boost::math::constants::pi<double>();
   //@TODO add sorption to this model. For now, R=1, no sorption. 
@@ -275,9 +276,9 @@ double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, double r, Iso iso, int t
   double B3_frac = (R*r + v()*t)/(2*pow(D*R*t,0.5));
   double B3_factor = -0.5*(1+(v()*r)/(D) + (v()*v()*t)/(D*R));
   double B3 = B3_factor*exp(B3_exp)*boost::math::erfc(B3_frac);  ;
-  double B = Ci()[iso]*(B1 + B2 + B3);
+  double B = C_i[iso]*(B1 + B2 + B3);
 
-  double to ret = C_0()[iso]*A + B
+  double to_ret = C_0[iso]*A + B;
   
   return to_ret;
 }

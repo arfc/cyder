@@ -14,7 +14,7 @@
 
 #include "IsoVector.h"
 #include "Material.h"
-
+#define SECSPERMONTH 2629740.0
 /**
    type definition for radiotoxicity in Sv
   */

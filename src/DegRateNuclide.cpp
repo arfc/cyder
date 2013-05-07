@@ -182,11 +182,8 @@ pair<IsoVector, double> DegRateNuclide::source_term_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
   IsoConcMap dirichlet, whole_vol;
-  whole_vol = conc_hist(last_degraded());
-  IsoConcMap::const_iterator it;
-  for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
-    dirichlet[(*it).first] = tot_deg()*(*it).second ;
-  }
+  pair<IsoVector, double> st = source_term_bc();
+  dirichlet = MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, V_ff());
   return dirichlet;
 }
 
@@ -194,7 +191,7 @@ IsoConcMap DegRateNuclide::dirichlet_bc(){
 ConcGradMap DegRateNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   ConcGradMap to_ret;
 
-  IsoConcMap c_int = conc_hist(last_degraded());
+  IsoConcMap c_int = dirichlet_bc();
   Radius r_int = geom_->radial_midpoint();
 
   int iso; 
@@ -204,10 +201,10 @@ ConcGradMap DegRateNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
     Elem elem = int(iso/1000);
     if( c_ext.count(iso) != 0) {  
       // in both
-      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso]*tot_deg(), r_ext, r_int);
+      to_ret[iso] = calc_conc_grad(c_ext[iso], c_int[iso], r_ext, r_int);
     } else {  
       // in c_int_only
-      to_ret[iso] = calc_conc_grad(0, c_int[iso]*tot_deg(), r_ext, r_int);
+      to_ret[iso] = calc_conc_grad(0, c_int[iso], r_ext, r_int);
     }
   }
   for( it=c_ext.begin(); it != c_ext.end(); ++it){
@@ -339,7 +336,7 @@ pair<CompMapPtr, double> DegRateNuclide::inner_neumann(NuclideModelPtr daughter)
   ConcGradMap grad_map;
   pair<CompMapPtr, double> comp_pair;
   //flux area perpendicular to flow, timeps porosit, times D.
-  double int_factor =2*(daughter->geom()->length())*(daughter->geom()->outer_radius());;
+  double int_factor =2*SECSPERMONTH*(daughter->geom()->length())*(daughter->geom()->outer_radius());;
   grad_map = daughter->neumann_bc(dirichlet_bc(), geom()->radial_midpoint());
   conc_map = MatTools::scaleConcMap(grad_map, tot_deg()*int_factor);
   IsoConcMap disp_map;
@@ -348,7 +345,14 @@ pair<CompMapPtr, double> DegRateNuclide::inner_neumann(NuclideModelPtr daughter)
   for(it=conc_map.begin(); it!=conc_map.end(); ++it) {
     if((*it).second >= 0.0){
       iso=(*it).first;
-      disp_map[iso] = conc_map[iso]*mat_table_->D(int(iso/1000.));
+      disp_map[iso] = (*it).second*mat_table_->D(int(iso/1000.));
+      cout << disp_map[iso];
+      LOG(LEV_ERROR,"GRDRNuc") << "the conc is " << (*it).second;;
+      LOG(LEV_ERROR,"GRDRNuc") << "trying to remove " << disp_map[iso] << " kg of iso " << iso ;;
+      LOG(LEV_ERROR,"GRDRNuc") << "the disp coeff is " << mat_table_->D(iso/1000.) ;;
+      LOG(LEV_ERROR,"GRDRNuc") << "the intfactor is " << int_factor ;;
+      LOG(LEV_ERROR,"GRDRNuc") << "the tot_deg is " << tot_deg() ;;
+      LOG(LEV_ERROR,"GRDRNuc") << "the grad_map is " << grad_map[iso] ;;
     }
   }
   comp_pair = MatTools::conc_to_comp_map(disp_map, 1);
@@ -360,8 +364,9 @@ pair<CompMapPtr, double> DegRateNuclide::inner_dirichlet(NuclideModelPtr daughte
   IsoConcMap conc_map;
   pair<CompMapPtr, double> comp_pair;
   //flux area perpendicular to flow, times v.
-  double int_factor =2*v()*(daughter->geom()->length())*(daughter->geom()->outer_radius());;
-  conc_map = MatTools::scaleConcMap(daughter->dirichlet_bc(), tot_deg()*int_factor);
+  
+  double int_factor =2*SECSPERMONTH*v()*(daughter->geom()->length())*(daughter->geom()->outer_radius());;
+  conc_map = MatTools::scaleConcMap(daughter->dirichlet_bc(), int_factor);
   IsoConcMap::iterator it;
   for(it=conc_map.begin(); it!=conc_map.end(); ++it) {
     if((*it).second < 0.0){
@@ -382,9 +387,7 @@ pair<CompMapPtr, double> DegRateNuclide::inner_cauchy(NuclideModelPtr daughter){
   IsoVector n_vec = IsoVector(neumann.first);
   IsoVector d_vec = IsoVector(dirichlet.first);
   n_vec.mix(d_vec, n_kg/d_kg);
-  return make_pair(n_vec.comp(),n_kg+d_kg);
+  return make_pair(CompMapPtr(n_vec.comp()),n_kg+d_kg);
 }
-
-
 
 
