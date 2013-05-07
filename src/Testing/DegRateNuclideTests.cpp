@@ -217,7 +217,7 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   deg_rate_= 0.5;
   EXPECT_NO_THROW(deg_rate_ptr_->set_geom(geom_));
   double expected_src = deg_rate_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
+  double expected_conc = expected_src/(deg_rate_*(nuc_model_ptr_->geom()->volume()));
   double expected_conc_w_vel = adv_vel_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
@@ -264,6 +264,8 @@ TEST_F(DegRateNuclideTest, transportNuclidesDRhalf){
   // Source Term
   EXPECT_FLOAT_EQ(expected_src, nuc_model_ptr_->source_term_bc().second);
   // Dirichlet
+  // the volume is now larger
+  expected_conc = expected_src/(time_*deg_rate_*(nuc_model_ptr_->geom()->volume()));
   EXPECT_FLOAT_EQ(expected_conc, nuc_model_ptr_->dirichlet_bc(u235_));
   // Neumann 
   expected_neumann= -expected_conc/(outer_radius*2 - deg_rate_ptr_->geom()->radial_midpoint());
