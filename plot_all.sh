@@ -45,3 +45,7 @@ cd ../lpEXPM_t_t
 python ../../output/line_plot.py -r 'lpEXPM' -xp 'transit_time' -xl 'Transit Time $[month]$' -yl 'Mass in Far Field $[kg]$' -t 'Transit Time Sensitivity' -o 'lpEXPM_t_t.eps'
 cd ../lpPFM_t_t
 python ../../output/line_plot.py -r 'lpPFM' -xp 'transit_time' -xl 'Transit Time $[month]$' -yl 'Mass in Far Field $[kg]$' -t 'Transit Time Sensitivity' -o 'lpPFM_t_t.eps'
+
+
+cd ../deg_cbc
+python ../../output/contour_plot.py -r 'deg_cbc' -xp 'ref_disp' -xl 'Reference Diffusivity $[m^2/s]$' -yp 'advective_velocity' -yl 'Vertical Advective Velocity $[m/s]$' -zl 'Mass in Far Field $[kg]$' -n 200 -t 'Sensitivity to Advection and Diffusion Coeffients' -o 'cbc_deg.eps'

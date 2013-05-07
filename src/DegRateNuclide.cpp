@@ -181,14 +181,9 @@ pair<IsoVector, double> DegRateNuclide::source_term_bc(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
-  IsoConcMap dirichlet, whole_vol;
-  //whole_vol = conc_hist(last_degraded());
-  //IsoConcMap::const_iterator it;
-  //for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
-  //  dirichlet[(*it).first] = tot_deg()*(*it).second ;
-  //}
+  IsoConcMap dirichlet;
   pair<IsoVector, double> st = shared_from_this()->source_term_bc();
-  dirichlet = MatTools::comp_to_conc_map(st.first.comp(), st.second, V_ff());
+  dirichlet = MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, V_ff());
   return dirichlet;
 }
 
@@ -348,16 +343,9 @@ pair<CompMapPtr, double> DegRateNuclide::inner_neumann(NuclideModelPtr daughter)
   IsoConcMap::iterator it;
   int iso;
   for(it=conc_map.begin(); it!=conc_map.end(); ++it) {
-    if((*it).second >= 0.0){
+    if((*it).second < 0.0){
       iso=(*it).first;
-      disp_map[iso] = (*it).second*mat_table_->D(int(iso/1000.));
-      cout << disp_map[iso];
-      LOG(LEV_ERROR,"GRDRNuc") << "the conc is " << (*it).second;;
-      LOG(LEV_ERROR,"GRDRNuc") << "trying to remove " << disp_map[iso] << " kg of iso " << iso ;;
-      LOG(LEV_ERROR,"GRDRNuc") << "the disp coeff is " << mat_table_->D(iso/1000.) ;;
-      LOG(LEV_ERROR,"GRDRNuc") << "the intfactor is " << int_factor ;;
-      LOG(LEV_ERROR,"GRDRNuc") << "the tot_deg is " << tot_deg() ;;
-      LOG(LEV_ERROR,"GRDRNuc") << "the grad_map is " << grad_map[iso] ;;
+      disp_map[iso] = -mat_table_->D(iso/1000.)*(*it).second;
     }
   }
   comp_pair = MatTools::conc_to_comp_map(disp_map, 1);
