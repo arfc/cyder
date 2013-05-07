@@ -297,7 +297,7 @@ public:
   /**
     Returns the last timestamp at which this component was last degraded [integer timestamp]
    */
-  virtual double V_ff(){return MatTools::V_ff(geom_->volume(), 0, tot_deg());};
+  virtual double V_ff(){return MatTools::V_ff(geom_->volume(), 1, tot_deg());};
   virtual double V_T(){return geom_->volume();};
 
   /// Sets the boundary condition type used on the inner boundary 

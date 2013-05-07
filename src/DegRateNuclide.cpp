@@ -182,8 +182,13 @@ pair<IsoVector, double> DegRateNuclide::source_term_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap DegRateNuclide::dirichlet_bc(){
   IsoConcMap dirichlet, whole_vol;
-  pair<IsoVector, double> st = source_term_bc();
-  dirichlet = MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, V_ff());
+  //whole_vol = conc_hist(last_degraded());
+  //IsoConcMap::const_iterator it;
+  //for( it=whole_vol.begin(); it!=whole_vol.end(); ++it){
+  //  dirichlet[(*it).first] = tot_deg()*(*it).second ;
+  //}
+  pair<IsoVector, double> st = shared_from_this()->source_term_bc();
+  dirichlet = MatTools::comp_to_conc_map(st.first.comp(), st.second, V_ff());
   return dirichlet;
 }
 
