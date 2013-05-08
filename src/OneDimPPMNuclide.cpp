@@ -152,11 +152,11 @@ pair<IsoVector, double> OneDimPPMNuclide::source_term_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::dirichlet_bc(){
   pair<IsoVector, double>sum_pair = source_term_bc(); 
-  CompMapPtr comp_map = sum_pair.first.comp();
+  CompMapPtr comp_map = CompMapPtr(sum_pair.first.comp());
   double mass = sum_pair.second;
   IsoConcMap to_ret;
   to_ret[92235] =0;
-  CompMap::iterator it;
+  CompMap::const_iterator it;
   for( it=(*comp_map).begin(); it!=(*comp_map).end(); ++it){
     if(V_ff() >0 ){
       to_ret[(*it).first]= mass*(*it).second/(V_ff());
@@ -295,7 +295,7 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
   double b=geom()->outer_radius();
 
   vector<double> calc_points = MatTools::linspace(a,b,n);
-  std::vector<NuclideModelPtr>::iterator daughter;
+  std::vector<NuclideModelPtr>::const_iterator daughter;
   for(daughter=daughters.begin(); daughter!=daughters.end(); ++daughter){
     std::map<double, IsoConcMap> fmap;
     // m(tn-1) = current contaminants
@@ -336,14 +336,14 @@ IsoConcMap OneDimPPMNuclide::trap_rule(double a, double b, int n, map<double, Is
   }
   terms.push_back(f_0);
   terms.push_back(f_n);
-  map<double,IsoConcMap>::iterator f;
+  map<double,IsoConcMap>::const_iterator f;
   for(f=fmap.begin(); f!=fmap.end(); ++f){
     double r =(*f).first;
     terms[r] = MatTools::scaleConcMap((*f).second,2*scalar);
   }
   IsoConcMap to_ret; 
   IsoConcMap prev;
-  vector<IsoConcMap>::iterator t;
+  vector<IsoConcMap>::const_iterator t;
   for(t=terms.begin(); t!=terms.end(); ++t){
     to_ret = MatTools::addConcMaps(prev, (*t));
     prev = to_ret;
@@ -386,7 +386,7 @@ void OneDimPPMNuclide::set_rho(double rho){
 IsoConcMap OneDimPPMNuclide::Co(NuclideModelPtr daughter) {
   IsoFluxMap cauchy = daughter->cauchy_bc(dirichlet_bc(), geom()->radial_midpoint());
   IsoConcMap Co;
-  IsoFluxMap::iterator it;
+  IsoFluxMap::const_iterator it;
   for(it=cauchy.begin(); it!=cauchy.end(); ++it){
     Co[(*it).first] = (*it).second/v(); 
   }
