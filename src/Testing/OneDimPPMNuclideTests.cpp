@@ -68,18 +68,18 @@ double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, doub
   double R=1;
   //@TODO convert months to seconds
 
-  double At_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
+  double At_frac = (R*r - v_*t)/(2*pow(D*R*t, 0.5));
   double At = 0.5*boost::math::erfc(At_frac);
-  double Att0_frac = (R*r - v()*t)/(2*pow(D*R*(t-t0), 0.5));
+  double Att0_frac = (R*r - v_*t)/(2*pow(D*R*(t-t0), 0.5));
   double Att0 = 0.5*boost::math::erfc(Att0_frac);
   double A = At - Att0;
-  double B1_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
+  double B1_frac = (R*r - v_*t)/(2*pow(D*R*t, 0.5));
   double B1 = 0.5*boost::math::erfc(B1_frac);
-  double B2_exp = -pow(R*r-v()*t,2)/(4*D*R*t);
-  double B2 = pow(v()*v()*t/(pi*R*D),0.5)*exp(B2_exp);
-  double B3_exp = v()*r/D;
-  double B3_frac = (R*r + v()*t)/(2*pow(D*R*t,0.5));
-  double B3_factor = -0.5*(1+(v()*r)/(D) + (v()*v()*t)/(D*R));
+  double B2_exp = -pow(R*r-v_*t,2)/(4*D*R*t);
+  double B2 = pow(v_*v_*t/(pi*R*D),0.5)*exp(B2_exp);
+  double B3_exp = v_*r/D;
+  double B3_frac = (R*r + v_*t)/(2*pow(D*R*t,0.5));
+  double B3_factor = -0.5*(1+(v_*r)/(D) + (v_*v_*t)/(D*R));
   double B3 = B3_factor*exp(B3_exp)*boost::math::erfc(B3_frac);  ;
   double B = C_i[iso]*(B1 + B2 + B3);
 
@@ -95,7 +95,7 @@ IsoConcMap OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, double r, int th
   Iso iso;
   for( it=C_0.begin(); it!=C_0.end(); ++it){
     iso = (*it).first;
-    to_ret[iso] = calculate_conc(C_0, r, iso, the_time);
+    to_ret[iso] = calculate_conc(C_0, C_0,  r, iso, the_time-1, the_time);
   }
   return to_ret;
 }
@@ -237,8 +237,8 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesZero){
 TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){ 
   // if the degradation rate is .5, everything should be released in two years
   porosity_= 0.5;
-  double expected_src = porosity_*test_size_;
-  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume());
+  double expected_src = test_size_;
+  double expected_conc = expected_src/(nuc_model_ptr_->geom()->volume()*porosity_);
   double expected_conc_w_vel = theta_*v_*expected_conc; 
   IsoConcMap zero_conc_map;
   zero_conc_map[92235] = 0;
