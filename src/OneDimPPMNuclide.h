@@ -289,10 +289,7 @@ public:
   /**
      return Co, the source concentration at the inner boundary
     */
-  const IsoConcMap Co() const {return Co_;};
-
-  /// sets the Co_ variable, the source concentration map 
-  void set_Co(IsoConcMap Co);
+  IsoConcMap Co(NuclideModelPtr daughter);
 
   /**
      return bulk density

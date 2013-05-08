@@ -303,7 +303,7 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
     // Ci = C(tn-1)
     for(pt = calc_points.begin(); pt!=calc_points.end(); ++pt){ 
       // C(tn) = f(Co_, Ci_)
-      fmap[(*pt)] = calculate_conc(Co(), Ci(), (*pt), the_time-1, the_time); 
+      fmap[(*pt)] = calculate_conc(Co(*daughter), Ci(), (*pt), the_time-1, the_time); 
     }
     // m(tn) = integrate C_t_n
     IsoConcMap to_ret = trap_rule(a, b, n, fmap);
@@ -381,8 +381,14 @@ void OneDimPPMNuclide::set_rho(double rho){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void OneDimPPMNuclide::set_Co(IsoConcMap Co){
-  Co_=Co;
+IsoConcMap OneDimPPMNuclide::Co(NuclideModelPtr daughter) {
+  IsoFluxMap cauchy = daughter->cauchy_bc(dirichlet_bc(), geom()->radial_midpoint());
+  IsoConcMap Co;
+  IsoFluxMap::iterator it;
+  for(it=cauchy.begin(); it!=cauchy.end(); ++it){
+    Co[(*it).first] = (*it).second/v(); 
+  }
+  return Co;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
