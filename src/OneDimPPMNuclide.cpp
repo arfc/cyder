@@ -74,8 +74,6 @@ NuclideModelPtr OneDimPPMNuclide::copy(const NuclideModel& src){
   set_porosity(src_ptr->porosity());
   set_rho(src_ptr->rho());
   set_v(src_ptr->v());
-  set_Ci(src_ptr->Ci());
-  set_Co(src_ptr->Co());
 
 
   // copy the geometry AND the centroid. It should be reset later.
