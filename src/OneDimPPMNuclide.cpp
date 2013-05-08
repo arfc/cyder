@@ -293,21 +293,25 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
   int n=10;
   double a=geom()->inner_radius();
   double b=geom()->outer_radius();
+  assert(a<b);
 
   vector<double> calc_points = MatTools::linspace(a,b,n);
-  std::vector<NuclideModelPtr>::const_iterator daughter;
+  std::vector<NuclideModelPtr>::iterator daughter;
   for(daughter=daughters.begin(); daughter!=daughters.end(); ++daughter){
-    std::map<double, IsoConcMap> fmap;
+    std::map<double, IsoConcMap> f_map;
     // m(tn-1) = current contaminants
     std::pair<IsoVector, double> m_prev = MatTools::sum_mats(wastes_);
     // Ci = C(tn-1)
     vector<double>::iterator pt;
     for(pt = calc_points.begin(); pt!=calc_points.end(); ++pt){ 
       // C(tn) = f(Co_, Ci_)
-      fmap[(*pt)] = calculate_conc(Co(*daughter), Ci(), (*pt), the_time-1, the_time); 
+      IsoConcMap C0 = Co(*daughter);
+      double r = (*pt);
+      IsoConcMap temp = calculate_conc(C0, Ci(), r, the_time-1, the_time); 
+      f_map.insert(make_pair(r,temp));
     }
     // m(tn) = integrate C_t_n
-    IsoConcMap to_ret = trap_rule(a, b, n, fmap);
+    IsoConcMap to_ret = trap_rule(a, b, n, f_map);
     pair<IsoVector, double> comp_t_n = MatTools::conc_to_comp_map(to_ret, V_ff());
 
     pair<IsoVector, double> m_ij = MatTools::subtractCompMaps(comp_t_n, m_prev);
@@ -317,29 +321,30 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap OneDimPPMNuclide::trap_rule(double a, double b, int n, map<double, IsoConcMap> fmap) {
+IsoConcMap OneDimPPMNuclide::trap_rule(double a, double b, int n, map<double, IsoConcMap> f_map) {
   double scalar = (b-a)/(2*n);
 
   vector<IsoConcMap> terms;
   IsoConcMap f_0;
   IsoConcMap f_n;
+  //assert(f_map.size() == n );
 
-  map<double, IsoConcMap>::iterator it = fmap.find(a);
-  if(it!=fmap.end()){ 
-    f_0 = fmap[a];
-    fmap.erase(it);
+  map<double, IsoConcMap>::iterator it = f_map.find(a);
+  if(it!=f_map.end()){ 
+    f_0 = (*it).second;
+    f_map.erase(it);
   }
-  it = fmap.find(b);
-  if(it!=fmap.end()){ 
-    f_n = fmap[b];
-    fmap.erase(it);
+  it = f_map.find(b);
+  if(it!=f_map.end()){ 
+    f_n = (*it).second;
+    f_map.erase(it);
   }
   terms.push_back(f_0);
   terms.push_back(f_n);
   map<double,IsoConcMap>::const_iterator f;
-  for(f=fmap.begin(); f!=fmap.end(); ++f){
+  for(f=f_map.begin(); f!=f_map.end(); ++f){
     double r =(*f).first;
-    terms[r] = MatTools::scaleConcMap((*f).second,2*scalar);
+    terms.push_back( MatTools::scaleConcMap((*f).second,2*scalar) );
   }
   IsoConcMap to_ret; 
   IsoConcMap prev;
@@ -383,9 +388,10 @@ void OneDimPPMNuclide::set_rho(double rho){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap OneDimPPMNuclide::Co(NuclideModelPtr daughter) {
+IsoConcMap OneDimPPMNuclide::Co(const NuclideModelPtr& daughter) {
   IsoFluxMap cauchy = daughter->cauchy_bc(dirichlet_bc(), geom()->radial_midpoint());
   IsoConcMap Co;
+  Co[92235] = 0;
   IsoFluxMap::const_iterator it;
   for(it=cauchy.begin(); it!=cauchy.end(); ++it){
     Co[(*it).first] = (*it).second/v(); 
@@ -396,7 +402,7 @@ IsoConcMap OneDimPPMNuclide::Co(NuclideModelPtr daughter) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::Ci() {
   pair<IsoVector, double> st = MatTools::sum_mats(wastes_);
-  return MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, V_ff());
+  return MatTools::comp_to_conc_map(st.first.comp(), st.second, V_ff());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::set_Ci(IsoConcMap Ci){

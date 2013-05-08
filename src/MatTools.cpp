@@ -192,7 +192,7 @@ void MatTools::validate_nonzero(double nonzero){
 IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
   MatTools::validate_finite_pos(scalar);
   double orig;
-  IsoConcMap::iterator it;
+  IsoConcMap::const_iterator it;
   for(it = C_0.begin(); it != C_0.end(); ++it) { 
     orig = C_0[(*it).first];
     C_0[(*it).first] = orig*scalar;
@@ -203,7 +203,7 @@ IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
   IsoConcMap to_ret;
-  IsoConcMap::iterator it;
+  IsoConcMap::const_iterator it;
   for(it = orig.begin(); it != orig.end(); ++it) {
     Iso iso=(*it).first;
     if(to_add.find(iso) != to_add.end()) {
@@ -224,7 +224,7 @@ IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 CompMapPtr MatTools::addCompMaps(CompMapPtr orig, CompMapPtr to_add){
   CompMapPtr to_ret = CompMapPtr(new CompMap(MASS));
-  CompMap::iterator it;
+  CompMap::const_iterator it;
   for(it = (*orig).map().begin(); it != (*orig).end(); ++it) {
     Iso iso=(*it).first;
     if(to_add->map().find(iso) != to_add->map().end()) {
@@ -251,7 +251,7 @@ pair<IsoVector, double> MatTools::subtractCompMaps(pair<IsoVector, double> orig_
   CompMapPtr to_ret = CompMapPtr(new CompMap(MASS));
   double to_ret_kg = 0;
 
-  CompMap::iterator it;
+  CompMap::const_iterator it;
   for(it = (*orig).begin(); it != (*orig).end(); ++it) {
     Iso iso=(*it).first;
     if(to_subtract->map().find(iso) != to_subtract->map().end()) {
@@ -270,7 +270,7 @@ pair<IsoVector, double> MatTools::subtractCompMaps(pair<IsoVector, double> orig_
       throw CycNegativeValueException(msg_ss.str());
     }
   }
-  return make_pair(IsoVector(to_ret), to_ret_kg);
+  return make_pair(IsoVector(CompMapPtr(to_ret)), to_ret_kg);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

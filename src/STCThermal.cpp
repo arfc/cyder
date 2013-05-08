@@ -94,7 +94,7 @@ Temp STCThermal::getTempChange(Iso tope, int the_time) {
 std::map<int, Temp> STCThermal::getTempChange(mat_rsrc_ptr mat){
   map<int, Temp> to_ret;
   CompMapPtr comp = mat->isoVector().comp();
-  CompMap::iterator it;
+  CompMap::const_iterator it;
   map<int,int>::iterator step;
   Iso iso;
   int time_ind;

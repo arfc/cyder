@@ -289,7 +289,7 @@ public:
   /**
      return Co, the source concentration at the inner boundary
     */
-  IsoConcMap Co(NuclideModelPtr daughter);
+  IsoConcMap Co(const NuclideModelPtr& daughter);
 
   /**
      return bulk density
