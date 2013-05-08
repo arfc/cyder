@@ -61,20 +61,31 @@ void OneDimPPMNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, double r, Iso iso, int dt) {
-  double D_L = mat_table_->D(iso/1000);
+double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t){
+  double D = mat_table_->D(iso/1000);
   double pi = boost::math::constants::pi<double>();
-  double term_1_frac = (r-v_*dt)/2*pow(D_L*dt,0.5);
-  double term_1_scalar = boost::math::erfc(term_1_frac);
-  double term_2_radical = (pow(v_,2)*dt/pi/D_L);
-  double term_2_exp = exp( -pow(r-v_*dt,2)/(4*D_L*dt)); 
-  double term_2_scalar = 0.5*pow(term_2_radical,0.5)*term_2_exp;
-  double term_3_factor = 0.5*(1 + v_*r/D_L + pow(v_,2)*dt/D_L);
-  double term_3_exp = exp(v_*r/D_L);
-  double term_3_erfc = boost::math::erfc( (r - v_*dt) / (2*pow(D_L*dt,0.5)) );
-  double term_3_scalar = 0.5*term_3_factor*term_3_exp*term_3_erfc;
-  double scalar = term_1_scalar + term_2_scalar + term_3_scalar;
-  return C_0[iso]*0.5*scalar;
+  //@TODO add sorption to this model. For now, R=1, no sorption. 
+  double R=1;
+  //@TODO convert months to seconds
+
+  double At_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
+  double At = 0.5*boost::math::erfc(At_frac);
+  double Att0_frac = (R*r - v()*t)/(2*pow(D*R*(t-t0), 0.5));
+  double Att0 = 0.5*boost::math::erfc(Att0_frac);
+  double A = At - Att0;
+  double B1_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
+  double B1 = 0.5*boost::math::erfc(B1_frac);
+  double B2_exp = -pow(R*r-v()*t,2)/(4*D*R*t);
+  double B2 = pow(v()*v()*t/(pi*R*D),0.5)*exp(B2_exp);
+  double B3_exp = v()*r/D;
+  double B3_frac = (R*r + v()*t)/(2*pow(D*R*t,0.5));
+  double B3_factor = -0.5*(1+(v()*r)/(D) + (v()*v()*t)/(D*R));
+  double B3 = B3_factor*exp(B3_exp)*boost::math::erfc(B3_frac);  ;
+  double B = C_i[iso]*(B1 + B2 + B3);
+
+  double to_ret = C_0[iso]*A + B;
+  
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
