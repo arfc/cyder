@@ -152,12 +152,15 @@ pair<IsoVector, double> OneDimPPMNuclide::source_term_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::dirichlet_bc(){
   pair<IsoVector, double>sum_pair = source_term_bc(); 
-  CompMap comp_map = *sum_pair.first.comp();
+  CompMapPtr comp_map = sum_pair.first.comp();
   double mass = sum_pair.second;
   IsoConcMap to_ret;
+  to_ret[92235] =0;
   CompMap::iterator it;
-  for( it=comp_map.begin(); it!=comp_map.end(); ++it){
-    to_ret[(*it).first]= mass*(*it).second/(geom()->volume());
+  for( it=(*comp_map).begin(); it!=(*comp_map).end(); ++it){
+    if(V_ff() >0 ){
+      to_ret[(*it).first]= mass*(*it).second/(V_ff());
+    }
   }
   return to_ret;
 }
@@ -165,7 +168,7 @@ IsoConcMap OneDimPPMNuclide::dirichlet_bc(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ConcGradMap OneDimPPMNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   ConcGradMap to_ret;
-  IsoConcMap c_int = conc_hist(last_updated());
+  IsoConcMap c_int = dirichlet_bc();
   Radius r_int = geom()->radial_midpoint();
 
   int iso;
@@ -306,7 +309,7 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
     }
     // m(tn) = integrate C_t_n
     IsoConcMap to_ret = trap_rule(a, b, n, fmap);
-    pair<IsoVector, double> comp_t_n = MatTools::conc_to_comp_map(to_ret, geom()->volume());
+    pair<IsoVector, double> comp_t_n = MatTools::conc_to_comp_map(to_ret, V_ff());
 
     pair<IsoVector, double> m_ij = MatTools::subtractCompMaps(comp_t_n, m_prev);
 
@@ -391,9 +394,9 @@ IsoConcMap OneDimPPMNuclide::Co(NuclideModelPtr daughter) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-const IsoConcMap OneDimPPMNuclide::Ci() const {
+IsoConcMap OneDimPPMNuclide::Ci() {
   pair<IsoVector, double> st = MatTools::sum_mats(wastes_);
-  return MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, geom()->volume());
+  return MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, V_ff());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::set_Ci(IsoConcMap Ci){

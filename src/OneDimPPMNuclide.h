@@ -279,9 +279,9 @@ public:
   void set_porosity(double porosity);
 
   /**
-     return initial concentration
+     return initial concentration in the cell for this timestep
     */
-  const IsoConcMap Ci() const ;
+  IsoConcMap Ci() ;
 
   /// sets the Ci_ variable, the initial concentration.
   void set_Ci(IsoConcMap Ci);
