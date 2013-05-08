@@ -146,21 +146,20 @@ void OneDimPPMNuclide::update(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> OneDimPPMNuclide::source_term_bc(){
-  double tot_mass=0;
-  IsoConcMap conc_map = MatTools::scaleConcMap(conc_hist(last_updated()), V_f());
-  CompMapPtr comp_map = CompMapPtr(new CompMap(MASS));
-  IsoConcMap::iterator it;
-  for( it=conc_map.begin(); it!=conc_map.end(); ++it){
-    (*comp_map)[(*it).first]=(*it).second;
-    tot_mass += (*it).second;
-  }
-  IsoVector to_ret = IsoVector(comp_map);
-  return make_pair(to_ret, tot_mass);
+  return MatTools::sum_mats(wastes_);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::dirichlet_bc(){
-  return conc_hist(last_updated());
+  pair<IsoVector, double>sum_pair = source_term_bc(); 
+  CompMap comp_map = *sum_pair.first.comp();
+  double mass = sum_pair.second;
+  IsoConcMap to_ret;
+  CompMap::iterator it;
+  for( it=comp_map.begin(); it!=comp_map.end(); ++it){
+    to_ret[(*it).first]= mass*(*it).second/(geom()->volume());
+  }
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -394,7 +393,7 @@ IsoConcMap OneDimPPMNuclide::Co(NuclideModelPtr daughter) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 const IsoConcMap OneDimPPMNuclide::Ci() const {
   pair<IsoVector, double> st = MatTools::sum_mats(wastes_);
-  MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, geom()->volume());
+  return MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, geom()->volume());
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::set_Ci(IsoConcMap Ci){
