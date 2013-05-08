@@ -76,7 +76,8 @@
           <nuclidemodel>
             <OneDimPPMNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0</degradation>
+              <porosity>0.1</porosity>
+              <bulk_density>1</bulk_density>
             </OneDimPPMNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
@@ -99,7 +100,8 @@
           <nuclidemodel>
             <OneDimPPMNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
+              <porosity>0.1</porosity>
+              <bulk_density>1</bulk_density>
             </OneDimPPMNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
@@ -122,7 +124,8 @@
           <nuclidemodel>
             <OneDimPPMNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
+              <porosity>0.1</porosity>
+              <bulk_density>1</bulk_density>
             </OneDimPPMNuclide>
           </nuclidemodel>
         </component>
@@ -144,7 +147,8 @@
           <nuclidemodel>
             <OneDimPPMNuclide>
               <advective_velocity>0.000631</advective_velocity>
-              <degradation>0.1</degradation>
+              <porosity>0.1</porosity>
+              <bulk_density>1</bulk_density>
             </OneDimPPMNuclide>
           </nuclidemodel>
         </component>

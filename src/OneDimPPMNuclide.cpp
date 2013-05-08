@@ -290,19 +290,18 @@ double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
-  std::vector<NuclideModelPtr>::iterator daughter;
-  std::vector<IsoConcMap> c_t_n;
   int n=10;
   double a=geom()->inner_radius();
   double b=geom()->outer_radius();
 
-  std::map<double, IsoConcMap> fmap;
   vector<double> calc_points = MatTools::linspace(a,b,n);
-  vector<double>::iterator pt;
+  std::vector<NuclideModelPtr>::iterator daughter;
   for(daughter=daughters.begin(); daughter!=daughters.end(); ++daughter){
+    std::map<double, IsoConcMap> fmap;
     // m(tn-1) = current contaminants
     std::pair<IsoVector, double> m_prev = MatTools::sum_mats(wastes_);
     // Ci = C(tn-1)
+    vector<double>::iterator pt;
     for(pt = calc_points.begin(); pt!=calc_points.end(); ++pt){ 
       // C(tn) = f(Co_, Ci_)
       fmap[(*pt)] = calculate_conc(Co(*daughter), Ci(), (*pt), the_time-1, the_time); 
@@ -339,11 +338,12 @@ IsoConcMap OneDimPPMNuclide::trap_rule(double a, double b, int n, map<double, Is
   terms.push_back(f_n);
   map<double,IsoConcMap>::iterator f;
   for(f=fmap.begin(); f!=fmap.end(); ++f){
-    terms[(*f).first] = MatTools::scaleConcMap((*f).second,2*scalar);
+    double r =(*f).first;
+    terms[r] = MatTools::scaleConcMap((*f).second,2*scalar);
   }
+  IsoConcMap to_ret; 
+  IsoConcMap prev;
   vector<IsoConcMap>::iterator t;
-  IsoConcMap to_ret =IsoConcMap();
-  IsoConcMap prev = IsoConcMap();
   for(t=terms.begin(); t!=terms.end(); ++t){
     to_ret = MatTools::addConcMaps(prev, (*t));
     prev = to_ret;
