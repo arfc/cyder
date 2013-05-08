@@ -306,7 +306,6 @@ IsoConcMap MixedCellNuclide::update_conc_hist(int the_time){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MixedCellNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
-  // @TODO mats is unused in this (and analogous) functions.
   assert(last_degraded() <= the_time);
 
   pair<IsoVector, double> sum_pair = source_term_bc(); 

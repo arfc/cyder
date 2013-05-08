@@ -250,7 +250,7 @@ public:
      radius r_calc
 
 
-     /// describe leij et. al eqn. here... 
+     /// describe van genuchten et. al eqn. here... 
      
      @param C_0 the initial concentration at that radius?
      @param r_calc the radius at which to calculate the IsoConcMap [m]
@@ -259,27 +259,40 @@ public:
     */
   double calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r_calc, int iso, int t0, int t);
 
+  /**
+     Calculates the concentration of an isoconcmap due to C_0 after dt at 
+     radius r_calc
+
+
+     /// describe van genuchten et. al eqn. here... 
+     
+     @param C_0 the initial concentration at that radius?
+     @param r_calc the radius at which to calculate the IsoConcMap [m]
+     @param dt the change in time since C_0 was calculated [timestep]
+    */
+  IsoConcMap calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r_calc, int t0, int t);
+
+  /// @TODO describe
+  IsoConcMap trap_rule(double a, double b, int n, std::map<double, IsoConcMap> fmap);
 
   /// sets the porosity_ variable, the percent void of the medium 
   void set_porosity(double porosity);
 
   /**
      return initial concentration
-     @TODO this shoudn't be a double it should be an isoconcmap
     */
-  const double Ci() const {return Ci_;};
+  const IsoConcMap Ci() const ;
 
   /// sets the Ci_ variable, the initial concentration.
-  void set_Ci(double Ci);
+  void set_Ci(IsoConcMap Ci);
 
   /**
-     return Co, the source concentration?
-     @TODO figure out what you intended to do with this variable. It shouldn't be a double, should be IsoConcMap.
+     return Co, the source concentration at the inner boundary
     */
-  const double Co() const {return Co_;};
+  const IsoConcMap Co() const {return Co_;};
 
-  /// sets the Co_ variable, the source concentration 
-  void set_Co(double Co);
+  /// sets the Co_ variable, the source concentration map 
+  void set_Co(IsoConcMap Co);
 
   /**
      return bulk density
@@ -291,7 +304,6 @@ public:
 
   /**
     The advective velocity through this component. [m/s] 
-    @TODO is m/s the right unit? shouldn't be m/yr?
    */
   const double v() const {return v_;};
 
@@ -321,12 +333,10 @@ protected:
   double v_;
 
   /// The initial contaminant concentration, C(x,0), in g/cm^3
-  // @TODO make this an isovector, maybe with a recipe
-  double Ci_;
+  IsoConcMap Ci_;
 
   /// The contaminant concentration constantly at the source until t_0, in g/cm^3
-  // @TODO make this an isovector, maybe with a recipe
-  double Co_;
+  IsoConcMap Co_;
 
   /// Porosity of the component matrix, a fraction between 0 and 1, inclusive.
   double porosity_;

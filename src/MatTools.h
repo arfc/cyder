@@ -226,6 +226,13 @@ public:
     */
   static IsoConcMap addConcMaps(IsoConcMap orig, IsoConcMap to_add);
 
+  /// @TODO add comments
+  static CompMapPtr addCompMaps(CompMapPtr orig, CompMapPtr to_add);
+
+  /// @TODO add comments
+  static std::pair<IsoVector, double> subtractCompMaps(std::pair<IsoVector, 
+      double> orig, std::pair<IsoVector, double> to_subtract);
+
   /** 
     Converts a standard isoid into an element. 
 
@@ -234,6 +241,9 @@ public:
     @return elem the element id (i.e. 92) that corresponds to iso
     */
   static int isoToElem(int iso);
+
+  /// @TODO add comments
+  static std::vector<double> linspace(double a, double b, int n);
   
 };
 #endif

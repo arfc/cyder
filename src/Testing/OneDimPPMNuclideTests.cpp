@@ -99,8 +99,6 @@ OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
   stringstream ss("");
   ss << "<start>"
      << "  <advective_velocity>" << v_ << "</advective_velocity>"
-     << "  <initial_concentration>" << Ci_ << "</initial_concentration>"
-     << "  <source_concentration>" << Co_ << "</source_concentration>"
      << "  <porosity>" << porosity_ << "</porosity>"
      << "  <bulk_density>" << rho_ << "</bulk_density>"
      << "</start>";
@@ -116,8 +114,6 @@ OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, initial_state) {
   EXPECT_EQ(v_, one_dim_ppm_ptr_->v());
-  EXPECT_EQ(Ci_, one_dim_ppm_ptr_->Ci());
-  EXPECT_EQ(Co_, one_dim_ppm_ptr_->Co());
   EXPECT_EQ(rho_, one_dim_ppm_ptr_->rho());
   EXPECT_EQ(porosity_, one_dim_ppm_ptr_->porosity());
 }

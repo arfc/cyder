@@ -22,12 +22,12 @@ using boost::lexical_cast;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::OneDimPPMNuclide():
-  Ci_(0),
-  Co_(0),
   v_(0),
   porosity_(0),
   rho_(0)
 {
+  Co_ = IsoConcMap();
+  Ci_ = IsoConcMap();
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
@@ -38,12 +38,12 @@ OneDimPPMNuclide::OneDimPPMNuclide():
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
-  Ci_(0),
-  Co_(0),
   v_(0),
   porosity_(0),
   rho_(0)
 {
+  Co_ = IsoConcMap();
+  Ci_ = IsoConcMap();
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
@@ -57,10 +57,6 @@ OneDimPPMNuclide::~OneDimPPMNuclide(){ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void OneDimPPMNuclide::initModuleMembers(QueryEngine* qe){
-  // C(x,0)=C_i
-  Ci_ = lexical_cast<double>(qe->getElementContent("initial_concentration"));
-  // -D{\frac{\partial C}{\partial x}}|_{x=0} + vC = vC_0, for t<t_0
-  Co_ = lexical_cast<double>(qe->getElementContent("source_concentration"));
   // advective velocity (hopefully the same as the whole system).
   v_ = lexical_cast<double>(qe->getElementContent("advective_velocity"));
   // rock parameters
@@ -98,8 +94,6 @@ void OneDimPPMNuclide::updateNuclideParamsTable(){
   shared_from_this()->addRowToNuclideParamsTable("porosity", porosity());
   shared_from_this()->addRowToNuclideParamsTable("bulk_density", rho());
   shared_from_this()->addRowToNuclideParamsTable("advective_velocity", v());
-  shared_from_this()->addRowToNuclideParamsTable("intial_concentration", Ci());
-  shared_from_this()->addRowToNuclideParamsTable("source_concentration", Co());
   shared_from_this()->addRowToNuclideParamsTable("ref_disp", mat_table_->ref_disp());
   shared_from_this()->addRowToNuclideParamsTable("ref_kd", mat_table_->ref_kd());
   shared_from_this()->addRowToNuclideParamsTable("ref_sol", mat_table_->ref_sol());
@@ -155,7 +149,6 @@ void OneDimPPMNuclide::update(int the_time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> OneDimPPMNuclide::source_term_bc(){
   double tot_mass=0;
-  /// @TODO The conc map should be integrated over the volume?
   IsoConcMap conc_map = MatTools::scaleConcMap(conc_hist(last_updated()), V_f());
   CompMapPtr comp_map = CompMapPtr(new CompMap(MASS));
   IsoConcMap::iterator it;
@@ -231,12 +224,11 @@ void OneDimPPMNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   assert(last_updated() <= the_time);
   IsoConcMap to_ret;
 
-  pair<IsoVector, double> sum_pair;
+  pair<IsoVector, double> sum_pair = MatTools::sum_mats(mats);
   IsoConcMap C_0 = MatTools::comp_to_conc_map(sum_pair.first.comp(), sum_pair.second, V_f());
 
-  /// @TODO this is a placeholder and only calculates C at the midpoint
-  /// @TODO this doesn't actually use the mats... 
   Radius r_calc = geom_->radial_midpoint();
+  // @TODO funky?
   to_ret = conc_profile(C_0, r_calc, the_time);
   set_last_updated(the_time);
   conc_hist_[the_time] = to_ret;
@@ -251,7 +243,19 @@ IsoConcMap OneDimPPMNuclide::conc_profile(IsoConcMap C_0, Radius r, int dt){
   for(it=C_0.begin(); it!=C_0.end(); ++it){
     iso = (*it).first;
     // @TODO FIX C_0 to C_i
-    to_ret[iso] = calculate_conc(C_0,C_0, r, iso, dt, dt+dt);
+    to_ret[iso] = calculate_conc(C_0, C_0, r, iso, dt, dt+dt);
+  }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, int t0, int t) {
+  IsoConcMap::iterator it;
+  int iso;
+  IsoConcMap to_ret;
+  for(it=C_0.begin(); it!=C_0.end(); ++it){
+    iso=(*it).first;
+    to_ret[iso] = calculate_conc(C_0, C_i, r, iso, t0, t);
   }
   return to_ret;
 }
@@ -262,6 +266,7 @@ double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r
   double pi = boost::math::constants::pi<double>();
   //@TODO add sorption to this model. For now, R=1, no sorption. 
   double R=1;
+  //@TODO convert months to seconds
 
   double At_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
   double At = 0.5*boost::math::erfc(At_frac);
@@ -283,6 +288,68 @@ double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r
   return to_ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
+  std::vector<NuclideModelPtr>::iterator daughter;
+  std::vector<IsoConcMap> c_t_n;
+  int n=10;
+  double a=geom()->inner_radius();
+  double b=geom()->outer_radius();
+
+  std::map<double, IsoConcMap> fmap;
+  vector<double> calc_points = MatTools::linspace(a,b,n);
+  vector<double>::iterator pt;
+  for(daughter=daughters.begin(); daughter!=daughters.end(); ++daughter){
+    // m(tn-1) = current contaminants
+    std::pair<IsoVector, double> m_prev = MatTools::sum_mats(wastes_);
+    // Ci = C(tn-1)
+    for(pt = calc_points.begin(); pt!=calc_points.end(); ++pt){ 
+      // C(tn) = f(Co_, Ci_)
+      fmap[(*pt)] = calculate_conc(Co(), Ci(), (*pt), the_time-1, the_time); 
+    }
+    // m(tn) = integrate C_t_n
+    IsoConcMap to_ret = trap_rule(a, b, n, fmap);
+    pair<IsoVector, double> comp_t_n = MatTools::conc_to_comp_map(to_ret, geom()->volume());
+
+    pair<IsoVector, double> m_ij = MatTools::subtractCompMaps(comp_t_n, m_prev);
+
+    absorb(mat_rsrc_ptr((*daughter)->extract(CompMapPtr(m_ij.first.comp()),m_ij.second)));
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+IsoConcMap OneDimPPMNuclide::trap_rule(double a, double b, int n, map<double, IsoConcMap> fmap) {
+  double scalar = (b-a)/(2*n);
+
+  vector<IsoConcMap> terms;
+  IsoConcMap f_0;
+  IsoConcMap f_n;
+
+  map<double, IsoConcMap>::iterator it = fmap.find(a);
+  if(it!=fmap.end()){ 
+    f_0 = fmap[a];
+    fmap.erase(it);
+  }
+  it = fmap.find(b);
+  if(it!=fmap.end()){ 
+    f_n = fmap[b];
+    fmap.erase(it);
+  }
+  terms.push_back(f_0);
+  terms.push_back(f_n);
+  map<double,IsoConcMap>::iterator f;
+  for(f=fmap.begin(); f!=fmap.end(); ++f){
+    terms[(*f).first] = MatTools::scaleConcMap((*f).second,2*scalar);
+  }
+  vector<IsoConcMap>::iterator t;
+  IsoConcMap to_ret =IsoConcMap();
+  IsoConcMap prev = IsoConcMap();
+  for(t=terms.begin(); t!=terms.end(); ++t){
+    to_ret = MatTools::addConcMaps(prev, (*t));
+    prev = to_ret;
+  }
+  return to_ret;
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::set_porosity(double porosity){
   try { 
@@ -316,13 +383,18 @@ void OneDimPPMNuclide::set_rho(double rho){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void OneDimPPMNuclide::set_Co(double Co){
+void OneDimPPMNuclide::set_Co(IsoConcMap Co){
   Co_=Co;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void OneDimPPMNuclide::set_Ci(double Ci){
-  Ci_=Ci;
+const IsoConcMap OneDimPPMNuclide::Ci() const {
+  pair<IsoVector, double> st = MatTools::sum_mats(wastes_);
+  MatTools::comp_to_conc_map(CompMapPtr(st.first.comp()), st.second, geom()->volume());
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+void OneDimPPMNuclide::set_Ci(IsoConcMap Ci){
+  Ci_ =  Ci;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -339,23 +411,3 @@ double OneDimPPMNuclide::V_T(){
 double OneDimPPMNuclide::V_f(){
   return MatTools::V_f(V_T(), porosity());
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
-  /// @TODO use cauchy.
-  std::vector<NuclideModelPtr>::iterator daughter;
-  IsoFluxMap cauchy;
-  IsoFluxMap::iterator it;
-  IsoConcMap C_0;
-  for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
-    cauchy = (*daughter)->cauchy_bc(dirichlet_bc(), geom()->radial_midpoint());
-    for(it=cauchy.begin(); it!=cauchy.end(); ++it){
-      C_0[(*it).first] = (*it).second/v(); 
-    }
-    //CompMapPtr comp_to_ext = CompMapPtr(comp());
-    //double kg_to_ext=cauchy.second;
-    //absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
-  }
-}
-
-
