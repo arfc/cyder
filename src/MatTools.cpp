@@ -226,12 +226,10 @@ IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-pair<IsoVector, double> MatTools::subtractCompMaps(pair<IsoVector, double> orig_pair, pair<IsoVector, double> to_subtract_pair){
-  CompMapPtr orig = CompMapPtr(orig_pair.first.comp());
-  orig->massify();
+pair<CompMapPtr, double> MatTools::subtractCompMaps(pair<CompMapPtr, double> orig_pair, pair<CompMapPtr, double> to_subtract_pair){
+  CompMapPtr orig = CompMapPtr(orig_pair.first);
   double o_kg = orig_pair.second;
-  CompMapPtr to_subtract = CompMapPtr(to_subtract_pair.first.comp());
-  to_subtract->massify();
+  CompMapPtr to_subtract = CompMapPtr(to_subtract_pair.first);
   double s_kg = to_subtract_pair.second;
   CompMapPtr to_ret = CompMapPtr(new CompMap(MASS));
   double to_ret_kg = 0;
@@ -240,7 +238,6 @@ pair<IsoVector, double> MatTools::subtractCompMaps(pair<IsoVector, double> orig_
   for(it = (*orig).begin(); it != (*orig).end(); ++it) {
     Iso iso=(*it).first;
     if(to_subtract->map().find(iso) != to_subtract->map().end()) {
-      /// @TODO the below is funky
       (*to_ret)[iso] = (*it).second*o_kg - (*to_subtract)[iso]*s_kg;
     } else {
       (*to_ret)[iso] = (*it).second*o_kg;
@@ -256,7 +253,7 @@ pair<IsoVector, double> MatTools::subtractCompMaps(pair<IsoVector, double> orig_
       throw CycNegativeValueException(msg_ss.str());
     }
   }
-  return make_pair(IsoVector(CompMapPtr(to_ret)), to_ret_kg);
+  return make_pair(CompMapPtr(to_ret), to_ret_kg);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

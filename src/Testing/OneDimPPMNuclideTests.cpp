@@ -309,6 +309,32 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, Azt){
+  double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8));  
+  double expected = 0.0000000000076; 
+  EXPECT_FLOAT_EQ(0.00000000000001, pow(10.,-14));
+  EXPECT_FLOAT_EQ(2629740.0, SECSPERMONTH );
+  EXPECT_FLOAT_EQ(expected, actual);
+  for(int i =0; i<15; ++i){
+    double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-i), SECSPERMONTH , pow(10.,-8));  
+    EXPECT_FLOAT_EQ(expected, actual);
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, Bzt){
+  double actual = one_dim_ppm_ptr_->Bzt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8), 0.99);  
+  double expected = 0;
+  EXPECT_FLOAT_EQ(0.00000000000001, pow(10.,-14));
+  EXPECT_FLOAT_EQ(2629740.0, SECSPERMONTH );
+  EXPECT_FLOAT_EQ(expected, actual);
+  for(int i =0; i<15; ++i){
+    double actual = one_dim_ppm_ptr_->Bzt(1, 1, pow(10.,-i), SECSPERMONTH , pow(10.,-8), 0.99);  
+    EXPECT_FLOAT_EQ(expected, actual);
+  }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, contained_mass){ 
   time_++;
   EXPECT_FLOAT_EQ(0, one_dim_ppm_ptr_->contained_mass(time_));

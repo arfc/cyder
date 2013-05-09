@@ -1,7 +1,9 @@
 #!/bin/bash
 cd input
 rm -r deg_cbc
-python perturb.py -i deg_cbc.xml.in -o ./deg_cbc/ -p ref_disp advective_velocity -l 0.001  0.0001 -u 1.001  0.0011 -n 101
+python perturb.py -i deg_cbc.xml.in -o ./deg_cbc/ -p ref_disp advective_velocity -l 0.001  0.0001 -u 1.001  0.0011 -n 50 50
+rm -r od 
+python perturb.py -i od.xml.in -o ./od/ -p ref_disp advective_velocity -l 0.00000001  0.000000000001 -u 0.00000001  0.00000000011 -n 10 10
 rm -r kd_nbc
 python perturb.py -i kd_nbc.xml.in -o ./kd_nbc/ -p ref_kd -l 0.0001 -u 1.0001 -n 101
 rm -r sol_nbc
@@ -49,3 +51,6 @@ python ../../output/line_plot.py -r 'lpPFM' -xp 'transit_time' -xl 'Transit Time
 
 cd ../deg_cbc
 python ../../output/contour_plot.py -r 'deg_cbc' -xp 'ref_disp' -xl 'Reference Diffusivity $[m^2/s]$' -yp 'advective_velocity' -yl 'Vertical Advective Velocity $[m/s]$' -zl 'Mass in Far Field $[kg]$' -n 200 -t 'Sensitivity to Advection and Diffusion Coeffients' -o 'cbc_deg.eps'
+
+cd ../od
+python ../../output/contour_plot.py -r 'od' -xp 'ref_disp' -xl 'Reference Diffusivity $[m^2/s]$' -yp 'advective_velocity' -yl 'Vertical Advective Velocity $[m/s]$' -zl 'Mass in Far Field $[kg]$' -n 200 -t 'Advection/Diffusion Transition OneDimPPM' -o 'od.eps'

@@ -74,11 +74,14 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <OneDimPPMNuclide>
-              <advective_velocity>0.000000000002</advective_velocity>
+            <MixedCellNuclide>
+              <advective_velocity>0.00063</advective_velocity>
+              <bc_type><SOURCE_TERM/></bc_type>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
               <porosity>0.1</porosity>
-              <bulk_density>1</bulk_density>
-            </OneDimPPMNuclide>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedcommod>waste</allowedcommod>
         </component>
@@ -98,11 +101,14 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <OneDimPPMNuclide>
-              <advective_velocity>0.000000000002</advective_velocity>
+            <MixedCellNuclide>
+              <advective_velocity>0.00063</advective_velocity>
+              <bc_type><SOURCE_TERM/></bc_type>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
               <porosity>0.1</porosity>
-              <bulk_density>1</bulk_density>
-            </OneDimPPMNuclide>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
           <allowedwf>WF</allowedwf>
         </component>
@@ -145,11 +151,14 @@
             <StubThermal/>
           </thermalmodel>
           <nuclidemodel>
-            <OneDimPPMNuclide>
-              <advective_velocity>0.000000000002</advective_velocity>
+            <MixedCellNuclide>
+              <advective_velocity>0.00063</advective_velocity>
+              <bc_type><SOURCE_TERM/></bc_type>
+              <degradation>0.1</degradation>
+              <kd_limited>0</kd_limited>
               <porosity>0.1</porosity>
-              <bulk_density>1</bulk_density>
-            </OneDimPPMNuclide>
+              <sol_limited>0</sol_limited>
+            </MixedCellNuclide>
           </nuclidemodel>
         </component>
       </Cyder>

@@ -234,7 +234,7 @@ void OneDimPPMNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
 IsoConcMap OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, int t0, int t) {
   IsoConcMap::const_iterator it;
   int iso;
-  IsoConcMap to_ret;
+  IsoConcMap to_ret = C_i;
   for(it=C_0.begin(); it!=C_0.end(); ++it){
     iso=(*it).first;
     to_ret[iso] = calculate_conc(C_0, C_i, r, iso, t0, t);
@@ -244,45 +244,55 @@ IsoConcMap OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, doub
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::Azt(double R, double z, double v, double t, double D){
+  double At_frac = (R*z - v*t)/(2*pow(D*R*t, 0.5));
+  double At = 0.5*boost::math::erfc(At_frac);
+  double A = At;
+  MatTools::validate_finite_pos(t);
+  MatTools::validate_finite_pos(A);
+  return A;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::Bzt(double R, double z, double v, double t, double D, double C_i){
+  double pi = boost::math::constants::pi<double>();
+  double B1_frac = (R*z - v*t)/(2*pow(D*R*t, 0.5));
+  double B1 = 0.5*boost::math::erfc(B1_frac);
+  double B2_exp = -pow(R*z-v*t,2)/(4*D*R*t);
+  double B2 = v*pow(t/(pi*R*D),0.5)*exp(B2_exp);
+  double B = -C_i*(B1 + B2);
+  MatTools::validate_finite_pos(-B);
+  return B;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
   double D = mat_table_->D(iso/1000);
   MatTools::validate_finite_pos(D);
-  double pi = boost::math::constants::pi<double>();
   //@TODO add sorption to this model. For now, R=1, no sorption. 
   double R=1;
-
-  t0 *= SECSPERMONTH ;
-  t *= SECSPERMONTH ;
-  double At_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
-  double At = 0.5*boost::math::erfc(At_frac);
-  double Att0_frac = (R*r - v()*(t-t0))/(2*pow(D*R*(t-t0), 0.5));
-  double Att0 = 0.5*boost::math::erfc(Att0_frac);
-  double A = At - Att0;
   assert(t0<t);
-  MatTools::validate_finite_pos(t0);
-  MatTools::validate_finite_pos(t);
-  MatTools::validate_finite_pos(A);
-
-  double B1_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
-  double B1 = 0.5*boost::math::erfc(B1_frac);
-  double B2_exp = -pow(R*r-v()*t,2)/(4*D*R*t);
-  double B2 = pow(v()*v()*t/(pi*R*D),0.5)*exp(B2_exp);
-  double B3_exp = v()*r/D;
-  double B3_frac = (R*r + v()*t)/(2*pow(D*R*t,0.5));
-  double B3_factor = -0.5*(1+(v()*r)/(D) + (v()*v()*t)/(D*R));
-  double B3 = B3_factor*exp(B3_exp)*boost::math::erfc(B3_frac);  ;
-  double B = C_i[iso]*(B1 + B2 + B3);
-  MatTools::validate_finite_pos(B);
-
-  double to_ret = C_0[iso]*A + B;
+  double del_t = t-t0;
+  t = SECSPERMONTH * del_t ;
+  double A = Azt(R,r,v(), t, D);
+  //LOG(LEV_ERROR, "GRDRNuc") << "A = " << A ;
+  double B=0;
+  if(C_i.find(iso) != C_i.end()) {
+    B = Bzt(R, r, v(), t, D, C_i[iso]); 
+  }
+  double to_ret=0;
+  if(C_0.find(iso)!=C_0.end()) {
+    to_ret = C_0[iso]*A + B;
+  } else { 
+    to_ret = B;
+  }
   MatTools::validate_finite_pos(to_ret);
-  
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
-  int n=10;
+  int n=100;
   double a=geom()->inner_radius();
   double b=geom()->outer_radius();
   assert(a<b);
@@ -303,16 +313,18 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
         MatTools::validate_finite_pos(r);
         assert(r<=b);
         assert(r>=a);
-        IsoConcMap temp = calculate_conc(C0, Ci(), r, the_time-1, the_time); 
+        IsoConcMap temp = calculate_conc(C0, Ci(), r-a, the_time-1, the_time); 
         f_map.insert(make_pair(r,temp));
       }
       // m(tn) = integrate C_t_n
       IsoConcMap to_ret = trap_rule(a, b, n, f_map);
-      pair<IsoVector, double> comp_t_n = MatTools::conc_to_comp_map(to_ret, V_ff());
+      pair<CompMapPtr, double> comp_t_n = MatTools::conc_to_comp_map(to_ret, V_ff());
 
-      pair<IsoVector, double> m_ij = MatTools::subtractCompMaps(comp_t_n, m_prev);
-
-      absorb(mat_rsrc_ptr((*daughter)->extract(CompMapPtr(m_ij.first.comp()), 
+      pair<CompMapPtr, double> m_ij = MatTools::subtractCompMaps(comp_t_n, make_pair(m_prev.first.comp(),m_prev.second ));
+      if(m_ij.second >= 1000){
+        m_ij.second=0;
+      }
+      absorb(mat_rsrc_ptr((*daughter)->extract(m_ij.first, 
               m_ij.second)));
     }
   }
