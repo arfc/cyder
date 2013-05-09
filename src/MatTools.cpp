@@ -178,7 +178,11 @@ void MatTools::validate_finite_pos(double pos){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void MatTools::validate_pos(double pos){
   if ( pos < 0) {
-    throw CycRangeException("The value is not positive and finite. It is less than zero.");
+    std::stringstream ss;
+    ss << "The value " 
+       << pos
+       << " is not positive and finite. It is less than zero." ;;
+    throw CycRangeException(ss.str());
   }
 }
 
@@ -282,14 +286,13 @@ int MatTools::isoToElem(int iso) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 vector<double> MatTools::linspace(double a, double b, int n) {
-    vector<double> array(n);  // optional preallocation
-    double step = (b-a) / (n-1);
-
-    while(a <= b) {
-        array.push_back(a);
-        a += step;           // could recode to better handle rounding errors
-    }
-    return array;
+  vector<double> array(0);  // optional preallocation
+  double step = (b-a)/(n-1);
+  while(a <= b) {
+    array.push_back(a);
+    a += step;           // could recode to better handle rounding errors
+  }
+  return array;
 }
 
 

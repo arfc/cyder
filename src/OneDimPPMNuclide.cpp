@@ -9,7 +9,6 @@
 #include <time.h>
 #include <boost/lexical_cast.hpp>
 #include <boost/math/special_functions/erf.hpp>
-#include <boost/numeric/odeint.hpp>
 
 
 #include "CycException.h"
@@ -70,7 +69,7 @@ void OneDimPPMNuclide::initModuleMembers(QueryEngine* qe){
 NuclideModelPtr OneDimPPMNuclide::copy(const NuclideModel& src){
   const OneDimPPMNuclide* src_ptr = dynamic_cast<const OneDimPPMNuclide*>(&src);
 
-  set_last_updated(TI->time());
+  set_last_updated(0);
   set_porosity(src_ptr->porosity());
   set_rho(src_ptr->rho());
   set_v(src_ptr->v());
@@ -228,34 +227,18 @@ void OneDimPPMNuclide::update_conc_hist(int the_time, deque<mat_rsrc_ptr> mats){
   IsoConcMap C_0 = MatTools::comp_to_conc_map(sum_pair.first.comp(), sum_pair.second, V_f());
 
   Radius r_calc = geom_->radial_midpoint();
-  // @TODO funky?
-  to_ret = conc_profile(C_0, r_calc, the_time);
   set_last_updated(the_time);
-  conc_hist_[the_time] = to_ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-IsoConcMap OneDimPPMNuclide::conc_profile(IsoConcMap C_0, Radius r, int dt){
-  // @TODO decay will accidentally get neglected here if you don't watch out. Fix.
-  IsoConcMap to_ret;
-  IsoConcMap::iterator it;
-  Iso iso;
-  for(it=C_0.begin(); it!=C_0.end(); ++it){
-    iso = (*it).first;
-    // @TODO FIX C_0 to C_i
-    to_ret[iso] = calculate_conc(C_0, C_0, r, iso, dt, dt+dt);
-  }
-  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, int t0, int t) {
-  IsoConcMap::iterator it;
+  IsoConcMap::const_iterator it;
   int iso;
   IsoConcMap to_ret;
   for(it=C_0.begin(); it!=C_0.end(); ++it){
     iso=(*it).first;
     to_ret[iso] = calculate_conc(C_0, C_i, r, iso, t0, t);
+    MatTools::validate_finite_pos(to_ret[iso]);
   }
   return to_ret;
 }
@@ -263,16 +246,23 @@ IsoConcMap OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, doub
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
   double D = mat_table_->D(iso/1000);
+  MatTools::validate_finite_pos(D);
   double pi = boost::math::constants::pi<double>();
   //@TODO add sorption to this model. For now, R=1, no sorption. 
   double R=1;
-  //@TODO convert months to seconds
 
+  t0 *= SECSPERMONTH ;
+  t *= SECSPERMONTH ;
   double At_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
   double At = 0.5*boost::math::erfc(At_frac);
-  double Att0_frac = (R*r - v()*t)/(2*pow(D*R*(t-t0), 0.5));
+  double Att0_frac = (R*r - v()*(t-t0))/(2*pow(D*R*(t-t0), 0.5));
   double Att0 = 0.5*boost::math::erfc(Att0_frac);
   double A = At - Att0;
+  assert(t0<t);
+  MatTools::validate_finite_pos(t0);
+  MatTools::validate_finite_pos(t);
+
+
   double B1_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
   double B1 = 0.5*boost::math::erfc(B1_frac);
   double B2_exp = -pow(R*r-v()*t,2)/(4*D*R*t);
@@ -282,8 +272,10 @@ double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r
   double B3_factor = -0.5*(1+(v()*r)/(D) + (v()*v()*t)/(D*R));
   double B3 = B3_factor*exp(B3_exp)*boost::math::erfc(B3_frac);  ;
   double B = C_i[iso]*(B1 + B2 + B3);
+  MatTools::validate_finite_pos(B);
 
   double to_ret = C_0[iso]*A + B;
+  MatTools::validate_finite_pos(to_ret);
   
   return to_ret;
 }
@@ -294,29 +286,35 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
   double a=geom()->inner_radius();
   double b=geom()->outer_radius();
   assert(a<b);
+  if(the_time > 0 ) {
+    vector<double> calc_points = MatTools::linspace(a,b,n);
+    std::vector<NuclideModelPtr>::iterator daughter;
+    for(daughter=daughters.begin(); daughter!=daughters.end(); ++daughter){
+      std::map<double, IsoConcMap> f_map;
+      // m(tn-1) = current contaminants
+      std::pair<IsoVector, double> m_prev = MatTools::sum_mats(wastes_);
+      // Ci = C(tn-1)
+      vector<double>::const_iterator pt;
+      for(pt = calc_points.begin(); pt!=calc_points.end(); ++pt){ 
+        // C(tn) = f(Co_, Ci_)
+        IsoConcMap C0 = Co(*daughter);
+        assert(C0.find(92235) != C0.end());
+        double r = (*pt);
+        MatTools::validate_finite_pos(r);
+        assert(r<=b);
+        assert(r>=a);
+        IsoConcMap temp = calculate_conc(C0, Ci(), r, the_time-1, the_time); 
+        f_map.insert(make_pair(r,temp));
+      }
+      // m(tn) = integrate C_t_n
+      IsoConcMap to_ret = trap_rule(a, b, n, f_map);
+      pair<IsoVector, double> comp_t_n = MatTools::conc_to_comp_map(to_ret, V_ff());
 
-  vector<double> calc_points = MatTools::linspace(a,b,n);
-  std::vector<NuclideModelPtr>::iterator daughter;
-  for(daughter=daughters.begin(); daughter!=daughters.end(); ++daughter){
-    std::map<double, IsoConcMap> f_map;
-    // m(tn-1) = current contaminants
-    std::pair<IsoVector, double> m_prev = MatTools::sum_mats(wastes_);
-    // Ci = C(tn-1)
-    vector<double>::iterator pt;
-    for(pt = calc_points.begin(); pt!=calc_points.end(); ++pt){ 
-      // C(tn) = f(Co_, Ci_)
-      IsoConcMap C0 = Co(*daughter);
-      double r = (*pt);
-      IsoConcMap temp = calculate_conc(C0, Ci(), r, the_time-1, the_time); 
-      f_map.insert(make_pair(r,temp));
+      pair<IsoVector, double> m_ij = MatTools::subtractCompMaps(comp_t_n, m_prev);
+
+      absorb(mat_rsrc_ptr((*daughter)->extract(CompMapPtr(m_ij.first.comp()), 
+              m_ij.second)));
     }
-    // m(tn) = integrate C_t_n
-    IsoConcMap to_ret = trap_rule(a, b, n, f_map);
-    pair<IsoVector, double> comp_t_n = MatTools::conc_to_comp_map(to_ret, V_ff());
-
-    pair<IsoVector, double> m_ij = MatTools::subtractCompMaps(comp_t_n, m_prev);
-
-    absorb(mat_rsrc_ptr((*daughter)->extract(CompMapPtr(m_ij.first.comp()),m_ij.second)));
   }
 }
 
