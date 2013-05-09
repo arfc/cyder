@@ -263,7 +263,7 @@ public:
      @param iso the isotope whose concentration is being queried [-]
      @param dt the change in time since C_0 was calculated [timestep]
     */
-  double calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r_calc, int iso, int t0, int t);
+  double calculate_conc_diff(IsoConcMap C_0, IsoConcMap C_i, double r_calc, int iso, int t0, int t);
 
   /**
      Calculates the concentration of an isoconcmap due to C_0 after dt at 
@@ -276,7 +276,7 @@ public:
      @param r_calc the radius at which to calculate the IsoConcMap [m]
      @param dt the change in time since C_0 was calculated [timestep]
     */
-  IsoConcMap calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r_calc, int t0, int t);
+  IsoConcMap calculate_conc_diff(IsoConcMap C_0, IsoConcMap C_i, double r_calc, int t0, int t);
 
   /// @TODO describe
   IsoConcMap trap_rule(double a, double b, int n, std::map<double, IsoConcMap> fmap);
