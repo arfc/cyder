@@ -308,3 +308,26 @@ TEST_F(MatToolsTest, isoToElem){
   EXPECT_EQ(o, MatTools::isoToElem(o16));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, linspace){
+  int n = 11;
+  double a = 0;
+  double b = 10;
+  vector<double> points = MatTools::linspace(a,b,n);
+  int i = 0;
+  vector<double>::const_iterator pt;
+  for(pt=points.begin(); pt!=points.end(); ++pt){
+    EXPECT_FLOAT_EQ(i, (*pt));
+    i+=1;
+  }
+
+  a = 10;
+  b = 20;
+  points = MatTools::linspace(a,b,n);
+  i=10;
+  for(pt=points.begin(); pt!=points.end(); ++pt){
+    EXPECT_FLOAT_EQ(i, (*pt));
+    i+=1;
+  }
+}
+
