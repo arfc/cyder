@@ -261,7 +261,7 @@ double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r
   assert(t0<t);
   MatTools::validate_finite_pos(t0);
   MatTools::validate_finite_pos(t);
-
+  MatTools::validate_finite_pos(A);
 
   double B1_frac = (R*r - v()*t)/(2*pow(D*R*t, 0.5));
   double B1 = 0.5*boost::math::erfc(B1_frac);
