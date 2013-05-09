@@ -71,6 +71,18 @@ TEST_F(MatToolsTest, sum_mats_one){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, addConcMaps){
+  IsoConcMap orig;
+  IsoConcMap to_add;
+  orig[u235_] = 1.0;
+  to_add[u235_] = 2.0;
+  IsoConcMap sum = MatTools::addConcMaps(orig, to_add);
+  EXPECT_FLOAT_EQ(3, sum[u235_]); 
+  sum = MatTools::addConcMaps(orig, orig);
+  EXPECT_FLOAT_EQ(2, sum[u235_]); 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, sum_mats_small_entry){
 
   CompMapPtr comp_to_add;
