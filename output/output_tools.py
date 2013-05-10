@@ -498,13 +498,15 @@ class Query(object):
         """
         Gets the parameter value of the parameter specified in the CompID component 
         """
-
         c = self.conn.cursor()
-
-        c.execute("SELECT NuclideModelParams.ParamVal " +
-            "FROM NuclideModelParams "+
-            "WHERE NuclideModelParams.CompID=" + str(compID) + " " +
-            "AND NuclideModelParams.ParamName='" + str(param_name) + "' ")
+        if(param_name == "capacity") :
+            c.execute("SELECT CyderParams.capacity " +
+                "FROM CyderParams ")
+        else :
+            c.execute("SELECT NuclideModelParams.ParamVal " +
+                "FROM NuclideModelParams "+
+                "WHERE NuclideModelParams.CompID=" + str(compID) + " " +
+                "AND NuclideModelParams.ParamName='" + str(param_name) + "' ")
 
         for row in c : 
             param_val = row[0]

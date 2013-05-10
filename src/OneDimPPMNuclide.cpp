@@ -288,7 +288,10 @@ double OneDimPPMNuclide::calculate_conc_diff(IsoConcMap C_0, IsoConcMap C_i, dou
   } else { 
     to_ret = B - Ci_iso;
   }
-  MatTools::validate_finite_pos(to_ret);
+  if(to_ret < 0) {
+    to_ret =0;
+  }
+  //MatTools::validate_finite_pos(to_ret);
   return to_ret;
 }
 
@@ -322,9 +325,9 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
       IsoConcMap to_ret = trap_rule(a, b, n, f_map);
       pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, 1);//V_ff());
 
-      if(m_ij.second >= 1000){
-        m_ij.second=0;
-      }
+      //if(m_ij.second >= 1000){
+      //  m_ij.second=0;
+      //}
       absorb(mat_rsrc_ptr((*daughter)->extract(m_ij.first, 
               m_ij.second)));
     }

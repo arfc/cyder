@@ -215,7 +215,7 @@ class ContourPlot(object) :
 
     def set_zi(self) :
         if self._zi is None :
-            self._zi = griddata(self._x, self._y, self._z, self._xi, self._yi, interp='linear')
+            self._zi = griddata(self._x, self._y, self._z, self._xi, self._yi, interp='nn')
         return self._zi
 
     def set_title(self, npts) :
