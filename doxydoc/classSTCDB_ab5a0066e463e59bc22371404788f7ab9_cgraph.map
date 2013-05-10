@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSTCDB.html#a1ac752589ad0f369583feb4d25411de7" title="This returns the iso_index_ for a particular db and mat struct." alt="" coords="182,5,309,32"/>
+<area shape="rect" id="node7" href="$classSTCDB.html#a68453bfd4bcbd2856fa7c4a48fedc519" title="Finds the name of the table in the database for the mat struct ." alt="" coords="187,107,304,133"/>
+<area shape="rect" id="node11" href="$classSTCDB.html#aad5de8827ca0c2b2aaa92b7b014d311c" title="This returns the time_index for a particular db and mat struct." alt="" coords="179,56,311,83"/>
+<area shape="rect" id="node5" href="$classSTCDB.html#a11e36bda53fb035d75d68ef45a9b165e" title="Returns a map from values to indices of the query result." alt="" coords="374,31,495,57"/>
+<area shape="rect" id="node9" href="$classSTCDB.html#af723d64077649bada45bf71648ea8ee4" title="this helper function provides the WHERE clause that selects the mat from the db." alt="" coords="360,107,509,133"/>
+</map>

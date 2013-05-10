@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSTCThermal.html#ae9dbeac8fc22d0260cde2a05abb5210d" title="A constructor for the STC Nuclide Model that returns a shared pointer." alt="" coords="243,5,375,32"/>
+<area shape="rect" id="node5" href="$classSTCThermal.html#a8b284126fa600af41ec41ef3969bf5d3" title="Default constructor for the component class." alt="" coords="424,5,592,32"/>
+<area shape="rect" id="node7" href="$classThermalModel.html#aa02d9e82ad9c586b285951acc8d433a4" title="set the geometry shared pointer" alt="" coords="641,5,802,32"/>
+</map>

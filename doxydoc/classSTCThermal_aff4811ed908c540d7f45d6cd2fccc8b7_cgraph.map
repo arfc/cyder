@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSTCThermal.html#a702f8eb8d632bdfb9537601df3e49230" title="returns alpha_th_, the thermal diffusivity []" alt="" coords="227,5,375,32"/>
+<area shape="rect" id="node5" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="239,57,363,98"/>
+</map>

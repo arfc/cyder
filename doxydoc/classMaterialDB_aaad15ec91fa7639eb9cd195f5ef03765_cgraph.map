@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMaterialDB.html#a267ce9fd236f13ea4eb00a07096a7aec" title="returns the table matching the mat string." alt="" coords="169,56,287,83"/>
+<area shape="rect" id="node5" href="$classMaterialDB.html#aa1833d8aa6c0a1ee12213a9c9ede84d5" title="MaterialDB::tableID" alt="" coords="363,5,495,32"/>
+<area shape="rect" id="node11" href="$classMaterialDB.html#af1220e75114ff7a189a423040fd96c47" title="checks whether a table associated with a particular mat has been created" alt="" coords="359,56,499,83"/>
+<area shape="rect" id="node13" href="$classMaterialDB.html#af0f3627d5f20108d1e1cfdca3bc75cfa" title="a function to initialize a large array of element_t structs via the SQLite/C++ API" alt="" coords="336,107,523,133"/>
+<area shape="rect" id="node7" href="$classMaterialDB.html#a4e0e880f98d729056f3831e226f53d3d" title="MaterialDB::ref_ind" alt="" coords="571,5,698,32"/>
+<area shape="rect" id="node9" href="$classMaterialDB.html#a00fe5b95c91dd870375d5de4d3519908" title="get a piece of data for some element in some material of interest" alt="" coords="747,5,864,32"/>
+</map>

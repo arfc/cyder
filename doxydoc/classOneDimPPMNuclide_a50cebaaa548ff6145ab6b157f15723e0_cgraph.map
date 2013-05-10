@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classOneDimPPMNuclide.html#ae70803f3a1f1f4d7f44e330101300ccc" title="Updates all the hists." alt="" coords="248,77,432,104"/>
+<area shape="rect" id="node5" href="$classOneDimPPMNuclide.html#aa20f186aed72a8840ae9d604e0fd7cac" title="update the istopic contaminant vector history, vec_hist_ based on wastes_" alt="" coords="480,5,664,46"/>
+<area shape="rect" id="node9" href="$classOneDimPPMNuclide.html#abbf37a9f27691831a217c59b86cd2e9f" title="Updates the available concentration using the wastes_ as mats." alt="" coords="480,70,664,111"/>
+<area shape="rect" id="node11" href="$classNuclideModel.html#a32eee9a2cebb4f014c90ffd134dfb19e" title="sets the last time that the vec_hist and conc_hist were updated, first verifying whether last_updated..." alt="" coords="499,135,645,177"/>
+<area shape="rect" id="node7" href="$classMatTools.html#a97a42f62c4b0cb64a984bb606dc1ef9f" title="sums the materials in the vector, filling the vec and kg with the cumulative IsoVector and total mass..." alt="" coords="712,12,851,39"/>
+</map>

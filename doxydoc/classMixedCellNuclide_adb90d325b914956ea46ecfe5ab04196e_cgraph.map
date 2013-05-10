@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMixedCellNuclide.html#a05a6973cebcc3ac3fe1bda13915838df" title="The porosity (a fraction) of the material of this component." alt="" coords="201,5,367,32"/>
+<area shape="rect" id="node5" href="$classMixedCellNuclide.html#ac8b7547e128fc94381cc8f78ee795bc6" title="returns the total degradation of the component" alt="" coords="202,56,366,83"/>
+<area shape="rect" id="node7" href="$classMixedCellNuclide.html#afeb802a87d91e39ae2825f76bf20c483" title="Gets the total volume." alt="" coords="211,107,357,133"/>
+</map>

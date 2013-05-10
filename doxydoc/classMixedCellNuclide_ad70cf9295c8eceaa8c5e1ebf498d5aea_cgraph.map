@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMatTools.html#af68b6ce5f07ee125b21008de311b6cb4" title="removes the specified amount of the specified composition from a deque of materials provided to the f..." alt="" coords="236,5,353,32"/>
+<area shape="rect" id="node5" href="$classNuclideModel.html#af5f177f93d00d0954ef9918de8e49787" title="returns the time at which the vec_hist and conc_hist were updated" alt="" coords="233,57,356,98"/>
+<area shape="rect" id="node7" href="$classMixedCellNuclide.html#ab41eb7f79926f55547e9d5f17aa2d3fe" title="Updates all the hists." alt="" coords="213,123,376,149"/>
+<area shape="rect" id="node9" href="$classMixedCellNuclide.html#ae796288904256f902bcc70b759956227" title="Updates the isotopic vector history at the time." alt="" coords="424,50,587,91"/>
+<area shape="rect" id="node13" href="$classMixedCellNuclide.html#a123fa7f61cf43e4a9d0921c53e40ce78" title="updates the contained concentration according to contained wastes_" alt="" coords="424,115,587,157"/>
+<area shape="rect" id="node15" href="$classNuclideModel.html#a32eee9a2cebb4f014c90ffd134dfb19e" title="sets the last time that the vec_hist and conc_hist were updated, first verifying whether last_updated..." alt="" coords="432,181,579,222"/>
+<area shape="rect" id="node11" href="$classMatTools.html#a97a42f62c4b0cb64a984bb606dc1ef9f" title="sums the materials in the vector, filling the vec and kg with the cumulative IsoVector and total mass..." alt="" coords="635,57,773,84"/>
+</map>

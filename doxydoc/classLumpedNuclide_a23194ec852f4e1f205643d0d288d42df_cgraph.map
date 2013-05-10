@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classNuclideModel.html#a102e5bef680f1e38080cfbbfb5db04f1" title="Returns the map of isotopes to concentrations at the time profided." alt="" coords="212,71,367,97"/>
+<area shape="rect" id="node5" href="$classNuclideModel.html#af5f177f93d00d0954ef9918de8e49787" title="returns the time at which the vec_hist and conc_hist were updated" alt="" coords="440,5,563,46"/>
+<area shape="rect" id="node10" href="$classMatTools.html#a19a466ff6ee992c0cf8dcf2415ed6726" title="This is a helper function that scales an IsoConcMap with a scalar." alt="" coords="206,125,373,152"/>
+<area shape="rect" id="node14" href="$classLumpedNuclide.html#a02fe67aa688ae75a6717f03755fbdbd2" title="Gets the fluid volume, based on porosity." alt="" coords="223,188,356,215"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#a4cc244e098b777e6b898bfbd88b372d1" title="Update the hists at a certain time." alt="" coords="430,71,573,97"/>
+<area shape="rect" id="node12" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="439,122,563,163"/>
+<area shape="rect" id="node16" href="$classLumpedNuclide.html#affa88a31ee5af63104473af666831a31" title="Gets the total volume." alt="" coords="433,188,570,215"/>
+<area shape="rect" id="node18" href="$classLumpedNuclide.html#adabcead98a9a1b537ac45c35ac20e094" title="The porosity of the permeable porous mediuam of this component. [%]." alt="" coords="422,239,581,265"/>
+</map>

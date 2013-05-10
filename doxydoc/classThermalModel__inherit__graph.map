@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classLumpedThermal.html" title="LumpedThermal is a skeleton component model that does nothing." alt="" coords="5,80,117,107"/>
+<area shape="rect" id="node5" href="$classSTCThermal.html" title="STCThermal is a skeleton component model that does nothing." alt="" coords="142,80,233,107"/>
+<area shape="rect" id="node7" href="$classStubThermal.html" title="StubThermal is a skeleton component model that does nothing." alt="" coords="259,80,352,107"/>
+</map>

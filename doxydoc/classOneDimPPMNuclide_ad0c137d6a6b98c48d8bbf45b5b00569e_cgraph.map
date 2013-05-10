@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classOneDimPPMNuclide.html#aecd14881fd188a05c97cc54cb66d5454" title="Calculates the concentration of a single isotope due to C_0 after dt at radius r_calc." alt="" coords="249,99,442,141"/>
+<area shape="rect" id="node7" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="702,74,826,115"/>
+<area shape="rect" id="node5" href="$classOneDimPPMNuclide.html#a4949efaea37a660b22b4427ee8c36e7a" title="give doc" alt="" coords="491,5,653,32"/>
+<area shape="rect" id="node9" href="$classOneDimPPMNuclide.html#af2164b161fda003e073dab7c5272cdff" title="give doc" alt="" coords="491,107,653,133"/>
+<area shape="rect" id="node12" href="$classOneDimPPMNuclide.html#a3c1b1037b983accdc2981ad26a4bbac8" title="The advective velocity through this component." alt="" coords="497,157,647,184"/>
+</map>

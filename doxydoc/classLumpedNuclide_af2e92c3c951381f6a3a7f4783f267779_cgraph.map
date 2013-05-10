@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classLumpedNuclide.html#a723ea166e7fe96c8a9524e80be29ddb1" title="Returns the peclet number of the component [&#45;]." alt="" coords="263,5,393,32"/>
+<area shape="rect" id="node5" href="$classLumpedNuclide.html#adabcead98a9a1b537ac45c35ac20e094" title="The porosity of the permeable porous mediuam of this component. [%]." alt="" coords="249,56,407,83"/>
+<area shape="rect" id="node7" href="$classLumpedNuclide.html#aa885f0db75d32410aa14af66fd257cc9" title="Returns the transit time through the component [&#45;]." alt="" coords="265,107,391,133"/>
+<area shape="rect" id="node9" href="$classLumpedNuclide.html#a3bb0c810f3b83470a5cfd954e9c7257a" title="The advective velocity through this component." alt="" coords="267,157,389,184"/>
+</map>

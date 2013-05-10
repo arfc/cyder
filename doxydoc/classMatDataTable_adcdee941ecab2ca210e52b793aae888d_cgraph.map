@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMatDataTable.html#a3fae07feade1c22dc772726ba1754cc5" title="checks whether this element has a row entry in the table." alt="" coords="177,5,319,46"/>
+<area shape="rect" id="node5" href="$classMatDataTable.html#ad628ec23baa8c14100a3369d1ec21517" title="gets a specific data object for some element in this material." alt="" coords="179,71,317,97"/>
+<area shape="rect" id="node7" href="$classMatDataTable.html#a8122f48ffa775c0fe68f1682baac489c" title="Returns the reference paramter supplied by the user." alt="" coords="369,45,493,72"/>
+<area shape="rect" id="node9" href="$classMatDataTable.html#a982762a7f3924bec9d1dc797d61ebb3b" title="The reference chemical data parameter for the reference element, Hydrogen." alt="" coords="369,96,492,123"/>
+</map>

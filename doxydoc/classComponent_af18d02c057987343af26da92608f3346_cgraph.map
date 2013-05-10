@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classComponent.html#ae5670267b041fbaee942c1764108634f" title="Enumerates a string if it is one of the named ComponentTypes." alt="" coords="256,38,445,65"/>
+<area shape="rect" id="node5" href="$classComponent.html#abc16efaec4850982ef85670a3db42902" title="get the Name" alt="" coords="494,13,621,40"/>
+<area shape="rect" id="node7" href="$classComponent.html#abfd8b368e78675bb9bb3785bc66a79e7" title="Returns the ComponentType of this component (WF, WP, etc.)" alt="" coords="498,76,617,102"/>
+<area shape="rect" id="node9" href="$classComponent.html#ac6e53d0619328ddba1c9c537d545ee46" title="get the inner radius of the object" alt="" coords="270,140,431,166"/>
+<area shape="rect" id="node12" href="$classComponent.html#a12612f8e11dd99a510efe3a77cb529b9" title="gets the pointer to the nuclide model being used in this component" alt="" coords="285,191,417,232"/>
+<area shape="rect" id="node14" href="$classComponent.html#a2cb9ba76a49945f1d9c1fd6969f7c696" title="get the inner radius of the object" alt="" coords="269,257,432,284"/>
+<area shape="rect" id="node16" href="$classComponent.html#a7b06b4cbb63c881117a88815c3ae0cec" title="gets the pointer to the thermal model being used in this component" alt="" coords="283,308,418,350"/>
+</map>

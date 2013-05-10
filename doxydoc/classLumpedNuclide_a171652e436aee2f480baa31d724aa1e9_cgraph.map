@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classLumpedNuclide.html#adabcead98a9a1b537ac45c35ac20e094" title="The porosity of the permeable porous mediuam of this component. [%]." alt="" coords="185,5,343,32"/>
+<area shape="rect" id="node5" href="$classMatTools.html#ad951f67fe8faad9f01977cfb8b62dc2f" title="Confirms whether or not the provided value is a percent (0&lt;=per&lt;=1)" alt="" coords="202,57,326,98"/>
+</map>

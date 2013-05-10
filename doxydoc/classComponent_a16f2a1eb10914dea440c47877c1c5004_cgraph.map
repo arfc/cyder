@@ -1,0 +1,35 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classComponent.html#a6b0cde7d6f3650ef67f649a00521e8b0" title="Returns atd::s new nuclide model that is a copy of the src model." alt="" coords="178,173,374,200"/>
+<area shape="rect" id="node42" href="$classComponent.html#a91831ab921f79e3ca4b67deb47304b23" title="Returns a new thermal model that is a copy of the src model." alt="" coords="176,275,376,301"/>
+<area shape="rect" id="node58" href="$classComponent.html#a6c64fa788d19504c2745b03d870df785" title="set the pointer to the geometry object" alt="" coords="201,224,351,251"/>
+<area shape="rect" id="node61" href="$classComponent.html#a168ff4e890fdbbc4e574fe6999548433" title="set the material type that this component is made of (clay, salt, glass, etc.) and retrieves the appr..." alt="" coords="207,326,345,367"/>
+<area shape="rect" id="node63" href="$classComponent.html#a9f987f6009a8ac8d986be0c521376b61" title="set the Name" alt="" coords="201,392,351,419"/>
+<area shape="rect" id="node67" href="$classComponent.html#a18696c616e921804bc10fbcfc0bc042d" title="sets the nuclide model to the src nuclide model" alt="" coords="198,443,354,485"/>
+<area shape="rect" id="node69" href="$classComponent.html#a62a3167370c82ac5dc87ab8780a000e8" title="sets the thermal model to the src thermal model" alt="" coords="197,509,355,550"/>
+<area shape="rect" id="node71" href="$classComponent.html#a373cab3149085634edab0a736571ef36" title="set the ComponentType" alt="" coords="205,575,347,601"/>
+<area shape="rect" id="node5" href="$classNuclideModelFactory.html#ae4d6c2d858db21159a0aa4b4a327f150" title="Creates a concrete NuclideModel from a QueryEngine pointer." alt="" coords="431,158,569,199"/>
+<area shape="rect" id="node36" href="$classComponent.html#aeef71aff14ef7436610edb8dc303072c" title="get the material table that this component is made of (clay, salt, glass, etc.)" alt="" coords="425,275,575,301"/>
+<area shape="rect" id="node38" href="$classComponent.html#a76e730ce193241927557723412f0e33c" title="get the pointer to the geometry object" alt="" coords="437,224,563,251"/>
+<area shape="rect" id="node40" href="$classComponent.html#a70e539703d79fdb8469684bb141a14d5" title="get the ID" alt="" coords="447,107,553,133"/>
+<area shape="rect" id="node7" href="$classNuclideModelFactory.html#a7e813a935959541f9a4be8db373a7d60" title="Enumerates a string if it is one of the named NuclideModelTypes." alt="" coords="645,158,782,199"/>
+<area shape="rect" id="node9" href="$classDegRateNuclide.html#a931e7e6bc8e34e05147bfa7d4f877bd5" title="A constructor for the DegRate Nuclide Model that returns a shared pointer." alt="" coords="636,275,791,301"/>
+<area shape="rect" id="node17" href="$classLumpedNuclide.html#a85e4ddfc33484ac0f0b4a1643504b34f" title="A constructor for the Lumped Nuclide Model that returns a shared pointer." alt="" coords="639,5,787,32"/>
+<area shape="rect" id="node22" href="$classMixedCellNuclide.html#aed563190225faedfde481d99bf7cd41a" title="A constructor for the Mixed Cell Nuclide Model that returns a shared pointer." alt="" coords="635,56,792,83"/>
+<area shape="rect" id="node27" href="$classOneDimPPMNuclide.html#a6994281621f994604022cf83a1bb6dca" title="A constructor for the OneDimPPM Nuclide Model that returns a shared pointer." alt="" coords="624,224,803,251"/>
+<area shape="rect" id="node32" href="$classStubNuclide.html#a3d99394a670118b7b87f352df4057480" title="A constructor for the Stub Nuclide Model that returns a shared pointer." alt="" coords="649,107,778,133"/>
+<area shape="rect" id="node11" href="$classDegRateNuclide.html#a9ddd42321729780b97175a83b39af820" title="Default constructor for the nuclide model class." alt="" coords="851,267,1063,293"/>
+<area shape="rect" id="node13" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="1112,132,1269,159"/>
+<area shape="rect" id="node15" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="1317,132,1451,159"/>
+<area shape="rect" id="node19" href="$classLumpedNuclide.html#a44a94055dd25ba73b56f4b084f9e3b67" title="Default constructor for the lumped parameter nuclide model class." alt="" coords="857,5,1057,32"/>
+<area shape="rect" id="node24" href="$classMixedCellNuclide.html#a0887740c1d7c8d94ba8c830e49cb3d03" title="Default constructor for the nuclide model class." alt="" coords="868,57,1047,98"/>
+<area shape="rect" id="node29" href="$classOneDimPPMNuclide.html#acfcca62ae6f45464a9c794fc1d7a9667" title="Default constructor for the mixed cell nuclide model class." alt="" coords="862,191,1053,233"/>
+<area shape="rect" id="node34" href="$classStubNuclide.html#a576b13c902fc15320a490a3056dd2fd8" title="Default constructor for the nuclide model class." alt="" coords="876,123,1039,149"/>
+<area shape="rect" id="node44" href="$classThermalModelFactory.html#ad6f62153e647412270420e61cc780da4" title="Creates a concrete ThermalModel from a QueryEngine pointer." alt="" coords="429,326,571,367"/>
+<area shape="rect" id="node46" href="$classThermalModelFactory.html#a2192ed1148b4e245e75e23d1bac2c62e" title="Enumerates a string if it is one of the named ThermalModelTypes." alt="" coords="643,326,784,367"/>
+<area shape="rect" id="node48" href="$classLumpedThermal.html#a1bdbe825b98270f29a98752d09795ece" title="A constructor for the Lumped Nuclide Model that returns a shared pointer." alt="" coords="637,392,789,419"/>
+<area shape="rect" id="node52" href="$classStubThermal.html#ae8bb37a565f9b5b8ad10187f65ee9247" title="A constructor for the Lumped Nuclide Model that returns a shared pointer." alt="" coords="647,443,780,469"/>
+<area shape="rect" id="node50" href="$classLumpedThermal.html#a7edc69b56e8196bb936022f91edc7751" title="Default constructor for the component class." alt="" coords="853,392,1061,419"/>
+<area shape="rect" id="node54" href="$classStubThermal.html#a3f08468a0de8fb142768dbfea09b3e04" title="Default constructor for the component class." alt="" coords="872,443,1043,469"/>
+<area shape="rect" id="node65" href="$classComponent.html#abc16efaec4850982ef85670a3db42902" title="get the Name" alt="" coords="437,392,563,419"/>
+<area shape="rect" id="node73" href="$classComponent.html#abfd8b368e78675bb9bb3785bc66a79e7" title="Returns the ComponentType of this component (WF, WP, etc.)" alt="" coords="441,575,559,601"/>
+</map>

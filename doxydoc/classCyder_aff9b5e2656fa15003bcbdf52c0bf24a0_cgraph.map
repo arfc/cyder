@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classCyder.html#a870643d31b286b98164d3528a45b532a" title="Condition the waste." alt="" coords="205,5,353,32"/>
+<area shape="rect" id="node5" href="$classCyder.html#a100c8b2f13ef244024dfe8456e9050cf" title="Load the buffer with the waste." alt="" coords="219,56,338,83"/>
+<area shape="rect" id="node9" href="$classCyder.html#a9fbfcfc95bc43725820b69a7acf7ca79" title="Package the waste." alt="" coords="203,107,354,133"/>
+<area shape="rect" id="node7" href="$classCyder.html#a47c218cde363192358e2f2e8e37ce1c8" title="Set the placement for the component within the repository." alt="" coords="403,56,541,83"/>
+</map>

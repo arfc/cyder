@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classNuclideModel.html#a213ddde82c0cb9f5fd0bb78b323b06c6" title="Returns the concentration gradient based on a simple finite difference between two datapoints..." alt="" coords="258,5,382,46"/>
+<area shape="rect" id="node5" href="$classNuclideModel.html#a102e5bef680f1e38080cfbbfb5db04f1" title="Returns the map of isotopes to concentrations at the time profided." alt="" coords="243,121,397,148"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#af5f177f93d00d0954ef9918de8e49787" title="returns the time at which the vec_hist and conc_hist were updated" alt="" coords="456,63,579,105"/>
+<area shape="rect" id="node11" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="253,172,387,199"/>
+<area shape="rect" id="node9" href="$classNuclideModel.html#a4cc244e098b777e6b898bfbd88b372d1" title="Update the hists at a certain time." alt="" coords="446,129,589,156"/>
+</map>

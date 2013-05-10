@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classLumpedNuclide.html#aef085060f2c99d83e2f6299495bad534" title="initializes the model parameters from an QueryEngine object" alt="" coords="254,23,423,65"/>
+<area shape="rect" id="node11" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="260,89,417,116"/>
+<area shape="rect" id="node5" href="$classLumpedNuclide.html#a73be8dc65de1a5709329fbe692120486" title="Returns the FormulationType corresponding to the string." alt="" coords="472,23,645,65"/>
+<area shape="rect" id="node7" href="$classLumpedNuclide.html#ae01dea11bba2fe4657661a510dc4d9da" title="Returns the nuclide model type." alt="" coords="697,5,836,32"/>
+<area shape="rect" id="node9" href="$classLumpedNuclide.html#ac8a0f8a6a9d3bad31686ee35dfc6cc68" title="Returns the nuclide model type name." alt="" coords="693,56,840,83"/>
+<area shape="rect" id="node13" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="492,89,625,116"/>
+</map>

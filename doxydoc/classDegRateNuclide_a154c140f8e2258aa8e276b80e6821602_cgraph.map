@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classNuclideModel.html#a2efe198eadc28e61f6f3fa9997e55a61" title="spits out a number instead of a BCType" alt="" coords="230,52,439,79"/>
+<area shape="rect" id="node9" href="$classDegRateNuclide.html#a0bee2d5ea187898a660bb7c358b98474" title="Sets the boundary condition type used on the inner boundary." alt="" coords="266,103,403,145"/>
+<area shape="rect" id="node13" href="$classDegRateNuclide.html#a09c01817e2a1209d739276c6e6e90713" title="returns the degradation rate that characterizes this model" alt="" coords="266,169,403,210"/>
+<area shape="rect" id="node15" href="$classDegRateNuclide.html#aa7a09a4c513b5240fd08e8e948d2d4e5" title="Set the advective velocity v_ through this component." alt="" coords="259,235,410,261"/>
+<area shape="rect" id="node5" href="$classNuclideModel.html#acddd6ea8520670773d0092192905514b" title="returns the NuclideModelType of the model" alt="" coords="509,5,635,32"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#aebc698edf5c584486d99354b9902e719" title="returns the name of the NuclideModelType of the model" alt="" coords="505,56,639,83"/>
+<area shape="rect" id="node11" href="$classDegRateNuclide.html#af1ec0089fee443c7651e454447fe4ab9" title="Sets the boundary condition type used on the inner boundary." alt="" coords="489,111,655,137"/>
+<area shape="rect" id="node17" href="$classDegRateNuclide.html#a8c5196767ef785df9e7d1375ecf65f45" title="The advective velocity through this component." alt="" coords="509,235,635,261"/>
+</map>

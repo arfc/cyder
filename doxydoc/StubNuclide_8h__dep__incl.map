@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$Component_8cpp.html" title="Implements the Component class used by the Generic Repository." alt="" coords="5,80,117,107"/>
+<area shape="rect" id="node5" href="$NuclideModelFactory_8cpp.html" title="Implements the NuclideModelFactory class used by the Generic Repository." alt="" coords="143,80,305,107"/>
+<area shape="rect" id="node7" href="$StubNuclide_8cpp.html" title="Implements the StubNuclide class that gives an example of a concrete NuclideModel." alt="" coords="329,80,444,107"/>
+<area shape="rect" id="node9" href="$ComponentTests_8cpp.html" title="ComponentTests.cpp" alt="" coords="468,80,612,107"/>
+<area shape="rect" id="node11" href="$StubNuclideTests_8h.html" title="StubNuclideTests.h" alt="" coords="636,80,767,107"/>
+<area shape="rect" id="node13" href="$StubNuclideTests_8cpp.html" title="StubNuclideTests.cpp" alt="" coords="629,155,773,181"/>
+</map>

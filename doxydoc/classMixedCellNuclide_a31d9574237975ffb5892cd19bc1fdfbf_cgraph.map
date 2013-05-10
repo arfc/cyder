@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMatTools.html#acff2ecaab19d9769a4861b492fc0f7fc" title="Converts a standard isoid into an element." alt="" coords="216,5,355,32"/>
+<area shape="rect" id="node5" href="$classMixedCellNuclide.html#a884b79f39d1e48238667322cb3883f5a" title="Gets boolean indicating whether to incorporate sorption." alt="" coords="217,57,353,98"/>
+<area shape="rect" id="node7" href="$classSolLim.html#a70b855b5ccf9a98e90c5e7cd9c69108f" title="Returns m_ff the contaminant mass in the free fluid volume [kg]." alt="" coords="241,123,329,149"/>
+<area shape="rect" id="node9" href="$classMixedCellNuclide.html#ac8b7547e128fc94381cc8f78ee795bc6" title="returns the total degradation of the component" alt="" coords="203,173,367,200"/>
+<area shape="rect" id="node11" href="$classMixedCellNuclide.html#aaafb2b93f439862ff2ed7d58255bec43" title="Gets the fluid volume, based on porosity." alt="" coords="214,224,357,251"/>
+<area shape="rect" id="node17" href="$classMixedCellNuclide.html#ae50f24fa135243a68cf59b1b582a8210" title="Gets the fluid volume, based on porosity." alt="" coords="212,275,359,301"/>
+<area shape="rect" id="node13" href="$classMixedCellNuclide.html#afeb802a87d91e39ae2825f76bf20c483" title="Gets the total volume." alt="" coords="427,224,573,251"/>
+<area shape="rect" id="node15" href="$classMixedCellNuclide.html#a05a6973cebcc3ac3fe1bda13915838df" title="The porosity (a fraction) of the material of this component." alt="" coords="417,275,583,301"/>
+</map>

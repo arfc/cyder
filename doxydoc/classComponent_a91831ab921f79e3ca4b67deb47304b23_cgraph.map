@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classComponent.html#a76e730ce193241927557723412f0e33c" title="get the pointer to the geometry object" alt="" coords="267,5,392,32"/>
+<area shape="rect" id="node5" href="$classComponent.html#aeef71aff14ef7436610edb8dc303072c" title="get the material table that this component is made of (clay, salt, glass, etc.)" alt="" coords="254,56,405,83"/>
+<area shape="rect" id="node7" href="$classThermalModelFactory.html#ad6f62153e647412270420e61cc780da4" title="Creates a concrete ThermalModel from a QueryEngine pointer." alt="" coords="259,107,400,149"/>
+<area shape="rect" id="node9" href="$classThermalModelFactory.html#a2192ed1148b4e245e75e23d1bac2c62e" title="Enumerates a string if it is one of the named ThermalModelTypes." alt="" coords="459,49,600,90"/>
+<area shape="rect" id="node11" href="$classLumpedThermal.html#a1bdbe825b98270f29a98752d09795ece" title="A constructor for the Lumped Nuclide Model that returns a shared pointer." alt="" coords="453,115,605,141"/>
+<area shape="rect" id="node15" href="$classStubThermal.html#ae8bb37a565f9b5b8ad10187f65ee9247" title="A constructor for the Lumped Nuclide Model that returns a shared pointer." alt="" coords="463,165,596,192"/>
+<area shape="rect" id="node13" href="$classLumpedThermal.html#a7edc69b56e8196bb936022f91edc7751" title="Default constructor for the component class." alt="" coords="653,115,861,141"/>
+<area shape="rect" id="node17" href="$classStubThermal.html#a3f08468a0de8fb142768dbfea09b3e04" title="Default constructor for the component class." alt="" coords="672,165,843,192"/>
+</map>

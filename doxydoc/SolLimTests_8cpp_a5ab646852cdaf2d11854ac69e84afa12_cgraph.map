@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSolLim.html#a56e02d7e2903b6a684f41505d34c0ff5" title="Returns m_aff the available contaminant mass in the free fluid volume [kg]." alt="" coords="123,5,219,32"/>
+<area shape="rect" id="node5" href="$classSolLim.html#adbcfe228849993736cf53d52b1c59dea" title="Returns m_f the contaminant mass in the fluid volume [kg]." alt="" coords="128,56,213,83"/>
+<area shape="rect" id="node7" href="$classSolLim.html#a70b855b5ccf9a98e90c5e7cd9c69108f" title="Returns m_ff the contaminant mass in the free fluid volume [kg]." alt="" coords="127,107,215,133"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSTCDB.html#a625261aff60a022276ed43e71298927f" title="returns the table matching the mat string." alt="" coords="144,95,245,121"/>
+<area shape="rect" id="node5" href="$classSTCDB.html#a1efabebf7b28129a6b3a7c9bf8ef8dae" title="Converts the th_params struct into a coded name." alt="" coords="512,5,645,32"/>
+<area shape="rect" id="node7" href="$classSTCDB.html#a9d9c78687eae453b8ec736e95d36c4b8" title="checks whether a table associated with a particular mat has been created" alt="" coords="317,145,440,172"/>
+<area shape="rect" id="node9" href="$classSTCDB.html#a5d095c7cb7dfab36a04bdb46b22ec8d5" title="a function to initialize a large array of element_t structs via the SQLite/C++ API" alt="" coords="294,95,463,121"/>
+<area shape="rect" id="node11" href="$classSTCDB.html#a1ac752589ad0f369583feb4d25411de7" title="This returns the iso_index_ for a particular db and mat struct." alt="" coords="697,183,823,209"/>
+<area shape="rect" id="node16" href="$classSTCDB.html#ab5a0066e463e59bc22371404788f7ab9" title="This returns the stc_array_ for a particular db and mat struct." alt="" coords="516,157,641,184"/>
+<area shape="rect" id="node18" href="$classSTCDB.html#a68453bfd4bcbd2856fa7c4a48fedc519" title="Finds the name of the table in the database for the mat struct ." alt="" coords="701,81,819,108"/>
+<area shape="rect" id="node22" href="$classSTCDB.html#aad5de8827ca0c2b2aaa92b7b014d311c" title="This returns the time_index for a particular db and mat struct." alt="" coords="694,132,826,159"/>
+<area shape="rect" id="node13" href="$classSTCDB.html#a11e36bda53fb035d75d68ef45a9b165e" title="Returns a map from values to indices of the query result." alt="" coords="889,157,1010,184"/>
+<area shape="rect" id="node20" href="$classSTCDB.html#af723d64077649bada45bf71648ea8ee4" title="this helper function provides the WHERE clause that selects the mat from the db." alt="" coords="875,81,1024,108"/>
+</map>

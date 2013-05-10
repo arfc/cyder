@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classCyder.html#ab1f909f967b83c4bb9732970ed92349c" title="Make requests based on capacity." alt="" coords="177,31,325,57"/>
+<area shape="rect" id="node11" href="$classCyder.html#a47c218cde363192358e2f2e8e37ce1c8" title="Set the placement for the component within the repository." alt="" coords="181,81,320,108"/>
+<area shape="rect" id="node5" href="$classCyder.html#a149d8414b6c73fadc1ebd7fdd5e01f4a" title="get the commodity&#45;specific capacity of the Cyder" alt="" coords="373,31,504,57"/>
+<area shape="rect" id="node7" href="$classCyder.html#a768d9fa5623bcf7df74ace33fba85b2b" title="get the total mass of the stuff in the inventory" alt="" coords="553,5,698,32"/>
+<area shape="rect" id="node9" href="$classCyder.html#aaed516c60b4d44d1016c974cfa2f9e7e" title="get the total mass of the stuff in the stocks" alt="" coords="559,56,691,83"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classThermalModel.html" title="Abstract interface for heat transport models to be used in the Cyder." alt="" coords="6,56,106,83"/>
+<area shape="rect" id="node3" href="$classLumpedThermal.html" title="LumpedThermal is a skeleton component model that does nothing." alt="" coords="155,5,267,32"/>
+<area shape="rect" id="node5" href="$classSTCThermal.html" title="STCThermal is a skeleton component model that does nothing." alt="" coords="165,56,257,83"/>
+<area shape="rect" id="node7" href="$classStubThermal.html" title="StubThermal is a skeleton component model that does nothing." alt="" coords="164,107,257,133"/>
+</map>

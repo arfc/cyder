@@ -1,0 +1,19 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMixedCellNuclide.html#a07879fcd242a368e6f35be89b4a599b0" title="initializes the model parameters from a QueryEngine object" alt="" coords="232,221,411,262"/>
+<area shape="rect" id="node33" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="243,344,400,371"/>
+<area shape="rect" id="node5" href="$classMixedCellNuclide.html#afeb0fca80b247c4c87b6e24c4dbf746d" title="Set the advective velocity v_ through this component." alt="" coords="487,5,641,32"/>
+<area shape="rect" id="node9" href="$classMixedCellNuclide.html#ab7072339ce63f0929dc317516860e872" title="returns the degradation rate that characterizes this model" alt="" coords="494,57,634,98"/>
+<area shape="rect" id="node11" href="$classMixedCellNuclide.html#ae480ae64269b3b03cc69815981a30f4c" title="Sets boolean indicating whether to incorporate sorption." alt="" coords="494,122,634,163"/>
+<area shape="rect" id="node15" href="$classMixedCellNuclide.html#aa9b122e16fec4ae76b85f066fc7dee6a" title="Set the porosity (a fraction) of the material of this component." alt="" coords="494,187,634,229"/>
+<area shape="rect" id="node19" href="$classMixedCellNuclide.html#a34ddf31969fae36819885ccc5ea754a9" title="Sets boolean indicating whether to incorporate solubility limits." alt="" coords="494,253,634,294"/>
+<area shape="rect" id="node23" href="$classMixedCellNuclide.html#aa71266ba633e568b64a78b5b47a981b2" title="Sets the boundary condition type used on the inner boundary." alt="" coords="494,318,634,359"/>
+<area shape="rect" id="node27" href="$classNuclideModel.html#a2efe198eadc28e61f6f3fa9997e55a61" title="spits out a number instead of a BCType" alt="" coords="459,384,669,411"/>
+<area shape="rect" id="node7" href="$classMixedCellNuclide.html#a0bf61cedc720d97831847000041d3727" title="The advective velocity through this component." alt="" coords="737,5,868,32"/>
+<area shape="rect" id="node13" href="$classMixedCellNuclide.html#a884b79f39d1e48238667322cb3883f5a" title="Gets boolean indicating whether to incorporate sorption." alt="" coords="735,122,871,163"/>
+<area shape="rect" id="node17" href="$classMixedCellNuclide.html#a05a6973cebcc3ac3fe1bda13915838df" title="The porosity (a fraction) of the material of this component." alt="" coords="719,195,886,221"/>
+<area shape="rect" id="node21" href="$classMixedCellNuclide.html#a91a934de95923ff73a413f526c1cd2d8" title="Gets boolean indicating whether to incorporate solubility limits." alt="" coords="733,253,872,294"/>
+<area shape="rect" id="node25" href="$classMixedCellNuclide.html#add97a2544fbb4bd3b332a0705804994d" title="Sets the boundary condition type used on the inner boundary." alt="" coords="718,325,887,352"/>
+<area shape="rect" id="node29" href="$classNuclideModel.html#acddd6ea8520670773d0092192905514b" title="returns the NuclideModelType of the model" alt="" coords="739,380,866,407"/>
+<area shape="rect" id="node31" href="$classNuclideModel.html#aebc698edf5c584486d99354b9902e719" title="returns the name of the NuclideModelType of the model" alt="" coords="735,431,870,457"/>
+<area shape="rect" id="node35" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="497,435,631,461"/>
+</map>

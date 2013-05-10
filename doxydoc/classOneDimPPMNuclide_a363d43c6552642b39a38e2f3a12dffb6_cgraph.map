@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classOneDimPPMNuclide.html#a22fdee4288efb308b1f2bd2afecff9b0" title="initializes the model parameters from an xmlNodePtr" alt="" coords="246,5,445,46"/>
+<area shape="rect" id="node5" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="267,71,424,97"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="493,71,627,97"/>
+</map>

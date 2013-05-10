@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSTCThermal.html#a702f8eb8d632bdfb9537601df3e49230" title="returns alpha_th_, the thermal diffusivity []" alt="" coords="403,34,551,61"/>
+<area shape="rect" id="node5" href="$classSTCThermal.html#addf69df1faf906fcf05ac327445fad62" title="returns k_th_, the thermal conductivity []" alt="" coords="417,106,538,133"/>
+<area shape="rect" id="node7" href="$classSTCThermal.html#aa6eb3a61fd5358cce72fa0c1caa7904e" title="returns mat_, the mat_t material through which to transport heat" alt="" coords="418,425,537,452"/>
+<area shape="rect" id="node9" href="$classSTCThermal.html#a76d8b0438969e1689c7d9606d513044f" title="returns spacing_, the spacing between waste packages (uniform grid) [m]" alt="" coords="412,269,543,296"/>
+<area shape="rect" id="node11" href="$classSTCThermal.html#aff4811ed908c540d7f45d6cd2fccc8b7" title="sets alpha_th_, the thermal diffusivity []" alt="" coords="182,45,354,72"/>
+<area shape="rect" id="node16" href="$classThermalModel.html#aa02d9e82ad9c586b285951acc8d433a4" title="set the geometry shared pointer" alt="" coords="187,501,349,528"/>
+<area shape="rect" id="node18" href="$classSTCThermal.html#aeab08724a9ab6aa1b0cd311c0f41ca3e" title="sets k_th_, the thermal conductivity[]" alt="" coords="195,146,341,173"/>
+<area shape="rect" id="node22" href="$classSTCThermal.html#aa9842fa3fad21f872ba83b6187e7eb69" title="sets mat_, an optional name for the material through which to transport heat" alt="" coords="197,400,339,426"/>
+<area shape="rect" id="node25" href="$classSTCThermal.html#a09ecd4a607f1ab833014bc5f1fd8c817" title="sets r_calc_, the radius at which the temperature is to be calculated [m]" alt="" coords="191,197,345,224"/>
+<area shape="rect" id="node29" href="$classSTCThermal.html#a9be6caebaba04072afd87b3133949c9a" title="sets spacing_, the spacing between waste packages (uniform grid) [m]" alt="" coords="185,248,351,274"/>
+<area shape="rect" id="node32" href="$classSTCThermal.html#a13666481d41c6c8156c514e0467ec009" title="returns spacing_, the spacing between waste packages (uniform grid) [m]" alt="" coords="406,334,549,361"/>
+<area shape="rect" id="node13" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="415,174,539,215"/>
+</map>

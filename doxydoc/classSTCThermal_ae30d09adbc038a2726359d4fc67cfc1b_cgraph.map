@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSTCThermal.html#ac03a7e7965a386f154f32219cd75e70b" title="initializes the STC map from the STCDB." alt="" coords="262,107,461,133"/>
+<area shape="rect" id="node13" href="$classSTCThermal.html#aff4811ed908c540d7f45d6cd2fccc8b7" title="sets alpha_th_, the thermal diffusivity []" alt="" coords="275,292,447,319"/>
+<area shape="rect" id="node19" href="$classSTCThermal.html#aeab08724a9ab6aa1b0cd311c0f41ca3e" title="sets k_th_, the thermal conductivity[]" alt="" coords="289,241,434,268"/>
+<area shape="rect" id="node24" href="$classSTCThermal.html#aa9842fa3fad21f872ba83b6187e7eb69" title="sets mat_, an optional name for the material through which to transport heat" alt="" coords="290,448,433,475"/>
+<area shape="rect" id="node28" href="$classSTCThermal.html#a09ecd4a607f1ab833014bc5f1fd8c817" title="sets r_calc_, the radius at which the temperature is to be calculated [m]" alt="" coords="284,343,439,369"/>
+<area shape="rect" id="node33" href="$classSTCThermal.html#a9be6caebaba04072afd87b3133949c9a" title="sets spacing_, the spacing between waste packages (uniform grid) [m]" alt="" coords="278,393,445,420"/>
+<area shape="rect" id="node5" href="$structth__params__t.html#a88d02ab41515a58180f5749f48cb1340" title="th_params_t::a" alt="" coords="531,107,637,133"/>
+<area shape="rect" id="node7" href="$structth__params__t.html#ab1888b283d0fbe6fa69f984bd2c92f94" title="th_params_t::k" alt="" coords="531,157,637,184"/>
+<area shape="rect" id="node9" href="$structth__params__t.html#a27459cd2e338d727fb4436537c031be2" title="th_params_t::r" alt="" coords="533,5,635,32"/>
+<area shape="rect" id="node11" href="$structth__params__t.html#a5e3d7b2f754d231f9e7885a2083fcec6" title="th_params_t::s" alt="" coords="531,56,637,83"/>
+<area shape="rect" id="node15" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="522,310,646,351"/>
+<area shape="rect" id="node17" href="$classSTCThermal.html#a702f8eb8d632bdfb9537601df3e49230" title="returns alpha_th_, the thermal diffusivity []" alt="" coords="510,259,658,285"/>
+<area shape="rect" id="node22" href="$classSTCThermal.html#addf69df1faf906fcf05ac327445fad62" title="returns k_th_, the thermal conductivity []" alt="" coords="523,208,645,235"/>
+<area shape="rect" id="node26" href="$classSTCThermal.html#aa6eb3a61fd5358cce72fa0c1caa7904e" title="returns mat_, the mat_t material through which to transport heat" alt="" coords="525,477,643,504"/>
+<area shape="rect" id="node31" href="$classSTCThermal.html#a76d8b0438969e1689c7d9606d513044f" title="returns spacing_, the spacing between waste packages (uniform grid) [m]" alt="" coords="519,376,649,403"/>
+<area shape="rect" id="node36" href="$classSTCThermal.html#a13666481d41c6c8156c514e0467ec009" title="returns spacing_, the spacing between waste packages (uniform grid) [m]" alt="" coords="513,427,655,453"/>
+</map>

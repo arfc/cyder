@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$STCDB_8cpp.html" title="STCDB.cpp" alt="" coords="99,80,191,107"/>
+<area shape="rect" id="node5" href="$STCThermal_8h.html" title="Declares the STCThermal class that gives a concrete ThermalModel example." alt="" coords="215,80,317,107"/>
+<area shape="rect" id="node15" href="$STCDBTests_8h.html" title="STCDBTests.h" alt="" coords="449,80,556,107"/>
+<area shape="rect" id="node7" href="$STCThermal_8cpp.html" title="Implements the STCThermal class, an example of a concrete ThermalModel." alt="" coords="5,155,123,181"/>
+<area shape="rect" id="node9" href="$STCThermalTests_8h.html" title="STCThermalTests.h" alt="" coords="147,155,280,181"/>
+<area shape="rect" id="node13" href="$ThermalModelFactory_8cpp.html" title="Implements the ThermalModelFactory class used by the Generic Repository." alt="" coords="305,155,471,181"/>
+<area shape="rect" id="node11" href="$STCThermalTests_8cpp.html" title="STCThermalTests.cpp" alt="" coords="139,229,287,256"/>
+<area shape="rect" id="node17" href="$STCDBTests_8cpp.html" title="STCDBTests.cpp" alt="" coords="496,155,619,181"/>
+</map>

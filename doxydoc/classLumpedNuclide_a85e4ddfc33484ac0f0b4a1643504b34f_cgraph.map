@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classLumpedNuclide.html#a44a94055dd25ba73b56f4b084f9e3b67" title="Default constructor for the lumped parameter nuclide model class." alt="" coords="203,5,403,32"/>
+<area shape="rect" id="node5" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="451,5,608,32"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="656,5,789,32"/>
+</map>

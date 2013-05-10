@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMatTools.html#a5cb215642fa4778dd0ae9cc7c7ece8bc" title="This is a helper function that returns the sum of two IsoConcMaps." alt="" coords="246,5,413,32"/>
+<area shape="rect" id="node5" href="$classMatTools.html#a19a466ff6ee992c0cf8dcf2415ed6726" title="This is a helper function that scales an IsoConcMap with a scalar." alt="" coords="246,56,413,83"/>
+<area shape="rect" id="node7" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="462,49,586,90"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classNuclideModel.html#aa86e1d2933183ec0f777e4bf0459db2c" title="Returns the IsoVector mass pair for a certain time." alt="" coords="238,41,386,68"/>
+<area shape="rect" id="node5" href="$classNuclideModel.html#af5f177f93d00d0954ef9918de8e49787" title="returns the time at which the vec_hist and conc_hist were updated" alt="" coords="445,5,568,46"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#a4cc244e098b777e6b898bfbd88b372d1" title="Update the hists at a certain time." alt="" coords="435,71,578,97"/>
+</map>

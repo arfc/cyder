@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMixedCellNuclide.html#a6a3e61e84f5ed88c71bff3c1ffc48487" title="returns the degradation rate that characterizes this model" alt="" coords="217,5,389,32"/>
+<area shape="rect" id="node5" href="$classMixedCellNuclide.html#a13ac90eb31e8e934424231d1b2d32752" title="Returns the last timestamp at which this component was last degraded [integer timestamp]." alt="" coords="449,111,591,153"/>
+<area shape="rect" id="node7" href="$classMixedCellNuclide.html#ab7072339ce63f0929dc317516860e872" title="returns the degradation rate that characterizes this model" alt="" coords="233,107,373,149"/>
+<area shape="rect" id="node9" href="$classMixedCellNuclide.html#a2e0f3016d3ac6d2393fea04e8d7024fc" title="Set the last_degraded_ time [integer timestamp]." alt="" coords="233,173,373,214"/>
+<area shape="rect" id="node12" href="$classMixedCellNuclide.html#a8b810af67c2b407770e7c801906c46b4" title="sets the total degradation of the component" alt="" coords="233,238,373,279"/>
+<area shape="rect" id="node14" href="$classMixedCellNuclide.html#ac8b7547e128fc94381cc8f78ee795bc6" title="returns the total degradation of the component" alt="" coords="438,275,602,301"/>
+</map>

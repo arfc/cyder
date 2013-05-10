@@ -1,0 +1,19 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classComponent.html#a76e730ce193241927557723412f0e33c" title="get the pointer to the geometry object" alt="" coords="264,5,389,32"/>
+<area shape="rect" id="node5" href="$classComponent.html#a70e539703d79fdb8469684bb141a14d5" title="get the ID" alt="" coords="273,56,380,83"/>
+<area shape="rect" id="node7" href="$classComponent.html#aeef71aff14ef7436610edb8dc303072c" title="get the material table that this component is made of (clay, salt, glass, etc.)" alt="" coords="251,107,402,133"/>
+<area shape="rect" id="node9" href="$classNuclideModelFactory.html#ae4d6c2d858db21159a0aa4b4a327f150" title="Creates a concrete NuclideModel from a QueryEngine pointer." alt="" coords="258,158,395,199"/>
+<area shape="rect" id="node11" href="$classNuclideModelFactory.html#a7e813a935959541f9a4be8db373a7d60" title="Enumerates a string if it is one of the named NuclideModelTypes." alt="" coords="471,23,609,65"/>
+<area shape="rect" id="node13" href="$classDegRateNuclide.html#a931e7e6bc8e34e05147bfa7d4f877bd5" title="A constructor for the DegRate Nuclide Model that returns a shared pointer." alt="" coords="463,89,617,116"/>
+<area shape="rect" id="node21" href="$classLumpedNuclide.html#a85e4ddfc33484ac0f0b4a1643504b34f" title="A constructor for the Lumped Nuclide Model that returns a shared pointer." alt="" coords="466,140,614,167"/>
+<area shape="rect" id="node26" href="$classMixedCellNuclide.html#aed563190225faedfde481d99bf7cd41a" title="A constructor for the Mixed Cell Nuclide Model that returns a shared pointer." alt="" coords="461,191,619,217"/>
+<area shape="rect" id="node31" href="$classOneDimPPMNuclide.html#a6994281621f994604022cf83a1bb6dca" title="A constructor for the OneDimPPM Nuclide Model that returns a shared pointer." alt="" coords="451,249,629,276"/>
+<area shape="rect" id="node36" href="$classStubNuclide.html#a3d99394a670118b7b87f352df4057480" title="A constructor for the Stub Nuclide Model that returns a shared pointer." alt="" coords="475,304,605,331"/>
+<area shape="rect" id="node15" href="$classDegRateNuclide.html#a9ddd42321729780b97175a83b39af820" title="Default constructor for the nuclide model class." alt="" coords="678,81,890,108"/>
+<area shape="rect" id="node17" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="939,161,1096,188"/>
+<area shape="rect" id="node19" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="1144,161,1277,188"/>
+<area shape="rect" id="node23" href="$classLumpedNuclide.html#a44a94055dd25ba73b56f4b084f9e3b67" title="Default constructor for the lumped parameter nuclide model class." alt="" coords="684,132,884,159"/>
+<area shape="rect" id="node28" href="$classMixedCellNuclide.html#a0887740c1d7c8d94ba8c830e49cb3d03" title="Default constructor for the nuclide model class." alt="" coords="695,183,873,225"/>
+<area shape="rect" id="node33" href="$classOneDimPPMNuclide.html#acfcca62ae6f45464a9c794fc1d7a9667" title="Default constructor for the mixed cell nuclide model class." alt="" coords="689,249,879,290"/>
+<area shape="rect" id="node38" href="$classStubNuclide.html#a576b13c902fc15320a490a3056dd2fd8" title="Default constructor for the nuclide model class." alt="" coords="703,315,865,341"/>
+</map>

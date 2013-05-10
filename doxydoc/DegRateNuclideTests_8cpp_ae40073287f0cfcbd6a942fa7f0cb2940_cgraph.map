@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classDegRateNuclide.html#a931e7e6bc8e34e05147bfa7d4f877bd5" title="A constructor for the DegRate Nuclide Model that returns a shared pointer." alt="" coords="264,5,419,32"/>
+<area shape="rect" id="node5" href="$classDegRateNuclide.html#a9ddd42321729780b97175a83b39af820" title="Default constructor for the nuclide model class." alt="" coords="467,5,679,32"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="728,5,885,32"/>
+<area shape="rect" id="node9" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="933,5,1067,32"/>
+</map>

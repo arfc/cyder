@@ -1,0 +1,20 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMixedCellNuclide.html#add97a2544fbb4bd3b332a0705804994d" title="Sets the boundary condition type used on the inner boundary." alt="" coords="427,51,597,78"/>
+<area shape="rect" id="node5" href="$classMixedCellNuclide.html#a6a3e61e84f5ed88c71bff3c1ffc48487" title="returns the degradation rate that characterizes this model" alt="" coords="206,47,378,74"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="445,190,579,217"/>
+<area shape="rect" id="node9" href="$classMixedCellNuclide.html#a884b79f39d1e48238667322cb3883f5a" title="Gets boolean indicating whether to incorporate sorption." alt="" coords="444,329,580,371"/>
+<area shape="rect" id="node11" href="$classMixedCellNuclide.html#a05a6973cebcc3ac3fe1bda13915838df" title="The porosity (a fraction) of the material of this component." alt="" coords="429,478,595,505"/>
+<area shape="rect" id="node13" href="$classMixedCellNuclide.html#aa71266ba633e568b64a78b5b47a981b2" title="Sets the boundary condition type used on the inner boundary." alt="" coords="222,99,362,140"/>
+<area shape="rect" id="node16" href="$classMixedCellNuclide.html#ab7072339ce63f0929dc317516860e872" title="returns the degradation rate that characterizes this model" alt="" coords="222,332,362,373"/>
+<area shape="rect" id="node18" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="213,215,371,242"/>
+<area shape="rect" id="node21" href="$classMixedCellNuclide.html#ae480ae64269b3b03cc69815981a30f4c" title="Sets boolean indicating whether to incorporate sorption." alt="" coords="222,267,362,308"/>
+<area shape="rect" id="node24" href="$classMixedCellNuclide.html#a2e0f3016d3ac6d2393fea04e8d7024fc" title="Set the last_degraded_ time [integer timestamp]." alt="" coords="222,565,362,607"/>
+<area shape="rect" id="node28" href="$classMixedCellNuclide.html#aa9b122e16fec4ae76b85f066fc7dee6a" title="Set the porosity (a fraction) of the material of this component." alt="" coords="222,500,362,541"/>
+<area shape="rect" id="node31" href="$classMixedCellNuclide.html#a34ddf31969fae36819885ccc5ea754a9" title="Sets boolean indicating whether to incorporate solubility limits." alt="" coords="222,631,362,672"/>
+<area shape="rect" id="node33" href="$classMixedCellNuclide.html#a91a934de95923ff73a413f526c1cd2d8" title="Gets boolean indicating whether to incorporate solubility limits." alt="" coords="443,660,581,701"/>
+<area shape="rect" id="node35" href="$classMixedCellNuclide.html#a8b810af67c2b407770e7c801906c46b4" title="sets the total degradation of the component" alt="" coords="222,748,362,789"/>
+<area shape="rect" id="node39" href="$classMixedCellNuclide.html#afeb0fca80b247c4c87b6e24c4dbf746d" title="Set the advective velocity v_ through this component." alt="" coords="215,814,369,841"/>
+<area shape="rect" id="node41" href="$classMixedCellNuclide.html#a0bf61cedc720d97831847000041d3727" title="The advective velocity through this component." alt="" coords="447,839,577,866"/>
+<area shape="rect" id="node26" href="$classMixedCellNuclide.html#a13ac90eb31e8e934424231d1b2d32752" title="Returns the last timestamp at which this component was last degraded [integer timestamp]." alt="" coords="441,565,583,607"/>
+<area shape="rect" id="node37" href="$classMixedCellNuclide.html#ac8b7547e128fc94381cc8f78ee795bc6" title="returns the total degradation of the component" alt="" coords="430,755,594,782"/>
+</map>

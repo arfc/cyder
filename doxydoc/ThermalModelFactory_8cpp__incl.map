@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node5" href="$ThermalModelFactory_8h.html" title="Declares the ThermalModelFactory class which produces ThermalModels." alt="" coords="313,80,463,107"/>
+<area shape="rect" id="node31" href="$LumpedThermal_8h.html" title="Declares the LumpedThermal class that gives a concrete ThermalModel example." alt="" coords="547,80,669,107"/>
+<area shape="rect" id="node39" href="$STCThermal_8h.html" title="Declares the STCThermal class that gives a concrete ThermalModel example." alt="" coords="871,80,973,107"/>
+<area shape="rect" id="node59" href="$StubThermal_8h.html" title="Declares the StubThermal class that gives a concrete ThermalModel example." alt="" coords="745,80,847,107"/>
+<area shape="rect" id="node9" href="$Geometry_8h.html" title="Declares the Geometry class for defining the cylindrical extent and position of the component..." alt="" coords="287,229,373,256"/>
+<area shape="rect" id="node13" href="$MatDataTable_8h.html" title="MatDataTable.h" alt="" coords="500,229,615,256"/>
+<area shape="rect" id="node23" href="$ThermalModel_8h.html" title="Declares the ThermalModel virtual class defining the heat transport model interface." alt="" coords="383,155,493,181"/>
+<area shape="rect" id="node45" href="$STCDB_8h.html" title="STCDB.h" alt="" coords="949,155,1027,181"/>
+<area shape="rect" id="node51" href="$STCDataTable_8h.html" title="STCDataTable.h" alt="" coords="639,229,757,256"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classLumpedNuclide.html#a02fe67aa688ae75a6717f03755fbdbd2" title="Gets the fluid volume, based on porosity." alt="" coords="189,31,323,57"/>
+<area shape="rect" id="node5" href="$classLumpedNuclide.html#adabcead98a9a1b537ac45c35ac20e094" title="The porosity of the permeable porous mediuam of this component. [%]." alt="" coords="371,5,530,32"/>
+<area shape="rect" id="node7" href="$classLumpedNuclide.html#affa88a31ee5af63104473af666831a31" title="Gets the total volume." alt="" coords="382,56,519,83"/>
+</map>

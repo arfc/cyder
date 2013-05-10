@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$Component_8cpp.html" title="Implements the Component class used by the Generic Repository." alt="" coords="5,80,117,107"/>
+<area shape="rect" id="node5" href="$LumpedThermal_8cpp.html" title="Implements the LumpedThermal class, an example of a concrete ThermalModel." alt="" coords="142,80,279,107"/>
+<area shape="rect" id="node7" href="$ThermalModelFactory_8cpp.html" title="Implements the ThermalModelFactory class used by the Generic Repository." alt="" coords="303,80,469,107"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classNuclideModel.html#a213ddde82c0cb9f5fd0bb78b323b06c6" title="Returns the concentration gradient based on a simple finite difference between two datapoints..." alt="" coords="277,5,401,46"/>
+<area shape="rect" id="node5" href="$classDegRateNuclide.html#ac28628aa6aafbf27b579731ad7cc6711" title="returns the prescribed concentration at the boundary, the dirichlet bc in kg/m^3" alt="" coords="249,71,429,97"/>
+<area shape="rect" id="node7" href="$classMatTools.html#aa059792374a061356e0f81c375a16cd9" title="Converts a CompMap and associated total mass to an IsoConcMap for a Volume." alt="" coords="477,44,672,71"/>
+<area shape="rect" id="node11" href="$classDegRateNuclide.html#a48f99f4cfae8401665820ea962faa657" title="Returns the last timestamp at which this component was last degraded [integer timestamp]." alt="" coords="503,96,646,123"/>
+<area shape="rect" id="node9" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="739,34,863,75"/>
+<area shape="rect" id="node13" href="$classDegRateNuclide.html#a36b4fe08e6d6c61f1029212e5e8f9e08" title="returns the total degradation of the component" alt="" coords="721,100,882,127"/>
+</map>

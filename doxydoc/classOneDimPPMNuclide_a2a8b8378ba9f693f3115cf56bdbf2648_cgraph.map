@@ -1,0 +1,24 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classOneDimPPMNuclide.html#aec9f6f005abf7d912a7471a06e1b750e" title="Absorbs the contents of the given Material into this OneDimPPMNuclide." alt="" coords="242,5,427,32"/>
+<area shape="rect" id="node5" href="$classOneDimPPMNuclide.html#aecd14881fd188a05c97cc54cb66d5454" title="Calculates the concentration of a single isotope due to C_0 after dt at radius r_calc." alt="" coords="238,201,431,242"/>
+<area shape="rect" id="node9" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="762,201,886,242"/>
+<area shape="rect" id="node17" href="$classOneDimPPMNuclide.html#a99aa48ec4c7f4759b9e04fd8680e1a4d" title="return initial concentration in the cell for this timestep" alt="" coords="257,360,413,387"/>
+<area shape="rect" id="node22" href="$classMatTools.html#a97a42f62c4b0cb64a984bb606dc1ef9f" title="sums the materials in the vector, filling the vec and kg with the cumulative IsoVector and total mass..." alt="" coords="975,613,1113,640"/>
+<area shape="rect" id="node32" href="$classOneDimPPMNuclide.html#a2efb8b8446eaec4ce4469138926e909c" title="return Co, the source concentration at the inner boundary" alt="" coords="254,575,415,601"/>
+<area shape="rect" id="node40" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="516,664,649,691"/>
+<area shape="rect" id="node43" href="$classMatTools.html#a3e92f60f75747f7410213a46007cd6ab" title="Converts an IsoConcMap and Volume to CompMap and associated total mass." alt="" coords="237,288,432,315"/>
+<area shape="rect" id="node47" href="$classMatTools.html#a26331bb3c29f03a8446787c8294aefaf" title="add comments" alt="" coords="271,765,398,792"/>
+<area shape="rect" id="node50" href="$classOneDimPPMNuclide.html#a521f3f8e760e81e703e053cccf081999" title="describe" alt="" coords="239,411,431,437"/>
+<area shape="rect" id="node7" href="$classOneDimPPMNuclide.html#a4949efaea37a660b22b4427ee8c36e7a" title="give doc" alt="" coords="501,157,664,184"/>
+<area shape="rect" id="node11" href="$classOneDimPPMNuclide.html#af2164b161fda003e073dab7c5272cdff" title="give doc" alt="" coords="501,208,664,235"/>
+<area shape="rect" id="node14" href="$classOneDimPPMNuclide.html#a3c1b1037b983accdc2981ad26a4bbac8" title="The advective velocity through this component." alt="" coords="507,563,658,589"/>
+<area shape="rect" id="node19" href="$classMatTools.html#aa059792374a061356e0f81c375a16cd9" title="Converts a CompMap and associated total mass to an IsoConcMap for a Volume." alt="" coords="485,309,680,336"/>
+<area shape="rect" id="node24" href="$classOneDimPPMNuclide.html#ae1e0a9971579da3f5edbf9d72afcdacb" title="Gets the fluid volume, based on porosity." alt="" coords="741,385,907,412"/>
+<area shape="rect" id="node26" href="$classOneDimPPMNuclide.html#a94cc5209d0c8a9fe06be39adaad50352" title="Gets the fluid volume, based on porosity." alt="" coords="963,385,1125,412"/>
+<area shape="rect" id="node28" href="$classOneDimPPMNuclide.html#ac76d0e8281c5338846c2a9fdd0f1144e" title="Gets the total fluid volume." alt="" coords="1185,360,1351,387"/>
+<area shape="rect" id="node30" href="$classOneDimPPMNuclide.html#a0d764b610a5b2786cb40c20ee3fbedf0" title="return porosity" alt="" coords="1174,411,1362,437"/>
+<area shape="rect" id="node34" href="$classOneDimPPMNuclide.html#a7d1420d42ccd528f57fc1d9bce7c8ba3" title="returns the prescribed concentration at the boundary, the dirichlet bc in kg/m^3" alt="" coords="481,613,685,640"/>
+<area shape="rect" id="node36" href="$classOneDimPPMNuclide.html#af25d2bc517c9419b70f30f0f981705bc" title="returns the available material source term at the outer boundary of the component" alt="" coords="733,606,915,647"/>
+<area shape="rect" id="node52" href="$classMatTools.html#a5cb215642fa4778dd0ae9cc7c7ece8bc" title="This is a helper function that returns the sum of two IsoConcMaps." alt="" coords="499,512,666,539"/>
+<area shape="rect" id="node54" href="$classMatTools.html#a19a466ff6ee992c0cf8dcf2415ed6726" title="This is a helper function that scales an IsoConcMap with a scalar." alt="" coords="499,411,666,437"/>
+</map>

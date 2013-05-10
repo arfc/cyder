@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMatTools.html#a97a42f62c4b0cb64a984bb606dc1ef9f" title="sums the materials in the vector, filling the vec and kg with the cumulative IsoVector and total mass..." alt="" coords="223,5,361,32"/>
+<area shape="rect" id="node5" href="$classDegRateNuclide.html#a36b4fe08e6d6c61f1029212e5e8f9e08" title="returns the total degradation of the component" alt="" coords="211,56,373,83"/>
+</map>

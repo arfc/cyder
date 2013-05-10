@@ -1,0 +1,24 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMatTools.html#a3e92f60f75747f7410213a46007cd6ab" title="Converts an IsoConcMap and Volume to CompMap and associated total mass." alt="" coords="435,6,629,32"/>
+<area shape="rect" id="node7" href="$classMixedCellNuclide.html#a0f5d41e85d9864ca78d4285a59a45de7" title="returns the prescribed concentration at the boundary, the dirichlet bc in kg/m^3" alt="" coords="203,256,386,283"/>
+<area shape="rect" id="node22" href="$classMixedCellNuclide.html#a05a6973cebcc3ac3fe1bda13915838df" title="The porosity (a fraction) of the material of this component." alt="" coords="1102,460,1269,487"/>
+<area shape="rect" id="node24" href="$classMixedCellNuclide.html#ac8b7547e128fc94381cc8f78ee795bc6" title="returns the total degradation of the component" alt="" coords="1103,107,1267,134"/>
+<area shape="rect" id="node52" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="228,646,361,672"/>
+<area shape="rect" id="node55" href="$classMatTools.html#a19a466ff6ee992c0cf8dcf2415ed6726" title="This is a helper function that scales an IsoConcMap with a scalar." alt="" coords="211,56,378,83"/>
+<area shape="rect" id="node5" href="$classMatTools.html#ae73952ab839a006bb62519964f53fceb" title="Confirms whether or not the provided value is finite and positive(0&lt;=pos&lt;=infty)" alt="" coords="706,41,830,82"/>
+<area shape="rect" id="node9" href="$classMatTools.html#aa059792374a061356e0f81c375a16cd9" title="Converts a CompMap and associated total mass to an IsoConcMap for a Volume." alt="" coords="435,212,629,239"/>
+<area shape="rect" id="node12" href="$classMixedCellNuclide.html#a15dcae9e1d09fa73615b6b1de21af3a5" title="returns the available material source term at the outer boundary of the component" alt="" coords="452,293,612,334"/>
+<area shape="rect" id="node18" href="$classMixedCellNuclide.html#adb90d325b914956ea46ecfe5ab04196e" title="Gets the free fluid volume, based on porosity and degradation rate." alt="" coords="907,544,1053,571"/>
+<area shape="rect" id="node14" href="$classMixedCellNuclide.html#a13ac90eb31e8e934424231d1b2d32752" title="Returns the last timestamp at which this component was last degraded [integer timestamp]." alt="" coords="697,209,839,250"/>
+<area shape="rect" id="node16" href="$classMatTools.html#a97a42f62c4b0cb64a984bb606dc1ef9f" title="sums the materials in the vector, filling the vec and kg with the cumulative IsoVector and total mass..." alt="" coords="699,326,837,352"/>
+<area shape="rect" id="node26" href="$classMixedCellNuclide.html#a31d9574237975ffb5892cd19bc1fdfbf" title="Update the isotopic vector history to incorporate sorption." alt="" coords="694,275,842,302"/>
+<area shape="rect" id="node43" href="$classMixedCellNuclide.html#a62acb71fe569a64ecb9e9d9671f27566" title="Update the isotopic vector history to incorporate solubility limitation." alt="" coords="678,427,858,454"/>
+<area shape="rect" id="node20" href="$classMixedCellNuclide.html#afeb802a87d91e39ae2825f76bf20c483" title="Gets the total volume." alt="" coords="1112,326,1259,352"/>
+<area shape="rect" id="node28" href="$classMixedCellNuclide.html#a884b79f39d1e48238667322cb3883f5a" title="Gets boolean indicating whether to incorporate sorption." alt="" coords="912,209,1048,250"/>
+<area shape="rect" id="node30" href="$classMatTools.html#acff2ecaab19d9769a4861b492fc0f7fc" title="Converts a standard isoid into an element." alt="" coords="911,376,1049,403"/>
+<area shape="rect" id="node32" href="$classSolLim.html#a70b855b5ccf9a98e90c5e7cd9c69108f" title="Returns m_ff the contaminant mass in the free fluid volume [kg]." alt="" coords="936,275,1024,302"/>
+<area shape="rect" id="node34" href="$classMixedCellNuclide.html#ae50f24fa135243a68cf59b1b582a8210" title="Gets the fluid volume, based on porosity." alt="" coords="907,326,1053,352"/>
+<area shape="rect" id="node38" href="$classMixedCellNuclide.html#aaafb2b93f439862ff2ed7d58255bec43" title="Gets the fluid volume, based on porosity." alt="" coords="909,158,1051,184"/>
+<area shape="rect" id="node45" href="$classMixedCellNuclide.html#a91a934de95923ff73a413f526c1cd2d8" title="Gets boolean indicating whether to incorporate solubility limits." alt="" coords="911,478,1049,520"/>
+<area shape="rect" id="node48" href="$classSolLim.html#a56e02d7e2903b6a684f41505d34c0ff5" title="Returns m_aff the available contaminant mass in the free fluid volume [kg]." alt="" coords="932,427,1028,454"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSTCDataTable.html#a889b0ae345d9f472e4dc926090a6c3a0" title="calls check_validity on the isotope and then returns its row index." alt="" coords="187,5,349,32"/>
+<area shape="rect" id="node7" href="$classSTCDataTable.html#aea5afbb9aa0ceb30f8db6ae19045227f" title="calls checkValidity on the time and then returns its row index." alt="" coords="184,56,352,83"/>
+<area shape="rect" id="node5" href="$classSTCDataTable.html#aaa5b6c6b5dccc9984a2c515594cf2012" title="checks whether this element has a row entry in the table." alt="" coords="400,31,587,57"/>
+</map>

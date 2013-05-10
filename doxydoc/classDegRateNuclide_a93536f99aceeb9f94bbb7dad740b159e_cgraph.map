@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classNuclideModel.html#a32eee9a2cebb4f014c90ffd134dfb19e" title="sets the last time that the vec_hist and conc_hist were updated, first verifying whether last_updated..." alt="" coords="220,5,367,46"/>
+<area shape="rect" id="node5" href="$classDegRateNuclide.html#aee345826392b7407908823477131e3e7" title="updates the contained concentration according to contained wastes_" alt="" coords="213,70,373,111"/>
+<area shape="rect" id="node7" href="$classDegRateNuclide.html#a8aefc7d705703a85c7fb640613067705" title="Updates the isotopic vector history at the time." alt="" coords="213,135,373,177"/>
+<area shape="rect" id="node9" href="$classMatTools.html#a97a42f62c4b0cb64a984bb606dc1ef9f" title="sums the materials in the vector, filling the vec and kg with the cumulative IsoVector and total mass..." alt="" coords="421,143,560,169"/>
+</map>

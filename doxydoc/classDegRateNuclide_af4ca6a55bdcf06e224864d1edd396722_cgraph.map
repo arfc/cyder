@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classDegRateNuclide.html#a580b8687ea7b3a3f4ed8a141037fce17" title="returns the degradation rate that characterizes this model" alt="" coords="433,201,602,228"/>
+<area shape="rect" id="node5" href="$classDegRateNuclide.html#a93536f99aceeb9f94bbb7dad740b159e" title="updates all the hists at the time" alt="" coords="224,111,384,137"/>
+<area shape="rect" id="node15" href="$classDegRateNuclide.html#a5d356092295a97f87d85e81c3580f08a" title="updates the total degradation and makes time the last degraded time." alt="" coords="224,303,384,345"/>
+<area shape="rect" id="node7" href="$classDegRateNuclide.html#a8aefc7d705703a85c7fb640613067705" title="Updates the isotopic vector history at the time." alt="" coords="437,70,597,111"/>
+<area shape="rect" id="node11" href="$classDegRateNuclide.html#aee345826392b7407908823477131e3e7" title="updates the contained concentration according to contained wastes_" alt="" coords="437,135,597,177"/>
+<area shape="rect" id="node13" href="$classNuclideModel.html#a32eee9a2cebb4f014c90ffd134dfb19e" title="sets the last time that the vec_hist and conc_hist were updated, first verifying whether last_updated..." alt="" coords="444,5,591,46"/>
+<area shape="rect" id="node9" href="$classMatTools.html#a97a42f62c4b0cb64a984bb606dc1ef9f" title="sums the materials in the vector, filling the vec and kg with the cumulative IsoVector and total mass..." alt="" coords="663,77,801,104"/>
+<area shape="rect" id="node17" href="$classDegRateNuclide.html#acb029c267c046f5ec9fa3c30084600da" title="Returns the last timestamp at which this component was last degraded [integer timestamp]." alt="" coords="662,307,802,349"/>
+<area shape="rect" id="node19" href="$classDegRateNuclide.html#a9ebd5499d16e4108ffb55395fa6a6d5e" title="Set the last_degraded_ time [integer timestamp]." alt="" coords="449,369,586,410"/>
+<area shape="rect" id="node23" href="$classDegRateNuclide.html#a09c01817e2a1209d739276c6e6e90713" title="returns the degradation rate that characterizes this model" alt="" coords="449,303,586,345"/>
+<area shape="rect" id="node25" href="$classDegRateNuclide.html#a36b4fe08e6d6c61f1029212e5e8f9e08" title="returns the total degradation of the component" alt="" coords="651,471,813,497"/>
+<area shape="rect" id="node27" href="$classDegRateNuclide.html#ac42983800ef45d9108a8d497f4e07ac8" title="sets the total degradation of the component" alt="" coords="449,434,586,475"/>
+</map>

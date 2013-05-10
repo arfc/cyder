@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classDegRateNuclide.html#af1ec0089fee443c7651e454447fe4ab9" title="Sets the boundary condition type used on the inner boundary." alt="" coords="422,46,589,73"/>
+<area shape="rect" id="node5" href="$classDegRateNuclide.html#a580b8687ea7b3a3f4ed8a141037fce17" title="returns the degradation rate that characterizes this model" alt="" coords="203,42,373,69"/>
+<area shape="rect" id="node7" href="$classNuclideModel.html#a65b0dc2a81fbd7f5ae1025cc53839934" title="Returns the geom_ data member." alt="" coords="439,218,572,245"/>
+<area shape="rect" id="node9" href="$classDegRateNuclide.html#a0bee2d5ea187898a660bb7c358b98474" title="Sets the boundary condition type used on the inner boundary." alt="" coords="219,94,357,135"/>
+<area shape="rect" id="node12" href="$classDegRateNuclide.html#a09c01817e2a1209d739276c6e6e90713" title="returns the degradation rate that characterizes this model" alt="" coords="219,211,357,252"/>
+<area shape="rect" id="node14" href="$classNuclideModel.html#afb183e319d737b6e08254481d077a019" title="Allows the geometry object to be set." alt="" coords="209,277,367,304"/>
+<area shape="rect" id="node17" href="$classDegRateNuclide.html#a9ebd5499d16e4108ffb55395fa6a6d5e" title="Set the last_degraded_ time [integer timestamp]." alt="" coords="219,328,357,370"/>
+<area shape="rect" id="node21" href="$classDegRateNuclide.html#ac42983800ef45d9108a8d497f4e07ac8" title="sets the total degradation of the component" alt="" coords="219,394,357,435"/>
+<area shape="rect" id="node25" href="$classDegRateNuclide.html#aa7a09a4c513b5240fd08e8e948d2d4e5" title="Set the advective velocity v_ through this component." alt="" coords="213,460,363,486"/>
+<area shape="rect" id="node27" href="$classDegRateNuclide.html#a8c5196767ef785df9e7d1375ecf65f45" title="The advective velocity through this component." alt="" coords="442,485,569,512"/>
+<area shape="rect" id="node19" href="$classDegRateNuclide.html#acb029c267c046f5ec9fa3c30084600da" title="Returns the last timestamp at which this component was last degraded [integer timestamp]." alt="" coords="435,328,575,370"/>
+<area shape="rect" id="node23" href="$classDegRateNuclide.html#a36b4fe08e6d6c61f1029212e5e8f9e08" title="returns the total degradation of the component" alt="" coords="425,401,586,428"/>
+</map>

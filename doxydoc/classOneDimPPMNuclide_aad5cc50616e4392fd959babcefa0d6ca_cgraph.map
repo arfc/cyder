@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classOneDimPPMNuclide.html#a0d764b610a5b2786cb40c20ee3fbedf0" title="return porosity" alt="" coords="238,5,426,32"/>
+<area shape="rect" id="node5" href="$classOneDimPPMNuclide.html#aacbb1056db7d82404d1a353959124b26" title="return bulk density" alt="" coords="251,56,413,83"/>
+<area shape="rect" id="node7" href="$classOneDimPPMNuclide.html#a3c1b1037b983accdc2981ad26a4bbac8" title="The advective velocity through this component." alt="" coords="257,107,407,133"/>
+</map>
