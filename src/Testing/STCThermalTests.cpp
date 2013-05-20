@@ -91,7 +91,8 @@ STCThermalPtr STCThermalTest::initThermalModel(){
      << "  <spacing>" << spacing_ << "</spacing>"
      << "</start>";
 
-  XMLParser parser(ss);
+  XMLParser parser;
+  parser.init(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
   stc_ptr_ = STCThermalPtr(STCThermal::create());
   stc_ptr_->initModuleMembers(engine);

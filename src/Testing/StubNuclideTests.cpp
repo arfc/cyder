@@ -59,7 +59,8 @@ StubNuclidePtr StubNuclideTest::initNuclideModel(){
   ss << "<start>"
      << "</start>";
 
-  XMLParser parser(ss);
+  XMLParser parser;
+  parser.init(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
   stub_ptr_ = StubNuclidePtr(StubNuclide::create());
   stub_ptr_->initModuleMembers(engine);

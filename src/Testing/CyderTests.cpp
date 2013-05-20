@@ -159,7 +159,8 @@ Cyder* CyderTest::initSrcFacility(){
          << "  </component>"
          << "</start>";
 
-      XMLParser parser(ss);
+      XMLParser parser;
+      parser.init(ss);
       XMLQueryEngine* engine = new XMLQueryEngine(parser);
       src_facility_ = new Cyder();
       src_facility_->initModuleMembers(engine);

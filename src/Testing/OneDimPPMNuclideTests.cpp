@@ -114,7 +114,8 @@ OneDimPPMNuclidePtr OneDimPPMNuclideTest::initNuclideModel(){
      << "  <bulk_density>" << rho_ << "</bulk_density>"
      << "</start>";
 
-  XMLParser parser(ss);
+  XMLParser parser;
+  parser.init(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
   OneDimPPMNuclidePtr one_dim_ppm_ptr = OneDimPPMNuclidePtr(OneDimPPMNuclide::create());
   one_dim_ppm_ptr->initModuleMembers(engine);

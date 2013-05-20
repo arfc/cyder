@@ -68,7 +68,8 @@ DegRateNuclidePtr DegRateNuclideTest::initNuclideModel(){
      << "  <degradation>" << deg_rate_ << "</degradation>"
      << "</start>";
 
-  XMLParser parser(ss);
+  XMLParser parser;
+  parser.init(ss);
   XMLQueryEngine* engine = new XMLQueryEngine(parser);
   deg_rate_ptr_ = DegRateNuclidePtr(DegRateNuclide::create());
   deg_rate_ptr_->initModuleMembers(engine);
