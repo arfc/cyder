@@ -78,10 +78,12 @@ public:
      @param comp_to_rem a CompMapPtr representing what to remove
      @param kg_to_rem a mass to remove of the CompMapPtr [kg]
      @param mat_list the list of materials to remove that comp from
+     @param threshold the amount (in kg) that should be considered negligible
+
      @return the material extracted
     **/
   static mat_rsrc_ptr extract(const CompMapPtr comp_to_rem, 
-      double kg_to_rem, std::deque<mat_rsrc_ptr>& mat_list);
+      double kg_to_rem, std::deque<mat_rsrc_ptr>& mat_list, double threshold=0);
 
   /**
     Converts a CompMap and associated total mass to an IsoConcMap for a Volume
