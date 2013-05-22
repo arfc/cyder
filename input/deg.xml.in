@@ -90,7 +90,7 @@
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
-            <ref_disp>1</ref_disp>
+            <ref_disp>1e-8</ref_disp>
             <ref_kd>1</ref_kd>
             <ref_sol_lim>1</ref_sol_lim>
           </material_data>
@@ -114,7 +114,7 @@
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
-            <ref_disp>1</ref_disp>
+            <ref_disp>1e-8</ref_disp>
             <ref_kd>1</ref_kd>
             <ref_sol_lim>1</ref_sol_lim>
           </material_data>
@@ -137,7 +137,7 @@
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>
-            <ref_disp>1</ref_disp>
+            <ref_disp>1e-8</ref_disp>
             <ref_kd>1</ref_kd>
             <ref_sol_lim>1</ref_sol_lim>
           </material_data>

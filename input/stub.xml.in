@@ -47,7 +47,7 @@
         <dx>100</dx>
         <dy>100</dy>
         <dz>100</dz>
-        <advective_velocity>0.000631</advective_velocity>
+        <advective_velocity>1e-14</advective_velocity>
         <capacity>1</capacity>
         <limiting_temp>1000</limiting_temp>
         <incommodity>waste</incommodity>
@@ -66,7 +66,7 @@
           <componenttype>WF</componenttype>
           <material_data>
             <clay/>
-            <ref_disp>1</ref_disp>
+            <ref_disp>1e-8</ref_disp>
             <ref_kd>1</ref_kd>
             <ref_sol_lim>0</ref_sol_lim>
           </material_data>
@@ -75,7 +75,7 @@
           </thermalmodel>
           <nuclidemodel>
             <DegRateNuclide>
-              <advective_velocity>0.000631</advective_velocity>
+              <advective_velocity>1e-14</advective_velocity>
               <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
             </DegRateNuclide>
@@ -90,7 +90,7 @@
           <componenttype>WP</componenttype>
           <material_data>
             <clay/>
-            <ref_disp>1</ref_disp>
+            <ref_disp>1e-8</ref_disp>
             <ref_kd>1</ref_kd>
             <ref_sol_lim>0</ref_sol_lim>
           </material_data>
@@ -99,7 +99,7 @@
           </thermalmodel>
           <nuclidemodel>
             <DegRateNuclide>
-              <advective_velocity>0.000631</advective_velocity>
+              <advective_velocity>1e-14</advective_velocity>
               <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
             </DegRateNuclide>
@@ -114,7 +114,7 @@
           <componenttype>BUFFER</componenttype>
           <material_data>
             <clay/>
-            <ref_disp>1</ref_disp>
+            <ref_disp>1e-8</ref_disp>
             <ref_kd>1</ref_kd>
             <ref_sol_lim>0</ref_sol_lim>
           </material_data>
@@ -123,7 +123,7 @@
           </thermalmodel>
           <nuclidemodel>
             <DegRateNuclide>
-              <advective_velocity>0.000631</advective_velocity>
+              <advective_velocity>1e-14</advective_velocity>
               <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
             </DegRateNuclide>
@@ -137,7 +137,7 @@
           <componenttype>FF</componenttype>
           <material_data>
             <clay/>
-            <ref_disp>1</ref_disp>
+            <ref_disp>1e-8</ref_disp>
             <ref_kd>1</ref_kd>
             <ref_sol_lim>0</ref_sol_lim>
           </material_data>
@@ -146,7 +146,7 @@
           </thermalmodel>
           <nuclidemodel>
             <DegRateNuclide>
-              <advective_velocity>0.000631</advective_velocity>
+              <advective_velocity>1e-14</advective_velocity>
               <bc_type><SOURCE_TERM/></bc_type>
               <degradation>0.1</degradation>
             </DegRateNuclide>
