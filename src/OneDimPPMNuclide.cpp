@@ -318,12 +318,14 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
         MatTools::validate_finite_pos(r);
         assert(r<=b);
         assert(r>=a);
-        IsoConcMap diff = calculate_conc_diff(C0, Ci(), r-a, the_time-1, the_time); 
+        IsoConcMap diff = calculate_conc_diff(C0, Ci(), r-a, the_time-1, 
+            the_time);
         f_map.insert(make_pair(r,diff));
       }
       // m(tn) = integrate C_t_n
       IsoConcMap to_ret = trap_rule(a, b, n, f_map);
-      pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, 1);//V_ff());
+      double twopiL = 2*boost::math::constants::pi<double>()*geom()->length(); 
+      pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, twopiL);
 
       //if(m_ij.second >= 1000){
       //  m_ij.second=0;

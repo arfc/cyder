@@ -71,6 +71,18 @@ TEST_F(MatToolsTest, sum_mats_one){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, addConcMaps){
+  IsoConcMap orig;
+  IsoConcMap to_add;
+  orig[u235_] = 1.0;
+  to_add[u235_] = 2.0;
+  IsoConcMap sum = MatTools::addConcMaps(orig, to_add);
+  EXPECT_FLOAT_EQ(3, sum[u235_]); 
+  sum = MatTools::addConcMaps(orig, orig);
+  EXPECT_FLOAT_EQ(2, sum[u235_]); 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, sum_mats_small_entry){
 
   CompMapPtr comp_to_add;
@@ -339,5 +351,28 @@ TEST_F(MatToolsTest, isoToElem){
   EXPECT_EQ(u, MatTools::isoToElem(u235));
   EXPECT_EQ(pu, MatTools::isoToElem(pu600));
   EXPECT_EQ(o, MatTools::isoToElem(o16));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, linspace){
+  int n = 11;
+  double a = 0;
+  double b = 10;
+  vector<double> points = MatTools::linspace(a,b,n);
+  int i = 0;
+  vector<double>::const_iterator pt;
+  for(pt=points.begin(); pt!=points.end(); ++pt){
+    EXPECT_FLOAT_EQ(i, (*pt));
+    i+=1;
+  }
+
+  a = 10;
+  b = 20;
+  points = MatTools::linspace(a,b,n);
+  i=10;
+  for(pt=points.begin(); pt!=points.end(); ++pt){
+    EXPECT_FLOAT_EQ(i, (*pt));
+    i+=1;
+  }
 }
 
