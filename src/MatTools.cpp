@@ -24,27 +24,30 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
   CompMapPtr sum_comp = CompMapPtr(new CompMap(MASS));
   double tot = 0;
   double kg = 0;
+  map<Iso, vector<double> > to_sum;
+  vector<double> tot_vec;
 
   if( !mats.empty() ){ 
     CompMapPtr comp_to_add;
     deque<mat_rsrc_ptr>::iterator mat;
     int iso;
     CompMap::const_iterator comp;
-
     for(mat = mats.begin(); mat != mats.end(); ++mat){ 
-      kg = (*mat)->mass(MassUnit(KG));
-      tot += kg;
-      comp_to_add = (*mat)->isoVector().comp();
-      comp_to_add->massify();
+      comp_to_add = (*mat)->unnormalizeComp(MASS, KG);
       for(comp = (*comp_to_add).begin(); comp != (*comp_to_add).end(); ++comp) {
         iso = comp->first;
-        if(sum_comp->count(iso)!=0) {
-          (*sum_comp)[iso] += (comp->second)*kg;
-        } else { 
-          (*sum_comp)[iso] = (comp->second)*kg;
+        if(to_sum.find(iso)==to_sum.end()) {
+          to_sum.insert(make_pair(iso, vector<double>()));
         }
+        to_sum[iso].push_back(comp->second);
       }
     }
+    map<Iso, vector<double> >::const_iterator it; 
+    for(it=to_sum.begin(); it!=to_sum.end(); ++it) { 
+      (*sum_comp)[(*it).first] = KahanSum((*it).second);
+      tot_vec.push_back((*sum_comp)[iso]);
+    }
+    tot = KahanSum(tot_vec);
   } else {
     (*sum_comp)[92235] = 0;
   }
@@ -53,17 +56,43 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, deque<mat_rsrc_ptr>& mat_list, double threshold){
-  comp_to_rem->normalize();
+double MatTools::KahanSum(vector<double> input){
+  // http://en.wikipedia.org/wiki/Kahan_summation_algorithm
+  double y, t;
+  double sum = 0.0;
+  //A running compensation for lost low-order bits.
+  double c = 0.0; 
+  for(vector<double>::iterator i = input.begin(); i!=input.end(); ++i){
+    y = *i - c;
+    //So far, so good: c is zero.
+    t = sum + y;
+    //Alas, sum is big, y small, so low-order digits of y are lost.
+    c = (t - sum) - y;
+    //(t - sum) recovers the high-order part of y; subtracting y recovers -(low part of y)
+    sum = t;
+    //Algebraically, c should always be zero. Beware eagerly optimising compilers!
+    //Next time around, the lost low part will be added to y in a fresh attempt.
+  }
+  return sum;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
+    deque<mat_rsrc_ptr>& mat_list, double threshold){
+  comp_to_rem->massify();
   mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material(comp_to_rem));
   left_over->setQuantity(0);
+  // absorb them together.
   while(!mat_list.empty()) { 
     left_over->absorb(mat_list.back());
     mat_list.pop_back();
   }
-  mat_rsrc_ptr to_ret = left_over->extract(comp_to_rem, kg_to_rem, KG, threshold);
-  if( left_over->mass(KG) > threshold) {  
+  mat_rsrc_ptr to_ret;
+  if( left_over->mass(KG) >= threshold ) {
+    to_ret = left_over->extract(comp_to_rem, kg_to_rem, KG, threshold);
     mat_list.push_back(left_over);
+  } else { 
+    to_ret = mat_rsrc_ptr(left_over);
   }
   return to_ret;
 }

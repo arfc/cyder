@@ -97,6 +97,39 @@ TEST_F(MatToolsTest, sum_mats_small_entry){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, KahanSumZero){
+  vector<double> to_sum;
+  for(int i=0; i<10; ++i){
+    to_sum.push_back(0);
+  }
+  EXPECT_FLOAT_EQ(0, MatTools::KahanSum(to_sum));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, KahanSumOrdinary){
+  vector<double> ten_vec;
+  vector<double> factorial_vec;
+  double factorial_sum = 0;
+  for(int i=0; i<10; ++i){
+    ten_vec.push_back(1);
+    factorial_vec.push_back(i);
+    factorial_sum +=i;
+  }
+  EXPECT_FLOAT_EQ(10, MatTools::KahanSum(ten_vec));
+  EXPECT_FLOAT_EQ(factorial_sum, MatTools::KahanSum(factorial_vec));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, KahanSumExtremeVals){
+  vector<double> extreme_vec;
+  double expected = 0;
+  extreme_vec.push_back(1e16);
+  extreme_vec.push_back(1e-16);
+  extreme_vec.push_back(1);
+  EXPECT_FLOAT_EQ(1e16+1e-16+1, MatTools::KahanSum(extreme_vec));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(MatToolsTest, extract){
   //@TODO this is just a placeholder, to remind you to write a test.
 }

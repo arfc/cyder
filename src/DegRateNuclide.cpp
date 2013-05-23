@@ -138,7 +138,8 @@ mat_rsrc_ptr DegRateNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
-  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
+  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, 
+        wastes_, 1.0e-3));
   update(last_updated());
   return to_ret;
 }
@@ -292,16 +293,16 @@ void DegRateNuclide::update_vec_hist(int the_time){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> daughters){
   std::vector<NuclideModelPtr>::iterator daughter;
-  std::pair<IsoVector, double> source_term;
-  pair<CompMapPtr, double> comp_pair;
-  CompMapPtr comp_to_ext;
-  double kg_to_ext=0;
 
   for( daughter = daughters.begin(); daughter!=daughters.end(); ++daughter){
+    pair<CompMapPtr, double> comp_pair;
+    std::pair<IsoVector, double> source_term;
+    CompMapPtr comp_to_ext;
+    double kg_to_ext=0;
     switch (bc_type_) {
       case SOURCE_TERM :
         source_term = (*daughter)->source_term_bc();
-        if( source_term.second >= 0 ){
+        if(source_term.second > 0){
           comp_to_ext = CompMapPtr(source_term.first.comp());
           kg_to_ext=source_term.second;
         }

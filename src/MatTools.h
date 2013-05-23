@@ -63,13 +63,20 @@ typedef std::map<int, Flux> IsoFluxMap;
 class MatTools { 
 public:
   /**
-     sums the materials in the vector, filling the vec and kg with 
+     sums the materials in the deque of mats, filling the vec and kg with 
      the cumulative IsoVector and total mass, in kg.
-     @TODO should put this in a toolkit or something. Doesn't belong here.
 
      @param mats the vector of materials to be summed (not mixed)
     */
   static std::pair<IsoVector, double> sum_mats(std::deque<mat_rsrc_ptr> mats);
+
+  /**
+     sums the materials in the vector in an intelligent way, to avoid floating point issues.
+
+     @param input is the list of values to add to each other
+     @return is the sum of all the values in the input vector
+     */
+  static double KahanSum(std::vector<double> input);
 
   /**
      removes the specified amount of the specified composition from a 
