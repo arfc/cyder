@@ -52,6 +52,7 @@ TEST_F(MatToolsTest, sum_mats_empty){
   pair<IsoVector, double> the_sum;
   the_sum = MatTools::sum_mats(mats);
   EXPECT_FLOAT_EQ(0, the_sum.second);
+  EXPECT_TRUE(the_sum.first.comp()->map().empty());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

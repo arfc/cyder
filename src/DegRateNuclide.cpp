@@ -139,7 +139,7 @@ mat_rsrc_ptr DegRateNuclide::extract(const CompMapPtr comp_to_rem, double kg_to_
   LOG(LEV_DEBUG2,"GRDRNuc") << "DegRateNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
   mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, 
-        wastes_, 1.0e-3));
+        wastes_, 0));
   update(last_updated());
   return to_ret;
 }
@@ -280,8 +280,8 @@ double DegRateNuclide::update_degradation(int the_time, double cur_rate){
   }
   double total = tot_deg() + deg_rate()*(the_time - last_degraded());
   set_tot_deg(min(1.0, total));
+  assert(tot_deg_ <= 1.0);
   set_last_degraded(the_time);
-
   return tot_deg_;
 }
 
@@ -325,8 +325,10 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
         // throw an error
         break;
     }
-    if(kg_to_ext > 0 ) {
-        absorb(mat_rsrc_ptr((*daughter)->extract(comp_to_ext, kg_to_ext)));
+    if(kg_to_ext > 0 && !comp_to_ext->empty()) {
+      assert(kg_to_ext <= (*daughter)->source_term_bc().second);
+      assert((*daughter)->source_term_bc().first.comp() == comp_to_ext);
+      shared_from_this()->absorb(mat_rsrc_ptr((*daughter)->extract(CompMapPtr(comp_to_ext), kg_to_ext)));
     }
   }
 }

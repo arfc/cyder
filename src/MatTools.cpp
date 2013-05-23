@@ -49,8 +49,6 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
       tot_vec.push_back((*sum_comp)[iso]);
     }
     tot = KahanSum(tot_vec);
-  } else {
-    (*sum_comp)[92235] = 0;
   }
   vec = IsoVector(sum_comp);
   return make_pair(vec, tot);
