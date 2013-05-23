@@ -44,7 +44,8 @@ pair<IsoVector, double> MatTools::sum_mats(deque<mat_rsrc_ptr> mats){
     }
     map<Iso, vector<double> >::const_iterator it; 
     for(it=to_sum.begin(); it!=to_sum.end(); ++it) { 
-      (*sum_comp)[(*it).first] = KahanSum((*it).second);
+      iso = (*it).first;
+      (*sum_comp)[iso] = KahanSum((*it).second);
       tot_vec.push_back((*sum_comp)[iso]);
     }
     tot = KahanSum(tot_vec);
