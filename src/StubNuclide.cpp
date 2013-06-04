@@ -111,24 +111,28 @@ void StubNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> dau
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 pair<IsoVector, double> StubNuclide::source_term_bc(){
   /// @TODO This is just a placeholder
-  pair<IsoVector, double> to_ret;
+  pair<IsoVector, double> to_ret = MatTools::sum_mats(wastes_);
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap StubNuclide::dirichlet_bc(){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time());
+  pair<IsoVector, double> sum_pair = MatTools::sum_mats(wastes_);
+  CompMapPtr comp = CompMapPtr(sum_pair.first.comp());
+  double mass = sum_pair.second;
+  IsoConcMap to_ret = MatTools::comp_to_conc_map(comp, mass, 1);
+  return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 ConcGradMap StubNuclide::neumann_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time());
+  return dirichlet_bc();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoFluxMap StubNuclide::cauchy_bc(IsoConcMap c_ext, Radius r_ext){
   /// @TODO This is just a placeholder
-  return conc_hist_.at(TI->time());
+  return dirichlet_bc();
 }
