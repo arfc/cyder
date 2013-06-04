@@ -238,10 +238,6 @@ public:
   /// @TODO add comments
   static CompMapPtr addCompMaps(CompMapPtr orig, CompMapPtr to_add);
 
-  /// @TODO add comments
-  static std::pair<CompMapPtr, double> subtractCompMaps(std::pair<CompMapPtr, 
-      double> orig, std::pair<CompMapPtr, double> to_subtract);
-
   /** 
     Converts a standard isoid into an element. 
 

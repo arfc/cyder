@@ -311,10 +311,10 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, Azt){
-  double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8));  
   double expected = 0.0000000000076; 
   EXPECT_FLOAT_EQ(0.00000000000001, pow(10.,-14));
   EXPECT_FLOAT_EQ(2629740.0, SECSPERMONTH );
+  double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8));  
   EXPECT_FLOAT_EQ(expected, actual);
   for(int i =0; i<15; ++i){
     double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-i), SECSPERMONTH , pow(10.,-8));  

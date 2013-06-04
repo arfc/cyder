@@ -302,7 +302,7 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
     switch (bc_type_) {
       case SOURCE_TERM :
         source_term = (*daughter)->source_term_bc();
-        if(source_term.second > 0){
+        if(source_term.second > 1e-30){
           comp_to_ext = CompMapPtr(source_term.first.comp());
           kg_to_ext=source_term.second;
         }
@@ -325,9 +325,8 @@ void DegRateNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr> 
         // throw an error
         break;
     }
-    if(kg_to_ext > 0 && !comp_to_ext->empty()) {
+    if(kg_to_ext > 0) {
       assert(kg_to_ext <= (*daughter)->source_term_bc().second);
-      assert((*daughter)->source_term_bc().first.comp() == comp_to_ext);
       shared_from_this()->absorb(mat_rsrc_ptr((*daughter)->extract(CompMapPtr(comp_to_ext), kg_to_ext)));
     }
   }

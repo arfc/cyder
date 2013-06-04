@@ -254,37 +254,6 @@ IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-pair<CompMapPtr, double> MatTools::subtractCompMaps(pair<CompMapPtr, double> orig_pair, pair<CompMapPtr, double> to_subtract_pair){
-  CompMapPtr orig = CompMapPtr(orig_pair.first);
-  double o_kg = orig_pair.second;
-  CompMapPtr to_subtract = CompMapPtr(to_subtract_pair.first);
-  double s_kg = to_subtract_pair.second;
-  CompMapPtr to_ret = CompMapPtr(new CompMap(MASS));
-  double to_ret_kg = 0;
-
-  CompMap::const_iterator it;
-  for(it = (*orig).begin(); it != (*orig).end(); ++it) {
-    Iso iso=(*it).first;
-    if(to_subtract->map().find(iso) != to_subtract->map().end()) {
-      (*to_ret)[iso] = (*it).second*o_kg - (*to_subtract)[iso]*s_kg;
-    } else {
-      (*to_ret)[iso] = (*it).second*o_kg;
-    }
-    to_ret_kg += (*to_ret)[iso];
-  }
-  for(it = (*to_subtract).begin(); it != (*to_subtract).end(); ++it) {
-    Iso iso=(*it).first;
-    if(orig->map().find(iso) == orig->map().end()) {
-      std::stringstream msg_ss;
-      msg_ss << "Cannot subtract a superset of isotopes from a subset";
-      LOG(LEV_ERROR, "GRDRNuc") <<msg_ss.str();;
-      throw CycNegativeValueException(msg_ss.str());
-    }
-  }
-  return make_pair(CompMapPtr(to_ret), to_ret_kg);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 int MatTools::isoToElem(int iso) { 
   int N = iso % 1000;
   return (iso-N)/1000;

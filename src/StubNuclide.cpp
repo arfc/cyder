@@ -62,6 +62,7 @@ void StubNuclide::absorb(mat_rsrc_ptr matToAdd)
   // add the material to it with the material absorb function.
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRSNuc") << "StubNuclide is absorbing material: ";
+  wastes_.push_back(matToAdd);
   matToAdd->print();
 }
 
