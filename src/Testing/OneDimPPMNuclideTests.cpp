@@ -61,7 +61,8 @@ void OneDimPPMNuclideTest::TearDown() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t){
+double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, 
+    double r, Iso iso, int t0, int t){
   double D = mat_table_->D(iso/1000);
   double pi = boost::math::constants::pi<double>();
   //@TODO add sorption to this model. For now, R=1, no sorption. 
