@@ -338,29 +338,31 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::trap_rule(double a, double b, int n, map<double, IsoConcMap> f_map) {
-  double scalar = (b-a)/(2*n);
+  double h = (b-a)/n;
 
   vector<IsoConcMap> terms;
   IsoConcMap f_0;
   IsoConcMap f_n;
-  //assert(f_map.size() == n );
+  assert(f_map.size() == n+1 );
+  assert(f_map.size() >= 2 );
 
   map<double, IsoConcMap>::iterator it = f_map.find(a);
   if(it!=f_map.end()){ 
-    f_0 = (*it).second;
+    f_0 = MatTools::scaleConcMap((*it).second, h/2.0);
     f_map.erase(it);
   }
   it = f_map.find(b);
   if(it!=f_map.end()){ 
-    f_n = (*it).second;
+    f_n = MatTools::scaleConcMap((*it).second, h/2.0);
     f_map.erase(it);
   }
-  terms.push_back(f_0);
-  terms.push_back(f_n);
+  //((h/2)*(f_0+f_n));
+  terms.push_back(MatTools::addConcMaps(f_0, f_n));
   map<double,IsoConcMap>::const_iterator f;
   for(f=f_map.begin(); f!=f_map.end(); ++f){
     double r =(*f).first;
-    terms.push_back( MatTools::scaleConcMap((*f).second,2*scalar) );
+    //(h*(f_i));
+    terms.push_back( MatTools::scaleConcMap((*f).second, h) );
   }
   IsoConcMap to_ret; 
   IsoConcMap prev;

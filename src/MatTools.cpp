@@ -234,21 +234,27 @@ IsoConcMap MatTools::scaleConcMap(IsoConcMap C_0, double scalar){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap MatTools::addConcMaps(IsoConcMap orig, IsoConcMap to_add){
+  map<Iso, vector<double> > add_map;
   IsoConcMap to_ret;
   IsoConcMap::const_iterator it;
   for(it = orig.begin(); it != orig.end(); ++it) {
     Iso iso=(*it).first;
+    add_map[iso].push_back((*it).second);
     if(to_add.find(iso) != to_add.end()) {
-      to_ret[iso] = (*it).second + to_add[iso];
-    } else {
-      to_ret[iso] = (*it).second;
-    }
+      add_map[iso].push_back(to_add[iso]);
+    } 
   }
   for(it = to_add.begin(); it != to_add.end(); ++it) {
     Iso iso=(*it).first;
     if(orig.find(iso) == orig.end()) {
-      to_ret[iso] = (*it).second;
+      add_map[iso].push_back((*it).second);
     }
+  }
+
+  map<Iso, vector<double> >::const_iterator term;
+  for( term=add_map.begin(); term!=add_map.end(); ++term){
+    Iso iso=(*term).first;
+    to_ret[iso] = MatTools::KahanSum((*term).second);
   }
   return to_ret;
 }

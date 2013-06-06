@@ -340,14 +340,35 @@ TEST_F(OneDimPPMNuclideTest, Bzt){
 TEST_F(OneDimPPMNuclideTest, trap_rule){
   double a=10;
   double b=20;
-  int n=11;
+  int n=20;
   map<double, IsoConcMap> rfmap; 
-  for(int i = a; i <= b; ++i){
-    IsoConcMap rf; 
-    rf[u235_] = 1.0;
-    rfmap[i] = rf;
+  IsoConcMap rf; 
+  rf[u235_] = 1.0;
+  double ind;
+  for(int i = 0; i <= n; ++i){
+    ind = a+(i*(b-a)/n);
+    rfmap[ind] = rf;
   }
   double expected = 1*(b-a); 
+  IsoConcMap actual_map = one_dim_ppm_ptr_->trap_rule(a, b, n, rfmap);
+  double actual = actual_map[u235_];
+  EXPECT_FLOAT_EQ(expected, actual);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
+  double a=1;
+  double b=3;
+  int n=10;
+  map<double, IsoConcMap> rfmap; 
+  double x;
+  for(int i = 0; i <= n; ++i){
+    x = a+(i*(b-a)/n);
+    IsoConcMap rf; 
+    rf[u235_] = x*x;
+    rfmap[x] = rf;
+  }
+  double expected = 8.72; 
   IsoConcMap actual_map = one_dim_ppm_ptr_->trap_rule(a, b, n, rfmap);
   double actual = actual_map[u235_];
   EXPECT_FLOAT_EQ(expected, actual);
