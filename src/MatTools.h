@@ -77,6 +77,14 @@ public:
      @return is the sum of all the values in the input vector
      */
   static double KahanSum(std::vector<double> input);
+  /**
+     gives criteria indicating true if mat1 is smaller than mat2. Used for sorting.
+
+     @param mat1 a material
+     @param mat2 anotherm material, to compare to mat1
+     @return true if mat1->mass() < mat2->mass()
+     */
+  static bool matSortCriterion( const mat_rsrc_ptr mat1, const mat_rsrc_ptr mat2);
 
   /**
      removes the specified amount of the specified composition from a 

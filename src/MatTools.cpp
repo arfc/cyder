@@ -76,15 +76,21 @@ double MatTools::KahanSum(vector<double> input){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+bool MatTools::matSortCriterion(const mat_rsrc_ptr mat1, const mat_rsrc_ptr mat2){
+  return mat1->mass(MassUnit(KG))<mat2->mass(MassUnit(KG));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
     deque<mat_rsrc_ptr>& mat_list, double threshold){
+  sort(mat_list.begin(), mat_list.end(), MatTools::matSortCriterion);
   comp_to_rem->massify();
   mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material(comp_to_rem));
   left_over->setQuantity(0);
   // absorb them together.
   while(!mat_list.empty()) { 
-    left_over->absorb(mat_list.back());
-    mat_list.pop_back();
+    left_over->absorb(mat_list.front());
+    mat_list.pop_front();
   }
   mat_rsrc_ptr to_ret;
   if( left_over->mass(KG) >= threshold ) {
