@@ -359,7 +359,7 @@ TEST_F(OneDimPPMNuclideTest, trap_rule){
 TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
   double a=1;
   double b=3;
-  int n=10;
+  int n=5;
   map<double, IsoConcMap> rfmap; 
   double x;
   for(int i = 0; i <= n; ++i){
