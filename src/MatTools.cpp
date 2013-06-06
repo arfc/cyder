@@ -272,7 +272,7 @@ int MatTools::isoToElem(int iso) {
 vector<double> MatTools::linspace(double a, double b, int n) {
   vector<double> vec;  
   double step = (b-a)/(n-1);
-  for( int i=0; i<=n; ++i){
+  for( int i=0; i<n; ++i){
     vec.push_back(a+i*step);
   }
   return vec;

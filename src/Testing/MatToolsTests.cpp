@@ -359,7 +359,8 @@ TEST_F(MatToolsTest, linspace){
   int n = 11;
   double a = 0;
   double b = 10;
-  vector<double> points = MatTools::linspace(a,b,n);
+  vector<double> points = MatTools::linspace(a, b, n);
+  EXPECT_EQ(points.size(), n);
   int i = 0;
   vector<double>::const_iterator pt;
   for(pt=points.begin(); pt!=points.end(); ++pt){
@@ -371,10 +372,20 @@ TEST_F(MatToolsTest, linspace){
   a = 10;
   b = 20;
   points = MatTools::linspace(a,b,n);
+  EXPECT_EQ(points.size(), n);
   i=10;
   for(pt=points.begin(); pt!=points.end(); ++pt){
     EXPECT_FLOAT_EQ(i, (*pt));
     i+=1;
+  }
+
+  n=21;
+  points = MatTools::linspace(a, b, n);
+  EXPECT_EQ(points.size(), n);
+  double d=10;
+  for(pt=points.begin(); pt!=points.end(); ++pt){
+    EXPECT_FLOAT_EQ(d, (*pt));
+    d+=0.5;
   }
 }
 
