@@ -272,9 +272,8 @@ int MatTools::isoToElem(int iso) {
 vector<double> MatTools::linspace(double a, double b, int n) {
   vector<double> array(0);  // optional preallocation
   double step = (b-a)/(n-1);
-  while(a <= b) {
-    array.push_back(a);
-    a += step;           // could recode to better handle rounding errors
+  for( i=a; i<=b; ++i){
+    array.push_back(a+i*step)
   }
   return array;
 }
