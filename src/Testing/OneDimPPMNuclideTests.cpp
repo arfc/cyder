@@ -311,10 +311,14 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(OneDimPPMNuclideTest, Azt){
-  double expected = 0.0000000000076; 
-  EXPECT_FLOAT_EQ(0.00000000000001, pow(10.,-14));
+TEST_F(OneDimPPMNuclideTest, secspermonth) {
   EXPECT_FLOAT_EQ(2629740.0, SECSPERMONTH );
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, Azt){
+  double expected = 7.6e-12; 
+  EXPECT_FLOAT_EQ(1e-14, pow(10.,-14));
   double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8));  
   EXPECT_FLOAT_EQ(expected, actual);
   for(int i =0; i<15; ++i){
@@ -368,7 +372,8 @@ TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
     rf[u235_] = x*x;
     rfmap[x] = rf;
   }
-  double expected = 8.72; 
+  // http://www.cs.grinnell.edu/~walker/courses/161.fa12/data-representation/lab-floats.shtml
+  double expected = 8.72; // only true if n is 5.
   IsoConcMap actual_map = one_dim_ppm_ptr_->trap_rule(a, b, n, rfmap);
   double actual = actual_map[u235_];
   EXPECT_FLOAT_EQ(expected, actual);
