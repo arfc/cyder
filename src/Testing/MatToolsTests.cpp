@@ -363,6 +363,7 @@ TEST_F(MatToolsTest, linspace){
   int i = 0;
   vector<double>::const_iterator pt;
   for(pt=points.begin(); pt!=points.end(); ++pt){
+    EXPECT_EQ(i, (*pt));
     EXPECT_FLOAT_EQ(i, (*pt));
     i+=1;
   }

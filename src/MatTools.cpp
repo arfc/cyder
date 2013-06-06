@@ -270,12 +270,12 @@ int MatTools::isoToElem(int iso) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 vector<double> MatTools::linspace(double a, double b, int n) {
-  vector<double> array(0);  // optional preallocation
+  vector<double> vec;  
   double step = (b-a)/(n-1);
-  for( i=a; i<=b; ++i){
-    array.push_back(a+i*step)
+  for( int i=0; i<=n; ++i){
+    vec.push_back(a+i*step);
   }
-  return array;
+  return vec;
 }
 
 
