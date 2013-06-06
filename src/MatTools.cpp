@@ -131,6 +131,7 @@ pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol)
   MatTools::validate_finite_pos(vol);
 
   CompMapPtr comp = CompMapPtr(new CompMap(MASS));
+  vector<double> masses;
   double mass(0);
   int iso;
   double c_iso;
@@ -142,9 +143,10 @@ pair<CompMapPtr, double> MatTools::conc_to_comp_map(IsoConcMap conc, double vol)
     c_iso=((*it).second);
     m_iso = c_iso*vol;
     (*comp)[iso] = m_iso;
-    mass+=m_iso;
+    masses.push_back(m_iso);
     ++it;
   } 
+  mass = MatTools::KahanSum(masses);
   (*comp).normalize();
   pair<CompMapPtr, double> to_ret = make_pair(CompMapPtr(comp), mass);
   return to_ret;
