@@ -341,13 +341,11 @@ TEST_F(OneDimPPMNuclideTest, trap_rule){
   double a=10;
   double b=20;
   int n=11;
-  double r;
   map<double, IsoConcMap> rfmap; 
   for(int i = a; i <= b; ++i){
     IsoConcMap rf; 
     rf[u235_] = 1.0;
-    r = i;
-    rfmap[a] = rf;
+    rfmap[i] = rf;
   }
   double expected = 1*(b-a); 
   IsoConcMap actual_map = one_dim_ppm_ptr_->trap_rule(a, b, n, rfmap);
