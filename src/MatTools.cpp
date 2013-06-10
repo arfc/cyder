@@ -83,9 +83,9 @@ bool MatTools::matSortCriterion(const mat_rsrc_ptr mat1, const mat_rsrc_ptr mat2
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
     deque<mat_rsrc_ptr>& mat_list, double threshold){
+  // sort mats from smallest to largest.
   sort(mat_list.begin(), mat_list.end(), MatTools::matSortCriterion);
-  comp_to_rem->massify();
-  mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material(comp_to_rem));
+  mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
   left_over->setQuantity(0);
   // absorb them together.
   while(!mat_list.empty()) { 
@@ -93,7 +93,7 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem,
     mat_list.pop_front();
   }
   mat_rsrc_ptr to_ret;
-  if( left_over->mass(KG) > threshold ) {
+  if( left_over->mass(KG) >= threshold ) {
     to_ret = left_over->extract(comp_to_rem, kg_to_rem, KG, threshold);
     mat_list.push_back(left_over);
   } else { 
