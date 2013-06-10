@@ -236,7 +236,8 @@ TEST_F(OneDimPPMNuclideTest, transportNuclidesZero){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(OneDimPPMNuclideTest, transportNuclidesOther){ 
+TEST_F(OneDimPPMNuclideTest, DISABLED_transportNuclidesOther){ 
+  /// @TODO enable this test.
   // if the degradation rate is .5, everything should be released in two years
   porosity_= 0.5;
   double expected_src = test_size_;
