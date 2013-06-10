@@ -331,13 +331,13 @@ TEST_F(OneDimPPMNuclideTest, Azt){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, Bzt){
   double actual = one_dim_ppm_ptr_->Bzt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8), 0.99);  
-  double expected = 0;
+  double expected = -6.425674897793388e-06; // calculated in python
   EXPECT_FLOAT_EQ(0.00000000000001, pow(10.,-14));
   EXPECT_FLOAT_EQ(2629740.0, SECSPERMONTH );
   EXPECT_FLOAT_EQ(expected, actual);
   for(int i =0; i<14; ++i){
     double actual = one_dim_ppm_ptr_->Bzt(1, 1, pow(10.,-i), SECSPERMONTH , pow(10.,-8), 0.99);  
-    EXPECT_LT(expected, actual);
+    EXPECT_GT(expected, actual);
   }
 }
 
