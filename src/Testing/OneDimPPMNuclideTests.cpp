@@ -317,7 +317,7 @@ TEST_F(OneDimPPMNuclideTest, secspermonth) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, Azt){
-  double expected = 7.6e-12; 
+  double expected = 6.405739e-6; 
   EXPECT_FLOAT_EQ(1e-14, pow(10.,-14));
   double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8));  
   EXPECT_FLOAT_EQ(expected, actual);
