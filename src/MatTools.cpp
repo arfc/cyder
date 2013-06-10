@@ -93,7 +93,7 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem,
     mat_list.pop_front();
   }
   mat_rsrc_ptr to_ret;
-  if( left_over->mass(KG) >= threshold ) {
+  if( left_over->mass(KG) > threshold ) {
     to_ret = left_over->extract(comp_to_rem, kg_to_rem, KG, threshold);
     mat_list.push_back(left_over);
   } else { 
