@@ -87,7 +87,7 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem,
   sort(mat_list.begin(), mat_list.end(), MatTools::matSortCriterion);
   mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
   left_over->setQuantity(0);
-  // absorb them together.
+  // absorb the mat_list into one mat.
   while(!mat_list.empty()) { 
     left_over->absorb(mat_list.front());
     mat_list.pop_front();
