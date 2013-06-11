@@ -87,6 +87,15 @@ public:
   static bool matSortCriterion( const mat_rsrc_ptr mat1, const mat_rsrc_ptr mat2);
 
   /**
+     combines a deque of materials (provided to the function by reference) into 
+     a single material. 
+
+     @param mat_list the list of materials to remove that comp from
+     @return combined a single material that has absorbed all others in the mat_list
+     */
+  static mat_rsrc_ptr combine_mats( std::deque<mat_rsrc_ptr>& mat_list);
+
+  /**
      removes the specified amount of the specified composition from a 
      deque of materials provided to the function by reference. 
 

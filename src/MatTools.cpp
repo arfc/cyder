@@ -81,8 +81,7 @@ bool MatTools::matSortCriterion(const mat_rsrc_ptr mat1, const mat_rsrc_ptr mat2
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
-    deque<mat_rsrc_ptr>& mat_list, double threshold){
+mat_rsrc_ptr MatTools::combine_mats(deque<mat_rsrc_ptr>& mat_list)  {
   // sort mats from smallest to largest.
   sort(mat_list.begin(), mat_list.end(), MatTools::matSortCriterion);
   mat_rsrc_ptr left_over = mat_rsrc_ptr(new Material());
@@ -92,7 +91,14 @@ mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem,
     left_over->absorb(mat_list.front());
     mat_list.pop_front();
   }
+  return left_over;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+mat_rsrc_ptr MatTools::extract(const CompMapPtr comp_to_rem, double kg_to_rem, 
+    deque<mat_rsrc_ptr>& mat_list, double threshold){
   mat_rsrc_ptr to_ret;
+  mat_rsrc_ptr left_over = mat_rsrc_ptr(combine_mats(mat_list));
   if( left_over->mass(KG) >= threshold ) {
     to_ret = left_over->extract(comp_to_rem, kg_to_rem, KG, threshold);
     mat_list.push_back(left_over);

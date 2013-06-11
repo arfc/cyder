@@ -16,9 +16,14 @@ class MatToolsTest : public ::testing::Test {
   protected:
     IsoConcMap test_conc_map_;
     CompMapPtr test_comp_;
+    CompMapPtr second_comp_map_;
+    CompMapPtr third_comp_map_;
     mat_rsrc_ptr test_mat_;
-    int one_mol_;
-    int u235_, am241_;
+    mat_rsrc_ptr second_mat_;
+    mat_rsrc_ptr third_mat_;
+    double one_;
+    double half_;
+    int u235_, am241_, pu239_;
     double test_size_;
     Radius r_four_, r_five_;
     Length len_five_;
@@ -28,16 +33,31 @@ class MatToolsTest : public ::testing::Test {
     virtual void SetUp(){
       // composition set up
       u235_=92235;
+      pu239_=92239;
       am241_=95241;
-      one_mol_=1.0;
+      one_=1.0;
+      half_=0.5;
       test_comp_= CompMapPtr(new CompMap(MASS));
-      (*test_comp_)[u235_] = one_mol_;
+      (*test_comp_)[u235_] = one_;
       test_size_=10.0;
       // conc setup
       test_conc_map_[u235_] = test_size_; 
-      // material creation
+      // test material creation
       test_mat_ = mat_rsrc_ptr(new Material(test_comp_));
       test_mat_->setQuantity(test_size_);
+
+      // second composition set up
+      second_comp_map_= CompMapPtr(new CompMap(MASS));
+      (*second_comp_map_)[u235_] = one_;
+      (*second_comp_map_)[am241_] = half_;
+      second_mat_ = mat_rsrc_ptr(new Material(second_comp_map_));
+      second_mat_->setQuantity(test_size_);
+
+      // third composition set up
+      third_comp_map_= CompMapPtr(new CompMap(MASS));
+      (*third_comp_map_)[pu239_] = one_;
+      third_mat_ = mat_rsrc_ptr(new Material(third_comp_map_));
+      third_mat_->setQuantity(test_size_);
     }
     virtual void TearDown() {
     }
@@ -140,6 +160,75 @@ TEST_F(MatToolsTest, KahanSumExtremeVals){
   extreme_vec.push_back(1e-16);
   extreme_vec.push_back(1);
   EXPECT_FLOAT_EQ(1e16+1e-16+1, MatTools::KahanSum(extreme_vec));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, combine_mats_zero) { 
+  deque<mat_rsrc_ptr> mat_list;
+  mat_rsrc_ptr result = mat_rsrc_ptr(MatTools::combine_mats(mat_list));
+  EXPECT_EQ(0, mat_list.size());
+  EXPECT_EQ(0, result->mass(KG));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, combine_mats_one) { 
+  deque<mat_rsrc_ptr> mat_list;
+  mat_list.push_back(test_mat_);
+  mat_rsrc_ptr result = MatTools::combine_mats(mat_list);
+  EXPECT_FLOAT_EQ(test_size_, result->mass(KG));
+  EXPECT_EQ(0, mat_list.size());
+  mat_list.push_back(result);
+  EXPECT_EQ(1, mat_list.size());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, combine_mats_complex) { 
+  mat_rsrc_ptr test_copy = mat_rsrc_ptr(new Material(test_comp_));
+  test_copy->setQuantity(test_mat_->mass(KG));
+  mat_rsrc_ptr second_copy = mat_rsrc_ptr(new Material(second_comp_map_));
+  second_copy->setQuantity(second_mat_->mass(KG));
+  mat_rsrc_ptr third_copy = mat_rsrc_ptr(new Material(third_comp_map_));
+  third_copy->setQuantity(third_mat_->mass(KG));
+
+  deque<mat_rsrc_ptr> mat_list;
+  mat_list.push_back(test_mat_);
+  mat_list.push_back(second_mat_);
+  mat_list.push_back(third_mat_);
+
+  mat_rsrc_ptr result = MatTools::combine_mats(mat_list);
+  EXPECT_FLOAT_EQ(3*test_size_, result->mass(KG));
+
+  CompMapPtr result_comp = result->isoVector().comp();
+  CompMap::const_iterator it;
+  for( it=(*result_comp).begin(); 
+      it!=(*result_comp).end(); 
+      ++it) {
+    int iso = (*it).first;
+    double term1 = test_copy->mass(iso);
+    double term2 = second_copy->mass(iso);
+    double term3 = third_copy->mass(iso);
+    EXPECT_FLOAT_EQ(term1+term2+term3, result->mass(iso));
+  }
+
+  EXPECT_EQ(0, mat_list.size());
+  mat_list.push_back(result);
+  EXPECT_EQ(1, mat_list.size());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(MatToolsTest, absorbtest){
+  // This should be covered by the material class, but i'm just checking... 
+  mat_rsrc_ptr glob = mat_rsrc_ptr(new Material());
+  glob->absorb(test_mat_);
+  EXPECT_FLOAT_EQ(test_size_, glob->mass(KG));
+  EXPECT_FLOAT_EQ(test_size_, glob->mass(u235_));
+  glob->absorb(second_mat_);
+  EXPECT_FLOAT_EQ(2*test_size_, glob->mass(KG));
+  EXPECT_FLOAT_EQ(test_size_*(one_+ 2./3.), glob->mass(u235_));
+  EXPECT_FLOAT_EQ(test_size_*(1./3.), glob->mass(am241_));
+  glob->absorb(third_mat_);
+  EXPECT_FLOAT_EQ(3*test_size_, glob->mass(KG));
+  EXPECT_FLOAT_EQ(test_size_, glob->mass(pu239_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
