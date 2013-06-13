@@ -382,6 +382,18 @@ TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, calculate_conc){
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, calculate_conc_diff_zero){
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, calculate_conc_diff_real){
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, contained_mass){ 
   time_++;
   EXPECT_FLOAT_EQ(0, one_dim_ppm_ptr_->contained_mass(time_));

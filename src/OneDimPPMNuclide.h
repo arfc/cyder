@@ -250,11 +250,22 @@ public:
     */
   IsoConcMap conc_profile(IsoConcMap C_0, double r_calc, int dt);
 
-
   /**
      Calculates the concentration of a single isotope due to C_0 after dt at 
      radius r_calc
 
+     /// describe van genuchten et. al eqn. here... 
+     
+     @param C_0 the initial concentration at that radius?
+     @param r_calc the radius at which to calculate the IsoConcMap [m]
+     @param iso the isotope whose concentration is being queried [-]
+     @param dt the change in time since C_0 was calculated [timestep]
+    */
+  double calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r_calc, int iso, int t0, int t);
+
+  /**
+     Calculates the concentration of a single isotope due to C_0 after dt at 
+     radius r_calc, then, subtracts the concentration that already existed
 
      /// describe van genuchten et. al eqn. here... 
      

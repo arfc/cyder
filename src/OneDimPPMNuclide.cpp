@@ -150,6 +150,7 @@ pair<IsoVector, double> OneDimPPMNuclide::source_term_bc(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::dirichlet_bc(){
+  // @TODO : should calculate C at r.
   pair<IsoVector, double>sum_pair = source_term_bc(); 
   CompMapPtr comp_map = CompMapPtr(sum_pair.first.comp());
   double mass = sum_pair.second;
@@ -266,7 +267,7 @@ double OneDimPPMNuclide::Bzt(double R, double z, double v, double t, double D, d
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclide::calculate_conc_diff(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
+double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
   double D = mat_table_->D(iso/1000);
   MatTools::validate_finite_pos(D);
   //@TODO add sorption to this model. For now, R=1, no sorption. 
@@ -284,14 +285,23 @@ double OneDimPPMNuclide::calculate_conc_diff(IsoConcMap C_0, IsoConcMap C_i, dou
   } 
   double to_ret=0;
   if(C_0.find(iso)!=C_0.end()) {
-    to_ret = C_0[iso]*A + B - Ci_iso;
+    to_ret = C_0[iso]*A + B ;
   } else { 
-    to_ret = B - Ci_iso;
+    to_ret = B;
   }
+  return to_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::calculate_conc_diff(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
+  double to_ret = calculate_conc(C_0, C_i, r, iso, t0, t);
+  if(C_i.find(iso) != C_i.end()) {
+    to_ret -= C_i[iso];
+  } 
   if(to_ret < 0) {
     to_ret =0;
   }
-  //MatTools::validate_finite_pos(to_ret);
+  MatTools::validate_finite_pos(to_ret);
   return to_ret;
 }
 
@@ -313,7 +323,7 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
       for(pt = calc_points.begin(); pt!=calc_points.end(); ++pt){ 
         // C(tn) = f(Co_, Ci_)
         IsoConcMap C0 = Co(*daughter);
-        assert(C0.find(92235) != C0.end());
+        assert(C0.size()!=0);
         double r = (*pt);
         MatTools::validate_finite_pos(r);
         assert(r<=b);
@@ -323,13 +333,23 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
         f_map.insert(make_pair(r,diff));
       }
       // m(tn) = integrate C_t_n
-      IsoConcMap to_ret = trap_rule(a, b, n, f_map);
+      IsoConcMap to_ret = trap_rule(a, b, n-1, f_map);
       double twopiL = 2*boost::math::constants::pi<double>()*geom()->length(); 
       pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, twopiL);
 
-      //if(m_ij.second >= 1000){
-      //  m_ij.second=0;
-      //}
+      //stringstream msg_ss;
+      //msg_ss << "component : ";
+      //msg_ss << comp_id_;
+      //msg_ss << " attempted to extract "; 
+      //msg_ss << m_ij.second;
+      //msg_ss << " kg from component ";
+      //msg_ss << (*daughter)->comp_id();
+      //msg_ss << " at timestep ";
+      //msg_ss << TI->time();
+      //LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
+      if(m_ij.second >= 1000){
+        m_ij.second=0;
+      }
       absorb(mat_rsrc_ptr((*daughter)->extract(m_ij.first, 
               m_ij.second)));
     }

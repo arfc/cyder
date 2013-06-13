@@ -430,6 +430,8 @@ public:
     return to_ret;
   }
 
+  virtual int comp_id(){return comp_id_;};
+
 
 protected:
   /// A vector of the wastes contained by this component
