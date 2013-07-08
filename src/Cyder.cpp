@@ -716,9 +716,9 @@ void Cyder::addRowToParamsTable(){
   std::map<std::string, boost::any>::iterator item;
   for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
     if (item->second.type() == typeid(int*)) {
-      ev->addVal(item->first, *boost::any_cast<int*>(item->second));
+      ev->addVal(item->first.c_str(), *boost::any_cast<int*>(item->second));
     } else if (item->second.type() == typeid(double*)) {
-      ev->addVal(item->first, *boost::any_cast<double*>(item->second));
+      ev->addVal(item->first.c_str(), *boost::any_cast<double*>(item->second));
     }
   }
   ev->record();
