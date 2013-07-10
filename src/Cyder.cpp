@@ -671,24 +671,24 @@ void Cyder::transportNuclides(int the_time){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::updateContaminantTable(int the_time) {
-  for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
-      iter != waste_forms_.end();
-      ++iter){
-    (*iter)->updateContaminantTable(the_time);
-  }
-  for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
-      iter != waste_packages_.end();
-      ++iter){
-    (*iter)->updateContaminantTable(the_time);
-  }
-  for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
-      iter != buffers_.end();
-      ++iter){
-    (*iter)->updateContaminantTable(the_time);
-  }
-  if (far_field_){
-    far_field_->updateContaminantTable(the_time);
-  }
+//  for ( std::deque< ComponentPtr >::const_iterator iter = waste_forms_.begin();
+//      iter != waste_forms_.end();
+//      ++iter){
+//    (*iter)->updateContaminantTable(the_time);
+//  }
+//  for ( std::deque< ComponentPtr >::const_iterator iter = waste_packages_.begin();
+//      iter != waste_packages_.end();
+//      ++iter){
+//    (*iter)->updateContaminantTable(the_time);
+//  }
+//  for ( std::deque< ComponentPtr >::const_iterator iter = buffers_.begin();
+//      iter != buffers_.end();
+//      ++iter){
+//    (*iter)->updateContaminantTable(the_time);
+//  }
+//  if (far_field_){
+//    far_field_->updateContaminantTable(the_time);
+//  }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -710,18 +710,18 @@ void Cyder::set_t_lim(Temp t_lim){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::addRowToParamsTable(){
-  event_ptr ev = EM->newEvent("CyderParams")
-                   ->addVal("facID", ID());
-
-  std::map<std::string, boost::any>::iterator item;
-  for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
-    if (item->second.type() == typeid(int*)) {
-      ev->addVal(item->first.c_str(), *boost::any_cast<int*>(item->second));
-    } else if (item->second.type() == typeid(double*)) {
-      ev->addVal(item->first.c_str(), *boost::any_cast<double*>(item->second));
-    }
-  }
-  ev->record();
+//  event_ptr ev = EM->newEvent("CyderParams")
+//                   ->addVal("facID", ID());
+//
+//  std::map<std::string, boost::any>::iterator item;
+//  for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
+//    if (item->second.type() == typeid(int*)) {
+//      ev->addVal(item->first.c_str(), *boost::any_cast<int*>(item->second));
+//    } else if (item->second.type() == typeid(double*)) {
+//      ev->addVal(item->first.c_str(), *boost::any_cast<double*>(item->second));
+//    }
+//  }
+//  ev->record();
 }
 
 /* --------------------

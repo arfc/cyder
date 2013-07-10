@@ -160,22 +160,22 @@ void Component::print(){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::updateContaminantTable(int the_time){
-  // get the vec_hist
-  std::pair<IsoVector, double> vec_pair = nuclide_model()->vec_hist(the_time);
-  CompMapPtr comp = vec_pair.first.comp();
-  double mass = vec_pair.second;
-  // iterate over the vec_hist IsoVector
-  std::map<int, double>::iterator entry;
-
-  for( entry=comp->begin(); entry!=comp->end(); ++entry ){
-    EM->newEvent("contaminants")
-      ->addVal( "CompID", ID())
-      ->addVal( "Time", the_time)
-      ->addVal( "IsoID", (*entry).first)
-      ->addVal( "MassKG", (*entry).second*mass)
-      ->addVal( "AvailConc", nuclide_model()->conc_hist(the_time, (*entry).first))
-      ->record();
-  }
+//  // get the vec_hist
+//  std::pair<IsoVector, double> vec_pair = nuclide_model()->vec_hist(the_time);
+//  CompMapPtr comp = vec_pair.first.comp();
+//  double mass = vec_pair.second;
+//  // iterate over the vec_hist IsoVector
+//  std::map<int, double>::iterator entry;
+//
+//  for( entry=comp->begin(); entry!=comp->end(); ++entry ){
+//    EM->newEvent("contaminants")
+//      ->addVal( "CompID", ID())
+//      ->addVal( "Time", the_time)
+//      ->addVal( "IsoID", (*entry).first)
+//      ->addVal( "MassKG", (*entry).second*mass)
+//      ->addVal( "AvailConc", nuclide_model()->conc_hist(the_time, (*entry).first))
+//      ->record();
+//  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -296,21 +296,21 @@ const std::vector<NuclideModelPtr> Component::nuclide_daughters(){
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Component::addComponentToTable(ComponentPtr comp){
-  EM->newEvent("components")
-    ->addVal("compID", comp->ID())
-    ->addVal("parentID", 0) // @TODO update with parent in setparent
-    ->addVal("compType", int(comp->type()))
-    ->addVal("name", comp->name())
-    ->addVal("material_data", comp->mat_table()->mat())
-    ->addVal("nuclidemodel", comp->nuclide_model()->name())
-    ->addVal("thermalmodel", comp->thermal_model()->name())
-    ->addVal("innerradius", comp->inner_radius())
-    ->addVal("outerradius", comp->outer_radius())
-    ->addVal("length", comp->geom()->length())
-    ->addVal("x", comp->x())
-    ->addVal("y", comp->y())
-    ->addVal("z", comp->z())
-    ->record();
+//  EM->newEvent("components")
+//    ->addVal("compID", comp->ID())
+//    ->addVal("parentID", 0) // @TODO update with parent in setparent
+//    ->addVal("compType", int(comp->type()))
+//    ->addVal("name", comp->name())
+//    ->addVal("material_data", comp->mat_table()->mat())
+//    ->addVal("nuclidemodel", comp->nuclide_model()->name())
+//    ->addVal("thermalmodel", comp->thermal_model()->name())
+//    ->addVal("innerradius", comp->inner_radius())
+//    ->addVal("outerradius", comp->outer_radius())
+//    ->addVal("length", comp->geom()->length())
+//    ->addVal("x", comp->x())
+//    ->addVal("y", comp->y())
+//    ->addVal("z", comp->z())
+//    ->record();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
