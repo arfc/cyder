@@ -174,7 +174,7 @@ protected:
      * This map holds the input name, a variable reference, and the
      * database datatype of each of the simple datamembers.
      */
-     std::map<std::string, boost::any> member_refs_ ;
+     std::map<const char*, boost::any> member_refs_ ;
 
     /**
        The Cyder has many input commodities
@@ -407,7 +407,7 @@ public:
        @param name is the name given to this variable in the input grammar
        @param val is the val for the appropraite member variable
       */
-    void mapVars(std::string name, boost::any val);
+    void mapVars(const char* name, boost::any val);
 
     /**
        Returns a boolean confirming whether the mat can be accepted at this time.

@@ -98,12 +98,12 @@ Cyder::Cyder() :
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::initModuleMembers(QueryEngine* qe) { 
   // initialize ordinary objects
-  std::map<std::string, boost::any>::iterator item;
+  std::map<const char*, boost::any>::iterator item;
   for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
     if (item->second.type() == typeid(int*)) {
-        (*boost::any_cast<int*>(item->second)) = lexical_cast<int>(qe->getElementContent(item->first.c_str()));
+        (*boost::any_cast<int*>(item->second)) = lexical_cast<int>(qe->getElementContent(item->first));
     } else if (item->second.type() == typeid(double*)) {
-        (*boost::any_cast<double*>(item->second)) = lexical_cast<double>(qe->getElementContent(item->first.c_str()));
+        (*boost::any_cast<double*>(item->second)) = lexical_cast<double>(qe->getElementContent(item->first));
     } else {
       std::string err = "The ";
       err += item->second.type().name();
@@ -692,7 +692,7 @@ void Cyder::updateContaminantTable(int the_time) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::mapVars(std::string name, boost::any val) {
+void Cyder::mapVars(const char* name, boost::any val) {
   member_refs_[name] = val;
 }
 
@@ -713,12 +713,12 @@ void Cyder::addRowToParamsTable(){
   event_ptr ev = EM->newEvent("CyderParams")
                    ->addVal("facID", ID());
 
-  std::map<std::string, boost::any>::iterator item;
+  std::map<const char*, boost::any>::iterator item;
   for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
     if (item->second.type() == typeid(int*)) {
-      ev->addVal(item->first.c_str(), *boost::any_cast<int*>(item->second));
+      ev->addVal(item->first, *boost::any_cast<int*>(item->second));
     } else if (item->second.type() == typeid(double*)) {
-      ev->addVal(item->first.c_str(), *boost::any_cast<double*>(item->second));
+      ev->addVal(item->first, *boost::any_cast<double*>(item->second));
     }
   }
   ev->record();
