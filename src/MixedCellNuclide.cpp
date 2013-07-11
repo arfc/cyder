@@ -150,7 +150,8 @@ mat_rsrc_ptr MixedCellNuclide::extract(const CompMapPtr comp_to_rem, double kg_t
   // each nuclide model should override this function
   LOG(LEV_DEBUG2,"GRDRNuc") << "MixedCellNuclide " << " is extracting composition: ";
   comp_to_rem->print() ;
-  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, wastes_));
+  mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, 
+        wastes_, 1e-16));
   update(last_updated());
   return to_ret;
 }

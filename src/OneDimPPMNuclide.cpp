@@ -427,11 +427,11 @@ void OneDimPPMNuclide::set_rho(double rho){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::Co(const NuclideModelPtr& daughter) {
-  IsoFluxMap cauchy = daughter->cauchy_bc(dirichlet_bc(), geom()->radial_midpoint());
+  IsoFluxMap dirichlet = daughter->dirichlet_bc();
   IsoConcMap Co;
   Co[92235] = 0;
   IsoFluxMap::const_iterator it;
-  for(it=cauchy.begin(); it!=cauchy.end(); ++it){
+  for(it=dirichlet.begin(); it!=dirichlet.end(); ++it){
     Co[(*it).first] = (*it).second/v(); 
   }
   return Co;
