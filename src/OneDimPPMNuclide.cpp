@@ -25,8 +25,6 @@ OneDimPPMNuclide::OneDimPPMNuclide():
   porosity_(0),
   rho_(0)
 {
-  Co_ = IsoConcMap();
-  Ci_ = IsoConcMap();
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
 
@@ -41,8 +39,6 @@ OneDimPPMNuclide::OneDimPPMNuclide(QueryEngine* qe):
   porosity_(0),
   rho_(0)
 {
-  Co_ = IsoConcMap();
-  Ci_ = IsoConcMap();
   wastes_ = deque<mat_rsrc_ptr>();
   set_geom(GeometryPtr(new Geometry()));
   last_updated_=0;
@@ -253,8 +249,10 @@ double OneDimPPMNuclide::A1(double R, double z, double v, double t, double D, do
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::A2(double R, double z, double v, double t, double D, double L){
-  double scalar;
-  double exp_arg;
+  double pi = boost::math::constants::pi<double>();
+
+  double scalar = pow(v*v*t/(pi*R*D),0.5);
+  double exp_arg = -pow(R*z - v*t, 2)/(4*D*R*t);
   return scalar*exp(exp_arg);
 }
 
@@ -269,6 +267,7 @@ double OneDimPPMNuclide::A3(double R, double z, double v, double t, double D, do
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::A4(double R, double z, double v, double t, double D, double L){
   double pi = boost::math::constants::pi<double>();
+
   double root_factor = pow(4*v*v*t/(pi*R*D), 0.5);
   double sum_factor = 1 + (v/(4*D))*(2*L - z + v*t/R) ;
   double scalar = root_factor*sum_factor;
@@ -281,7 +280,7 @@ double OneDimPPMNuclide::A4(double R, double z, double v, double t, double D, do
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::A5(double R, double z, double v, double t, double D, double L){
   double sum_factor = 2*L - z + 3*v*t/(2*R) + (v/(4*D))*pow(2*L - z + v*t/R, 2);
-  double scalar = - (v/D)*sum_factor;
+  double scalar = -(v/D)*sum_factor;
 
   double exp_arg = v*L/D;
   double erfc_arg = (R*(2*L - z) + v*t)/2*pow(D*R*t, 0.5) ;
@@ -299,32 +298,34 @@ double OneDimPPMNuclide::Azt(double R, double z, double v, double t, double D, d
   terms.push_back(A5(R, z, v, t, D, L));
 
   double to_ret = CycArithmetic::KahanSum(terms);
-  MatTools::validate_finite_pos(to_ret);
   return to_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
-  double D = mat_table_->D(iso/1000);
-  double L = geom_->outer_radius();
-  MatTools::validate_finite_pos(D);
-  //@TODO add sorption to this model. For now, R=1, no sorption. 
-  double R=1;
-  assert(t0<t);
-  double del_t = t-t0;
-  t = SECSPERMONTH * del_t ;
-  double A = Azt(R, r, v(), t, D, L);
-  //LOG(LEV_ERROR, "GRDRNuc") << "A = " << A ;
-  double Ci_iso =0;
-  if(C_i.find(iso) != C_i.end()) {
-    Ci_iso = C_i[iso];
-  } 
-  double C0_iso =0;
-  if(C_0.find(iso)!=C_0.end()) {
-    C0_iso = C_0[iso]*A;
-  }
-  double to_ret=0;
-  to_ret = Ci_iso + (C0_iso + Ci_iso)*A ;
+//  double D = mat_table_->D(iso/1000);
+//  double L = geom_->outer_radius();
+//  MatTools::validate_finite_pos(D);
+//  //@TODO add sorption to this model. For now, R=1, no sorption. 
+//  double R=1;
+//  assert(t0<t);
+//  double del_t = t-t0;
+//  t = SECSPERMONTH * del_t ;
+//  double A = Azt(R, r, v(), t, D, L);
+//  //LOG(LEV_ERROR, "GRDRNuc") << "A = " << A ;
+//  double Ci_iso =0;
+//  if(C_i.find(iso) != C_i.end()) {
+//    Ci_iso = C_i[iso];
+//    MatTools::validate_finite_pos(Ci_iso);
+//  } 
+//  double C0_iso =0;
+//  if(C_0.find(iso)!=C_0.end()) {
+//    C0_iso = C_0[iso];
+//    MatTools::validate_finite_pos(Ci_iso);
+//  }
+//  double to_ret=0;
+//  to_ret = Ci_iso + (C0_iso - Ci_iso)*A ; 
+  double to_ret = max(C_0[iso], 0.0);
   return to_ret;
 }
 
@@ -357,7 +358,6 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
       // Ci = C(tn-1)
       vector<double>::const_iterator pt;
       for(pt = calc_points.begin(); pt!=calc_points.end(); ++pt){ 
-        // C(tn) = f(Co_, Ci_)
         IsoConcMap C0 = Co(*daughter);
         assert(C0.size()!=0);
         double r = (*pt);
@@ -370,8 +370,10 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
       }
       // m(tn) = integrate C_t_n
       IsoConcMap to_ret = trap_rule(a, b, n-1, f_map);
-      double twopiL = 2*boost::math::constants::pi<double>()*geom()->length(); 
-      pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, twopiL);
+      //double twopiL = 2*boost::math::constants::pi<double>()*geom()->length(); 
+      //pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, V_ff());
+      pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, (*daughter)->V_ff());
+      //twopiL);
 
       stringstream msg_ss;
       msg_ss << "component : ";
@@ -383,9 +385,9 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
       msg_ss << " at timestep ";
       msg_ss << TI->time();
       LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
-      if(m_ij.second >= 1000){
-        m_ij.second=0;
-      }
+      //if(m_ij.second >= 1000){
+      //  m_ij.second=0;
+      //}
       absorb(mat_rsrc_ptr((*daughter)->extract(m_ij.first, 
               m_ij.second)));
     }
@@ -464,23 +466,13 @@ void OneDimPPMNuclide::set_rho(double rho){
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::Co(const NuclideModelPtr& daughter) {
   IsoFluxMap dirichlet = daughter->dirichlet_bc();
-  IsoConcMap Co;
-  Co[92235] = 0;
-  IsoFluxMap::const_iterator it;
-  for(it=dirichlet.begin(); it!=dirichlet.end(); ++it){
-    Co[(*it).first] = (*it).second/v(); 
-  }
-  return Co;
+  return dirichlet;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 IsoConcMap OneDimPPMNuclide::Ci() {
   pair<IsoVector, double> st = MatTools::sum_mats(wastes_);
   return MatTools::comp_to_conc_map(st.first.comp(), st.second, V_ff());
-}
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-void OneDimPPMNuclide::set_Ci(IsoConcMap Ci){
-  Ci_ =  Ci;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    

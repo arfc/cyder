@@ -312,9 +312,6 @@ public:
     */
   IsoConcMap Ci() ;
 
-  /// sets the Ci_ variable, the initial concentration.
-  void set_Ci(IsoConcMap Ci);
-
   /**
      return Co, the source concentration at the inner boundary
     */
@@ -357,12 +354,6 @@ protected:
     The advective velocity through the waste packages in units of m/s.
   */
   double v_;
-
-  /// The initial contaminant concentration, C(x,0), in g/cm^3
-  IsoConcMap Ci_;
-
-  /// The contaminant concentration constantly at the source until t_0, in g/cm^3
-  IsoConcMap Co_;
 
   /// Porosity of the component matrix, a fraction between 0 and 1, inclusive.
   double porosity_;
