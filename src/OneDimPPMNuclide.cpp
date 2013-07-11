@@ -299,7 +299,7 @@ double OneDimPPMNuclide::Azt(double R, double z, double v, double t, double D, d
   terms.push_back(A5(R, z, v, t, D, L));
 
   vector<double>::const_iterator A;
-  for(A=terms.begin(); A!=terms.end(), ++A){
+  for(A=terms.begin(); A!=terms.end(); ++A){
     MatTools::validate_finite_pos(A);
   }
 
