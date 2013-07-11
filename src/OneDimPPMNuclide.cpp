@@ -309,24 +309,24 @@ double OneDimPPMNuclide::Azt(double R, double z, double v, double t, double D, d
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
   double D = mat_table_->D(iso/1000);
-  L = geom_->outer_radius();
+  double L = geom_->outer_radius();
   MatTools::validate_finite_pos(D);
   //@TODO add sorption to this model. For now, R=1, no sorption. 
   double R=1;
   assert(t0<t);
   double del_t = t-t0;
   t = SECSPERMONTH * del_t ;
-  double A = Azt(R,r,v(), t, D, L);
+  double A = Azt(R, r, v(), t, D, L);
   //LOG(LEV_ERROR, "GRDRNuc") << "A = " << A ;
   double Ci_iso =0;
-  double C0_iso =0;
   if(C_i.find(iso) != C_i.end()) {
     Ci_iso = C_i[iso];
   } 
-  double to_ret=0;
+  double C0_iso =0;
   if(C_0.find(iso)!=C_0.end()) {
-    C_0_iso = C_0[iso]*A;
+    C0_iso = C_0[iso]*A;
   }
+  double to_ret=0;
   to_ret = Ci_iso + (C0_iso + Ci_iso)*A ;
   return to_ret;
 }
