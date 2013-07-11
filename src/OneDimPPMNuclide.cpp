@@ -10,8 +10,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/math/special_functions/erf.hpp>
 
-
 #include "CycException.h"
+#include "CycArithmetic.h"
 #include "Logger.h"
 #include "Timer.h"
 #include "OneDimPPMNuclide.h"
