@@ -292,11 +292,11 @@ double OneDimPPMNuclide::A5(double R, double z, double v, double t, double D, do
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::Azt(double R, double z, double v, double t, double D, double L){
   vector<double> terms;
-  double terms.push_back(A1(R, z, v, t, D, L));
-  double terms.push_back(A2(R, z, v, t, D, L));
-  double terms.push_back(A3(R, z, v, t, D, L));
-  double terms.push_back(A4(R, z, v, t, D, L));
-  double terms.push_back(A5(R, z, v, t, D, L));
+  terms.push_back(A1(R, z, v, t, D, L));
+  terms.push_back(A2(R, z, v, t, D, L));
+  terms.push_back(A3(R, z, v, t, D, L));
+  terms.push_back(A4(R, z, v, t, D, L));
+  terms.push_back(A5(R, z, v, t, D, L));
 
   vector<double>::const_iterator A;
   for(A=terms.begin(); A!=terms.end(), ++A){
