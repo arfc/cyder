@@ -154,10 +154,22 @@ public:
   virtual void transportNuclides(int time);
 
   /// @TODO give doc
-  double Azt(double R, double z, double v, double t, double D);
+  double A1(double R, double z, double v, double t, double D, double L);
 
   /// @TODO give doc
-  double Bzt(double R, double z, double v, double t, double D, double C_i);
+  double A2(double R, double z, double v, double t, double D, double L);
+
+  /// @TODO give doc
+  double A3(double R, double z, double v, double t, double D, double L);
+
+  /// @TODO give doc
+  double A4(double R, double z, double v, double t, double D, double L);
+
+  /// @TODO give doc
+  double A5(double R, double z, double v, double t, double D, double L);
+
+  /// @TODO give doc
+  double Azt(double R, double z, double v, double t, double D, double L);
 
   /** 
      Determines what IsoVector to remove from the daughter nuclide models

@@ -244,51 +244,90 @@ IsoConcMap OneDimPPMNuclide::calculate_conc_diff(IsoConcMap C_0, IsoConcMap C_i,
   return to_ret;
 }
 
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclide::Azt(double R, double z, double v, double t, double D){
-  double At_frac = (R*z - v*t)/(2*pow(D*R*t, 0.5));
-  double At = 0.5*boost::math::erfc(At_frac);
-  double A = At;
-  MatTools::validate_finite_pos(t);
-  MatTools::validate_finite_pos(A);
-  return A;
+double OneDimPPMNuclide::A1(double R, double z, double v, double t, double D, double L){
+  double erfc_arg = (R*z - v*t)/(2*pow(D*R*t, 0.5));
+  return 0.5*boost::math::erfc(erfc_arg);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-double OneDimPPMNuclide::Bzt(double R, double z, double v, double t, double D, double C_i){
+double OneDimPPMNuclide::A2(double R, double z, double v, double t, double D, double L){
+  double scalar;
+  double exp_arg;
+  return scalar*exp(exp_arg);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::A3(double R, double z, double v, double t, double D, double L){
+  double scalar = -0.5*(1 + v*z/D + pow(v,2)*t/(D*R));
+  double exp_arg = (v*z)/D;
+  double erfc_arg = (R*z + v*t)/(2*pow(D*R*t, 0.5));
+  return scalar*exp(exp_arg)*boost::math::erfc(erfc_arg);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::A4(double R, double z, double v, double t, double D, double L){
   double pi = boost::math::constants::pi<double>();
-  double B1_frac = (R*z - v*t)/(2*pow(D*R*t, 0.5));
-  double B1 = 0.5*boost::math::erfc(B1_frac);
-  double B2_exp = -pow(R*z-v*t,2)/(4*D*R*t);
-  double B2 = v*pow(t/(pi*R*D),0.5)*exp(B2_exp);
-  double B = -C_i*(B1 + B2);
-  MatTools::validate_finite_pos(-B);
-  return B;
+  double root_factor = pow(4*v*v*t/(pi*R*D), 0.5);
+  double sum_factor = 1 + (v/(4*D))*(2*L - z + v*t/R) ;
+  double scalar = root_factor*sum_factor;
+
+  double exp_arg = (v*L)/D - (R/(4*D*t))*pow(2*L - z + v*t/R, 2) ;
+
+  return scalar*exp(exp_arg);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::A5(double R, double z, double v, double t, double D, double L){
+  double sum_factor = 2*L - z + 3*v*t/(2*R) + (v/(4*D))*pow(2*L - z + v*t/R, 2);
+  double scalar = - (v/D)*sum_factor;
+
+  double exp_arg = v*L/D;
+  double erfc_arg = (R*(2*L - z) + v*t)/2*pow(D*R*t, 0.5) ;
+
+  return scalar*exp(exp_arg)*boost::math::erfc(erfc_arg);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+double OneDimPPMNuclide::Azt(double R, double z, double v, double t, double D, double L){
+  vector<double> terms;
+  double terms.push_back(A1(R, z, v, t, D, L));
+  double terms.push_back(A2(R, z, v, t, D, L));
+  double terms.push_back(A3(R, z, v, t, D, L));
+  double terms.push_back(A4(R, z, v, t, D, L));
+  double terms.push_back(A5(R, z, v, t, D, L));
+
+  vector<double>::const_iterator A;
+  for(A=terms.begin(); A!=terms.end(), ++A){
+    MatTools::validate_finite_pos(A);
+  }
+
+  return CycArithmetic::KahanSum(terms);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
   double D = mat_table_->D(iso/1000);
+  L = geom_->outer_radius();
   MatTools::validate_finite_pos(D);
   //@TODO add sorption to this model. For now, R=1, no sorption. 
   double R=1;
   assert(t0<t);
   double del_t = t-t0;
   t = SECSPERMONTH * del_t ;
-  double A = Azt(R,r,v(), t, D);
+  double A = Azt(R,r,v(), t, D, L);
   //LOG(LEV_ERROR, "GRDRNuc") << "A = " << A ;
   double Ci_iso =0;
-  double B =0;
+  double C0_iso =0;
   if(C_i.find(iso) != C_i.end()) {
     Ci_iso = C_i[iso];
-    B = Bzt(R, r, v(), t, D, Ci_iso); 
   } 
   double to_ret=0;
   if(C_0.find(iso)!=C_0.end()) {
-    to_ret = C_0[iso]*A + B ;
-  } else { 
-    to_ret = B;
+    C_0_iso = C_0[iso]*A;
   }
+  to_ret = Ci_iso + (C0_iso + Ci_iso)*A ;
   return to_ret;
 }
 
@@ -337,16 +376,16 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
       double twopiL = 2*boost::math::constants::pi<double>()*geom()->length(); 
       pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, twopiL);
 
-      //stringstream msg_ss;
-      //msg_ss << "component : ";
-      //msg_ss << comp_id_;
-      //msg_ss << " attempted to extract "; 
-      //msg_ss << m_ij.second;
-      //msg_ss << " kg from component ";
-      //msg_ss << (*daughter)->comp_id();
-      //msg_ss << " at timestep ";
-      //msg_ss << TI->time();
-      //LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
+      stringstream msg_ss;
+      msg_ss << "component : ";
+      msg_ss << comp_id_;
+      msg_ss << " attempted to extract "; 
+      msg_ss << m_ij.second;
+      msg_ss << " kg from component ";
+      msg_ss << (*daughter)->comp_id();
+      msg_ss << " at timestep ";
+      msg_ss << TI->time();
+      LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
       if(m_ij.second >= 1000){
         m_ij.second=0;
       }

@@ -29,7 +29,7 @@
       <SourceFacility>
         <output>
           <outcommodity>waste</outcommodity>
-          <output_capacity>1e9</output_capacity>
+          <output_capacity>1</output_capacity>
           <recipe>lwr_used_fuel_recipe</recipe>
         </output>
       </SourceFacility>
@@ -48,7 +48,7 @@
         <dy>100</dy>
         <dz>100</dz>
         <advective_velocity>1e-14</advective_velocity>
-        <capacity>1e9</capacity>
+        <capacity>1</capacity>
         <limiting_temp>1000</limiting_temp>
         <incommodity>waste</incommodity>
         <inventorysize>5000</inventorysize>
