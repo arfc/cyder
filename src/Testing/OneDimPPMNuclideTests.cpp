@@ -492,12 +492,13 @@ TEST_F(OneDimPPMNuclideTest, A5){
   v=0;
   double result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
   EXPECT_FLOAT_EQ(0, result);
+  v=v_;
   // an increase in R should decrease the absolute value of A5
   R=1;
   result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
   R=10;
   double larger_result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
-  EXPECT_GT(larger_result, result);
+  EXPECT_GT(abs(larger_result), abs(result));
   // if R or D is zero, A2 is -inf, and should throw an error.
   R=0;
   EXPECT_THROW(one_dim_ppm_ptr_->A2(R, z, v, t, D, L), CycRangeException);
@@ -514,9 +515,9 @@ TEST_F(OneDimPPMNuclideTest, A){
   double t = 20*SECSPERMONTH;
   double D = D_;
   double L = r_five_ - r_four_;
-  // zero result test
-  double zero_result = one_dim_ppm_ptr_->Azt(R, z, v, t, D, L);
-  EXPECT_FLOAT_EQ(0, zero_result);
+  // positive result test
+  double result = one_dim_ppm_ptr_->Azt(R, z, v, t, D, L);
+  EXPECT_GE(result, 0);
   // positive result test
 }
 
