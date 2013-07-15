@@ -362,15 +362,15 @@ TEST_F(OneDimPPMNuclideTest, A1){
   R=1;
   double result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
   // A1 should always be positive and never zero (though sometimes VERY small)
-  EXPECT_GE(0, result);
+  EXPECT_GE(result, 0);
   // as z or R increase, A1 decreases
   R = 2;
   double smaller_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
-  EXPECT_GT(smaller_result, result);
+  EXPECT_LT(smaller_result, result);
   R = 1;
   v = v_*0.5;
   smaller_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
-  EXPECT_GT(smaller_result, result);
+  EXPECT_LT(smaller_result, result);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
