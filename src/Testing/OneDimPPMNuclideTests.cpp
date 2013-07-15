@@ -374,6 +374,8 @@ TEST_F(OneDimPPMNuclideTest, A1){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A2){
+  // if v or t is zero, A2 is zero
+  // if R or D is zero, A2 is -inf, and should throw an error.
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
@@ -394,6 +396,8 @@ TEST_F(OneDimPPMNuclideTest, A2){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A3){
+  // if z=0 and v=0 A3=1/2
+  // if D, R, or t = 0, A3 is nan or -inf and should throw an error
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
