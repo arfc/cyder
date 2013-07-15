@@ -460,7 +460,6 @@ TEST_F(OneDimPPMNuclideTest, A4){
   double z = (r_five_-r_four_)/2;
   double v = v_;
   double t = 100*SECSPERMONTH;
-  cout << t << endl;
   double D = D_;
   double L = r_five_ - r_four_;
   // positive result test
