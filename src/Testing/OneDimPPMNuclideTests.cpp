@@ -349,7 +349,6 @@ TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A1){
-  // as v, D, or t increase, A1 increases
   // if (Rz-vt)/2sqrt(DRt) = 0 : A1 = 1/2
   // so : for D=1, R=1, t=1, z=1, and v=1 = 0, A1=1/2
   double R;
@@ -368,9 +367,23 @@ TEST_F(OneDimPPMNuclideTest, A1){
   double smaller_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
   EXPECT_LT(smaller_result, result);
   R = 1;
-  v = v_*0.5;
+  z = z*2;
   smaller_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
   EXPECT_LT(smaller_result, result);
+  // as v, D, or t increase, A1 increases
+  R = 1;
+  z = (r_five_-r_four_)/2;
+  v = v_*2;
+  double larger_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  EXPECT_GT(larger_result, result);
+  v = v_;
+  D = D_*2;
+  larger_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  EXPECT_GT(larger_result, result);
+  D=D_;
+  t=t*100;
+  larger_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  EXPECT_GT(larger_result, result);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
