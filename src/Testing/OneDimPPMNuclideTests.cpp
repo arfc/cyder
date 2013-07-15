@@ -483,19 +483,28 @@ TEST_F(OneDimPPMNuclideTest, A4){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A5){
-  // if v=0  then A5=0
-  // if D, R, or t = 0, then throw
-  // an increase in R should decrease the absolute value of A5
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
   double t = 100*SECSPERMONTH;
   double D = D_;
   double L = r_five_ - r_four_;
-  // zero result test
-  double zero_result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
-  EXPECT_FLOAT_EQ(2, zero_result);
-  // positive result test
+  // if v=0  then A5=0
+  v=0;
+  double result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(0, result);
+  // an increase in R should decrease the absolute value of A5
+  R=1;
+  result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
+  R=10;
+  double larger_result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
+  EXPECT_GT(larger_result, result);
+  // if R or D is zero, A2 is -inf, and should throw an error.
+  R=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A2(R, z, v, t, D, L), CycRangeException);
+  R=1;
+  D=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A2(R, z, v, t, D, L), CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
