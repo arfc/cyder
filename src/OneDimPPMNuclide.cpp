@@ -329,11 +329,6 @@ double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r
   }
   double to_ret=0;
   to_ret = Ci_iso + (C0_iso - Ci_iso)*A ; 
-  //LOG(LEV_ERROR, "GRDRNuc") << "A = " << A ;
-  //LOG(LEV_ERROR, "GRDRNuc") << "Ci_iso = " << Ci_iso ;
-  //LOG(LEV_ERROR, "GRDRNuc") << "C0_iso = " << C0_iso ;
-  //LOG(LEV_ERROR, "GRDRNuc") << "to_ret = " << to_ret ;
-  //double to_ret = max(A*C_0[iso], 0.0);
   return to_ret;
 }
 
