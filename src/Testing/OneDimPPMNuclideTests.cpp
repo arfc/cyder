@@ -425,7 +425,6 @@ TEST_F(OneDimPPMNuclideTest, A2){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A3){
-  // if D, R, or t = 0, A3 is nan or -inf and should throw an error
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
@@ -451,9 +450,6 @@ TEST_F(OneDimPPMNuclideTest, A3){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A4){
-  // if R, D, or t = 0, A4 is nan or -inf, so it should throw
-  // if v=0 then A4=0
-  // if 2L > z then A4 >= 0
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
@@ -461,10 +457,22 @@ TEST_F(OneDimPPMNuclideTest, A4){
   cout << t << endl;
   double D = D_;
   double L = r_five_ - r_four_;
-  // zero result test
-  double zero_result = one_dim_ppm_ptr_->A4(R, z, v, t, D, L);
-  EXPECT_FLOAT_EQ(2, zero_result);
   // positive result test
+  // if 2L > z then A4 >= 0
+  assert(2*L > z);
+  double result = one_dim_ppm_ptr_->A4(R, z, v, t, D, L);
+  EXPECT_GT(result, 0);
+  // if v=0 then A4=0
+  v=0;
+  result = one_dim_ppm_ptr_->A4(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(0, result);
+  // if R or D is zero, A2 is -inf, and should throw an error.
+  v=v_;
+  R=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A3(R, z, v, t, D, L), CycRangeException);
+  R=1;
+  D=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A3(R, z, v, t, D, L), CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
