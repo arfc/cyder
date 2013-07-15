@@ -440,6 +440,12 @@ TEST_F(OneDimPPMNuclideTest, A3){
   v=0;
   result = one_dim_ppm_ptr_->A3(R, z, v, t, D, L);
   EXPECT_FLOAT_EQ(-0.5, result);
+  // if R or D is zero, A2 is -inf, and should throw an error.
+  R=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A3(R, z, v, t, D, L), CycRangeException);
+  R=1;
+  D=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A3(R, z, v, t, D, L), CycRangeException);
 
 }
 
