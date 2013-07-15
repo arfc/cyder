@@ -351,7 +351,8 @@ TEST_F(OneDimPPMNuclideTest, A1){
   // A1 should always be positive and never zero (though sometimes VERY small)
   // as z or R increase, A1 decreases
   // as v, D, or t increase, A1 increases
-  // for D=1, R=1, t=1, and z-v = 2, A1=1/2
+  // if (Rz-vt)/2sqrt(DRt) = 0 : A1 = 1/2
+  // so : for D=1, R=1, t=1, z=1, and v=1 = 0, A1=1/2
   double R;
   double z = (r_five_-r_four_)/2;
   double v = v_;
