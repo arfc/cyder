@@ -376,26 +376,22 @@ void OneDimPPMNuclide::update_inner_bc(int the_time, std::vector<NuclideModelPtr
             the_time);
         f_map.insert(make_pair(r,diff));
       }
-      // m(tn) = integrate C_t_n
+      // m(tn) = integrate conc diff
       IsoConcMap to_ret = trap_rule(a, b, n-1, f_map);
-      //double twopiL = 2*boost::math::constants::pi<double>()*geom()->length(); 
-      //pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, V_ff());
+      // note, we are using the daughter's volume for safety
+      // @TODO use this v_ff after checking appropriateness.
       pair<CompMapPtr, double> m_ij = MatTools::conc_to_comp_map(to_ret, (*daughter)->V_ff());
-      //twopiL);
 
       stringstream msg_ss;
       msg_ss << "component : ";
       msg_ss << comp_id_;
-      msg_ss << " attempted to extract "; 
+      msg_ss << " is extracting "; 
       msg_ss << m_ij.second;
       msg_ss << " kg from component ";
       msg_ss << (*daughter)->comp_id();
       msg_ss << " at timestep ";
       msg_ss << TI->time();
-      LOG(LEV_ERROR, "GRDRNuc") << msg_ss.str();;
-      //if(m_ij.second >= 1000){
-      //  m_ij.second=0;
-      //}
+      LOG(LEV_DEBUG2, "GRDRNuc") << msg_ss.str();;
       absorb(mat_rsrc_ptr((*daughter)->extract(m_ij.first, 
               m_ij.second)));
     }
