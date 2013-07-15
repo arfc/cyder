@@ -415,6 +415,7 @@ TEST_F(OneDimPPMNuclideTest, A3){
 TEST_F(OneDimPPMNuclideTest, A4){
   // if R, D, or t = 0, A4 is nan or -inf, so it should throw
   // if v=0 then A4=0
+  // if 2L > z then A4 >= 0
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
