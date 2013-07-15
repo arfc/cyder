@@ -254,10 +254,6 @@ double OneDimPPMNuclide::A2(double R, double z, double v, double t, double D, do
   MatTools::validate_finite_pos(pi);
   double scalar = pow(v*v*t/(pi*R*D),0.5);
   double exp_arg = -pow(R*z - v*t, 2)/(4*D*R*t);
-  //cout << "Rz - vt = " << R*z - v*t <<endl;
-  //cout << "4DRt = " << 4*D*R*t << endl;
-  //cout << "exp_arg = " << exp_arg << endl;
-  //cout << "exp_arg = " << exp_arg << endl;
   return scalar*exp(exp_arg);
 }
 
