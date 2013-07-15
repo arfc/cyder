@@ -349,8 +349,6 @@ TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A1){
-  // if (Rz-vt)/2sqrt(DRt) = 0 : A1 = 1/2
-  // so : for D=1, R=1, t=1, z=1, and v=1 = 0, A1=1/2
   double R;
   double z = (r_five_-r_four_)/2;
   double v = v_;
@@ -384,6 +382,16 @@ TEST_F(OneDimPPMNuclideTest, A1){
   t=t*100;
   larger_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
   EXPECT_GT(larger_result, result);
+  // if (Rz-vt)/2sqrt(DRt) = 0 : A1 = 1/2
+  // so : for D=1, R=1, t=1, z=1, and v=1 = 0, A1=1/2
+  R = 1;
+  z = 1;
+  v = 1;
+  t = 1;
+  D = 1;
+  L = 1;
+  result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(0.5, result);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
