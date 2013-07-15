@@ -63,7 +63,7 @@ void OneDimPPMNuclideTest::TearDown() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, 
     double r, Iso iso, int t0, int t){
-  double to_ret; //@TODO this whold function is bunk now.
+  double to_ret; //@TODO this whole function is bunk now.
   return to_ret;
 }
 
@@ -296,6 +296,7 @@ TEST_F(OneDimPPMNuclideTest, secspermonth) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, Azt){
+  //@TODO update to Brenner.
   double expected = 6.490573901865077e-06; // calculated in python
   EXPECT_FLOAT_EQ(1e-14, pow(10.,-14));
   double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8), 2);  
@@ -412,6 +413,8 @@ TEST_F(OneDimPPMNuclideTest, A3){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A4){
+  // if R, D, or t = 0, A4 is nan or -inf, so it should throw
+  // if v=0 then A4=0
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
