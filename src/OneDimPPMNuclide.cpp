@@ -243,6 +243,11 @@ IsoConcMap OneDimPPMNuclide::calculate_conc_diff(IsoConcMap C_0, IsoConcMap C_i,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::A1(double R, double z, double v, double t, double D, double L){
+  MatTools::validate_finite_pos(R);
+  MatTools::validate_nonzero(R);
+  MatTools::validate_finite_pos(D);
+  MatTools::validate_nonzero(D);
+
   double erfc_arg = (R*z - v*t)/(2*pow(D*R*t, 0.5));
   return 0.5*boost::math::erfc(erfc_arg);
 }
@@ -250,8 +255,11 @@ double OneDimPPMNuclide::A1(double R, double z, double v, double t, double D, do
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::A2(double R, double z, double v, double t, double D, double L){
   double pi = boost::math::constants::pi<double>();
+  MatTools::validate_finite_pos(R);
+  MatTools::validate_nonzero(R);
+  MatTools::validate_finite_pos(D);
+  MatTools::validate_nonzero(D);
 
-  MatTools::validate_finite_pos(pi);
   double scalar = pow(v*v*t/(pi*R*D),0.5);
   double exp_arg = -pow(R*z - v*t, 2)/(4*D*R*t);
   return scalar*exp(exp_arg);
@@ -259,6 +267,11 @@ double OneDimPPMNuclide::A2(double R, double z, double v, double t, double D, do
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::A3(double R, double z, double v, double t, double D, double L){
+  MatTools::validate_finite_pos(R);
+  MatTools::validate_nonzero(R);
+  MatTools::validate_finite_pos(D);
+  MatTools::validate_nonzero(D);
+
   double scalar = -0.5*(1 + v*z/D + pow(v,2)*t/(D*R));
   double exp_arg = (v*z)/D;
   double erfc_arg = (R*z + v*t)/(2*pow(D*R*t, 0.5));
@@ -268,6 +281,10 @@ double OneDimPPMNuclide::A3(double R, double z, double v, double t, double D, do
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::A4(double R, double z, double v, double t, double D, double L){
   double pi = boost::math::constants::pi<double>();
+  MatTools::validate_finite_pos(R);
+  MatTools::validate_nonzero(R);
+  MatTools::validate_finite_pos(D);
+  MatTools::validate_nonzero(D);
 
   double root_factor = pow(4*v*v*t/(pi*R*D), 0.5);
   double sum_factor = 1 + (v/(4*D))*(2*L - z + v*t/R) ;
@@ -280,6 +297,11 @@ double OneDimPPMNuclide::A4(double R, double z, double v, double t, double D, do
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::A5(double R, double z, double v, double t, double D, double L){
+  MatTools::validate_finite_pos(R);
+  MatTools::validate_nonzero(R);
+  MatTools::validate_finite_pos(D);
+  MatTools::validate_nonzero(D);
+
   double sum_factor = 2*L - z + 3*v*t/(2*R) + (v/(4*D))*pow(2*L - z + v*t/R, 2);
   double scalar = -(v/D)*sum_factor;
 

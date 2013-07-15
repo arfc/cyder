@@ -392,6 +392,12 @@ TEST_F(OneDimPPMNuclideTest, A1){
   L = 1;
   result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
   EXPECT_FLOAT_EQ(0.5, result);
+  // if R or D is zero, A2 is -inf, and should throw an error.
+  R=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A2(R, z, v, t, D, L), CycRangeException);
+  R=1;
+  D=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A2(R, z, v, t, D, L), CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
@@ -431,9 +437,9 @@ TEST_F(OneDimPPMNuclideTest, A3){
   double t = 100*SECSPERMONTH;
   double D = D_;
   double L = r_five_ - r_four_;
-  // positive result test
+  // negative result test
   double result = one_dim_ppm_ptr_->A3(R, z, v, t, D, L);
-  EXPECT_GE(result, 0);
+  EXPECT_LT(result, 0);
   // if z=0 and v=0 A3=-1/2
   z=0;
   v=0;
