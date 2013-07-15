@@ -251,8 +251,13 @@ double OneDimPPMNuclide::A1(double R, double z, double v, double t, double D, do
 double OneDimPPMNuclide::A2(double R, double z, double v, double t, double D, double L){
   double pi = boost::math::constants::pi<double>();
 
+  MatTools::validate_finite_pos(pi);
   double scalar = pow(v*v*t/(pi*R*D),0.5);
   double exp_arg = -pow(R*z - v*t, 2)/(4*D*R*t);
+  //cout << "Rz - vt = " << R*z - v*t <<endl;
+  //cout << "4DRt = " << 4*D*R*t << endl;
+  //cout << "exp_arg = " << exp_arg << endl;
+  //cout << "exp_arg = " << exp_arg << endl;
   return scalar*exp(exp_arg);
 }
 
@@ -303,29 +308,32 @@ double OneDimPPMNuclide::Azt(double R, double z, double v, double t, double D, d
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclide::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, double r, Iso iso, int t0, int t) {
-//  double D = mat_table_->D(iso/1000);
-//  double L = geom_->outer_radius();
-//  MatTools::validate_finite_pos(D);
-//  //@TODO add sorption to this model. For now, R=1, no sorption. 
-//  double R=1;
-//  assert(t0<t);
-//  double del_t = t-t0;
-//  t = SECSPERMONTH * del_t ;
-//  double A = Azt(R, r, v(), t, D, L);
-//  //LOG(LEV_ERROR, "GRDRNuc") << "A = " << A ;
-//  double Ci_iso =0;
-//  if(C_i.find(iso) != C_i.end()) {
-//    Ci_iso = C_i[iso];
-//    MatTools::validate_finite_pos(Ci_iso);
-//  } 
-//  double C0_iso =0;
-//  if(C_0.find(iso)!=C_0.end()) {
-//    C0_iso = C_0[iso];
-//    MatTools::validate_finite_pos(Ci_iso);
-//  }
-//  double to_ret=0;
-//  to_ret = Ci_iso + (C0_iso - Ci_iso)*A ; 
-  double to_ret = max(C_0[iso], 0.0);
+  double D = mat_table_->D(iso/1000);
+  double L = geom_->outer_radius() - geom_->inner_radius();
+  MatTools::validate_finite_pos(D);
+  //@TODO add sorption to this model. For now, R=1, no sorption. 
+  double R=1;
+  assert(t0<t);
+  double del_t = t-t0;
+  t = 120*SECSPERMONTH * del_t ;
+  double A = Azt(R, r, v(), t, D, L);
+  double Ci_iso =0;
+  if(C_i.find(iso) != C_i.end()) {
+    Ci_iso = C_i[iso];
+    MatTools::validate_finite_pos(Ci_iso);
+  } 
+  double C0_iso =0;
+  if(C_0.find(iso)!=C_0.end()) {
+    C0_iso = C_0[iso];
+    MatTools::validate_finite_pos(Ci_iso);
+  }
+  double to_ret=0;
+  to_ret = Ci_iso + (C0_iso - Ci_iso)*A ; 
+  //LOG(LEV_ERROR, "GRDRNuc") << "A = " << A ;
+  //LOG(LEV_ERROR, "GRDRNuc") << "Ci_iso = " << Ci_iso ;
+  //LOG(LEV_ERROR, "GRDRNuc") << "C0_iso = " << C0_iso ;
+  //LOG(LEV_ERROR, "GRDRNuc") << "to_ret = " << to_ret ;
+  //double to_ret = max(A*C_0[iso], 0.0);
   return to_ret;
 }
 

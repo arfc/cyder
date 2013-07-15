@@ -24,14 +24,14 @@ void OneDimPPMNuclideTest::SetUp(){
 
   // other vars
   theta_ = 0.3; // percent porosity
-  v_ = 1; // m/yr
+  v_ = 1e-18; // m/s
   time_ = 0;
   Ci_ = 1;
   Co_ = 2;
   porosity_ = 0.1;
-  D_ = 4;
-  rho_ = 5;
-  Kd_ = 6;
+  D_ = 1e-08;
+  rho_ = 1;
+  Kd_ = 0;
 
   // composition set up
   u235_=92235;
@@ -63,29 +63,7 @@ void OneDimPPMNuclideTest::TearDown() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 double OneDimPPMNuclideTest::calculate_conc(IsoConcMap C_0, IsoConcMap C_i, 
     double r, Iso iso, int t0, int t){
-  double D = mat_table_->D(iso/1000);
-  double pi = boost::math::constants::pi<double>();
-  //@TODO add sorption to this model. For now, R=1, no sorption. 
-  double R=1;
-  //@TODO convert months to seconds
-
-  double At_frac = (R*r - v_*t)/(2*pow(D*R*t, 0.5));
-  double At = 0.5*boost::math::erfc(At_frac);
-  double Att0_frac = (R*r - v_*t)/(2*pow(D*R*(t-t0), 0.5));
-  double Att0 = 0.5*boost::math::erfc(Att0_frac);
-  double A = At - Att0;
-  double B1_frac = (R*r - v_*t)/(2*pow(D*R*t, 0.5));
-  double B1 = 0.5*boost::math::erfc(B1_frac);
-  double B2_exp = -pow(R*r-v_*t,2)/(4*D*R*t);
-  double B2 = pow(v_*v_*t/(pi*R*D),0.5)*exp(B2_exp);
-  double B3_exp = v_*r/D;
-  double B3_frac = (R*r + v_*t)/(2*pow(D*R*t,0.5));
-  double B3_factor = -0.5*(1+(v_*r)/(D) + (v_*v_*t)/(D*R));
-  double B3 = B3_factor*exp(B3_exp)*boost::math::erfc(B3_frac);  ;
-  double B = C_i[iso]*(B1 + B2 + B3);
-
-  double to_ret = C_0[iso]*A + B;
-  
+  double to_ret; //@TODO this whold function is bunk now.
   return to_ret;
 }
 
@@ -369,7 +347,109 @@ TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, A1){
+  double R;
+  double z = (r_five_-r_four_)/2;
+  double v = v_;
+  double t = 100*SECSPERMONTH;
+  double D = D_;
+  double L = r_five_ - r_four_;
+  // zero result tests
+  R=0;
+  double zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  R=1;
+  zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  D = 0;
+  v = 0;
+  zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  // positive result test
+  D=D_;
+  v=v_;
+  zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, A2){
+  double R = 1;
+  double z = (r_five_-r_four_)/2;
+  double v = v_;
+  double t = 100*SECSPERMONTH;
+  double D = D_;
+  double L = r_five_ - r_four_;
+  // zero result tests
+  MatTools::validate_finite_pos(R);
+  MatTools::validate_finite_pos(z);
+  MatTools::validate_finite_pos(v);
+  MatTools::validate_finite_pos(t);
+  MatTools::validate_finite_pos(D);
+  MatTools::validate_finite_pos(L);
+  double zero_result = one_dim_ppm_ptr_->A2(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(2, zero_result);
+  // positive result test
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, A3){
+  double R = 1;
+  double z = (r_five_-r_four_)/2;
+  double v = v_;
+  double t = 100*SECSPERMONTH;
+  double D = D_;
+  double L = r_five_ - r_four_;
+  // zero result test
+  double zero_result = one_dim_ppm_ptr_->A3(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(2, zero_result);
+  // positive result test
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, A4){
+  double R = 1;
+  double z = (r_five_-r_four_)/2;
+  double v = v_;
+  double t = 100*SECSPERMONTH;
+  cout << t << endl;
+  double D = D_;
+  double L = r_five_ - r_four_;
+  // zero result test
+  double zero_result = one_dim_ppm_ptr_->A4(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(2, zero_result);
+  // positive result test
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, A5){
+  double R = 1;
+  double z = (r_five_-r_four_)/2;
+  double v = v_;
+  double t = 100*SECSPERMONTH;
+  double D = D_;
+  double L = r_five_ - r_four_;
+  // zero result test
+  double zero_result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(2, zero_result);
+  // positive result test
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
+TEST_F(OneDimPPMNuclideTest, A){
+  double R = 1;
+  double z = (r_five_-r_four_)/2;
+  double v = v_;
+  double t = 20*SECSPERMONTH;
+  double D = D_;
+  double L = r_five_ - r_four_;
+  // zero result test
+  double zero_result = one_dim_ppm_ptr_->Azt(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(0, zero_result);
+  // positive result test
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, calculate_conc){
+  // if Ci and C0 are 0, then conc = 0
+  // if Ci is positive and C0 is zero then 0 < conc <= Ci
+  // if Ci is positive and C0 is zero then 0 < conc <= C0
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
