@@ -349,8 +349,6 @@ TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A1){
-  // A1 should always be positive and never zero (though sometimes VERY small)
-  // as z or R increase, A1 decreases
   // as v, D, or t increase, A1 increases
   // if (Rz-vt)/2sqrt(DRt) = 0 : A1 = 1/2
   // so : for D=1, R=1, t=1, z=1, and v=1 = 0, A1=1/2
@@ -362,15 +360,17 @@ TEST_F(OneDimPPMNuclideTest, A1){
   double L = r_five_ - r_four_;
   // known result tests
   R=1;
-  double zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
-  zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
-  D = 0;
-  v = 0;
-  zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
-  // positive result test
-  D=D_;
-  v=v_;
-  zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  double result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  // A1 should always be positive and never zero (though sometimes VERY small)
+  EXPECT_GE(0, result);
+  // as z or R increase, A1 decreases
+  R = 2;
+  double smaller_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  EXPECT_GT(smaller_result, result);
+  R = 1;
+  v = v_*0.5;
+  smaller_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  EXPECT_GT(smaller_result, result);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
