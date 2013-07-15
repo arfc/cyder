@@ -431,6 +431,9 @@ TEST_F(OneDimPPMNuclideTest, A4){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A5){
+  // if v=0  then A5=0
+  // if D, R, or t = 0, then throw
+  // an increase in R should decrease the absolute value of A5
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
