@@ -483,8 +483,8 @@ TEST_F(OneDimPPMNuclideTest, A5){
   R=1;
   result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
   R=10;
-  double larger_result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
-  EXPECT_GT(abs(larger_result), abs(result));
+  double smaller_result = one_dim_ppm_ptr_->A5(R, z, v, t, D, L);
+  EXPECT_LT(abs(smaller_result), abs(result));
   // if R or D is zero, A2 is -inf, and should throw an error.
   R=0;
   EXPECT_THROW(one_dim_ppm_ptr_->A2(R, z, v, t, D, L), CycRangeException);
