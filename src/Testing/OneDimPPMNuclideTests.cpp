@@ -396,24 +396,31 @@ TEST_F(OneDimPPMNuclideTest, A1){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A2){
-  // if v or t is zero, A2 is zero
-  // if R or D is zero, A2 is -inf, and should throw an error.
   double R = 1;
   double z = (r_five_-r_four_)/2;
   double v = v_;
   double t = 100*SECSPERMONTH;
   double D = D_;
   double L = r_five_ - r_four_;
+  // A2 is positive for all positive inputs
+  double result = one_dim_ppm_ptr_->A2(R, z, v, t, D, L);
+  EXPECT_GT(result,0);
   // zero result tests
-  MatTools::validate_finite_pos(R);
-  MatTools::validate_finite_pos(z);
-  MatTools::validate_finite_pos(v);
-  MatTools::validate_finite_pos(t);
-  MatTools::validate_finite_pos(D);
-  MatTools::validate_finite_pos(L);
+  // if v or t is zero, A2 is zero
+  v = 0;
   double zero_result = one_dim_ppm_ptr_->A2(R, z, v, t, D, L);
-  EXPECT_FLOAT_EQ(2, zero_result);
-  // positive result test
+  EXPECT_FLOAT_EQ(0, zero_result);
+  v = v_;
+  t = 0;
+  zero_result = one_dim_ppm_ptr_->A2(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(0, zero_result);
+  t=100*SECSPERMONTH ;
+  // if R or D is zero, A2 is -inf, and should throw an error.
+  R=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A2(R, z, v, t, D, L), CycRangeException);
+  R=1;
+  D=0;
+  EXPECT_THROW(one_dim_ppm_ptr_->A2(R, z, v, t, D, L), CycRangeException);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
