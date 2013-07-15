@@ -295,20 +295,6 @@ TEST_F(OneDimPPMNuclideTest, secspermonth) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
-TEST_F(OneDimPPMNuclideTest, Azt){
-  //@TODO update to Brenner.
-  double expected = 6.490573901865077e-06; // calculated in python
-  EXPECT_FLOAT_EQ(1e-14, pow(10.,-14));
-  double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-14), SECSPERMONTH , pow(10.,-8), 2);  
-  EXPECT_FLOAT_EQ(expected, actual);
-  EXPECT_NEAR(expected, actual, 10e-10);
-  for(int i =0; i<14; ++i){
-    double actual = one_dim_ppm_ptr_->Azt(1, 1, pow(10.,-i), SECSPERMONTH , pow(10.,-8), 2);  
-    EXPECT_LT(expected, actual);
-  }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, trap_rule){
   double a=10;
   double b=20;
