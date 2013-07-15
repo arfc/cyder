@@ -425,7 +425,6 @@ TEST_F(OneDimPPMNuclideTest, A2){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A3){
-  // if z=0 and v=0 A3=1/2
   // if D, R, or t = 0, A3 is nan or -inf and should throw an error
   double R = 1;
   double z = (r_five_-r_four_)/2;
@@ -433,10 +432,15 @@ TEST_F(OneDimPPMNuclideTest, A3){
   double t = 100*SECSPERMONTH;
   double D = D_;
   double L = r_five_ - r_four_;
-  // zero result test
-  double zero_result = one_dim_ppm_ptr_->A3(R, z, v, t, D, L);
-  EXPECT_FLOAT_EQ(2, zero_result);
   // positive result test
+  double result = one_dim_ppm_ptr_->A3(R, z, v, t, D, L);
+  EXPECT_GE(result, 0);
+  // if z=0 and v=0 A3=-1/2
+  z=0;
+  v=0;
+  result = one_dim_ppm_ptr_->A3(R, z, v, t, D, L);
+  EXPECT_FLOAT_EQ(-0.5, result);
+
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
