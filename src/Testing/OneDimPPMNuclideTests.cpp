@@ -348,16 +348,19 @@ TEST_F(OneDimPPMNuclideTest, trap_rule_x_squared){
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -    
 TEST_F(OneDimPPMNuclideTest, A1){
+  // A1 should always be positive and never zero (though sometimes VERY small)
+  // as z or R increase, A1 decreases
+  // as v, D, or t increase, A1 increases
+  // for D=1, R=1, t=1, and z-v = 2, A1=1/2
   double R;
   double z = (r_five_-r_four_)/2;
   double v = v_;
   double t = 100*SECSPERMONTH;
   double D = D_;
   double L = r_five_ - r_four_;
-  // zero result tests
-  R=0;
-  double zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
+  // known result tests
   R=1;
+  double zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
   zero_result = one_dim_ppm_ptr_->A1(R, z, v, t, D, L);
   D = 0;
   v = 0;
