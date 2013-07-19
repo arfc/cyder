@@ -936,8 +936,8 @@ class Query(object):
             legend_ids.append(stream_labels[self.data_labels[stream_dim][ind]])
 
         self.ax.set_xlim(left=0)
-        self.ax.set_ylabel(self.data_units[3])
-        self.ax.set_xlabel(self.data_axes[time_dim])
+        self.ax.set_ylabel("mass ["+self.data_units[3]+"]")
+        self.ax.set_xlabel(self.data_axes[time_dim]+" ["+self.data_units[time_dim]+"]")
         #self.ax.set_xticks(indList, t)
         #self.ax.set_yticks(np.arange(0,max(run_sum)))
         self.legend = self.ax.legend(legend_items,legend_ids, 
