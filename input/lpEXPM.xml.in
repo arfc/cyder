@@ -141,7 +141,7 @@
         <component>
           <name>FF</name>
           <innerradius>3</innerradius>
-          <outerradius>100</outerradius>
+          <outerradius>4</outerradius>
           <length>1</length>
           <componenttype>FF</componenttype>
           <material_data>

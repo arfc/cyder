@@ -190,7 +190,7 @@ class Query(object):
                 self.ind_to_iso[index] = iso
         elif self.q_type == 'contaminants':
             self.data_axes = ['time', 'CompID', 'IsoID', 'MassKG']
-            self.data_units = ['months', 'CompID', 'IsoID', "kg"]
+            self.data_units = ['years', 'CompID', 'IsoID', "kg"]
         elif self.q_type == 'nucparams':
             self.data_axes = ['CompID', 'ParamName', 'ParamVal']
             self.data_units = ['CompID', 'name', 'val']
@@ -924,9 +924,9 @@ class Query(object):
           if(max(plot_data[:, ind] > 0)):
             for time in t :
               time-=self.t0
-              the_plot = self.ax.bar(time,
+              the_plot = self.ax.bar(time*10,
                                      plot_data[time, ind], 
-                                     width=1,
+                                     width=10,
                                      bottom=run_sum[time], 
                                      color=cm.jet(float(ind)/float(len(stream_list)), 
                                          alpha=0.5), 

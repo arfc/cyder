@@ -103,6 +103,7 @@
           <nuclidemodel>
             <LumpedNuclide>
               <advective_velocity>1e-14</advective_velocity>
+              <porosity>0.1</porosity>
               <transit_time>1</transit_time>
               <formulation>
                 <PFM/>
@@ -140,7 +141,7 @@
         <component>
           <name>FF</name>
           <innerradius>3</innerradius>
-          <outerradius>100</outerradius>
+          <outerradius>4</outerradius>
           <length>1</length>
           <componenttype>FF</componenttype>
           <material_data>

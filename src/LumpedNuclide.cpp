@@ -163,7 +163,7 @@ mat_rsrc_ptr LumpedNuclide::extract(const CompMapPtr comp_to_rem, double
   LOG(LEV_DEBUG2,"GRLNuc") << "LumpedNuclide" << "is extracting composition: ";
   comp_to_rem->print() ;
   mat_rsrc_ptr to_ret = mat_rsrc_ptr(MatTools::extract(comp_to_rem, kg_to_rem, 
-        wastes_));
+        wastes_, 1e-3));
   update(last_updated());
   return to_ret;
 }
@@ -457,7 +457,7 @@ mat_rsrc_ptr LumpedNuclide::extractIntegratedMass(NuclideModelPtr daughter,
   double del_r = geom()->outer_radius() - geom()->inner_radius();
   double len = geom()->length();
   // scalar = 2*pi*l*theta*(r_j-r_i)^2
-  double scalar = 2*pi*porosity()*len*del_r*del_r;
+  double scalar = daughter->V_ff();
   IsoConcMap c_i_n = daughter->dirichlet_bc();
   IsoConcMap c_j_n = C_t(C_0(), the_time);
   // m_j = scalar*(((5c_j_n/6) - (c_i_n)/3) 

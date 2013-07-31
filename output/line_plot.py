@@ -190,7 +190,7 @@ class LinearData(object) :
         self._filename = str(filename)
         self._flist = self.collect_filenames(root)
         self.extract_data(self._flist) 
-        LinearPlot(
+        self._the_plot = LinearPlot(
             x_min = min(self._x),
             y_min = min(self._y),
             x_max = max(self._x), 
