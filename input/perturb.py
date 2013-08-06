@@ -61,9 +61,12 @@ def change_extension(fname, new_ext) :
     root = strip_xml(root_xml)
     return root+new_ext
 
-def make_param_range(low, upper, number):
+def make_param_range(low, upper, number, logspace):
     """ makes a range between low and high with number vals"""
-    arr = np.linspace(float(low), float(upper), int(number))
+    if logspace == True :
+        arr = np.logspace(np.log10(float(low)), np.log10(float(upper)), int(number))
+    else :
+        arr = np.linspace(float(low), float(upper), int(number))
     return arr.tolist()
 
 def perturb(args) :
@@ -72,7 +75,7 @@ def perturb(args) :
     for param in args.params :
         ind = args.params.index(param)
         param_range = make_param_range(args.lows[ind], args.uppers[ind], 
-                args.numbers[ind])
+                args.numbers[ind], bool(args.logspace))
         curr_list = list(in_file_list)
         in_file_list = []
         for f in curr_list : 
@@ -96,6 +99,8 @@ def main() :
                       help="the upper value of the param range")
     arg_parser.add_argument("-n", "--num", type=int, nargs='*', dest="numbers",
                       help="number of values of the param range")
+    arg_parser.add_argument("-ls", "--logspace", type=str, nargs=1, dest="logspace",
+                      help="true if you want to logspace the parametric spacing.")
     args = arg_parser.parse_args()
     perturb(args)
 
