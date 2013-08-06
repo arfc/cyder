@@ -433,7 +433,7 @@ class ThermalPlotData(object) :
             y_label= r'Maximum Temperature $[^{\circ}K]$',
             ptitle = title,
             xscale = 'linear',
-            yscale = 'linear',
+            yscale = 'log',
             fname = outfile,
             save = True
             )
