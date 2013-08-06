@@ -48,10 +48,27 @@ class LinearPlot(object) :
     <++>
     """
     _n_labels = 15 # the number of labels on each a_xis
+
+    """
+    <++>
+    """
+    _xscale = 'linear'
+
+    """
+    <++>
+    """
+    _yscale = 'linear'
+
     """
     <++>
     """
     _filename = "out.eps"
+
+    """
+    <++>
+    """
+    _save = True
+
     """
     <++>
     """
@@ -71,7 +88,10 @@ class LinearPlot(object) :
             x_label = 'x',
             y_label = 'y',
             ptitle = 'plottitle',
-            fname = 'line_plot.eps'
+            xscale = 'linear',
+            yscale = 'linear',
+            fname = 'line_plot.eps',
+            save = True
             ):
         
         self._x_min = x_min
@@ -91,7 +111,10 @@ class LinearPlot(object) :
         self._x_label = x_label
         self._y_label = y_label
         self._title = ptitle
+        self._xscale = xscale
+        self._yscale = yscale
         self._filename = fname
+        self._save = save
         
         self.sort_data(self._x, self._y)
         self.lineplot()
@@ -111,6 +134,8 @@ class LinearPlot(object) :
 
         plt.subplot(111)
         plt.plot(x, y, 'ko-')
+        plt.xscale(self._xscale)
+        plt.yscale(self._yscale)
         plt.xlim(x_min, x_max*1.01)
         plt.ylim(y_min, y_max*1.01)
         plt.xlabel(x_label)
@@ -127,8 +152,11 @@ class LinearPlot(object) :
         self._y = sorted_dict.values()
 
     def save_it(self) :
-        savefig(self._filename)
-        print ('saved as '+ self._filename)
+        if self._save : 
+            savefig(self._filename)
+            print ('saved as '+ self._filename)
+        else :
+            print ('Not saved. Continue working on this plot or save_it. ')
 
     def set_x(self) :
         if self._x is None :
@@ -181,13 +209,19 @@ class LinearData(object) :
             xlabel = 'Reference Solubility Limit $[kg/m^3]$',
             ylabel = 'massKG',
             title = 'Solubility Limitation',
-            filename = 'sol.eps'
+            xscale = 'linear',
+            yscale = 'linear',
+            filename = 'sol.eps',
+            save = True
             ): 
         self._x_param = xparam
         self._x_label = xlabel
         self._y_label = ylabel
         self._title = title
+        self._xscale = xscale
+        self._yscale = yscale
         self._filename = str(filename)
+        self._save = save
         self._flist = self.collect_filenames(root)
         self.extract_data(self._flist) 
         self._the_plot = LinearPlot(
@@ -201,7 +235,10 @@ class LinearData(object) :
             x_label = self._x_label,
             y_label = self._y_label,
             ptitle = self._title,
-            fname = self._filename
+            xscale = self._xscale,
+            yscale = self._yscale,
+            fname = self._filename,
+            save = self._save
             )
         
     def extract_data(self, flist) : 
@@ -250,8 +287,14 @@ def main():
             dest="y_label", help="This is the y label name as plotted")
     arg_parser.add_argument("-t", metavar="title", type=str, nargs=1, 
             dest="title", help="This is the title of the plot")
+    arg_parser.add_argument("-xs", metavar="xscale", type=str, nargs=1, 
+            dest="xscale", help="This is the x scale type (i.e. 'log').")
+    arg_parser.add_argument("-ys", metavar="yscale", type=str, nargs=1, 
+            dest="yscale", help="This is the y scale type (i.e. 'log').")
     arg_parser.add_argument("-o", metavar="filename", type=str, nargs=1, 
             dest="filename", help="This is the output filename. Include eps.")
+    arg_parser.add_argument("-s", metavar="save", type=str, nargs=1, 
+            dest="save", help="True=save the figure. False=don't.")
     args=arg_parser.parse_args()
     LinearData(
             args.root[0],
@@ -259,7 +302,10 @@ def main():
             args.x_label[0],
             args.y_label[0],
             args.title[0],
-            args.filename[0]
+            args.xscale[0],
+            args.yscale[0],
+            args.filename[0],
+            bool(args.save[0])
             )
 
 if __name__=="__main__" :
