@@ -12,6 +12,7 @@ import numpy as np
 from numpy.random import uniform, seed
 from matplotlib.mlab import griddata
 import pdb
+import linear_plot as lp
 
 class ContourPlot(object) :
     """
@@ -184,6 +185,7 @@ class ContourPlot(object) :
         plt.title(title)
         print ('tricontour plotted')
 
+
     def save_it(self) :
         savefig(self._filename)
         print ('saved as '+ self._filename)
@@ -317,6 +319,14 @@ class ThermalPlotData(object) :
         clf()
         self.set_up_and_plot(a_range[1], k_range[1], s_range, r_range) # s vs r
         clf()
+        self.set_up_linear(a_range, k_range[1], s_range[1], r_range[1]) # a
+        clf()
+        self.set_up_linear(a_range[1], k_range, s_range[1], r_range[1]) # k
+        clf()
+        self.set_up_linear(a_range[1], k_range[1], s_range, r_range[1]) # s
+        clf()
+        self.set_up_linear(a_range[1], k_range[1], s_range[1], r_range) # r
+        clf()
 
     def set_up_and_plot(self, a, k, s, r):
         title = "Maximum Temperature Sensitivity at"
@@ -376,12 +386,59 @@ class ThermalPlotData(object) :
             ptitle = title,
             fname = outfile
             )
-        
+
+    def set_up_linear(self, a, k, s, r):
+        title = "Maximum Temperature Sensitivity at"
+        inparams = {
+                "a" : a, 
+                "k" : k, 
+                "s" : s, 
+                "r" : r}
+        x_range = None
+        default = ''
+        max_t=[]
+        for key, v in inparams.iteritems() :
+            if type(v) == ListType :
+                x_key = key
+                x_range = list(v)
+                xmin = min(v)
+                xmax = max(v)
+                xlabel = self.label(key)
+            elif type(v) != ListType :
+                title += key+"="+ str(v)+" " 
+                default += "_" + key+str(v)
+        for x in x_range : 
+            inparams[x_key] = x
+            x_vals.append(x)
+            max_t.append(self.calc_max_temp(self.matid_query(inparams["a"], 
+                inparams["k"], inparams["s"], inparams["r"]), self._recipe))
+
+        outfile = x_key + default + ".eps"
+
+        print(x_vals)
+        print(max_t)
+        return lp.LinearPlot(
+            x_min=xmin,
+            y_min=ymin,
+            x_max=xmax,
+            y_max=ymax,
+            x = x_vals, 
+            y = max_t,
+            npts = len(max_t),
+            x_label=xlabel,
+            y_label= r'Maximum Temperature $[^{\circ}K]$',
+            ptitle = title,
+            xscale = 'linear',
+            yscale = 'linear',
+            fname = outfile,
+            save = True
+            )
+
     def label(self, key) : 
         labels = {
                 "a": r'Thermal Diffusivity $\alpha_{th} [m^2/s]$',
                 "k": r'Thermal Conductivity $k_{th} [W/m/K]$',
-                "s": 'Waste Package Spacing s [m]',
+                "s": r'Waste Package Spacing $s$ [m]',
                 "r": r'Limiting Radius, $r_{lim}$ [m]'
                 }
         return labels[key]
