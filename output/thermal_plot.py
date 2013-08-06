@@ -329,7 +329,7 @@ class ThermalPlotData(object) :
         clf()
 
     def set_up_and_plot(self, a, k, s, r):
-        title = "Maximum Temperature Sensitivity at"
+        title = "Maximum Temperature Sensitivity at "
         inparams = {
                 "a" : a, 
                 "k" : k, 
@@ -338,6 +338,8 @@ class ThermalPlotData(object) :
         x_range = None
         y_range = None
         default = ''
+        x_vals=[]
+        y_vals=[]
         max_t=[]
         for key, v in inparams.iteritems() :
           if type(v) == ListType and x_range == None :
@@ -388,7 +390,7 @@ class ThermalPlotData(object) :
             )
 
     def set_up_linear(self, a, k, s, r):
-        title = "Maximum Temperature Sensitivity at"
+        title = "Maximum Temperature Sensitivity at "
         inparams = {
                 "a" : a, 
                 "k" : k, 
@@ -396,6 +398,8 @@ class ThermalPlotData(object) :
                 "r" : r}
         x_range = None
         default = ''
+        x_vals=[]
+        y_vals=[]
         max_t=[]
         for key, v in inparams.iteritems() :
             if type(v) == ListType :
@@ -419,9 +423,9 @@ class ThermalPlotData(object) :
         print(max_t)
         return lp.LinearPlot(
             x_min=xmin,
-            y_min=ymin,
+            y_min=min(max_t),
             x_max=xmax,
-            y_max=ymax,
+            y_max=max(max_t),
             x = x_vals, 
             y = max_t,
             npts = len(max_t),
