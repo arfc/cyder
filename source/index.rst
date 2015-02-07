@@ -28,7 +28,9 @@ includes :
 Important Features
 -------------------
 
-todo 
+- 4 model options for hydrologic radionuclide contaminant transport 
+- thermal specific temperatuer change model for dynamic repository capcity analysis
+- efficiency and fidelity appropriate for fuel cycle analysis
 
 Learn More
 ----------

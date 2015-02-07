@@ -16,10 +16,21 @@ Interested developers are welcome and encouraged to contribute but may
 experience code instability in the early experimental stages of
 the project.
 
+Background Literature
+---------------------
+
+Background literature related to the Cyder generic geology performance library 
+includes :
+
+  
+
+
 Important Features
 -------------------
 
-todo 
+- 4 model options for hydrologic radionuclide contaminant transport 
+- thermal specific temperatuer change model for dynamic repository capcity analysis
+- efficiency and fidelity appropriate for fuel cycle analysis
 
 Learn More
 ----------
