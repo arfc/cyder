@@ -148,7 +148,7 @@ public:
        
        @param time the time of the tick
      */
-    virtual void handleTick(int time);
+    virtual void Tick(int time);
 
     /**
        The handleTick function specific to the Cyder.
@@ -157,7 +157,7 @@ public:
        
        @param time the time of the tock
      */
-    virtual void handleTock(int time);
+    virtual void Tock(int time);
 
 
 /* ------------------- */ 
