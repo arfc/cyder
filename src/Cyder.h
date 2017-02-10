@@ -73,7 +73,7 @@ typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
    ceases to operate. 
    
  */
-class Cyder : public Facility  {
+class Cyder : public cyclus::Facility  {
 /* --------------------
  * all MODEL classes have these members
  * --------------------
@@ -81,10 +81,10 @@ class Cyder : public Facility  {
 
 public:
   /// Default constructor for the Cyder class.
-  Cyder();
+  Cyder(cyclus::Context* ctx);
 
   /// Destructor for the Cyder class. 
-  ~Cyder() {};
+  virtual ~Cyder();
   
   /// initialize an object from QueryEngine input
   virtual void initModuleMembers(QueryEngine* qe);
