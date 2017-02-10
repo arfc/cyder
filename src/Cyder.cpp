@@ -369,12 +369,6 @@ void Cyder::makeRequests(int time){
     }
   }
 }
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::EnterNotify() {
-  cyclus::Facility::EnterNotify();
-
-  //conditions for not entering
-}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 double Cyder::getCapacity(std::string commod){
