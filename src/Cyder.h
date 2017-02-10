@@ -138,7 +138,7 @@ public:
  * --------------------
  */
 
-public:
+#pragma cyclus
 
     /**
        The handleTick function specific to the Cyder.
@@ -160,7 +160,7 @@ public:
     virtual void Tock(int time);
 
     virtual void EnterNotify();
-    
+
 
 /* ------------------- */ 
 
