@@ -96,6 +96,18 @@ Cyder::Cyder() :
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Cyder::EnterNofity(){
+  cyclus::Facility::EnterNotify();
+
+  //conditions
+  
+}
+
+
+
+
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::initModuleMembers(QueryEngine* qe) { 
   // initialize ordinary objects
   std::map<const char*, boost::any>::iterator item;
