@@ -293,7 +293,7 @@ void Cyder::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::handleTick(int time)
+void Cyder::Tick(int time)
 {
   LOG(LEV_INFO3, "GenRepoFac") << facName() << " is ticking {";
   // if this is the first timestep, register the far field
@@ -307,7 +307,7 @@ void Cyder::handleTick(int time)
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::handleTock(int time) {
+void Cyder::Tock(int time) {
 
   // emplace the waste that's ready
   emplaceWaste();
