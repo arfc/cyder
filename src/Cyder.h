@@ -138,7 +138,7 @@ public:
  * --------------------
  */
 
-public:
+#pragma cyclus 
 
     /**
        The handleTick function specific to the Cyder.
