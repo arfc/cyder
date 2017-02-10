@@ -185,8 +185,8 @@ TEST_F(CyderTest, initial_state) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 TEST_F(CyderTest, assess_capacity_crude){
-  EXPECT_NO_THROW(src_facility_->handleTick(time_));
-  EXPECT_NO_THROW(src_facility_->handleTock(time_));
+  EXPECT_NO_THROW(src_facility_->Tick(time_));
+  EXPECT_NO_THROW(src_facility_->Tock(time_));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
