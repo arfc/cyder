@@ -159,6 +159,8 @@ public:
      */
     virtual void Tock(int time);
 
+    virtual void EnterNotify();
+    
 
 /* ------------------- */ 
 
@@ -168,6 +170,8 @@ public:
  */
 
 public:
+
+//this is the state variables? where #pragma goes in.
 
 protected:
     /**
