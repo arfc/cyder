@@ -10,7 +10,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/any.hpp>
 
-#include "FacilityModel.h"
+#include "Facility.h"
 #include "Component.h"
 
 /**
@@ -19,9 +19,9 @@
 typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
 
 /*! Cyder
-    This FacilityModel seeks to provide a generic disposal system model
+    This Facility seeks to provide a generic disposal system model
    
-   The Cyder class inherits from the FacilityModel class and is 
+   The Cyder class inherits from the Facility class and is 
    dynamically loaded by the Model class when requested.
    
    \section intro Introduction 
@@ -73,7 +73,7 @@ typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
    ceases to operate. 
    
  */
-class Cyder : public FacilityModel  {
+class Cyder : public Facility  {
 /* --------------------
  * all MODEL classes have these members
  * --------------------
@@ -90,7 +90,7 @@ public:
   virtual void initModuleMembers(QueryEngine* qe);
 
   /// initialize an object by cloning module members from another
-  virtual void cloneModuleMembersFrom(FacilityModel* src);
+  virtual void cloneModuleMembersFrom(Facility* src);
 
   /**
      @brief deep copy method 

@@ -18,7 +18,7 @@
 
 
 /**
- * The Cyder class inherits from the FacilityModel class and is 
+ * The Cyder class inherits from the Facility class and is 
  * dynamically loaded by the Model class when requested.
  * 
  * This facility model is intended to calculate nuclide and heat metrics over
@@ -190,7 +190,7 @@ ComponentPtr Cyder::initComponent(QueryEngine* qe){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::cloneModuleMembersFrom(FacilityModel* source)
+void Cyder::cloneModuleMembersFrom(Facility* source)
 {
 
   Cyder* src = dynamic_cast<Cyder*>(source);
@@ -238,7 +238,7 @@ std::string Cyder::str() {
  
   // this should ultimately print all of the components loaded into this repository.
   std::stringstream fac_model_ss;
-  fac_model_ss << FacilityModel::str(); 
+  fac_model_ss << Facility::str(); 
   std::string gen_repo_msg;
 
   gen_repo_msg += "}, wf {";
