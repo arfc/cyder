@@ -355,6 +355,13 @@ protected:
     /**
        The radius at which the thermally limiting temperature takes effect [m]
      */
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "radius of thermal limiting temperature into effect", \
+                        "units": "m", \
+                        "uilabel": "Limit Radius", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "radius of thermal limiting temperature into effect"}
     Radius r_lim_;
 
     /**
