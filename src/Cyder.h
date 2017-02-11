@@ -284,6 +284,10 @@ protected:
     /**
        The stocks of pre-emplacement waste materials.
      */
+    #pragma cyclus var {"tooltip": "stocks of pre-emplaced waste material", \
+                        "uilabel": "PreEmplaced Stock", \
+                        "uitype": "none", \
+                        "doc": "stocks of pre-emplaced waste material"}
     std::deque<WasteStream> stocks_;
 
     /**
