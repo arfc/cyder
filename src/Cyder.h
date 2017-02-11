@@ -330,6 +330,13 @@ protected:
        The year in which operation of the facility begins.
        (maybe this should just be in the deployment description?)
      */
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "repository operation start year", \
+                        "units": "year", \
+                        "uilabel": "Start Year", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "repository operation start year"}
     int start_op_yr_;
 
     /**
