@@ -197,14 +197,22 @@ protected:
      */
 
     #pragma cyclus var {"tooltip": "thermal model", \
-                        "doc": "thermal model for analysis"
-                        "uilabel": }
+                        "doc": "Choose from 'LumpedThermal', 'STCThermal', 'StubThermal'", \
+                        "uilabel": "Thermal Model", \
+                        "uitype": "none"}
     ThermalModelPtr thermal_model_;
 
     /**
        A limit to how quickly the Cyder can accept waste.
        Units vary. It will be in the commodity unit per month.
      */
+  #pragma cyclus var {"default": 1e299, \
+                      "tooltip": "repository accept rate", \
+                      "uilabel": "Maximum Throughput", \
+                      "uitype": "range", \
+                      "range": [0.0, 1e299], \
+                      "doc": "capacity the repository can " \
+                             "accept at each time step"}
     double capacity_;
 
     /**
