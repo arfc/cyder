@@ -492,6 +492,10 @@ protected:
     /**
        Each waste form associated with a waste package.
      */
+    #pragma cyclus var {"tooltip": "commodity association with waste package", \
+                        "uilabel": "Waste Package Map", \
+                        "uitype": "none", \
+                        "doc": "commodity association with waste package"}
     std::map<std::string, ComponentPtr> wf_wp_map_;
 
     /**
