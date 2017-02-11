@@ -367,6 +367,13 @@ protected:
     /**
        The limiting temperature at the limiting radius [K]
      */
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "limiting temperature at limiting radius", \
+                        "units": "K", \
+                        "uilabel": "Limiting Temperature", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "lmiting temperature at the limiting radius"}
      Temp t_lim_;
 
     /**
