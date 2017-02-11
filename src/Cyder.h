@@ -399,7 +399,10 @@ protected:
        The buffer template before initialization.
        This will be copied and initialized before use.
      */
-      
+    #pragma cyclus var {"tooltip": "the buffer template before initialization", \
+                        "uilabel": "Buffer Template", \
+                        "uitype": "none", \
+                        "doc": "the buffer template before initialization"}
     ComponentPtr buffer_template_;
 
     /**
