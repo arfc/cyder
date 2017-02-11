@@ -304,12 +304,26 @@ protected:
        The Cyder must stop processing the material in its stocks 
        when its inventory is full. (YMRLegislative = 70,000tHM) 
      */
+
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "repository maximum inventory size", \
+                        "uilabel": "Maximum Inventory", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "total maximum inventory size of repository"}
     double inventory_size_;
 
     /**
        The number of months that a facility stays operational.
        hopefully, this repository is forever, but just in case... 
      */
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "repository lifetime in months", \
+                        "units": "months", \
+                        "uilabel": "Repository Lifetime", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "repository lifetime in months"}
     int lifetime_;
 
     /**
