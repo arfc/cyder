@@ -413,13 +413,17 @@ protected:
                         "uilabel": "Waste Package Template", \
                         "uitype": "none", \
                         "doc": "he waste package template before initialization"}
-
     std::deque<ComponentPtr> wp_templates_;
 
     /**
        The waste form templates before initialization.
        These will be copied and initialized before use.
      */
+
+    #pragma cyclus var {"tooltip": "the waste form template before initialization", \
+                        "uilabel": "Waste Form Template", \
+                        "uitype": "none", \
+                        "doc": "he waste form template before initialization"}
     std::deque<ComponentPtr> wf_templates_;
 
     /**
