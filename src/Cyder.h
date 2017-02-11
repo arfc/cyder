@@ -343,6 +343,13 @@ protected:
        The month in which operation of the facility begins.
        (maybe this should just be in the deployment description?)
      */
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "repository operation start month", \
+                        "units": "month", \
+                        "uilabel": "Start Month", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "repository operation start month"}
     int start_op_mo_;
 
     /**
