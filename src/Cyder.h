@@ -195,6 +195,10 @@ protected:
        This thermal model determines the acceptability of a material
        at radius r_lim_ due to temperature limit t_lim_
      */
+
+    #pragma cyclus var {"tooltip": "thermal model", \
+                        "doc": "thermal model for analysis"
+                        "uilabel": }
     ThermalModelPtr thermal_model_;
 
     /**
