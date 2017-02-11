@@ -379,6 +379,10 @@ protected:
     /**
        Reports true if the repository has reached capacity, false otherwise
      */
+    #pragma cyclus var {"tooltip": "if the repository has reached capacity", \
+                        "uilabel": "If Repository Full", \
+                        "uitype": "none", \
+                        "doc": "if the repository has reached capacity"}
     bool is_full_;
 
     /**
