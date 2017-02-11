@@ -438,6 +438,10 @@ protected:
     /**
        The waste package components that have been emplaced
      */
+    #pragma cyclus var {"tooltip": "the emplaced waste package components", \
+                        "uilabel": "Emplaced Waste Package", \
+                        "uitype": "none", \
+                        "doc": "the emplaced waste package components"}
     std::deque<ComponentPtr> emplaced_waste_packages_;
 
     /**
