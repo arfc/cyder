@@ -409,6 +409,11 @@ protected:
        The waste package component templates before initialization.
        These will be copied and initialized before use.
      */
+    #pragma cyclus var {"tooltip": "the waste package template before initialization", \
+                        "uilabel": "Waste Package Template", \
+                        "uitype": "none", \
+                        "doc": "he waste package template before initialization"}
+
     std::deque<ComponentPtr> wp_templates_;
 
     /**
