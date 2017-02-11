@@ -429,6 +429,10 @@ protected:
     /**
        The waste package components current being dealt with
      */
+    #pragma cyclus var {"tooltip": "the current waste package components", \
+                        "uilabel": "Current Waste Package", \
+                        "uitype": "none", \
+                        "doc": "the current waste package components"}
     std::deque<ComponentPtr> current_waste_packages_;
 
     /**
