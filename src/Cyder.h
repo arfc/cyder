@@ -293,6 +293,10 @@ protected:
     /**
        The inventory of emplaced materials.
      */
+    #pragma cyclus var {"tooltip": "inventory of emplaced materials", \
+                        "uilabel": "Emplaced Inventory", \
+                        "uitype": "none", \
+                        "doc": "inventory of emplaced materials"}
     std::deque<WasteStream> inventory_;
 
     /**
