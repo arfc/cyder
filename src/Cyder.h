@@ -483,6 +483,10 @@ protected:
     /**
        Each commodity is associated with a waste form.
      */
+    #pragma cyclus var {"tooltip": "commodity association with waste form", \
+                        "uilabel": "Waste Form Map", \
+                        "uitype": "none", \
+                        "doc": "commodity association with waste form"}
     std::map<std::string, ComponentPtr> commod_wf_map_;
 
     /**
