@@ -245,8 +245,29 @@ protected:
     /**
        The x, y, and z dimensional spacing of the source centers in kilometers.
      */
+
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "x dimension spacing of centers in kilometers", \
+                        "uilabel": "X Dimension Spacing", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "x dimension of the spacing of source centers in kilometers"}
     double dx_;
+    
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "y dimension spacing of centers in kilometers", \
+                        "uilabel": "Y Dimension Spacing", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "y dimension of the spacing of source centers in kilometers"}
     double dy_;
+
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "z dimension spacing of centers in kilometers", \
+                        "uilabel": "Z Dimension Spacing", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "z dimension of the spacing of source centers in kilometers"}
     double dz_;
 
     /// The advective velocity (@TODO decide direction? +x or +z?) [m/yr] 
