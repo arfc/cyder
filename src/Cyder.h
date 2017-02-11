@@ -447,6 +447,10 @@ protected:
     /**
        The waste form components
      */
+    #pragma cyclus var {"tooltip": "the current waste form components", \
+                        "uilabel": "Current Waste Form", \
+                        "uitype": "none", \
+                        "doc": "the current waste form components"}
     std::deque<ComponentPtr> current_waste_forms_;
 
     /**
