@@ -388,13 +388,18 @@ protected:
     /**
        The Far Field component
      */
+
+    #pragma cyclus var {"tooltip": "the far field component", \
+                        "uilabel": "Far Field Comp", \
+                        "uitype": "none", \
+                        "doc": "the far field component."}
     ComponentPtr far_field_;
 
     /**
        The buffer template before initialization.
        This will be copied and initialized before use.
      */
-
+      
     ComponentPtr buffer_template_;
 
     /**
