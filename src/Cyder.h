@@ -465,6 +465,10 @@ protected:
     /**
        The waste package component
      */
+    #pragma cyclus var {"tooltip": "the waste pacakge component", \
+                        "uilabel": "Waste Package Comp", \
+                        "uitype": "none", \
+                        "doc": "the waste pacakge component"}
     std::deque<ComponentPtr> waste_packages_;
 
     /**
