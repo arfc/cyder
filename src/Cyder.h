@@ -184,6 +184,11 @@ protected:
     /**
        The Cyder has many input commodities
      */
+
+    #pragma cyclus var {"tooltip": "input commodities", \
+                        "doc": "commodities that the sink facility accepts", \
+                        "uilabel": "List of Input Commodities", \
+                        "uitype": "incommodity"}
     std::deque<std::string> in_commods_;
 
     /**
