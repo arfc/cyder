@@ -474,6 +474,10 @@ protected:
     /**
        The waste form components
      */
+    #pragma cyclus var {"tooltip": "the waste form component", \
+                        "uilabel": "Waste Form Comp", \
+                        "uitype": "none", \
+                        "doc": "the waste form component"}
     std::deque<ComponentPtr> waste_forms_;
 
     /**
