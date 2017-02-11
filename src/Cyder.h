@@ -272,6 +272,13 @@ protected:
 
     /// The advective velocity (@TODO decide direction? +x or +z?) [m/yr] 
     // NOTE!!! NOT SI!! [m/yr]
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "advective velocity in meters per year", \
+                        "uilabel": "Advective Velocity", \
+                        "units": "m/yr", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "advective velocity in meters per year"}
     double adv_vel_;
 
     /**
