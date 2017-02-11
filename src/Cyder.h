@@ -218,8 +218,28 @@ protected:
     /**
        The x, y, and z dimensional extents of the repository in kilometers.
      */
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "x dimension of repository in kilometers", \
+                        "uilabel": "X Dimension Length", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "x dimension of the repository in kilometers"}
     double x_;
+
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "y dimension of repository in kilometers", \
+                        "uilabel": "Y Dimension Length", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "y dimension of the repository in kilometers"}
     double y_;
+
+    #pragma cyclus var {"default": 1e299, \
+                        "tooltip": "z dimension of repository in kilometers", \
+                        "uilabel": "Z Dimension Length", \
+                        "uitype": "range", \
+                        "range": [0.0, 1e299], \
+                        "doc": "z dimension of the repository in kilometers"}
     double z_;
 
     /**
