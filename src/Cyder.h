@@ -456,6 +456,10 @@ protected:
     /**
        The buffer components
      */
+    #pragma cyclus var {"tooltip": "the buffer components", \
+                        "uilabel": "Buffer Components", \
+                        "uitype": "none", \
+                        "doc": "the buffer components"}
     std::deque<ComponentPtr> buffers_;
 
     /**
