@@ -140,6 +140,7 @@ public:
 
 #pragma cyclus 
 
+   virtual void EnterNotify();
     /**
        The handleTick function specific to the Cyder.
        At each tick, it requests as much raw inCommod as it can 
@@ -159,7 +160,7 @@ public:
      */
     virtual void Tock(int time);
 
-    virtual void EnterNotify();
+   
     
 
 /* ------------------- */ 
@@ -274,6 +275,7 @@ protected:
        The buffer template before initialization.
        This will be copied and initialized before use.
      */
+
     ComponentPtr buffer_template_;
 
     /**
