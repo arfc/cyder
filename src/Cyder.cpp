@@ -56,7 +56,9 @@
 using boost::lexical_cast;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Cyder::Cyder() :
+Cyder::Cyder(cyclus::Context* ctx)
+  : cyclus::Facility(ctx) {} ,
+  
   x_(0),
   y_(0),
   z_(0),
