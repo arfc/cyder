@@ -85,6 +85,15 @@ public:
 
   /// Destructor for the Cyder class. 
   virtual ~Cyder();
+
+  #pragma cyclus note { \
+  "doc": \
+  "The Cyder is a facility type in *Cyclus* which represents a generic\n"\
+  "disposal system. It continually requests wastes of all incoming commodities that\n"\
+  "it allows until the capacity has been reached. While there are new waste streams \n"\
+  "in the stocks, they are conditioned into a waste form, packaged into a waste \n"\
+  "package, and emplaced in a buffer\n"."\
+  }
   
   /// initialize an object from QueryEngine input
   virtual void initModuleMembers(QueryEngine* qe);
