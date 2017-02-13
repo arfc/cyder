@@ -156,7 +156,7 @@ public:
        process this * month and offers as much outCommod as it 
        will have in its inventory by the end of the month.
        
-       @param time the time of the tick
+       
      */
     virtual void Tick();
 
@@ -165,7 +165,7 @@ public:
        At each tock, it processes material and handles orders, and 
        records this month's actions.
        
-       @param time the time of the tock
+       
      */
     virtual void Tock();
 
