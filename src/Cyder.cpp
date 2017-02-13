@@ -58,7 +58,6 @@ using boost::lexical_cast;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Cyder::Cyder(cyclus::Context* ctx)
   : cyclus::Facility(ctx) {} ,
-
   x_(0),
   y_(0),
   z_(0),
@@ -740,10 +739,11 @@ void Cyder::addRowToParamsTable(){
  * --------------------
  */
 
-extern "C" Model* constructCyder() {
-    return new Cyder();
+extern "C" cyclus::Agent* ConstructCyder(cyclus::Context* ctx) {
+    return new Cyder(ctx);
 }
 
+//consider deleting?
 extern "C" void destructCyder(Model* p) {
     delete p;
 }
