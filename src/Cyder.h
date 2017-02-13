@@ -180,7 +180,7 @@ public:
  */
 
 public:
-  
+
 protected:
     /**
      * This map holds the input name, a variable reference, and the
@@ -214,11 +214,11 @@ protected:
        Units vary. It will be in the commodity unit per month.
      */
   #pragma cyclus var {"default": 1e299, \
-                      "tooltip": "repository accept rate", \
+                      "tooltip": "repository emplacement rate", \
                       "uilabel": "Maximum Throughput", \
                       "uitype": "range", \
                       "range": [0.0, 1e299], \
-                      "doc": "capacity the repository can " \
+                      "doc": "amount the repository can " \
                              "accept at each time step"}
     double capacity_;
 
@@ -227,7 +227,8 @@ protected:
      */
     #pragma cyclus var {"default": 1e299, \
                         "tooltip": "x dimension of repository in kilometers", \
-                        "uilabel": "X Dimension Length", \
+                        "uilabel": "X Dimension Length [km]", \
+                        "units": "km", \
                         "uitype": "range", \
                         "range": [0.0, 1e299], \
                         "doc": "x dimension of the repository in kilometers"}
@@ -235,7 +236,8 @@ protected:
 
     #pragma cyclus var {"default": 1e299, \
                         "tooltip": "y dimension of repository in kilometers", \
-                        "uilabel": "Y Dimension Length", \
+                        "uilabel": "Y Dimension Length [km]", \
+                        "units": "km", \
                         "uitype": "range", \
                         "range": [0.0, 1e299], \
                         "doc": "y dimension of the repository in kilometers"}
@@ -243,7 +245,8 @@ protected:
 
     #pragma cyclus var {"default": 1e299, \
                         "tooltip": "z dimension of repository in kilometers", \
-                        "uilabel": "Z Dimension Length", \
+                        "uilabel": "Z Dimension Length [km]", \
+                        "units": "km", \
                         "uitype": "range", \
                         "range": [0.0, 1e299], \
                         "doc": "z dimension of the repository in kilometers"}
@@ -255,7 +258,8 @@ protected:
 
     #pragma cyclus var {"default": 1e299, \
                         "tooltip": "x dimension spacing of centers in kilometers", \
-                        "uilabel": "X Dimension Spacing", \
+                        "uilabel": "X Dimension Spacing [km]", \
+                        "units": "km", \
                         "uitype": "range", \
                         "range": [0.0, 1e299], \
                         "doc": "x dimension of the spacing of source centers in kilometers"}
@@ -263,7 +267,8 @@ protected:
     
     #pragma cyclus var {"default": 1e299, \
                         "tooltip": "y dimension spacing of centers in kilometers", \
-                        "uilabel": "Y Dimension Spacing", \
+                        "uilabel": "Y Dimension Spacing [km]", \
+                        "units": "km", \
                         "uitype": "range", \
                         "range": [0.0, 1e299], \
                         "doc": "y dimension of the spacing of source centers in kilometers"}
@@ -271,7 +276,8 @@ protected:
 
     #pragma cyclus var {"default": 1e299, \
                         "tooltip": "z dimension spacing of centers in kilometers", \
-                        "uilabel": "Z Dimension Spacing", \
+                        "uilabel": "Z Dimension Spacing [km]", \
+                        "units": "km", \
                         "uitype": "range", \
                         "range": [0.0, 1e299], \
                         "doc": "z dimension of the spacing of source centers in kilometers"}
