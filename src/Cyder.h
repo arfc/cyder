@@ -180,9 +180,7 @@ public:
  */
 
 public:
-
-//this is the state variables? where #pragma goes in.
-
+  
 protected:
     /**
      * This map holds the input name, a variable reference, and the
