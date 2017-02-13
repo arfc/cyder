@@ -392,8 +392,8 @@ protected:
     /**
        Reports true if the repository has reached capacity, false otherwise
      */
-    #pragma cyclus var {"tooltip": "if the repository has reached capacity", \
-                        "uilabel": "If Repository Full", \
+    #pragma cyclus var {"tooltip": "true if the repository has reached capacity", \
+                        "uilabel": "True If Repository Full", \
                         "uitype": "none", \
                         "doc": "if the repository has reached capacity"}
     bool is_full_;
@@ -423,7 +423,7 @@ protected:
        These will be copied and initialized before use.
      */
     #pragma cyclus var {"tooltip": "the waste package template before initialization", \
-                        "uilabel": "Waste Package Template", \
+                        "uilabel": "The Waste Package Template", \
                         "uitype": "none", \
                         "doc": "he waste package template before initialization"}
     std::deque<ComponentPtr> wp_templates_;
@@ -434,7 +434,7 @@ protected:
      */
 
     #pragma cyclus var {"tooltip": "the waste form template before initialization", \
-                        "uilabel": "Waste Form Template", \
+                        "uilabel": "The Waste Form Template", \
                         "uitype": "none", \
                         "doc": "he waste form template before initialization"}
     std::deque<ComponentPtr> wf_templates_;
