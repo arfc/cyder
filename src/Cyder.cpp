@@ -56,7 +56,8 @@
 using boost::lexical_cast;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Cyder::Cyder() :
+Cyder::Cyder(cyclus::Context* ctx)
+  : cyclus::Facility(ctx) {} ,
   x_(0),
   y_(0),
   z_(0),
@@ -94,6 +95,15 @@ Cyder::Cyder() :
   mapVars("startOperYear", &start_op_yr_);
   mapVars("startOperMonth", &start_op_mo_);
 }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Cyder::EnterNofity(){
+  cyclus::Facility::EnterNotify();
+
+  //conditions
+  
+}
+
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::initModuleMembers(QueryEngine* qe) { 
@@ -293,7 +303,7 @@ void Cyder::addResource(Transaction trans, std::vector<rsrc_ptr> manifest) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::Tick(int time)
+void Cyder::Tick()
 {
   LOG(LEV_INFO3, "GenRepoFac") << facName() << " is ticking {";
   // if this is the first timestep, register the far field
@@ -307,7 +317,7 @@ void Cyder::Tick(int time)
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::Tock(int time) {
+void Cyder::Tock() {
 
   // emplace the waste that's ready
   emplaceWaste();
@@ -729,10 +739,11 @@ void Cyder::addRowToParamsTable(){
  * --------------------
  */
 
-extern "C" Model* constructCyder() {
-    return new Cyder();
+extern "C" cyclus::Agent* ConstructCyder(cyclus::Context* ctx) {
+    return new Cyder(ctx);
 }
 
+//consider deleting?
 extern "C" void destructCyder(Model* p) {
     delete p;
 }
