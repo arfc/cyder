@@ -332,7 +332,7 @@ protected:
      */
     #pragma cyclus var {"default": 1e299, \
                         "tooltip": "repository lifetime in months", \
-                        "units": "months", \
+                        "units": "month", \
                         "uilabel": "Repository Lifetime", \
                         "uitype": "range", \
                         "range": [0.0, 1e299], \
@@ -364,7 +364,7 @@ protected:
                         "range": [0.0, 1e299], \
                         "doc": "repository operation start month"}
     int start_op_mo_;
-
+x
     /**
        The radius at which the thermally limiting temperature takes effect [m]
      */
@@ -434,7 +434,7 @@ protected:
      */
 
     #pragma cyclus var {"tooltip": "the waste form template before initialization", \
-                        "uilabel": "The Waste Form Template", \
+                        "uilabel": "TheWaste Form Template", \
                         "uitype": "none", \
                         "doc": "he waste form template before initialization"}
     std::deque<ComponentPtr> wf_templates_;
