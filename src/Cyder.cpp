@@ -265,12 +265,12 @@ void Cyder::Tick()
 {
   LOG(LEV_INFO3, "GenRepoFac") << facName() << " is ticking {";
   // if this is the first timestep, register the far field
-  if (time==0){
+  if (context()->time()==0){
     setPlacement(far_field_);
   }
 
   // make requests
-  makeRequests(time);
+  makeRequests(context()->time());
   LOG(LEV_INFO3, "GenRepoFac") << "}";
 }
 
@@ -281,10 +281,10 @@ void Cyder::Tock() {
   emplaceWaste();
 
   // calculate the heat
-  transportHeat(time);
+  transportHeat(context()->time());
   
   // calculate the nuclide transport
-  transportNuclides(time);
+  transportNuclides(context()->time());
 
 }
 
