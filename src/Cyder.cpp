@@ -96,6 +96,8 @@ Cyder::Cyder(cyclus::Context* ctx)
   mapVars("startOperMonth", &start_op_mo_);
 }
 
+#pragma cyclus clone cyder::cyder
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::EnterNofity(){
   cyclus::Facility::EnterNotify();
@@ -200,50 +202,6 @@ ComponentPtr Cyder::initComponent(QueryEngine* qe){
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::cloneModuleMembersFrom(Facility* source)
-{
-
-  Cyder* src = dynamic_cast<Cyder*>(source);
-  // copy variables specific to this model
-  x_= src->x_;
-  y_= src->y_;
-  z_= src->z_;
-  dx_= src->dx_;
-  dy_= src->dy_;
-  dz_= src->dz_;
-  adv_vel_ = src->adv_vel_;
-  capacity_ = src->capacity_;
-  t_lim_ = src->t_lim_;
-  inventory_size_ = src->inventory_size_;
-  inventory_size_ = src->lifetime_;
-  start_op_yr_ = src->start_op_yr_;
-  start_op_mo_ = src->start_op_mo_;
-  in_commods_ = src->in_commods_;
-  thermal_model_->copy(*(src->thermal_model_));
-  far_field_->copy(src->far_field_);
-  buffer_template_ = src->buffer_template_;
-  wp_templates_ = src->wp_templates_;
-  wf_templates_ = src->wf_templates_;
-  wf_wp_map_ = src->wf_wp_map_;
-  commod_wf_map_ = src->commod_wf_map_;
-
-  // don't copy things that should start out empty
-  // initialize empty structures instead
-  stocks_ = std::deque< WasteStream >();
-  inventory_ = std::deque< WasteStream >();
-  is_full_ = false;
-
-  addRowToParamsTable();
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::copyFreshModel(Model* src)
-{
-  copy(dynamic_cast<Cyder*>(src));
-}
-
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::string Cyder::str() {
  
   // this should ultimately print all of the components loaded into this repository.
@@ -307,12 +265,12 @@ void Cyder::Tick()
 {
   LOG(LEV_INFO3, "GenRepoFac") << facName() << " is ticking {";
   // if this is the first timestep, register the far field
-  if (time==0){
+  if (context()->time()==0){
     setPlacement(far_field_);
   }
 
   // make requests
-  makeRequests(time);
+  makeRequests(context()->time());
   LOG(LEV_INFO3, "GenRepoFac") << "}";
 }
 
@@ -323,10 +281,10 @@ void Cyder::Tock() {
   emplaceWaste();
 
   // calculate the heat
-  transportHeat(time);
+  transportHeat(context()->time());
   
   // calculate the nuclide transport
-  transportNuclides(time);
+  transportNuclides(context()->time());
 
 }
 
