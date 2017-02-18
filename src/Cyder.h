@@ -339,32 +339,7 @@ protected:
                         "doc": "repository lifetime in months"}
     int lifetime_;
 
-    /**
-       The year in which operation of the facility begins.
-       (maybe this should just be in the deployment description?)
-     */
-    #pragma cyclus var {"default": 1e299, \
-                        "tooltip": "repository operation start year", \
-                        "units": "year", \
-                        "uilabel": "Start Year", \
-                        "uitype": "range", \
-                        "range": [0.0, 1e299], \
-                        "doc": "repository operation start year"}
-    int start_op_yr_;
 
-    /**
-       The month in which operation of the facility begins.
-       (maybe this should just be in the deployment description?)
-     */
-    #pragma cyclus var {"default": 1e299, \
-                        "tooltip": "repository operation start month", \
-                        "units": "month", \
-                        "uilabel": "Start Month", \
-                        "uitype": "range", \
-                        "range": [0.0, 1e299], \
-                        "doc": "repository operation start month"}
-    int start_op_mo_;
-x
     /**
        The radius at which the thermally limiting temperature takes effect [m]
      */
