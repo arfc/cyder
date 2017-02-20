@@ -38,8 +38,6 @@ typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
    parameters:
    - double capacity : The production capacity of the facility (units vary, but 
    typically kg/month). *Question:* Do we want to allow this to be infinite?  
-   - int startOpYear : The year in which the facility begins to operate .
-   - int startOpMonth : The month in which the facility begins to operate .
    - int lifeTime : The length of time that the facility operates (months).
    - std::string inCommod : One or more types of commodity that this facility accepts.
    - Component`*` component : One or more types of component that facility contains
