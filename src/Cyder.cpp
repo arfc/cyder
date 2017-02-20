@@ -697,10 +697,6 @@ extern "C" cyclus::Agent* ConstructCyder(cyclus::Context* ctx) {
     return new Cyder(ctx);
 }
 
-//consider deleting?
-extern "C" void destructCyder(Model* p) {
-    delete p;
-}
 
 /* ------------------- */ 
 
