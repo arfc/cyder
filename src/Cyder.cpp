@@ -69,8 +69,6 @@ Cyder::Cyder(cyclus::Context* ctx)
   t_lim_(500),
   inventory_size_(70000),
   lifetime_(10000),
-  start_op_yr_(2000),
-  start_op_mo_(1),
   is_full_(false),
   stocks_(std::deque< WasteStream >()), 
   inventory_(std::deque< WasteStream >()),
@@ -92,8 +90,6 @@ Cyder::Cyder(cyclus::Context* ctx)
   mapVars("limiting_temp", &t_lim_);
   mapVars("inventorysize", &inventory_size_);
   mapVars("lifetime", &lifetime_);
-  mapVars("startOperYear", &start_op_yr_);
-  mapVars("startOperMonth", &start_op_mo_);
 }
 
 #pragma cyclus clone cyder::cyder

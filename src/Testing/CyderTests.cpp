@@ -25,8 +25,6 @@ void CyderTest::SetUp(){
   in_commod_ = "in_commod";
   inventory_size_ = 70000;
   lifetime_ = 3000000;
-  start_op_yr_ = 1; 
-  start_op_mo_ = 1;
   wfname_ = "wf_name";
   wfinnerradius_ = 0;
   wfouterradius_ = 1;
@@ -90,8 +88,6 @@ Cyder* CyderTest::initSrcFacility(){
          << "  <incommodity>" << in_commod_ << "</incommodity>"
          << "  <inventorysize>" << inventory_size_ << "</inventorysize>"
          << "  <lifetime>" << lifetime_ << "</lifetime>"
-         << "  <startOperMonth>" << start_op_mo_ << "</startOperMonth>"
-         << "  <startOperYear>" << start_op_yr_ << "</startOperYear>"
          << "  <thermalmodel>"
          << "    <STCThermal/>"
          << "  </thermalmodel>"

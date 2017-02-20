@@ -38,8 +38,6 @@ typedef std::pair<mat_rsrc_ptr, std::string> WasteStream;
    parameters:
    - double capacity : The production capacity of the facility (units vary, but 
    typically kg/month). *Question:* Do we want to allow this to be infinite?  
-   - int startOpYear : The year in which the facility begins to operate .
-   - int startOpMonth : The month in which the facility begins to operate .
    - int lifeTime : The length of time that the facility operates (months).
    - std::string inCommod : One or more types of commodity that this facility accepts.
    - Component`*` component : One or more types of component that facility contains
@@ -339,32 +337,7 @@ protected:
                         "doc": "repository lifetime in months"}
     int lifetime_;
 
-    /**
-       The year in which operation of the facility begins.
-       (maybe this should just be in the deployment description?)
-     */
-    #pragma cyclus var {"default": 1e299, \
-                        "tooltip": "repository operation start year", \
-                        "units": "year", \
-                        "uilabel": "Start Year", \
-                        "uitype": "range", \
-                        "range": [0.0, 1e299], \
-                        "doc": "repository operation start year"}
-    int start_op_yr_;
 
-    /**
-       The month in which operation of the facility begins.
-       (maybe this should just be in the deployment description?)
-     */
-    #pragma cyclus var {"default": 1e299, \
-                        "tooltip": "repository operation start month", \
-                        "units": "month", \
-                        "uilabel": "Start Month", \
-                        "uitype": "range", \
-                        "range": [0.0, 1e299], \
-                        "doc": "repository operation start month"}
-    int start_op_mo_;
-x
     /**
        The radius at which the thermally limiting temperature takes effect [m]
      */
