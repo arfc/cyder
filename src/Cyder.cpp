@@ -672,21 +672,6 @@ void Cyder::set_t_lim(Temp t_lim){
   t_lim_=t_lim;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::addRowToParamsTable(){
-  event_ptr ev = EM->newEvent("CyderParams")
-                   ->addVal("facID", ID());
-
-  std::map<const char*, boost::any>::iterator item;
-  for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
-    if (item->second.type() == typeid(int*)) {
-      ev->addVal(item->first, *boost::any_cast<int*>(item->second));
-    } else if (item->second.type() == typeid(double*)) {
-      ev->addVal(item->first, *boost::any_cast<double*>(item->second));
-    }
-  }
-  ev->record();
-}
 
 /* --------------------
  * all MODEL classes have these members
