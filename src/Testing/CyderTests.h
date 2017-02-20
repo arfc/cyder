@@ -12,7 +12,7 @@ protected:
   
   Cyder* src_facility_;
   Cyder* clone_facility_;
-  int lifetime_,start_op_yr_,start_op_mo_, time_;
+  int lifetime_, time_;
   double wfinnerradius_, wfouterradius_;
   double wpinnerradius_, wpouterradius_; 
   double binnerradius_, bouterradius_;
