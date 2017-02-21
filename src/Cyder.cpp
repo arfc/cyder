@@ -656,11 +656,6 @@ void Cyder::updateContaminantTable(int the_time) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::mapVars(const char* name, boost::any val) {
-  member_refs_[name] = val;
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::set_r_lim(Radius r_lim){
   MatTools::validate_pos(r_lim);
   r_lim_=r_lim;
@@ -672,21 +667,6 @@ void Cyder::set_t_lim(Temp t_lim){
   t_lim_=t_lim;
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::addRowToParamsTable(){
-  event_ptr ev = EM->newEvent("CyderParams")
-                   ->addVal("facID", ID());
-
-  std::map<const char*, boost::any>::iterator item;
-  for (item = member_refs_.begin(); item != member_refs_.end(); ++item) {
-    if (item->second.type() == typeid(int*)) {
-      ev->addVal(item->first, *boost::any_cast<int*>(item->second));
-    } else if (item->second.type() == typeid(double*)) {
-      ev->addVal(item->first, *boost::any_cast<double*>(item->second));
-    }
-  }
-  ev->record();
-}
 
 /* --------------------
  * all MODEL classes have these members
@@ -697,10 +677,6 @@ extern "C" cyclus::Agent* ConstructCyder(cyclus::Context* ctx) {
     return new Cyder(ctx);
 }
 
-//consider deleting?
-extern "C" void destructCyder(Model* p) {
-    delete p;
-}
 
 /* ------------------- */ 
 
