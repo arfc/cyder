@@ -181,12 +181,6 @@ public:
 
 protected:
     /**
-     * This map holds the input name, a variable reference, and the
-     * database datatype of each of the simple datamembers.
-     */
-     std::map<const char*, boost::any> member_refs_ ;
-
-    /**
        The Cyder has many input commodities
      */
 
