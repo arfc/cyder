@@ -656,11 +656,6 @@ void Cyder::updateContaminantTable(int the_time) {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Cyder::mapVars(const char* name, boost::any val) {
-  member_refs_[name] = val;
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Cyder::set_r_lim(Radius r_lim){
   MatTools::validate_pos(r_lim);
   r_lim_=r_lim;
