@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -l nodes=64:ppn=32:xe
+#PBS -l walltime=2:55:00
+#PBS -N reproc_pub_noTh
+#PBS -j oe   
+
+### cd to the location where you submitted the job, if needed
+### note that you are on a PBS MOM node and not running interactively on a
+### compute node
+
+cd $PBS_O_WORKDIR
+
+# To add certain modules that you do not have added via ~/.modules
+module swap PrgEnv-cray PrgEnv-gnu
+export OMP_NUM_THREADS=32
+
+aprun -n 64 -d 32 $sss2 -omp 32 publ_core
+
