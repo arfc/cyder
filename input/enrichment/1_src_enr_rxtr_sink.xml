@@ -12,6 +12,7 @@
     <spec><lib>cycamore</lib><name>Source</name></spec>
     <spec><lib>cycamore</lib><name>Reactor</name></spec>
     <spec><lib>cycamore</lib><name>Enrichment</name></spec>
+    <spec><lib>recycle</lib><name>Corrm</name></spec>
     <spec><lib>agents</lib><name>NullRegion</name></spec>
     <spec><lib>agents</lib><name>NullInst</name></spec>
   </archetypes>
@@ -42,9 +43,9 @@
   </facility>
 
   <facility>
-    <name>Reactor</name>
+    <name>Corrm</name>
     <config>
-      <Reactor>
+      <Corrm>
         <fuel_inrecipes>  <val>fuel_recipe</val>      </fuel_inrecipes>
         <fuel_outrecipes> <val>used_fuel_recipe</val> </fuel_outrecipes>
         <fuel_incommods>  <val>enriched_u</val>       </fuel_incommods>
@@ -55,7 +56,7 @@
         <assem_size>2</assem_size>
         <n_assem_core>1</n_assem_core>
         <n_assem_batch>1</n_assem_batch>
-      </Reactor>
+      </Corrm>
     </config>
   </facility>
 
@@ -86,7 +87,7 @@
           <number>1</number>
         </entry>
         <entry>
-          <prototype>Reactor</prototype>
+          <prototype>Corrm</prototype>
           <number>1</number>
         </entry>
         <entry>

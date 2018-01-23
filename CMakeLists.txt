@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 #taken from http://geant4.cern.ch/support/source/geant4/CMakeLists.txt
 IF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    message(STATUS "Cycamore requires an out-of-source build.")
+    message(STATUS "Recycle requires an out-of-source build.")
     message(STATUS "Please remove these files from ${CMAKE_BINARY_DIR} first:")
     message(STATUS "CMakeCache.txt")
     message(STATUS "CMakeFiles")
@@ -10,8 +10,8 @@ IF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "in-source build detected")
 ENDIF()
 
-# This project name is cycamore.
-PROJECT(CYCAMORE)
+# This project name is recycle.
+PROJECT(RECYCLE)
 
 # check for and enable c++11 support (required for cyclus)
 INCLUDE(CheckCXXCompilerFlag)
@@ -34,27 +34,27 @@ ENDIF()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overflow")
 
 # Direct any out-of-source builds to this directory
-SET(CYCAMORE_SOURCE_DIR ${CMAKE_SOURCE_DIR})
+SET(RECYCLE_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 
 IF(NOT CYCLUS_DOC_ONLY)
     # Direct any binary installation paths to this directory
-    SET(CYCAMORE_BINARY_DIR ${CMAKE_BINARY_DIR})
+    SET(RECYCLE_BINARY_DIR ${CMAKE_BINARY_DIR})
 
     # This makes all the libraries build as SHARED
     SET(BUILD_SHARED_LIBS true)
 
     # Setup build locations.
     IF(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
-        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CYCAMORE_BINARY_DIR}/bin)
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RECYCLE_BINARY_DIR}/bin)
     endif()
     IF(NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CYCAMORE_BINARY_DIR}/lib)
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${RECYCLE_BINARY_DIR}/lib)
     endif()
     IF(NOT CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
-        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CYCAMORE_BINARY_DIR}/lib)
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${RECYCLE_BINARY_DIR}/lib)
     ENDIF()
 
-    SET(CYCAMORE_EXECUTABLE_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    SET(RECYCLE_EXECUTABLE_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
     # use, i.e. don't skip the full RPATH for the build tree
     SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
@@ -84,7 +84,7 @@ IF(NOT CYCLUS_DOC_ONLY)
 
     # Tell CMake where the modules are
     SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_INSTALL_PREFIX}/share/cyclus/cmake")
-    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CYCAMORE_SOURCE_DIR}/cmake)
+    SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${RECYCLE_SOURCE_DIR}/cmake)
     MESSAGE("--CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}")
 
     # get dependency hints
@@ -105,8 +105,8 @@ IF(NOT CYCLUS_DOC_ONLY)
     # Find cyclus
     FIND_PACKAGE(Cyclus REQUIRED)
     SET(
-      CYCAMORE_INCLUDE_DIRS
-      ${CYCAMORE_INCLUDE_DIRS}
+      RECYCLE_INCLUDE_DIRS
+      ${RECYCLE_INCLUDE_DIRS}
       ${CYCLUS_CORE_INCLUDE_DIR} # INSTALL_PATH/include/cyclus
       )
     SET(LIBS ${LIBS} ${CYCLUS_CORE_LIBRARIES})
@@ -119,7 +119,7 @@ IF(NOT CYCLUS_DOC_ONLY)
     IF(NOT LibXML++_LIBRARIES)
         FIND_LIBRARY(LibXML++ REQUIRED ${DEPS_HINTS})
     ENDIF()
-    SET(CYCAMORE_INCLUDE_DIRS ${CYCAMORE_INCLUDE_DIRS} ${LibXML++_INCLUDE_DIR} ${Glibmm_INCLUDE_DIRS} ${LibXML++Config_INCLUDE_DIR})
+    SET(RECYCLE_INCLUDE_DIRS ${RECYCLE_INCLUDE_DIRS} ${LibXML++_INCLUDE_DIR} ${Glibmm_INCLUDE_DIRS} ${LibXML++Config_INCLUDE_DIR})
     SET(LIBS ${LIBS} ${LibXML++_LIBRARIES})
     MESSAGE("-- LIBS: ${LIBS}")
 
@@ -138,7 +138,7 @@ IF(NOT CYCLUS_DOC_ONLY)
     FIND_PACKAGE(Boost COMPONENTS program_options filesystem system serialization REQUIRED)
     MESSAGE("--    Boost Root: ${Boost_ROOT}")
     MESSAGE("--    Boost Include directory: ${Boost_INCLUDE_DIR}")
-    SET(CYCAMORE_INCLUDE_DIRS ${CYCAMORE_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+    SET(RECYCLE_INCLUDE_DIRS ${RECYCLE_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
     MESSAGE("--    Boost Library directories: ${Boost_LIBRARY_DIRS}")
     SET(LIBS ${LIBS} ${Boost_PROGRAM_OPTIONS_LIBRARY})
     MESSAGE("--    Boost Program Options location: ${Boost_PROGRAM_OPTIONS_LIBRARY}")
@@ -166,7 +166,7 @@ IF(NOT CYCLUS_DOC_ONLY)
     set(LIBS ${LIBS} ${HDF5_C_LIBRARIES} ${HDF5_C_HL_LIBRARIES})
     MESSAGE("--    HDF5 Root: ${HDF5_ROOT}")
     MESSAGE("--    HDF5 Include directory: ${HDF5_INCLUDE_DIR}")
-    SET(CYCAMORE_INCLUDE_DIRS ${CYCAMORE_INCLUDE_DIRS} ${HDF5_INCLUDE_DIR})
+    SET(RECYCLE_INCLUDE_DIRS ${RECYCLE_INCLUDE_DIRS} ${HDF5_INCLUDE_DIR})
     MESSAGE("--    HDF5 Library directories: ${HDF5_LIBRARY_DIRS}")
     MESSAGE("--    HDF5 Libraries: ${HDF5_C_LIBRARIES}")
     MESSAGE("--    HDF5 High Level Libraries: ${HDF5_C_HL_LIBRARIES}")
@@ -174,7 +174,7 @@ IF(NOT CYCLUS_DOC_ONLY)
     # find coin and link to it
     FIND_PACKAGE(COIN)
     if(COIN_FOUND)
-      SET(CYCAMORE_INCLUDE_DIRS ${CYCAMORE_INCLUDE_DIRS} ${COIN_INCLUDE_DIRS})
+      SET(RECYCLE_INCLUDE_DIRS ${RECYCLE_INCLUDE_DIRS} ${COIN_INCLUDE_DIRS})
       SET(LIBS ${LIBS} ${COIN_LIBRARIES})
     endif()
     MESSAGE("--    COIN Root: ${COIN_ROOT}")
@@ -182,7 +182,7 @@ IF(NOT CYCLUS_DOC_ONLY)
     MESSAGE("--    COIN Libraries: ${COIN_LIBRARIES}")
 
     FIND_PACKAGE( Sqlite3 REQUIRED )
-    SET(CYCAMORE_INCLUDE_DIRS ${CYCAMORE_INCLUDE_DIRS} ${SQLITE3_INCLUDE_DIR})
+    SET(RECYCLE_INCLUDE_DIRS ${RECYCLE_INCLUDE_DIRS} ${SQLITE3_INCLUDE_DIR})
     SET(LIBS ${LIBS} ${SQLITE3_LIBRARIES})
     MESSAGE("--    SQLITE3 Include directories: ${SQLITE3_INCLUDE_DIR}")
     MESSAGE("--    SQLITE3 Libraries: ${SQLITE3_LIBRARIES}")
@@ -256,7 +256,7 @@ IF(NOT CYCLUS_DOC_ONLY)
     ENDIF(PYTHON_LIBRARIES)
 
     # include all the directories we just found
-    INCLUDE_DIRECTORIES(${CYCAMORE_INCLUDE_DIRS})
+    INCLUDE_DIRECTORIES(${RECYCLE_INCLUDE_DIRS})
 
     # ------------------------- Add the Agents -----------------------------------
     ADD_SUBDIRECTORY(src)
@@ -280,7 +280,7 @@ IF(NOT CYCLUS_DOC_ONLY)
 
     SET(TestSource
         ${TestSource}
-        ${CYCAMORE_TEST_CORE}
+        ${RECYCLE_TEST_CORE}
         )
 
     FIND_PACKAGE(Threads)
@@ -288,19 +288,19 @@ IF(NOT CYCLUS_DOC_ONLY)
         SET(cxx_base_flags "${cxx_base_flags} -DGTEST_HAS_PTHREAD=1")
     ENDIF()
 
-    # Build cycamore_unit_tests
-    ADD_EXECUTABLE(cycamore_unit_tests
-        tests/cycamore_unit_test_driver.cc
+    # Build recycle_unit_tests
+    ADD_EXECUTABLE(recycle_unit_tests
+        tests/recycle_unit_test_driver.cc
         ${TestSource}
         )
 
-    TARGET_LINK_LIBRARIES(cycamore_unit_tests
+    TARGET_LINK_LIBRARIES(recycle_unit_tests
         dl
         ${LIBS}
         ${CYCLUS_TEST_LIBRARIES}
         )
 
-    INSTALL(TARGETS cycamore_unit_tests
+    INSTALL(TARGETS recycle_unit_tests
         RUNTIME DESTINATION bin
         COMPONENT testing
         )
@@ -328,10 +328,10 @@ IF(NOT CYCLUS_DOC_ONLY)
 
 
     # Here's where we package it with CPack
-    SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Cycamore : The Cyclus Additional Module Repository.")
+    SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Recycle : The Cyclus Advanced Module Repository.")
 
     # Here we set some components for installation with cpack
-    SET(CPACK_COMPONENTS_ALL cycamore testing libraries data core)
+    SET(CPACK_COMPONENTS_ALL recycle testing libraries data core)
     SET(CPACK_GENERATOR "DEB")
 
     # Organisation
@@ -350,8 +350,8 @@ IF(NOT CYCLUS_DOC_ONLY)
     MESSAGE("CPACK_DEBIAN_PACKAGE_DEPENDS ${CPACK_DEBIAN_PACKAGE_DEPENDS}")
 
     # Names
-    SET(CPACK_PACKAGE_NAME "cycamore")
-    SET(CPACK_PACKAGE_INSTALL_DIRECTORY "cycamore_${CPACK_PACKAGE_VERSION_MAJOR}")
+    SET(CPACK_PACKAGE_NAME "recycle")
+    SET(CPACK_PACKAGE_INSTALL_DIRECTORY "recycle_${CPACK_PACKAGE_VERSION_MAJOR}")
     SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_INSTALL_DIRECTORY}.${CPACK_PACKAGE_VERSION_MINOR}")
     SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_INSTALL_DIRECTORY}.${CPACK_PACKAGE_VERSION_PATCH}")
 
@@ -366,11 +366,11 @@ IF(NOT CYCLUS_DOC_ONLY)
     SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY "1")
     SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS OFF)
     CONFIGURE_FILE(
-      "${CYCAMORE_SOURCE_DIR}/cmake/CycamoreCPackOptions.cmake.in"
-      "${CYCAMORE_BINARY_DIR}/cmake/CycamoreCPackOptions.cmake" @ONLY
+      "${RECYCLE_SOURCE_DIR}/cmake/RecycleCPackOptions.cmake.in"
+      "${RECYCLE_BINARY_DIR}/cmake/RecycleCPackOptions.cmake" @ONLY
       )
-    SET(CPACK_PROJECT_CONFIG_FILE "${CYCAMORE_BINARY_DIR}/cmake/CycamoreCPackOptions.cmake")
-    SET(CPACK_PACKAGE_EXECUTABLES "cycamore" "cycamore_unit_tests")
+    SET(CPACK_PROJECT_CONFIG_FILE "${RECYCLE_BINARY_DIR}/cmake/RecycleCPackOptions.cmake")
+    SET(CPACK_PACKAGE_EXECUTABLES "recycle" "recycle_unit_tests")
 
     INCLUDE(CPack)
 
@@ -385,7 +385,7 @@ IF(NOT CYCLUS_DOC_ONLY)
 ENDIF(NOT CYCLUS_DOC_ONLY)
 
 # This is the directory that holds the doxygen doxyfile template (doxy.conf.in)
-SET(DOC_INPUT_DIR ${CYCAMORE_SOURCE_DIR}/doc)
+SET(DOC_INPUT_DIR ${RECYCLE_SOURCE_DIR}/doc)
 
 # If doxygen exists, use the doc/CMakeLists.txt file for further instructions.
 FIND_PACKAGE(Doxygen)
