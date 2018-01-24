@@ -5,7 +5,7 @@
 # ---------------------------------
 
 IF(DOXYGEN_FOUND)
-    SET(DOXYGEN_SOURCE_DIR ${CYCAMORE_SOURCE_DIR})
+    SET(DOXYGEN_SOURCE_DIR ${RECYCLE_SOURCE_DIR})
     SET(DOXYGEN_INPUT ${DOC_INPUT_DIR}/doxygen.conf)
     SET(DOXYGEN_OUTPUT ${DOC_OUTPUT_DIR}/html/index.html)
 
@@ -55,7 +55,7 @@ IF(DOXYGEN_FOUND)
 
     ADD_CUSTOM_COMMAND(
         OUTPUT ${DOXYGEN_OUTPUT}
-        COMMAND ${CMAKE_COMMAND} -E echo_append "Building cycamore Documentation..."
+        COMMAND ${CMAKE_COMMAND} -E echo_append "Building recycle Documentation..."
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
         COMMAND ${CMAKE_COMMAND} -E echo "Done."
         WORKING_DIRECTORY ${DOC_OUTPUT_DIR}
@@ -63,10 +63,10 @@ IF(DOXYGEN_FOUND)
         )
 
 
-    ADD_CUSTOM_TARGET(cycamoredoc DEPENDS ${DOXYGEN_OUTPUT})
+    ADD_CUSTOM_TARGET(recycledoc DEPENDS ${DOXYGEN_OUTPUT})
 
-    ADD_CUSTOM_TARGET(cycamoredoc_forced
-        COMMAND ${CMAKE_COMMAND} -E echo_append "Building cycamore Documentation..."
+    ADD_CUSTOM_TARGET(recycledoc_forced
+        COMMAND ${CMAKE_COMMAND} -E echo_append "Building recycle Documentation..."
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
         COMMAND ${CMAKE_COMMAND} -E echo "Done."
         WORKING_DIRECTORY ${DOC_OUTPUT_DIR})

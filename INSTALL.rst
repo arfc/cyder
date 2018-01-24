@@ -1,9 +1,9 @@
 ###########################
-Cycamore Installation Guide
+Recycle Installation Guide
 ###########################
 
-Cycamore uses the CMake cross-platform build-generator. To
-simplify the usage of cmake to build Cycamore from source, a python script is
+Recycle uses the CMake cross-platform build-generator. To
+simplify the usage of cmake to build Recycle from source, a python script is
 provided with the source.
 
 .. contents:: Table of Contents
@@ -12,7 +12,7 @@ provided with the source.
 Dependencies
 ************
 
-Cycamore's only dependency is the Cyclus Core.
+Recycle's only dependency is the Cyclus Core.
 
 ====================   ==================
 Package                Minimum Version
@@ -48,14 +48,14 @@ Run the install script:
   python install.py
 
 
-If you successfully followed the instructions above, then the Cycamore library
+If you successfully followed the instructions above, then the Recycle library
 has been generated and placed in ``.local/`` in your home directory. 
 
 .. website_include_end
 
 .. website_custom_start
 
-Custom Cycamore Installation
+Custom Recycle Installation
 ----------------------------
 
 The installation using the install script can be customized using the following
@@ -130,13 +130,13 @@ installation flag. The otherwise identical process would look like:
 
 .. code-block:: bash
 
-    .../cycamore$  python install.py --coin_root=path/to/coin
+    .../recycle$  python install.py --coin_root=path/to/coin
 
 
-CMake Cycamore Installation
+CMake Recycle Installation
 ---------------------------
 
-If you are ``CMake`` aficionado you can also install Cycamore without using the
+If you are ``CMake`` aficionado you can also install Recycle without using the
 install.py python script and use ``cmake`` directly, which should look like:
 
 
@@ -179,18 +179,18 @@ All variables can be set using ``-DMY_VARIABLE=MY_VARIABLES_VALUE``.
 Running Tests
 ******************************
 
-Installing Cycamore will also install a test driver (i.e., an executable of all of
-our tests). We strongly recommend after a fresh install of Cycamore, or after
+Installing Recycle will also install a test driver (i.e., an executable of all of
+our tests). We strongly recommend after a fresh install of Recycle, or after
 any modification on the source code, to rerun those tests in order to insure the
-proper functioning of Cycamore. You can run the tests yourself via:
+proper functioning of Recycle. You can run the tests yourself via:
 
 .. code-block:: bash
 
-    $ cycamore_unit_tests
+    $ recycle_unit_tests
 
 
 .. _`Cyclus Homepage`: http://fuelcycle.org/
 .. _`Cyclus User Guide`: http://fuelcycle.org/user/index.html
 .. _`Cyclus repo`: https://github.com/cyclus/cyclus
-.. _`Cycamore Repo`: https://github.com/cyclus/cycamore
+.. _`Recycle Repo`: https://github.com/cyclus/recycle
 
