@@ -6,7 +6,7 @@
   </control>
 
   <archetypes>
-    <spec><lib>recycle</lib><name>StubFacility</name></spec>
+    <spec><lib>recycle</lib><name>corrm</name></spec>
     <spec><lib>agents</lib><name>NullRegion</name></spec>
     <spec><lib>agents</lib><name>NullInst</name></spec>
   </archetypes>
@@ -15,7 +15,7 @@
   <facility>
     <name>OneFacility</name>
     <config>
-      <StubFacility/>
+      <corrm/>
     </config>
   </facility>
 

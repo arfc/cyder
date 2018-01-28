@@ -1,5 +1,5 @@
-#ifndef RECYCLE_SRC_STUB_FACILITY_H_
-#define RECYCLE_SRC_STUB_FACILITY_H_
+#ifndef RECYCLE_SRC_CORRM_H_
+#define RECYCLE_SRC_CORRM_H_
 
 #include <string>
 
@@ -9,12 +9,12 @@
 namespace recycle {
 
 
-class StubFacility : public cyclus::Facility,
+class corrm : public cyclus::Facility,
   public cyclus::toolkit::CommodityProducer  {
  public:
   /// Constructor for StubFacility Class
   /// @param ctx the cyclus context for access to simulation-wide parameters
-  explicit StubFacility(cyclus::Context* ctx);
+  explicit corrm(cyclus::Context* ctx);
 
   /// The Prime Directive
   /// Generates code that handles all input file reading and restart operations
@@ -43,4 +43,4 @@ class StubFacility : public cyclus::Facility,
 
 }  // namespace recycle
 
-#endif  // RECYCLE_SRC_STUB_FACILITY_H_
+#endif  // RECYCLE_SRC_CORRM_H

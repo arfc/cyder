@@ -1,21 +1,21 @@
 #include <gtest/gtest.h>
 
-#include "stub_facility.h"
+#include "corrm.h"
 
 #include "agent_tests.h"
 #include "context.h"
 #include "facility_tests.h"
 
-using recycle::StubFacility;
+using recycle::corrm;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class StubFacilityTest : public ::testing::Test {
+class corrmTest : public ::testing::Test {
  protected:
   cyclus::TestContext tc;
-  StubFacility* facility;
+  corrm* facility;
 
   virtual void SetUp() {
-    facility = new StubFacility(tc.get());
+    facility = new corrm(tc.get());
   }
 
   virtual void TearDown() {
@@ -24,24 +24,24 @@ class StubFacilityTest : public ::testing::Test {
 };
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-TEST_F(StubFacilityTest, InitialState) {
+TEST_F(corrmTest, InitialState) {
   // Test things about the initial state of the facility here
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-TEST_F(StubFacilityTest, Print) {
+TEST_F(corrmTest, Print) {
   EXPECT_NO_THROW(std::string s = facility->str());
   // Test StubFacility specific aspects of the print method here
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-TEST_F(StubFacilityTest, Tick) {
+TEST_F(corrmTest, Tick) {
   ASSERT_NO_THROW(facility->Tick());
   // Test StubFacility specific behaviors of the Tick function here
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-TEST_F(StubFacilityTest, Tock) {
+TEST_F(corrmTest, Tock) {
   EXPECT_NO_THROW(facility->Tock());
   // Test StubFacility specific behaviors of the Tock function here
 }
@@ -49,8 +49,8 @@ TEST_F(StubFacilityTest, Tock) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Do Not Touch! Below section required for connection with Cyclus
-cyclus::Agent* StubFacilityConstructor(cyclus::Context* ctx) {
-  return new StubFacility(ctx);
+cyclus::Agent* corrmConstructor(cyclus::Context* ctx) {
+  return new corrm(ctx);
 }
 // Required to get functionality in cyclus agent unit tests library
 #ifndef CYCLUS_AGENT_TESTS_CONNECTED
@@ -58,8 +58,8 @@ int ConnectAgentTests();
 static int cyclus_agent_tests_connected = ConnectAgentTests();
 #define CYCLUS_AGENT_TESTS_CONNECTED cyclus_agent_tests_connected
 #endif  // CYCLUS_AGENT_TESTS_CONNECTED
-INSTANTIATE_TEST_CASE_P(StubFac, FacilityTests,
-                        ::testing::Values(&StubFacilityConstructor));
-INSTANTIATE_TEST_CASE_P(StubFac, AgentTests,
-                        ::testing::Values(&StubFacilityConstructor));
+INSTANTIATE_TEST_CASE_P(corrmFac, FacilityTests,
+                        ::testing::Values(&corrmConstructor));
+INSTANTIATE_TEST_CASE_P(corrmFac, AgentTests,
+                        ::testing::Values(&corrmConstructor));
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
