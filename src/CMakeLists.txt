@@ -5,7 +5,7 @@ CONFIGURE_FILE(recycle_version.h.in "${CMAKE_CURRENT_SOURCE_DIR}/recycle_version
 
 SET(CYCLUS_CUSTOM_HEADERS "recycle_version.h")
 
-USE_CYCLUS("recycle" "corrm")
+USE_CYCLUS("recycle" "stub_facility")
 
 INSTALL_CYCLUS_MODULE("recycle" "" "NONE")
 
