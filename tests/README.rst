@@ -10,7 +10,7 @@ Dependencies
 Running Tests
 -------------
 
-To run the regression tests from the cycamore/tests:
+To run the regression tests from the recyle/tests:
 
 .. code-block:: bash
 
@@ -43,13 +43,13 @@ Next, rename the databases:
 
 .. code-block:: bash
 
-  $ rename 's/^[^_]*_[^_]*_(.*)/<cyclus version>_<cycamore version>_$1/' *.h5
+  $ rename 's/^[^_]*_[^_]*_(.*)/<cyclus version>_<recyle version>_$1/' *.h5
 
 where
 
 * <cyclus version> is replaced by the current version tag name for cyclus
   (e.g. v0.1)
-* <cycamore version> is replaced by the current version tag name for cycamore
+* <recyle version> is replaced by the current version tag name for cycamore
   (e.g. v0.1)
 
 so that, using the above examples, the command is

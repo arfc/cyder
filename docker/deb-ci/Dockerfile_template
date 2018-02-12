@@ -35,10 +35,10 @@ RUN wget -r --no-parent -A 'cyclus_1.5.0_*_ubuntu.CYCAMORE_UBUNTU_MAJOR_VERSION.
 run mv dory.fuelcycle.org:4848/* ./; rm -rf dory.fuelcycle.org:4848
 RUN dpkg -i cyclus_1.5.0_*_ubuntu.CYCAMORE_UBUNTU_MAJOR_VERSION.04.deb
 
-COPY . /cycamore 
-WORKDIR cycamore
+COPY . /recyle 
+WORKDIR recyle
 RUN mkdir -p deb
-WORKDIR /cycamore/deb
+WORKDIR /recyle/deb
 RUN cmake -DCPACK_PACKAGING_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_PREFIX=/usr/local -DCPACK_HASH_NAME=CYCAMORE_REPO_HASH -DCPACK_SYSTEM_NAME=ubuntu.CYCAMORE_UBUNTU_MAJOR_VERSION.04 ..
 
 # Build the deb file in the docker container

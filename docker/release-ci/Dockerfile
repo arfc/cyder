@@ -1,10 +1,10 @@
 
 FROM cyclus/cyclus:stable
 
-COPY . /cycamore
-WORKDIR /cycamore
+COPY . /recyle
+WORKDIR /recyle
 RUN mkdir Release
-WORKDIR /cycamore/Release
+WORKDIR /recyle/Release
 RUN cmake .. -DCMAKE_BUILD_TYPE=Release
 RUN make -j2 && make install
 

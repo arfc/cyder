@@ -63,10 +63,10 @@ Quick Cycamore Installation
 Assuming you have the dependencies installed correctly, installing Cyclus using
 github is fairly straightforward:
 
-- Clone the Cyclus Repo: ``git clone https://github.com/cyclus/cycamore.git``,
+- Clone the Cyclus Repo: ``git clone https://github.com/cyclus/recyle.git``,
 
 - to install Cyclus locally (in ``~/.local/``) just run: ``python install.py``
-  from cycamore folder,
+  from recyle folder,
 
 - finally, add the following Cyclus installation path (``~/.local/cyclus``) to
   the **bottom** on your ``$PATH``.
@@ -84,7 +84,7 @@ our tests). You can run the tests yourself via:
 
 .. code-block:: bash
 
-    $ cycamore_unit_tests
+    $ recyle_unit_tests
 
 ******************************
 Contributing
@@ -99,7 +99,7 @@ to contribute into Cyclus, please follow this procedure:
 
 #. Implement your modification of the Cycamore source code,
 
-#. Submit a Pull request into ``cycamore/master`` branch,
+#. Submit a Pull request into ``recyle/master`` branch,
 
 #. Wait for reviews/merge (the Puller cannot be the Merger).
 
@@ -109,7 +109,7 @@ You may also want to read our `Contribution Guidelines <CONTRIBUTING.rst>`_.
 .. _`Cyclus Homepage`: http://fuelcycle.org/
 .. _`Cyclus User Guide`: http://fuelcycle.org/user/index.html
 .. _`Cyclus repo`: https://github.com/cyclus/cyclus
-.. _`Cycamore Repo`: https://github.com/cyclus/cycamore
+.. _`Cycamore Repo`: https://github.com/cyclus/recyle
 .. _`INSTALL`: INSTALL.rst
 .. _`CONTRIBUTING`: CONTRIBUTING.rst
 

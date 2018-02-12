@@ -67,7 +67,7 @@ You can run the tests yourself using:
 
     .. code-block:: bash
 
-      $ cycamore_unit_tests
+      $ recyle_unit_tests
 
 Cautions
 ========
