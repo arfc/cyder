@@ -49,7 +49,7 @@ where
 
 * <cyclus version> is replaced by the current version tag name for cyclus
   (e.g. v0.1)
-* <recyle version> is replaced by the current version tag name for cycamore
+* <recyle version> is replaced by the current version tag name for recyle
   (e.g. v0.1)
 
 so that, using the above examples, the command is

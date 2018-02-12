@@ -18,7 +18,7 @@ echo "post-link.sh, PREFIX: $PREFIX"
 # The library path modifications are here because cyclus installs 
 # libgtest and libbaseagentunittests into the lib/cyclus directory.
 # We make this directory the last possible location to be searched.
-mv $PREFIX/bin/recyle_unit_tests $PREFIX/bin/cycamore_unit_tests_base
+mv $PREFIX/bin/recyle_unit_tests $PREFIX/bin/recyle_unit_tests_base
 echo "#!/bin/bash
 export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:$PREFIX/lib/cyclus\"
 export DYLD_FALLBACK_LIBRARY_PATH=\"\$DYLD_FALLBACK_LIBRARY_PATH:$PREFIX/lib/cyclus\"

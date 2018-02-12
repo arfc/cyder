@@ -5,7 +5,7 @@ jobs:
     build:
         docker:
             - image: cyclus/cyclus:latest
-        working_directory: ~/cycamore
+        working_directory: ~/recyle
         steps:
             # Ensure your image has git (required by git to clone via SSH) so that CircleCI can clone your repo
             - run: apt-get -qq update; apt-get -y install git openssh-client
@@ -40,7 +40,7 @@ jobs:
                   - v1-repo-{{ checksum ".circle-sha" }}
             - run:
                 name: Unit Test
-                command: /root/.local/bin/cycamore_unit_tests; exit $?
+                command: /root/.local/bin/recyle_unit_tests; exit $?
     nosetest:
         docker:
             - image: cyclus/cyclus:latest
@@ -57,14 +57,14 @@ jobs:
                 command: pip install nose
             - run:
                 name: Nosetests
-                command: nosetests -w ~/cycamore/tests; exit $?
+                command: nosetests -w ~/recyle/tests; exit $?
 
                 
     # Update docker container
     deploy: # Cycamore -> Cycamore:latest
         docker:
             - image: circleci/ruby:2.4-node
-        working_directory: ~/cycamore
+        working_directory: ~/recyle
         steps:
             - checkout
             - run:
@@ -77,15 +77,15 @@ jobs:
                     docker login -u $DOCKER_USER -p $DOCKER_PASS
             - run:
                 name: Build Docker container
-                command: docker build --rm=false -t cyclus/cycamore:latest .
+                command: docker build --rm=false -t cyclus/recyle:latest .
             - run:
                 name: Push on DockerHub
-                command: docker push cyclus/cycamore:latest # push to docker depot
+                command: docker push cyclus/recyle:latest # push to docker depot
 
     deploy_stable: # Cycamore:stable
         docker:
             - image: circleci/ruby:2.4-node
-        working_directory: ~/cycamore
+        working_directory: ~/recyle
         steps:
             - checkout
             - run:
@@ -98,17 +98,17 @@ jobs:
                   docker login -u $DOCKER_USER -p $DOCKER_PASS
             - run:
                 name: Build Docker container
-                command: docker build -t cyclus/cycamore:stable .
+                command: docker build -t cyclus/recyle:stable .
             - run:
                 name: Push on DockerHub
-                command: docker push cyclus/cycamore:stable # push to docker depot
+                command: docker push cyclus/recyle:stable # push to docker depot
 
 
     # Debian package generation (on master update)
     deb_generation:
         docker:
             - image: circleci/ruby:2.4-node
-        working_directory: ~/cycamore
+        working_directory: ~/recyle
         steps:
             - checkout
             - setup_remote_docker
