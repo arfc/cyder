@@ -116,8 +116,8 @@ class _PhysorEnrichment(TestRegression):
     def setUp(self):
         super(_PhysorEnrichment, self).setUp()
         tbl = self.agent_entry
-        self.rx_id = self.find_ids(":cycamore:Reactor", tbl)
-        self.enr_id = self.find_ids(":cycamore:Enrichment", tbl)
+        self.rx_id = self.find_ids(":recyle:Reactor", tbl)
+        self.enr_id = self.find_ids(":recyle:Enrichment", tbl)
 
     def test_deploy(self):
         assert_equal(len(self.rx_id), 2)
@@ -190,9 +190,9 @@ class _PhysorSources(TestRegression):
 
         # identify each reactor and supplier by id
         tbl = self.agent_entry
-        rx_id = self.find_ids(":cycamore:Reactor", tbl)
+        rx_id = self.find_ids(":recyle:Reactor", tbl)
         self.r1, self.r2, self.r3 = tuple(rx_id)
-        s_id = self.find_ids(":cycamore:Source", tbl)
+        s_id = self.find_ids(":recyle:Source", tbl)
         self.smox = self.transactions[0]["SenderId"]
         s_id.remove(self.smox)
         self.suox = s_id[0]
@@ -294,8 +294,8 @@ class TestDynamicCapacitated(TestRegression):
         self.depl_time = self.to_ary(self.agent_entry, "EnterTime")
         self.exit_time = self.to_ary(self.agent_exit, "ExitTime")
         self.exit_ids = self.to_ary(self.agent_exit, "AgentId")
-        self.source_id = self.find_ids(":cycamore:Source", self.agent_entry)
-        self.sink_id = self.find_ids(":cycamore:Sink", self.agent_entry)
+        self.source_id = self.find_ids(":recyle:Source", self.agent_entry)
+        self.sink_id = self.find_ids(":recyle:Sink", self.agent_entry)
 
         # Check transactions
         self.sender_ids = self.to_ary(self.transactions, "SenderId")

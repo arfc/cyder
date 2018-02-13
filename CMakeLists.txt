@@ -297,6 +297,7 @@ IF(NOT CYCLUS_DOC_ONLY)
     TARGET_LINK_LIBRARIES(recycle_unit_tests
         dl
         ${LIBS}
+        recycle
         ${CYCLUS_TEST_LIBRARIES}
         )
 

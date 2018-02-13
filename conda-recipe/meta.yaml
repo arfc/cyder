@@ -1,11 +1,11 @@
 package:
-  name: cycamore
+  name: recyle
   version: 0.0
 
 # Only use fn and url for polyphemus compatability
 source:
-  fn: cycamore-src.tar.gz # ["TRAVIS" not in environ] 
-  url: https://github.com/cyclus/cycamore/archive/develop.tar.gz # ["TRAVIS" not in environ]
+  fn: recyle-src.tar.gz # ["TRAVIS" not in environ] 
+  url: https://github.com/cyclus/recyle/archive/develop.tar.gz # ["TRAVIS" not in environ]
   path: ..  # ["TRAVIS" in environ]
 
 requirements:
