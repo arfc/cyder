@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+# attributed to cycstub (https://github.com/cyclus/cyclus/blob/master/stubs/install.py)
+
 import os
 import sys
 import subprocess
