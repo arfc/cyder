@@ -1,6 +1,5 @@
 ### DO NOT DELETE THIS COMMENT: INSERT_ARCHETYPES_HERE ###
 
-# should i include for header files that do not have cc files?
 USE_CYCLUS("cyder" "Component")
 USE_CYCLUS("cyder" "Cyder")
 USE_CYCLUS("cyder" "DegRateNuclide")
@@ -8,7 +7,6 @@ USE_CYCLUS("cyder" "Geometry")
 USE_CYCLUS("cyder" "LumpedNuclide")
 USE_CYCLUS("cyder" "MatTools")
 USE_CYCLUS("cyder" "MixedCellNuclide")
-# USE_CYCLUS("cyder" "NuclideModel")
 USE_CYCLUS("cyder" "NuclideModelFactory")
 USE_CYCLUS("cyder" "OneDimPPMNuclide")
 USE_CYCLUS("cyder" "STCThermal")
