@@ -5,6 +5,8 @@ CONFIGURE_FILE(recycle_version.h.in "${CMAKE_CURRENT_SOURCE_DIR}/recycle_version
 
 SET(CYCLUS_CUSTOM_HEADERS "recycle_version.h")
 
+USE_CYCLUS("recycle" "pyre")
+
 INSTALL_CYCLUS_MODULE("recycle" "" "NONE")
 
 SET(TestSource ${recycle_TEST_CC} PARENT_SCOPE)
