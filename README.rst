@@ -1,5 +1,5 @@
 ###################################################
-CYDER
+CYDER: A cyclus disposal environment and repository object.
 ###################################################
 
 This repository holds a generic nuclear repository model intended to be used 
