@@ -3,10 +3,15 @@ CYDER
 ###################################################
 
 This repository holds a generic nuclear repository model intended to be used 
-within the Cyclus nuclear fuel cycle simulator. This repository model is not meant for site specific 
-nuclear repository performance assesment. Rather, it is intended to provide 
-medium-fidelity performance metrics of disposal system concepts in generic 
-geologies within the broader cyclus simulation framework.
+within the Cyclus nuclear fuel cycle simulator. It contains a conditioning facility 
+and a nuclear repository model that places spent fuel packages in a repository based 
+on its temperature and the constraints of the repository. 
+
+There is an older version of this repository that has contains a depreciated version of Cyder: https://github.com/arfc/cyder/releases/tag/v0.1 . That version of the repository holds a generic 
+nuclear repository model intended to be used within the Cyclus nuclear fuel cycle simulator. 
+This repository model is not meant for site specific nuclear repository performance assesment. 
+Rather, it is intended to provide medium-fidelity performance metrics of disposal system concepts 
+in generic geologies within the broader cyclus simulation framework.
 
 This README provides basic information about:
  - the dependencies required by Cyder
