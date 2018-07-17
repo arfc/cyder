@@ -1,3 +1,8 @@
+*******
+LICENSE
+*******
+::
+
 Copyright (c) 2010-2018, University of Illinois at Urbana-Champaign Advanced Reactors and Fuel Cycles Group 
 
 All rights reserved.
