@@ -1,11 +1,11 @@
 package:
-  name: recyle
+  name: cyder
   version: 0.0
 
 # Only use fn and url for polyphemus compatability
 source:
-  fn: recyle-src.tar.gz # ["TRAVIS" not in environ] 
-  url: https://github.com/cyclus/recyle/archive/develop.tar.gz # ["TRAVIS" not in environ]
+  fn: cyder-src.tar.gz # ["TRAVIS" not in environ] 
+  url: https://github.com/cyclus/cyder/archive/develop.tar.gz # ["TRAVIS" not in environ]
   path: ..  # ["TRAVIS" in environ]
 
 requirements:
