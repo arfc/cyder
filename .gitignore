@@ -1,0 +1,16 @@
+*.sw*
+build
+debug
+doxygen.conf
+suffix.h
+*~
+#*
+*.pyc
+rs.cred
+*.h5
+*.dat
+tests/run_inputs.py
+cyclus.sqlite
+recyle_version.h
+*.sqlite
+src/version.cc.in
