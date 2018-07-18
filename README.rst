@@ -1,36 +1,22 @@
 ###################################################
-Cycamore : The CYClus Additional MOdules REpository
+CYDER: A cyclus disposal environment and repository object
 ###################################################
 
-Additional modules for the Cyclus nuclear fuel cycle simulator from the
-University of Wisconsin - Madison are intended to support innovative
-fuel cycle simulations with the Cyclus fuel cycle simulator.
+This repository holds a generic nuclear repository model intended to be used 
+within the Cyclus nuclear fuel cycle simulator. It contains a conditioning facility 
+and a nuclear repository model that places spent fuel packages in a repository based 
+on its temperature and the constraints of the repository. 
 
-This README is intended primarily for those who intend to contribute to the
-development of Cycamore archetypes.  If you are interested in Cyclus as a user
-or in developing your own Cyclus archetyes, you may want to consult `Getting
-Started with Cyclus <http://fuelcycle.org/user/install.html>`_.
+There is an older version of this repository that has contains a depreciated version of Cyder: https://github.com/arfc/cyder/releases/tag/v0.1 . That version of the repository holds a generic 
+nuclear repository model intended to be used within the Cyclus nuclear fuel cycle simulator. 
+This repository model is not meant for site specific nuclear repository performance assesment. 
+Rather, it is intended to provide medium-fidelity performance metrics of disposal system concepts 
+in generic geologies within the broader cyclus simulation framework.
 
 This README provides basic information about:
- - the dependency required by Cycamore
- - installation of Cycamore from the command line
- - how to run Cycamore unit tests
-
-Although Cycamore is meant to enable a basic fuel cycle simulation, you may want
-more functionality than it offers.  Third party modules can also be installed
-(or developed) with additional facilities.  Please visit the Cyclus website for
-a list of `contributed modules <http://fuelcycle.org/user/index.html#third-party-archetypes>`_.
-
-- **For general information about Cyclus, visit the**  `Cyclus Homepage`_,
-
-- **For detailed installation instructions, visit the**
-  `INSTALLATION Guide <INSTALL.rst>`_,
-
-- **To see user and developer documentation for this code, please visit
-  the** `Users Guide <http://fuelcycle.org/user/index.html>`_,
-
-- **If you would like to contribute to Cycamore, please check our**
-  `Contribution Guidelines <https://github.com/cyclus/cyclus/blob/master/CONTRIBUTING.rst>`_.
+ - the dependencies required by Cyder
+ - installation of Cyder from the command line
+ - how to run Cyder unit tests
 
 
 .. contents:: Table of Contents
@@ -45,7 +31,7 @@ Cycamore's only dependency is the Cyclus Core.
 ====================   ==================
 Package                Minimum Version
 ====================   ==================
-`Cyclus`               1.4
+`Cyclus`               1.5.3
 ====================   ==================
 
 There are a number of ways to install the Cyclus core:
@@ -56,60 +42,22 @@ There are a number of ways to install the Cyclus core:
 - To install from a binary distribution, see the instructions for
   `Installing Cyclus from Binaries <DEPENDENCIES.rst>`_
 
-******************************
-Quick Cycamore Installation
-******************************
+- **For general information about Cyclus, visit the**  `Cyclus Homepage`_,
 
-Assuming you have the dependencies installed correctly, installing Cyclus using
-github is fairly straightforward:
+- **For detailed installation instructions, visit the**
+  `INSTALLATION Guide <INSTALL.rst>`_,
 
-- Clone the Cyclus Repo: ``git clone https://github.com/cyclus/recyle.git``,
-
-- to install Cyclus locally (in ``~/.local/``) just run: ``python install.py``
-  from recyle folder,
-
-- finally, add the following Cyclus installation path (``~/.local/cyclus``) to
-  the **bottom** on your ``$PATH``.
-
-For more detailed installation procedure, and/or custom installation please
-refer to the `INSTALLATION guide <INSTALL.rst>`_.
-
+- **To see user and developer documentation for this code, please visit
+  the** `Users Guide <http://fuelcycle.org/user/index.html>`_,
 
 ******************************
 Running Tests
 ******************************
 
-Installing Cycamore will also install a test driver (i.e., an executable of all of
+Installing Cyder will also install a test driver (i.e., an executable of all of
 our tests). You can run the tests yourself via:
 
 .. code-block:: bash
 
-    $ recyle_unit_tests
-
-******************************
-Contributing
-******************************
-
-We happily welcome new developers into the Cyclus Developer Team. If you are willing
-to contribute into Cyclus, please follow this procedure:
-
-#. Fork Cycamore repository,
-
-#. Create a working branch on you fork from the ``master`` branch,
-
-#. Implement your modification of the Cycamore source code,
-
-#. Submit a Pull request into ``recyle/master`` branch,
-
-#. Wait for reviews/merge (the Puller cannot be the Merger).
-
-You may also want to read our `Contribution Guidelines <CONTRIBUTING.rst>`_.
-
-.. _`CMake`: https://cmake.org
-.. _`Cyclus Homepage`: http://fuelcycle.org/
-.. _`Cyclus User Guide`: http://fuelcycle.org/user/index.html
-.. _`Cyclus repo`: https://github.com/cyclus/cyclus
-.. _`Cycamore Repo`: https://github.com/cyclus/recyle
-.. _`INSTALL`: INSTALL.rst
-.. _`CONTRIBUTING`: CONTRIBUTING.rst
+    $ cyder_unit_tests
 
