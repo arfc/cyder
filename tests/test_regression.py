@@ -116,8 +116,8 @@ class _PhysorEnrichment(TestRegression):
     def setUp(self):
         super(_PhysorEnrichment, self).setUp()
         tbl = self.agent_entry
-        self.rx_id = self.find_ids(":recyle:Reactor", tbl)
-        self.enr_id = self.find_ids(":recyle:Enrichment", tbl)
+        self.rx_id = self.find_ids(":cyder:Reactor", tbl)
+        self.enr_id = self.find_ids(":cyder:Enrichment", tbl)
 
     def test_deploy(self):
         assert_equal(len(self.rx_id), 2)
@@ -190,9 +190,9 @@ class _PhysorSources(TestRegression):
 
         # identify each reactor and supplier by id
         tbl = self.agent_entry
-        rx_id = self.find_ids(":recyle:Reactor", tbl)
+        rx_id = self.find_ids(":cyder:Reactor", tbl)
         self.r1, self.r2, self.r3 = tuple(rx_id)
-        s_id = self.find_ids(":recyle:Source", tbl)
+        s_id = self.find_ids(":cyder:Source", tbl)
         self.smox = self.transactions[0]["SenderId"]
         s_id.remove(self.smox)
         self.suox = s_id[0]
@@ -294,8 +294,8 @@ class TestDynamicCapacitated(TestRegression):
         self.depl_time = self.to_ary(self.agent_entry, "EnterTime")
         self.exit_time = self.to_ary(self.agent_exit, "ExitTime")
         self.exit_ids = self.to_ary(self.agent_exit, "AgentId")
-        self.source_id = self.find_ids(":recyle:Source", self.agent_entry)
-        self.sink_id = self.find_ids(":recyle:Sink", self.agent_entry)
+        self.source_id = self.find_ids(":cyder:Source", self.agent_entry)
+        self.sink_id = self.find_ids(":cyder:Sink", self.agent_entry)
 
         # Check transactions
         self.sender_ids = self.to_ary(self.transactions, "SenderId")
@@ -426,11 +426,11 @@ class TestGrowth(TestRegression):
         for x in source3_id:
             assert_equal(enter_time[np.where(agent_ids == x)], 2)
 
-class _Recycle(TestRegression):
-    """This class tests the input/recycle.xml file.
+class _Cyder(TestRegression):
+    """This class tests the input/cyder.xml file.
     """
     def __init__(self, *args, **kwargs):
-        super(_Recycle, self).__init__(*args, **kwargs)
+        super(_Cyder, self).__init__(*args, **kwargs)
 
         # this test requires separations which isn't supported by hdf5
         # so we force sqlite:
@@ -457,11 +457,11 @@ class _Recycle(TestRegression):
             t = row[0]
             invs[t] = row[1]
 
-        expfname = 'exp_recycle_{0}-{1}-{2}.dat'.format(fromfac, tofac, nuclide)
+        expfname = 'exp_cyder_{0}-{1}-{2}.dat'.format(fromfac, tofac, nuclide)
         with open(expfname, 'w') as f:
             for t, val in enumerate(exp_invs):
                 f.write('{0} {1}\n'.format(t, val))
-        obsfname = 'obs_recycle_{0}-{1}-{2}.dat'.format(fromfac, tofac, nuclide)
+        obsfname = 'obs_cyder_{0}-{1}-{2}.dat'.format(fromfac, tofac, nuclide)
         with open(obsfname, 'w') as f:
             for t, val in enumerate(invs):
                 f.write('{0} {1}\n'.format(t, val))
@@ -517,17 +517,17 @@ class _Recycle(TestRegression):
         exp[549] = 420.42772559790944
         self.do_compare('reactor', 'repo', 942390000, exp)
 
-class TestGreedyRecycle(_Recycle):
-    """This class tests the input/recycle.xml file.
+class TestGreedyCyder(_Cyder):
+    """This class tests the input/cyder.xml file.
     """
     def __init__(self, *args, **kwargs):
-        super(TestGreedyRecycle, self).__init__(*args, **kwargs)
-        self.inf = "../input/greedy_recycle.xml"
+        super(TestGreedyCyder, self).__init__(*args, **kwargs)
+        self.inf = "../input/greedy_cyder.xml"
 
-class TestCbcRecycle(_Recycle):
-    """This class tests the input/recycle.xml file.
+class TestCbcCyder(_Cyder):
+    """This class tests the input/cyder.xml file.
     """
     def __init__(self, *args, **kwargs):
-        super(TestCbcRecycle, self).__init__(*args, **kwargs)
-        self.inf = "../input/recycle.xml"
+        super(TestCbcCyder, self).__init__(*args, **kwargs)
+        self.inf = "../input/cyder.xml"
         skip_if_dont_allow_milps()
