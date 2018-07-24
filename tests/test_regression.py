@@ -447,10 +447,14 @@ class _Cyder(TestRegression):
         self.ext = '.sqlite'
         self.outf = base + self.ext
         self.sql = """
-            SELECT t.time as time,SUM(c.massfrac*r.quantity) as qty FROM transactions as t
-            JOIN resources as r ON t.resourceid=r.resourceid AND r.simid=t.simid
-            JOIN agententry as send ON t.senderid=send.agentid AND send.simid=t.simid
-            JOIN agententry as recv ON t.receiverid=recv.agentid AND recv.simid=t.simid
+            SELECT t.time as time,SUM(c.massfrac*r.quantity) as qty
+            FROM transactions as t
+            JOIN resources as r ON t.resourceid=r.resourceid
+            AND r.simid=t.simid
+            JOIN agententry as send ON t.senderid=send.agentid
+            AND send.simid=t.simid
+            JOIN agententry as recv ON t.receiverid=recv.agentid
+            AND recv.simid=t.simid
             JOIN compositions as c ON c.qualid=r.qualid AND c.simid=r.simid
             WHERE send.prototype=? AND recv.prototype=? AND c.nucid=?
             GROUP BY t.time;"""
@@ -462,7 +466,8 @@ class _Cyder(TestRegression):
         simdur = len(exp_invs)
 
         invs = [0.0] * simdur
-        for i, row in enumerate(c.execute(self.sql, (fromfac, tofac, nuclide))):
+        for i, row in enumerate(c.execute(self.sql, (fromfac, tofac,
+                                nuclide))):
             t = row[0]
             invs[t] = row[1]
 
@@ -473,7 +478,8 @@ class _Cyder(TestRegression):
         obsfname = 'obs_cyder_{0}-{1}-{2}.dat'.format(fromfac, tofac, nuclide)
         with open(obsfname, 'w') as f:
             for t, val in enumerate(invs):
-                f.write('{0} {1}\n'.format(t, val))
+                f.write('{0} {1}\n'.format(t,
+                                           val))
 
         i = 0
         for exp, obs in zip(invs, exp_invs):
