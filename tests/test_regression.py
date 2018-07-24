@@ -484,7 +484,8 @@ class _Cyder(TestRegression):
         i = 0
         for exp, obs in zip(invs, exp_invs):
             assert_almost_equal(
-                exp, obs, err_msg='mismatch at t={}, {} != {}'.format(i, exp, obs))
+                exp, obs, err_msg='mismatch at t={}, {} != {}'.format(i, exp,
+                                                                      obs))
             i += 1
 
         os.remove(expfname)
