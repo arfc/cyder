@@ -1,0 +1,37 @@
+<simulation>
+  <control>
+    <duration>10</duration>
+    <startmonth>1</startmonth>
+    <startyear>2000</startyear>
+  </control>
+
+  <archetypes>
+    <spec><lib>recycle</lib><name>corrm</name></spec>
+    <spec><lib>agents</lib><name>NullRegion</name></spec>
+    <spec><lib>agents</lib><name>NullInst</name></spec>
+  </archetypes>
+
+
+  <facility>
+    <name>OneFacility</name>
+    <config>
+      <corrm/>
+    </config>
+  </facility>
+
+  <region>
+    <name>SingleRegion</name>
+    <config><NullRegion/></config>
+    <institution>
+      <name>SingleInstitution</name>
+      <initialfacilitylist>
+        <entry>
+          <prototype>OneFacility</prototype>
+          <number>1</number>
+        </entry>
+      </initialfacilitylist>
+      <config><NullInst/></config>
+    </institution>
+  </region>
+
+</simulation>
