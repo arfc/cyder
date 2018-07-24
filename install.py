@@ -17,6 +17,7 @@ try:
 except ImportError:
     import pyne._argparse as ap
 
+
 def absexpanduser(x): return os.path.abspath(os.path.expanduser(x))
 
 
@@ -80,8 +81,8 @@ def install_cyclus(args):
         if args.hdf5_root:
             h5root = absexpanduser(args.hdf5_root)
             cmake_cmd += ['-DHDF5_ROOT=' + h5root,
-                          '-DHDF5_LIBRARIES={0}/lib/libhdf5{1};{0}/lib/libhdf5_hl{1}'.format(h5root,
-                                                                                             libext),
+                          '-DHDF5_LIBRARIES={0}/lib/libhdf5{1};{0}/lib/libhdf5_hl{1}'
+                          .format(h5root,libext),
                           '-DHDF5_LIBRARY_DIRS=' + h5root + '/lib',
                           '-DHDF5_INCLUDE_DIRS=' + h5root + '/include',
                           ]
