@@ -56,10 +56,10 @@ def write_macros_to_output(tests, executable, reg_dir, output=None):
     # add unit tests
     for test in tests:
         lines.append("ADD_TEST(" + test + " " +
-                      executable + " " + "--gtest_filter=" + test + ")")
+                     executable + " " + "--gtest_filter=" + test + ")")
     # add regression tests
-    lines.append("ADD_TEST(RegressionTests nosetests -v -w " + 
-                  reg_dir + ")")
+    lines.append("ADD_TEST(RegressionTests nosetests -v -w " +
+                 reg_dir + ")")
 
     if output is None:
         for line in lines:
