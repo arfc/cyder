@@ -34,11 +34,13 @@ def check_windows_cmake(cmake_cmd):
             cmake_cmd += ['-G "MinGW Makefiles"']
         cmake_cmd = ' '.join(cmake_cmd)
 
+
 def update_describe():
     root_dir = os.path.split(__file__)[0]
     fname = os.path.join(root_dir, 'src', 'version.cc.in')
     cmd = 'touch {0}'.format(fname)
     subprocess.check_call(cmd.split(), shell=(os.name == 'nt'))
+
 
 def install_cyclus(args):
     if not os.path.exists(args.build_dir):
@@ -113,6 +115,7 @@ def install_cyclus(args):
 
     rtn = subprocess.check_call(make_cmd, cwd=args.build_dir,
                                 shell=(os.name == 'nt'))
+
 
 def uninstall_cyclus(args):
     makefile = os.path.join(args.build_dir, 'Makefile')
@@ -209,6 +212,7 @@ def main():
         uninstall_cyclus(args)
     else:
         install_cyclus(args)
+
 
 if __name__ == "__main__":
     main()

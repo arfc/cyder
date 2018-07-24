@@ -17,8 +17,10 @@ if sys.version_info[0] >= 3:
 else:
     str_types = (str, unicode)
 
+
 def hasher(x):
     return int(sha1(x.encode()).hexdigest(), 16)
+
 
 def idx(h):
     ind = [None] * 5
@@ -26,12 +28,15 @@ def idx(h):
         h, ind[i] = divmod(h, 2**32)
     return tuple(ind)
 
+
 sha1array = lambda x: np.array(idx(hasher(x)), np.uint32)
+
 
 def table_exist(db, tables):
     """Checks if hdf5 database contains the specified tables.
     """
     return all([t in db.root for t in tables])
+
 
 def find_ids(data, data_table, id_table):
     """Finds ids of the specified data located in the specified data_table,
@@ -48,6 +53,7 @@ def find_ids(data, data_table, id_table):
         elif d == data:
             ids.append(id_table[i])
     return ids
+
 
 def exit_times(agent_id, exit_table):
     """Finds exit times of the specified agent from the exit table.
@@ -98,4 +104,3 @@ def cyclus_has_coin():
                                           if line != '']}
     CYCLUS_HAS_COIN = m['Coin-Cbc'] != '-1'
     return CYCLUS_HAS_COIN
-
