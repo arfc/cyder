@@ -46,7 +46,7 @@ def write_macros_to_output(tests, executable, reg_dir, output=None):
     output file
 
     Arguments
-    tests -- a list of all test names to be added as ADD_TEST macros 
+    tests -- a list of all test names to be added as ADD_TEST macros
     to the output file
     exectuable -- the name of the test executable
     output -- the output file to write to, if output is not
@@ -55,11 +55,11 @@ def write_macros_to_output(tests, executable, reg_dir, output=None):
     lines = []
     # add unit tests
     for test in tests:
-        lines.append("ADD_TEST(" + test + " " + 
-                    executable + " " + "--gtest_filter=" + test + ")")
+        lines.append("ADD_TEST(" + test + " " +
+                      executable + " " + "--gtest_filter=" + test + ")")
     # add regression tests
-    lines.append("ADD_TEST(RegressionTests nosetests -v -w " + \
-                reg_dir + ")")
+    lines.append("ADD_TEST(RegressionTests nosetests -v -w " + 
+                  reg_dir + ")")
 
     if output is None:
         for line in lines:
