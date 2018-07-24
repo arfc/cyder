@@ -29,7 +29,7 @@ def idx(h):
     return tuple(ind)
 
 
-sha1array = lambda x: np.array(idx(hasher(x)), np.uint32)
+def sha1array(x): return np.array(idx(hasher(x)), np.uint32)
 
 
 def table_exist(db, tables):
@@ -86,7 +86,8 @@ def check_cmd(args, cwd, holdsrtn):
     env = dict(os.environ)
     env['_'] = subprocess.check_output(['which', 'cyclus'], cwd=cwd).strip()
     with tempfile.NamedTemporaryFile() as f:
-        rtn = subprocess.call(args, shell=True, cwd=cwd, stdout=f, stderr=f, env=env)
+        rtn = subprocess.call(args, shell=True, cwd=cwd, stdout=f, stderr=f, 
+                              env=env)
         if rtn != 0:
             f.seek(0)
             print("STDOUT + STDERR:\n\n" + f.read().decode())
@@ -98,9 +99,10 @@ def cyclus_has_coin():
     global CYCLUS_HAS_COIN
     if CYCLUS_HAS_COIN is not None:
         return CYCLUS_HAS_COIN
-    s = subprocess.check_output(['cyclus', '--version'], universal_newlines=True)
+    s = subprocess.check_output(['cyclus', '--version'], 
+                                universal_newlines=True)
     s = s.strip().replace('Dependencies:', '')
-    m = {k.strip(): v.strip() for k,v in [line.split()[:2] for line in s.splitlines()
+    m = {k.strip(): v.strip() for k, v in [line.split()[:2] for line in s.splitlines()
                                           if line != '']}
     CYCLUS_HAS_COIN = m['Coin-Cbc'] != '-1'
     return CYCLUS_HAS_COIN
