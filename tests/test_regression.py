@@ -30,9 +30,9 @@ def skip_if_dont_allow_milps():
 
 class TestRegression(object):
     """A base class for all regression tests. A derived class is required for
-    each new input file to be tested. Each derived class *must* declare an `inf`
-    member in their `__init__` function that points to the input file to be
-    tested, e.g., `self.inf_ = ./path/to/my/input_file.xml. See below for
+    each new input file to be tested. Each derived class *must* declare an
+    `inf` member in their `__init__` function that points to the input file to
+    be tested, e.g., `self.inf_ = ./path/to/my/input_file.xml. See below for
     examples.
     """
     def __init__(self, *args, **kwargs):
@@ -73,12 +73,12 @@ class TestRegression(object):
                 if len(exc(
                     ("SELECT * FROM sqlite_master WHERE "
                      "type='table' AND name='AgentExit'")).fetchall()) > 0 \
-                     else None
+                else None
             self.enrichments = exc('SELECT * FROM Enrichments').fetchall() \
                 if len(exc(
                     ("SELECT * FROM sqlite_master WHERE "
                      "type='table' AND name='Enrichments'")).fetchall()) > 0 \
-                     else None
+                else None
             self.resources = exc('SELECT * FROM Resources').fetchall()
             self.transactions = exc('SELECT * FROM Transactions').fetchall()
             self.compositions = exc('SELECT * FROM Compositions').fetchall()
@@ -105,10 +105,11 @@ class TestRegression(object):
             print("removing {0}".format(self.outf))
             os.remove(self.outf)
 
+
 class _PhysorEnrichment(TestRegression):
     """This class tests the 1_Enrichment_2_Reactor.xml file related to the
-    Cyclus Physor 2014 publication. The number of key facilities, the enrichment
-    values, and the transactions to each reactor are tested.
+    Cyclus Physor 2014 publication. The number of key facilities, the
+    enrichment values, and the transactions to each reactor are tested.
     """
     def __init__(self, *args, **kwargs):
         super(_PhysorEnrichment, self).__init__(*args, **kwargs)
@@ -166,16 +167,19 @@ class _PhysorEnrichment(TestRegression):
         msg = "Testing that second reactor gets what it wants."
         assert_array_almost_equal(exp, txs, decimal=2, err_msg=msg)
 
+
 class TestCBCPhysorEnrichment(_PhysorEnrichment):
     def __init__(self, *args, **kwargs):
         super(TestCBCPhysorEnrichment, self).__init__(*args, **kwargs)
         self.inf = "../input/physor/1_Enrichment_2_Reactor.xml"
         skip_if_dont_allow_milps()
 
+
 class TestGreedyPhysorEnrichment(_PhysorEnrichment):
     def __init__(self, *args, **kwargs):
         super(TestGreedyPhysorEnrichment, self).__init__(*args, **kwargs)
         self.inf = "../input/physor/greedy_1_Enrichment_2_Reactor.xml"
+
 
 class _PhysorSources(TestRegression):
     """This class tests the 2_Sources_3_Reactor.xml file related to the Cyclus
@@ -249,16 +253,19 @@ class _PhysorSources(TestRegression):
                 txs[tx['Time']] += self.rsrc_qtys[tx['ResourceId']]
         assert_array_almost_equal(uox_exp, txs)
 
+
 class TestCBCPhysorSources(_PhysorSources):
     def __init__(self, *args, **kwargs):
         super(TestCBCPhysorSources, self).__init__(*args, **kwargs)
         self.inf = "../input/physor/2_Sources_3_Reactors.xml"
         skip_if_dont_allow_milps()
 
+
 class TestGreedyPhysorSources(_PhysorSources):
     def __init__(self, *args, **kwargs):
         super(TestGreedyPhysorSources, self).__init__(*args, **kwargs)
         self.inf = "../input/physor/greedy_2_Sources_3_Reactors.xml"
+
 
 class TestDynamicCapacitated(TestRegression):
     """Tests dynamic capacity restraints involving changes in the number of
@@ -379,6 +386,7 @@ class TestDynamicCapacitated(TestRegression):
                 np.where(self.resource_ids == self.trans_resource[t])]
         assert_equal(quantity, 2)
 
+
 class TestGrowth(TestRegression):
     """Tests GrowthRegion, ManagerInst, and Source over a 4-time step
     simulation.
@@ -388,8 +396,8 @@ class TestGrowth(TestRegression):
     respectively. At t=1, a 2-capacity Source is expected to be built, and at
     t=2 and t=3, 1-capacity Sources are expected to be built.
 
-    A linear growth demand (y = 0x + 3) for a second commodity is provided at t=2
-    to test the demand for multiple commodities.
+    A linear growth demand (y = 0x + 3) for a second commodity is provided at
+    t=2 to test the demand for multiple commodities.
     """
     def __init__(self, *args, **kwargs):
         super(TestGrowth, self).__init__(*args, **kwargs)
@@ -426,6 +434,7 @@ class TestGrowth(TestRegression):
         for x in source3_id:
             assert_equal(enter_time[np.where(agent_ids == x)], 2)
 
+
 class _Cyder(TestRegression):
     """This class tests the input/cyder.xml file.
     """
@@ -438,10 +447,14 @@ class _Cyder(TestRegression):
         self.ext = '.sqlite'
         self.outf = base + self.ext
         self.sql = """
-            SELECT t.time as time,SUM(c.massfrac*r.quantity) as qty FROM transactions as t
-            JOIN resources as r ON t.resourceid=r.resourceid AND r.simid=t.simid
-            JOIN agententry as send ON t.senderid=send.agentid AND send.simid=t.simid
-            JOIN agententry as recv ON t.receiverid=recv.agentid AND recv.simid=t.simid
+            SELECT t.time as time,SUM(c.massfrac*r.quantity) as qty
+            FROM transactions as t
+            JOIN resources as r ON t.resourceid=r.resourceid
+            AND r.simid=t.simid
+            JOIN agententry as send ON t.senderid=send.agentid
+            AND send.simid=t.simid
+            JOIN agententry as recv ON t.receiverid=recv.agentid
+            AND recv.simid=t.simid
             JOIN compositions as c ON c.qualid=r.qualid AND c.simid=r.simid
             WHERE send.prototype=? AND recv.prototype=? AND c.nucid=?
             GROUP BY t.time;"""
@@ -453,7 +466,8 @@ class _Cyder(TestRegression):
         simdur = len(exp_invs)
 
         invs = [0.0] * simdur
-        for i, row in enumerate(c.execute(self.sql, (fromfac, tofac, nuclide))):
+        for i, row in enumerate(c.execute(self.sql, (fromfac, tofac,
+                                nuclide))):
             t = row[0]
             invs[t] = row[1]
 
@@ -464,12 +478,14 @@ class _Cyder(TestRegression):
         obsfname = 'obs_cyder_{0}-{1}-{2}.dat'.format(fromfac, tofac, nuclide)
         with open(obsfname, 'w') as f:
             for t, val in enumerate(invs):
-                f.write('{0} {1}\n'.format(t, val))
+                f.write('{0} {1}\n'.format(t,
+                                           val))
 
         i = 0
         for exp, obs in zip(invs, exp_invs):
             assert_almost_equal(
-                exp, obs, err_msg='mismatch at t={}, {} != {}'.format(i, exp, obs))
+                exp, obs, err_msg='mismatch at t={}, {} != {}'.format(i, exp,
+                                                                      obs))
             i += 1
 
         os.remove(expfname)
@@ -517,12 +533,14 @@ class _Cyder(TestRegression):
         exp[549] = 420.42772559790944
         self.do_compare('reactor', 'repo', 942390000, exp)
 
+
 class TestGreedyCyder(_Cyder):
     """This class tests the input/cyder.xml file.
     """
     def __init__(self, *args, **kwargs):
         super(TestGreedyCyder, self).__init__(*args, **kwargs)
         self.inf = "../input/greedy_cyder.xml"
+
 
 class TestCbcCyder(_Cyder):
     """This class tests the input/cyder.xml file.

@@ -17,7 +17,8 @@ try:
 except ImportError:
     import pyne._argparse as ap
 
-absexpanduser = lambda x: os.path.abspath(os.path.expanduser(x))
+
+def absexpanduser(x): return os.path.abspath(os.path.expanduser(x))
 
 
 def check_windows_cmake(cmake_cmd):
@@ -34,11 +35,13 @@ def check_windows_cmake(cmake_cmd):
             cmake_cmd += ['-G "MinGW Makefiles"']
         cmake_cmd = ' '.join(cmake_cmd)
 
+
 def update_describe():
     root_dir = os.path.split(__file__)[0]
     fname = os.path.join(root_dir, 'src', 'version.cc.in')
     cmd = 'touch {0}'.format(fname)
     subprocess.check_call(cmd.split(), shell=(os.name == 'nt'))
+
 
 def install_cyclus(args):
     if not os.path.exists(args.build_dir):
@@ -78,7 +81,8 @@ def install_cyclus(args):
         if args.hdf5_root:
             h5root = absexpanduser(args.hdf5_root)
             cmake_cmd += ['-DHDF5_ROOT=' + h5root,
-                          '-DHDF5_LIBRARIES={0}/lib/libhdf5{1};{0}/lib/libhdf5_hl{1}'.format(h5root, libext),
+                          '-DHDF5_LIBRARIES={0}/lib/libhdf5{1};' +
+                          '{0}/lib/libhdf5_hl{1}'.format(h5root, libext),
                           '-DHDF5_LIBRARY_DIRS=' + h5root + '/lib',
                           '-DHDF5_INCLUDE_DIRS=' + h5root + '/include',
                           ]
@@ -114,6 +118,7 @@ def install_cyclus(args):
     rtn = subprocess.check_call(make_cmd, cwd=args.build_dir,
                                 shell=(os.name == 'nt'))
 
+
 def uninstall_cyclus(args):
     makefile = os.path.join(args.build_dir, 'Makefile')
     if not os.path.exists(args.build_dir) or not os.path.exists(makefile):
@@ -133,7 +138,8 @@ def main():
     parser.add_argument('--build_dir', help=build_dir, default='build')
 
     uninst = 'uninstall'
-    parser.add_argument('--uninstall', action='store_true', help=uninst, default=False)
+    parser.add_argument('--uninstall', action='store_true', help=uninst,
+                        default=False)
 
     noupdate = 'do not update the hash in version.cc'
     parser.add_argument('--no-update', dest='update', action='store_false',
@@ -194,8 +200,9 @@ def main():
     parser.add_argument('-D', metavar='VAR', action='append',
                         help='Set enviornment variable(s).')
     parser.add_argument('--cmake-debug', action='store_true', default=False,
-                        dest='cmake_debug', help='puts CMake itself in a debug mode '
-                                                 'when dealing with build system issues.')
+                        dest='cmake_debug',
+                        help='puts CMake itself in a debug mode'
+                        'when dealing with build system issues.')
 
     args = parser.parse_args()
     # modify roots as needed
@@ -209,6 +216,7 @@ def main():
         uninstall_cyclus(args)
     else:
         install_cyclus(args)
+
 
 if __name__ == "__main__":
     main()
