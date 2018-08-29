@@ -5,6 +5,7 @@ import os
 reg_tst_name = """RegressionTests"""
 end_tst_token = """Testing:"""
 
+
 def main():
     build_tst_dir = os.path.join(os.getcwd(), "Testing", "Temporary")
 
@@ -14,11 +15,11 @@ def main():
     if os.path.exists(fname):
         with open(fname) as f:
             lines = f.readlines()
-    
+
         for line in lines:
             if reg_tst_name in line:
                 print_regs = True
-    
+
     fname = os.path.join(build_tst_dir, "LastTest.log")
     with open(fname) as f:
         lines = f.readlines()
@@ -34,6 +35,7 @@ def main():
                 in_regs = False
             if in_regs:
                 print(line.strip())
+
 
 if __name__ == "__main__":
     main()

@@ -1,11 +1,11 @@
 """generate_test_macros.py
 
-A simple module and default main execution to generate a listing of 
-ADD_TEST CMake macros for all non-disabled tests in a 
+A simple module and default main execution to generate a listing of
+ADD_TEST CMake macros for all non-disabled tests in a
 google-test-based executable.
 
-The default main function writes a list of macros to the given output 
-file. 
+The default main function writes a list of macros to the given output
+file.
 """
 from __future__ import print_function
 
@@ -18,13 +18,14 @@ try:
 except ImportError:
     import pyne._argparse as ap
 
+
 def parse_tests(test_lines):
     """Return a list of google test names.
 
-    Arguments: 
+    Arguments:
 
-    test_lines -- a list of the output of a google test exectuable 
-    using the --gtest_list_tests flag. If the output is in a file, 
+    test_lines -- a list of the output of a google test exectuable
+    using the --gtest_list_tests flag. If the output is in a file,
     test_lines are the result of file.readlines().
     """
     tests = []
@@ -33,31 +34,32 @@ def parse_tests(test_lines):
         line = test_line.decode().strip()
         if line[-1] == ".":
             current_test = line
-        else:        
+        else:
             assert current_test is not None
             if str(line).lower().find("disabled") == -1:
-                tests.append(current_test + line) 
+                tests.append(current_test + line)
     return tests
 
+
 def write_macros_to_output(tests, executable, reg_dir, output=None):
-    """writes a list of test names as ADD_TEST cmake macros to an 
+    """writes a list of test names as ADD_TEST cmake macros to an
     output file
-    
+
     Arguments
-    tests -- a list of all test names to be added as ADD_TEST macros 
+    tests -- a list of all test names to be added as ADD_TEST macros
     to the output file
     exectuable -- the name of the test executable
-    output -- the output file to write to, if output is not 
+    output -- the output file to write to, if output is not
     specified, the list of ADD_TEST macros will be written to stdout
     """
     lines = []
     # add unit tests
     for test in tests:
-        lines.append("ADD_TEST(" + test + " " + \
-                         executable + " " + "--gtest_filter=" + test + ")")
+        lines.append("ADD_TEST(" + test + " " +
+                     executable + " " + "--gtest_filter=" + test + ")")
     # add regression tests
-    lines.append("ADD_TEST(RegressionTests nosetests -v -w " + \
-                     reg_dir + ")")
+    lines.append("ADD_TEST(RegressionTests nosetests -v -w " +
+                 reg_dir + ")")
 
     if output is None:
         for line in lines:
@@ -67,9 +69,10 @@ def write_macros_to_output(tests, executable, reg_dir, output=None):
             for line in lines:
                 f.write(line + '\n')
 
+
 def main():
-    description = "A simple script to add CTest ADD_TEST macros to a "+\
-        "file for every test in a google-test executable." 
+    description = "A simple script to add CTest ADD_TEST macros to a " + \
+        "file for every test in a google-test executable."
     parser = ap.ArgumentParser(description=description)
 
     executable = 'the path to the test exectuable to call'
@@ -78,7 +81,7 @@ def main():
     reg_dir = "the regression tests directory"
     parser.add_argument('--reg_dir', help=reg_dir, required=True)
 
-    output = "the file to write the ADD_TEST macros to "+\
+    output = "the file to write the ADD_TEST macros to " + \
         "(nominally CTestTestfile.cmake)"
     parser.add_argument('--output', help=output, required=True)
 
@@ -87,11 +90,11 @@ def main():
     assert os.path.exists(args.executable)
     assert os.path.exists(args.output)
 
-    rtn = subprocess.Popen([args.executable, "--gtest_list_tests"], 
-                           stdout=subprocess.PIPE, shell=(os.name=='nt'))
+    rtn = subprocess.Popen([args.executable, "--gtest_list_tests"],
+                           stdout=subprocess.PIPE, shell=(os.name == 'nt'))
     rtn.wait()
     if rtn.returncode != 0:
-        raise OSError('Could not generate test list, return code: ' 
+        raise OSError('Could not generate test list, return code: '
                       + str(rtn.returncode) + '.')
 
     tests = parse_tests(rtn.stdout.readlines())
@@ -100,6 +103,7 @@ def main():
     write_macros_to_output(tests, args.executable, args.reg_dir, args.output)
 
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
