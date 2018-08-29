@@ -67,7 +67,7 @@ You can run the tests yourself using:
 
     .. code-block:: bash
 
-      $ recyle_unit_tests
+      $ cyder_unit_tests
 
 Cautions
 ========
