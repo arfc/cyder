@@ -1,25 +1,28 @@
-#ifndef CYCLUS_STORAGES_STORAGE_H_
-#define CYCLUS_STORAGES_STORAGE_H_
+/// Taken from cyclus/cycamore storage.h file 
+
+#ifndef CYCLUS_CONDITIONINGS_CONDITIONING_H_
+#define CYCLUS_CONDITIONINGS_CONDITIONING_H_
 
 #include <string>
 #include <list>
 #include <vector>
 
 #include "cyclus.h"
+#include "cyder_version.h"
 
 // forward declaration
-namespace storage {
-class Storage;
-} // namespace storage
+namespace conditioning {
+class Conditioning;
+} // namespace conditioning
 
 
-namespace storage {
-/// @class Storage
+namespace conditioning {
+/// @class Conditioning
 ///
 /// This Facility is intended to hold materials for a user specified
-/// amount of time in order to model a storage facility with a certain
+/// amount of time in order to model a conditioning facility with a certain
 /// residence time or holdup time.
-/// The Storage class inherits from the Facility class and is
+/// The Conditioning class inherits from the Facility class and is
 /// dynamically loaded by the Agent class when requested.
 ///
 /// @section intro Introduction
@@ -36,7 +39,7 @@ namespace storage {
 /// in_recipe (optional) describes the incoming resource by recipe
 /// 
 /// @section optionalparams Optional Parameters
-/// max_inv_size is the maximum capacity of the inventory storage
+/// max_inv_size is the maximum capacity of the inventory conditioning
 /// throughput is the maximum processing capacity per timestep
 ///
 /// @section detailed Detailed Behavior
@@ -63,40 +66,40 @@ namespace storage {
 ///
 /// Sending Resources:
 /// Matched resources are sent immediately.
-class Storage 
+class Conditioning 
   : public cyclus::Facility,
     public cyclus::toolkit::CommodityProducer,
     public cyclus::toolkit::Position {
  public:  
   /// @param ctx the cyclus context for access to simulation-wide parameters
-  Storage(cyclus::Context* ctx);
+  Conditioning(cyclus::Context* ctx);
   
   #pragma cyclus decl
 
-  #pragma cyclus note {"doc": "Storage is a simple facility which accepts any number of commodities " \
+  #pragma cyclus note {"doc": "Conditioning is a simple facility which accepts any number of commodities " \
                               "and holds them for a user specified amount of time. The commodities accepted "\
                               "are chosen based on the specified preferences list. Once the desired amount of material "\
                               "has entered the facility it is passed into a 'processing' buffer where it is held until "\
                               "the residence time has passed. The material is then passed into a 'ready' buffer where it is "\
                               "queued for removal. Currently, all input commodities are lumped into a single output commodity. "\
-                              "Storage also has the functionality to handle materials in discrete or continuous batches. Discrete "\
+                              "Conditioning also has the functionality to handle materials in discrete or continuous batches. Discrete "\
                               "mode, which is the default, does not split or combine material batches. Continuous mode, however, "\
                               "divides material batches if necessary in order to push materials through the facility as quickly "\
                               "as possible."}
 
-  /// A verbose printer for the Storage Facility
+  /// A verbose printer for the Conditioning Facility
   virtual std::string str();
 
   // --- Facility Members ---
   
   // --- Agent Members ---
-  /// Sets up the Storage Facility's trade requests
+  /// Sets up the Conditioning Facility's trade requests
   virtual void EnterNotify();
 
-  /// The handleTick function specific to the Storage.
+  /// The handleTick function specific to the Conditioning.
   virtual void Tick();
 
-  /// The handleTick function specific to the Storage.
+  /// The handleTick function specific to the Conditioning.
   virtual void Tock();
 
  protected:
@@ -116,7 +119,7 @@ class Storage
   /// @param time the time of interest
   void ReadyMatl_(int time);
 
-    /* --- Storage Members --- */
+    /* --- Conditioning Members --- */
 
   /// @brief current maximum amount that can be added to processing
   inline double current_capacity() const { 
@@ -175,7 +178,7 @@ class Storage
 
   #pragma cyclus var {"default": 1e299,\
                       "tooltip":"maximum inventory size (kg)",\
-                      "doc":"the maximum amount of material that can be in all storage buffer stages",\
+                      "doc":"the maximum amount of material that can be in all conditioning buffer stages",\
                       "uilabel":"Maximum Inventory Size",\
                       "uitype": "range", \
                       "range": [0.0, 1e299], \
@@ -183,8 +186,8 @@ class Storage
   double max_inv_size; 
 
   #pragma cyclus var {"default": False,\
-                      "tooltip":"Bool to determine how Storage handles batches",\
-                      "doc":"Determines if Storage will divide resource objects. Only controls material "\
+                      "tooltip":"Bool to determine how Conditioning handles batches",\
+                      "doc":"Determines if Conditioning will divide resource objects. Only controls material "\
                             "handling within this facility, has no effect on DRE material handling. "\
                             "If true, batches are handled as discrete quanta, neither split nor combined. "\
                             "Otherwise, batches may be divided during processing. Default to false (continuous))",\
@@ -234,9 +237,9 @@ class Storage
 
   void RecordPosition();
 
-  friend class StorageTest;
+  friend class ConditioningTest;
 };
 
-}  // namespace storage
+}  // namespace conditioning
 
-#endif  // CYCLUS_STORAGES_STORAGE_H_
+#endif  // CYCLUS_CONDITIONINGS_CONDITIONING_H_
