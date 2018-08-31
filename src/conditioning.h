@@ -111,13 +111,17 @@ class Conditioning
   /// @brief Move all unprocessed inventory to processing
   void BeginProcessing_();
 
+/// @brief move ready resources from processing to repackaged after repackaging
+  /// @param *** ADD HERE ***
+  void RepackageMatl_();
+
+  /// @brief move ready resources from repackaged to ready at a certain time
+  /// @param time the time of interest
+  void ReadyMatl_(int time);
+
   /// @brief Move as many ready resources as allowable into stocks
   /// @param cap current throughput capacity 
   void ProcessMat_(double cap);
-
-  /// @brief move ready resources from processing to ready at a certain time
-  /// @param time the time of interest
-  void ReadyMatl_(int time);
 
     /* --- Conditioning Members --- */
 
@@ -210,6 +214,9 @@ class Conditioning
 
   #pragma cyclus var {"tooltip":"Buffer for material still waiting for required residence_time"}
   cyclus::toolkit::ResBuf<cyclus::Material> processing;
+
+    #pragma cyclus var {"tooltip":"Buffer for material that just got repackaged and are still waiting for required residence time "}
+  cyclus::toolkit::ResBuf<cyclus::Material> repackaged;
 
   //// A policy for requesting material
   cyclus::toolkit::MatlBuyPolicy buy_policy;
