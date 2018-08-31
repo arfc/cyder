@@ -178,6 +178,27 @@ void Conditioning::BeginProcessing_() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Conditioning::PackageMatl_() {
+  using cyclus::toolkit::ResBuf;
+  std::cout << "packaged" << std::endl;
+  packaged.Push(processing.Pop());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Conditioning::ReadyMatl_(int time) {
+  using cyclus::toolkit::ResBuf;
+
+  int to_ready = 0;
+
+  while (!entry_times.empty() && entry_times.front() <= time) {
+    entry_times.pop_front();
+    ++to_ready;
+  }
+
+  ready.Push(packaged.PopN(to_ready));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::ProcessMat_(double cap) {
   using cyclus::Material;
   using cyclus::ResCast;
@@ -213,19 +234,6 @@ void Conditioning::ProcessMat_(double cap) {
   }
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::ReadyMatl_(int time) {
-  using cyclus::toolkit::ResBuf;
-
-  int to_ready = 0;
-
-  while (!entry_times.empty() && entry_times.front() <= time) {
-    entry_times.pop_front();
-    ++to_ready;
-  }
-
-  ready.Push(processing.PopN(to_ready));
-}
 
 void Conditioning::RecordPosition() {
   std::string specification = this->spec();
