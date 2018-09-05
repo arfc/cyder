@@ -29,7 +29,7 @@
 
 
   <control>
-    <duration>15</duration>
+    <duration>10</duration>
     <startmonth>1</startmonth>
     <startyear>2000</startyear>
   </control>
@@ -40,7 +40,7 @@
       <Source>
         <outcommod>fuel</outcommod>
         <outrecipe>fresh_uox</outrecipe>
-        <throughput>100</throughput>
+        <throughput>1</throughput>
       </Source>
     </config>
     <name>source</name>
@@ -52,7 +52,7 @@
         <in_commods>
           <val>packaged_spent_uox</val>
         </in_commods>
-        <max_inv_size>10000</max_inv_size>
+        <max_inv_size>1000</max_inv_size>
       </Sink>
     </config>
     <name>sink</name>
@@ -90,11 +90,11 @@
         <in_commods>
           <val>spent_uox</val>
         </in_commods>
-        <residence_time>5</residence_time>
-        <throughput>1e299</throughput>
-        <max_inv_size>1e299</max_inv_size>
+        <residence_time>1</residence_time>
+        <throughput>1</throughput>
+        <max_inv_size>20</max_inv_size>
         <out_commods>
-          <val>repackaged_spent_uox</val>
+          <val>packaged_spent_uox</val>
         </out_commods>
       </Conditioning>
     </config>
