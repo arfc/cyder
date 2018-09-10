@@ -213,7 +213,7 @@ class Conditioning
   std::list<int> entry_times;
 
   #pragma cyclus var {"tooltip":"Buffer for material still waiting for required residence_time"}
-  cyclus::toolkit::ResBuf<cyclus::Material> processing;
+  cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> processing;
 
     #pragma cyclus var {"tooltip":"Buffer for material that just got packaged and are still waiting for required residence time "}
   cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> packaged;
