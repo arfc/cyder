@@ -222,7 +222,7 @@ class Conditioning
   cyclus::toolkit::MatlBuyPolicy buy_policy;
 
   //// A policy for sending material
-  cyclus::toolkit::MatlSellPolicy sell_policy;
+  cyclus::toolkit::PackagedMatlSellPolicy sell_policy;
 
   #pragma cyclus var { \
     "default": 0.0, \
