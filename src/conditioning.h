@@ -205,7 +205,13 @@ class Conditioning
                             "If true, batches are handled as discrete quanta, neither split nor combined. "\
                             "Otherwise, batches may be divided during processing. Default to false (continuous))",\
                       "uilabel":"Batch Handling"}
-  bool discrete_handling;                    
+  bool discrete_handling;
+
+  #pragma cyclus var {"default": ,\
+                      "tooltip":"packaged material properties ",\
+                      "doc":"packaged material properties such as "\
+                      "uilabel":"properties"}
+  std::map<std::string, std::map<std::string, double>> package_properties                      
 
   #pragma cyclus var {"tooltip":"Incoming material buffer"}
   cyclus::toolkit::ResBuf<cyclus::Material> inventory;
