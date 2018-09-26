@@ -132,7 +132,7 @@ void Conditioning::Tock() {
   LOG(cyclus::LEV_INFO3, "ComCnv") << prototype() << " is tocking {";
 
   BeginProcessing_();  // place unprocessed inventory into processing
-  PackageMatl_();
+  PackageMatl_(package_size);
 
   if (ready_time() >= 0 || residence_time == 0 && !inventory.empty()) {
     ReadyMatl_(ready_time());  // place processing into ready
@@ -180,7 +180,27 @@ void Conditioning::BeginProcessing_() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::PackageMatl_() {
+void Conditioning::PackageMatl_(int pack_size) {
+  while (processing.count() > 0) {
+    
+    if (pack_size <= processing.count()) {
+      // create a new packagedmaterial
+      // push pack_size number of resource objects into matstream of package 
+      // update quantity of packagedmaterial 
+      // add packagedmaterial into packaged resbuf 
+    } else{
+      // create a newpackagedmaterial 
+      // push the rest of processing.count() into matstream of package 
+      // somehow store the uncompleted packagedmaterial somewhere for use in next time step 
+      // make a new resbuf for it to put it in ? 
+    }
+    
+  }
+
+}
+
+
+{
    while (processing.count() > 0) {
     try {
       packaged.Push(processing.Pop());
