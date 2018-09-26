@@ -224,8 +224,11 @@ class Conditioning
   #pragma cyclus var {"tooltip":"Buffer for material still waiting for required residence_time"}
   cyclus::toolkit::ResBuf<cyclus::Material> processing;
 
-    #pragma cyclus var {"tooltip":"Buffer for material that just got packaged and are still waiting for required residence time "}
+  #pragma cyclus var {"tooltip":"Buffer for material that just got packaged and are still waiting for required residence time "}
   cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> packaged;
+
+  #pragma cyclus var {"tooltip":"Buffer for packaged materials that are not filled to its max number of assemblies "}
+  cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> packaging;
 
   //// A policy for requesting material
   cyclus::toolkit::MatlBuyPolicy buy_policy;
