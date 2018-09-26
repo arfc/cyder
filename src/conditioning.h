@@ -113,7 +113,7 @@ class Conditioning
 
 /// @brief move ready resources from processing to packaged after repackaging
   /// @param *** ADD HERE ***
-  void PackageMatl_();
+  void PackageMatl_(int size_package);
 
   /// @brief move ready resources from packaged to ready at a certain time
   /// @param time the time of interest
@@ -179,6 +179,15 @@ class Conditioning
                      "range": [0.0, 1e299], \
                      "units":"kg"}
   double throughput;
+
+  #pragma cyclus var {"default": 10,\
+                     "tooltip":"no. of spent fuel bundles in each canister",\
+                     "doc":"the number of spent fuel bundles accepted in each waste canister",\
+                     "uilabel":"Package Size",\
+                     "uitype": "range", \
+                     "range": [0, 100], \
+                     "units":""}
+  int package_size;
 
   #pragma cyclus var {"default": 1e299,\
                       "tooltip":"maximum inventory size (kg)",\
