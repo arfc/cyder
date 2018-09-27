@@ -182,15 +182,33 @@ void Conditioning::BeginProcessing_() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::PackageMatl_(int pack_size,std::map<std::string, std::map<std::string, double>> package_prop) { // add package state variable, how to use fancy typedef 
   while (processing.count() > 0) {
-    // logic for when the packaging buffer is not empty 
-    if (!packaging.empty()) {
-      // find out how many more material objects it can take 
-      int spaces_left =  
-      if ()
+    double assem_quantity = (processing.Peek()->quantity())*pack_size;
+
+    if (!packaging.empty()){
+      // when packaging is not empty, pull out the matstream and add stuff then put it back into the package
+      cyclus::PackagedMaterial::package pm;
+      pm = (packaging.Pop();
+      temp_stream = pm->first; 
+      // check how many material objects in temp stream 
+      how_many = temp_stream.size()
+      double cap_pop = (processing.Peek()->quantity())*how_many; 
+      while (cap_pop<=assem_quantity){
+        cyclus::PackagedMaterial::matstream temp_stream;
+        temp_stream.Push(processing.Pop());
+        cap_pop += processing.empty() ? 0 : processing.Peek()->quantity();
+        how_many+=1
+      cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
+      pm = PackagedMaterial::Create(assem_quantity,temp_package);
+      if (how_many = pack_size){
+        packaged.Push(pm);
+      } else{
+        packaging.Push(pm);
+      }
+      } 
+
     } else{
-      if (pack_size == processing.count()) {
+        if (pack_size >= processing.count()) {
         // assumption all the assemblies have the same quantity 
-        double assem_quantity = (processing.Peek()->quantity())*pack_size;
         cyclus::PackagedMaterial::matstream temp_stream; 
         // pop a bunch of assemblies from processing to our temp stream 
         temp_stream.Push(processing.PopN(processing.count()));
@@ -201,11 +219,25 @@ void Conditioning::PackageMatl_(int pack_size,std::map<std::string, std::map<std
         // add packagedmaterial into packaged resbuf 
         packaged.Push(pm);
       } else{
-        // create a newpackagedmaterial 
-        // push the rest of processing.count() into matstream of package 
-        // somehow store the uncompleted packagedmaterial somewhere for use in next time step 
-        // make a new resbuf for it to put it in ? 
+        // if pack_size is less processing count
+        // see how much quantity in the first material object  
+        double cap_pop = processing.Peek()->quantity(); 
+        int how_many = 0; 
+        while (cap_pop<=assem_quantity){
+          cyclus::PackagedMaterial::matstream temp_stream;
+          temp_stream.Push(processing.Pop());
+          cap_pop += processing.empty() ? 0 : processing.Peek()->quantity();
+          how_many+=1
+        cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
+        pm = PackagedMaterial::Create(assem_quantity,temp_package);
+        if (how_many = pack_size){
+          packaged.Push(pm);
+        } else{
+          packaging.Push(pm);
+        }
+        } 
       }
+        
     }
     
   }
