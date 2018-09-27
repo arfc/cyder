@@ -132,7 +132,7 @@ void Conditioning::Tock() {
   LOG(cyclus::LEV_INFO3, "ComCnv") << prototype() << " is tocking {";
 
   BeginProcessing_();  // place unprocessed inventory into processing
-  PackageMatl_(package_size);
+  PackageMatl_(package_size,package_properties);
 
   if (ready_time() >= 0 || residence_time == 0 && !inventory.empty()) {
     ReadyMatl_(ready_time());  // place processing into ready
@@ -180,19 +180,32 @@ void Conditioning::BeginProcessing_() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::PackageMatl_(int pack_size) {
+void Conditioning::PackageMatl_(int pack_size,std::map<std::string, std::map<std::string, double>> package_prop) { // add package state variable, how to use fancy typedef 
   while (processing.count() > 0) {
-    
-    if (pack_size <= processing.count()) {
-      // create a new packagedmaterial
-      // push pack_size number of resource objects into matstream of package 
-      // update quantity of packagedmaterial 
-      // add packagedmaterial into packaged resbuf 
+    // logic for when the packaging buffer is not empty 
+    if (!packaging.empty()) {
+      // find out how many more material objects it can take 
+      int spaces_left =  
+      if ()
     } else{
-      // create a newpackagedmaterial 
-      // push the rest of processing.count() into matstream of package 
-      // somehow store the uncompleted packagedmaterial somewhere for use in next time step 
-      // make a new resbuf for it to put it in ? 
+      if (pack_size == processing.count()) {
+        // assumption all the assemblies have the same quantity 
+        double assem_quantity = (processing.Peek()->quantity())*pack_size;
+        cyclus::PackagedMaterial::matstream temp_stream; 
+        // pop a bunch of assemblies from processing to our temp stream 
+        temp_stream.Push(processing.PopN(processing.count()));
+        // place that temp stream into our package_prop 
+        cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
+        // create a new packagedmaterial
+        pm = PackagedMaterial::Create(assem_quantity,temp_package);
+        // add packagedmaterial into packaged resbuf 
+        packaged.Push(pm);
+      } else{
+        // create a newpackagedmaterial 
+        // push the rest of processing.count() into matstream of package 
+        // somehow store the uncompleted packagedmaterial somewhere for use in next time step 
+        // make a new resbuf for it to put it in ? 
+      }
     }
     
   }
