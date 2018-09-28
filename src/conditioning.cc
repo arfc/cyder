@@ -184,6 +184,7 @@ void Conditioning::PackageMatl_(int pack_size,std::map<std::string, std::map<std
   while (processing.count() > pack_size) {
     if (pack_size <= processing.count()) {
     // assumption all the assemblies have the same quantity 
+    // does this work when it isnt matstream from PM 
     std::vector<Material::Ptr> temp_stream; 
     // pop a bunch of assemblies from processing to our temp stream 
     temp_stream.push_back(processing.PopN(processing.count()));
