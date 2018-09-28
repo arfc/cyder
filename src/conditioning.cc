@@ -181,15 +181,16 @@ void Conditioning::BeginProcessing_() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::PackageMatl_(int pack_size,std::map<std::string, std::map<std::string, double>> package_prop) { // add package state variable, how to use fancy typedef 
-  double assem_quantity = (processing.Peek()->quantity())*pack_size;
   while (processing.count() > pack_size) {
     if (pack_size <= processing.count()) {
     // assumption all the assemblies have the same quantity 
-    cyclus::PackagedMaterial::matstream temp_stream; 
+    std::vector<Material::Ptr> temp_stream; 
     // pop a bunch of assemblies from processing to our temp stream 
     temp_stream.push_back(processing.PopN(processing.count()));
     // place that temp stream into our package_prop 
     cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
+    // somehow make sure that assem quantities are added together 
+    double assem_quantity += (processing.Peek()->quantity());
     // create a new packagedmaterial
     pm = PackagedMaterial::Create(assem_quantity,temp_package);
     // add packagedmaterial into packaged resbuf 
