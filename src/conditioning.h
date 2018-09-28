@@ -103,11 +103,6 @@ class Conditioning
   virtual void Tock();
 
  protected:
-  ///   @brief adds a material into the incoming commodity inventory
-  ///   @param mat the material to add to the incoming inventory.
-  ///   @throws if there is trouble with pushing to the inventory buffer.
-  void AddMat_(cyclus::Material::Ptr mat);
-
   /// @brief Move all unprocessed inventory to processing
   void BeginProcessing_();
 

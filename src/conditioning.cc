@@ -144,24 +144,6 @@ void Conditioning::Tock() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::AddMat_(cyclus::Material::Ptr mat) {
-  LOG(cyclus::LEV_INFO5, "ComCnv") << prototype() << " is initially holding "
-                                   << inventory.quantity() << " total.";
-
-  try {
-    inventory.Push(mat);
-  } catch (cyclus::Error& e) {
-    e.msg(Agent::InformErrorMsg(e.msg()));
-    throw e;
-  }
-
-  LOG(cyclus::LEV_INFO5, "ComCnv")
-      << prototype() << " added " << mat->quantity()
-      << " of material to its inventory, which is holding "
-      << inventory.quantity() << " total.";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::BeginProcessing_() {
   while (inventory.count() > 0) {
     try {
