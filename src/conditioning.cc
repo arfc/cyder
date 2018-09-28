@@ -183,36 +183,24 @@ void Conditioning::BeginProcessing_() {
 void Conditioning::PackageMatl_(int pack_size,std::map<std::string, std::map<std::string, double>> package_prop) { // add package state variable, how to use fancy typedef 
   while (processing.count() > pack_size) {
     if (pack_size <= processing.count()) {
-    // assumption all the assemblies have the same quantity 
-    std::vector<Material::Ptr> temp_stream; 
-    // pop a bunch of assemblies from processing to our temp stream 
-    temp_stream.push_back(processing.PopN(processing.count()));
+      // try a for loop 
+      cyclus::PackagedMaterial::matstream temp_stream;
+      double assem_quantity = 0; 
+      for (int a = 1; a = pack_size; a = a + 1) {
+        // pop a bunch of assemblies from processing to our temp stream 
+        temp_stream.push_back(processing.Pop());
+        assem_quantity += (processing.Peek()->quantity());
+      }
     // place that temp stream into our package_prop 
     cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
     // somehow make sure that assem quantities are added together 
-    double assem_quantity += (processing.Peek()->quantity());
+
     // create a new packagedmaterial
-    pm = PackagedMaterial::Create(assem_quantity,temp_package);
+    cyclus::PackagedMaterial::Ptr pm; 
+    pm = cyclus::PackagedMaterial::Create(this, assem_quantity,temp_package);
     // add packagedmaterial into packaged resbuf 
     packaged.Push(pm);
   } 
-  }
-}
-
-
-{
-   while (processing.count() > 0) {
-    try {
-      packaged.Push(processing.Pop());
-      std::cout << "packaged" << std::endl;
-
-      LOG(cyclus::LEV_DEBUG2, "ComCnv")
-          << "Conditioning " << prototype()
-          << " added resources to packaged at t= " << context()->time();
-    } catch (cyclus::Error& e) {
-      e.msg(Agent::InformErrorMsg(e.msg()));
-      throw e;
-    }
   }
 }
 
