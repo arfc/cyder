@@ -187,7 +187,7 @@ void Conditioning::PackageMatl_(int pack_size,std::map<std::string, std::map<std
     // assumption all the assemblies have the same quantity 
     cyclus::PackagedMaterial::matstream temp_stream; 
     // pop a bunch of assemblies from processing to our temp stream 
-    temp_stream.Push(processing.PopN(processing.count()));
+    temp_stream.push_back(processing.PopN(processing.count()));
     // place that temp stream into our package_prop 
     cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
     // create a new packagedmaterial
