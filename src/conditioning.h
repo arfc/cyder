@@ -167,12 +167,12 @@ class Conditioning
   int residence_time;
 
   #pragma cyclus var {"default": 1e299,\
-                     "tooltip":"throughput per timestep (kg)",\
-                     "doc":"the max amount that can be moved through the facility per timestep (kg)",\
+                     "tooltip":"throughput per timestep",\
+                     "doc":"the max number of waste canisters that can be moved through the facility per timestep",\
                      "uilabel":"Throughput",\
                      "uitype": "range", \
                      "range": [0.0, 1e299], \
-                     "units":"kg"}
+                     "units":""}
   double throughput;
 
   #pragma cyclus var {"default": 10,\
@@ -195,6 +195,7 @@ class Conditioning
 
   #pragma cyclus var {\
                       "alias": ["packageproperties","layer",["properties","property","value"]],\
+                      "uitype":["oneormore","string",["oneormore","string","double"]],\
                       "tooltip":"packaged material properties ",\
                       "doc":"packaged material properties such as ",\
                       "uilabel":"properties"}
