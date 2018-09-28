@@ -215,7 +215,6 @@ void Conditioning::ProcessMat_(double cap) {
         cap_pop = cap_pop+1;
       }
 
-
       LOG(cyclus::LEV_INFO1, "ComCnv") << "Conditioning " << prototype()
                                        << " moved resources"
                                        << " from ready to stocks"
