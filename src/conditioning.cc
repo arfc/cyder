@@ -203,29 +203,18 @@ void Conditioning::ReadyMatl_(int time) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::ProcessMat_(double cap) {
-  using cyclus::Material;
-  using cyclus::ResCast;
-  using cyclus::toolkit::ResBuf;
-  using cyclus::toolkit::Manifest;
+// move ready to stocks based on throughput 
 
   if (!ready.empty()) {
     try {
-      double max_pop = std::min(cap, ready.quantity());
-
-      if (discrete_handling) {
-        if (max_pop == ready.quantity()) {
-          stocks.Push(ready.PopN(ready.count()));
-        } else {
-          double cap_pop = ready.Peek()->quantity();
-          while (cap_pop <= max_pop && !ready.empty()) {
-            stocks.Push(ready.Pop());
-            cap_pop += ready.empty() ? 0 : ready.Peek()->quantity();
-          }
-        }
-      } else {
-        stocks.Push(ready.Pop(max_pop, cyclus::eps_rsrc()));
-        std::cout << "processedmat" << std::endl;
+      double count_num = ready.count(); 
+      double max_pop = std::min(cap, count_num);
+      int cap_pop = 0; 
+      while (cap_pop < max_pop){
+        stocks.Push(ready.Pop());
+        cap_pop = cap_pop+1;
       }
+
 
       LOG(cyclus::LEV_INFO1, "ComCnv") << "Conditioning " << prototype()
                                        << " moved resources"
