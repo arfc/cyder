@@ -198,16 +198,8 @@ class Conditioning
                       "units":"kg"}
   double max_inv_size; 
 
-  #pragma cyclus var {"default": False,\
-                      "tooltip":"Bool to determine how Conditioning handles batches",\
-                      "doc":"Determines if Conditioning will divide resource objects. Only controls material "\
-                            "handling within this facility, has no effect on DRE material handling. "\
-                            "If true, batches are handled as discrete quanta, neither split nor combined. "\
-                            "Otherwise, batches may be divided during processing. Default to false (continuous))",\
-                      "uilabel":"Batch Handling"}
-  bool discrete_handling;
-
   #pragma cyclus var {\
+                      "alias": ["packageproperties","layer",["properties","property","value"]],\
                       "tooltip":"packaged material properties ",\
                       "doc":"packaged material properties such as ",\
                       "uilabel":"properties"}
