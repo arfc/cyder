@@ -91,11 +91,22 @@
           <val>spent_uox</val>
         </in_commods>
         <residence_time>1</residence_time>
-        <throughput>1</throughput>
+        <throughput>10</throughput>
         <max_inv_size>20</max_inv_size>
+        <package_size>2</package_size>
         <out_commods>
           <val>packaged_spent_uox</val>
         </out_commods>
+        <packageproperties>
+          <item>
+          <layer>basic</layer>
+          <properties>
+            <item>
+              <property>radius</property><value>10</value>
+            </item>
+          </properties>
+          </item>
+        </packageproperties>
       </Conditioning>
     </config>
     <name>conditioning_fac</name>

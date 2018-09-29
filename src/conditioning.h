@@ -103,17 +103,12 @@ class Conditioning
   virtual void Tock();
 
  protected:
-  ///   @brief adds a material into the incoming commodity inventory
-  ///   @param mat the material to add to the incoming inventory.
-  ///   @throws if there is trouble with pushing to the inventory buffer.
-  void AddMat_(cyclus::Material::Ptr mat);
-
   /// @brief Move all unprocessed inventory to processing
   void BeginProcessing_();
 
 /// @brief move ready resources from processing to packaged after repackaging
   /// @param *** ADD HERE ***
-  void PackageMatl_();
+  void PackageMatl_(int size_package,std::map<std::string, std::map<std::string, int>> package_properties);
 
   /// @brief move ready resources from packaged to ready at a certain time
   /// @param time the time of interest
@@ -172,13 +167,22 @@ class Conditioning
   int residence_time;
 
   #pragma cyclus var {"default": 1e299,\
-                     "tooltip":"throughput per timestep (kg)",\
-                     "doc":"the max amount that can be moved through the facility per timestep (kg)",\
+                     "tooltip":"throughput per timestep",\
+                     "doc":"the max number of waste canisters that can be moved through the facility per timestep",\
                      "uilabel":"Throughput",\
                      "uitype": "range", \
                      "range": [0.0, 1e299], \
-                     "units":"kg"}
+                     "units":""}
   double throughput;
+
+  #pragma cyclus var {"default": 10,\
+                     "tooltip":"no. of spent fuel bundles in each canister",\
+                     "doc":"the number of spent fuel bundles accepted in each waste canister",\
+                     "uilabel":"Package Size",\
+                     "uitype": "range", \
+                     "range": [0, 100], \
+                     "units":""}
+  int package_size;
 
   #pragma cyclus var {"default": 1e299,\
                       "tooltip":"maximum inventory size (kg)",\
@@ -189,23 +193,22 @@ class Conditioning
                       "units":"kg"}
   double max_inv_size; 
 
-  #pragma cyclus var {"default": False,\
-                      "tooltip":"Bool to determine how Conditioning handles batches",\
-                      "doc":"Determines if Conditioning will divide resource objects. Only controls material "\
-                            "handling within this facility, has no effect on DRE material handling. "\
-                            "If true, batches are handled as discrete quanta, neither split nor combined. "\
-                            "Otherwise, batches may be divided during processing. Default to false (continuous))",\
-                      "uilabel":"Batch Handling"}
-  bool discrete_handling;                    
+  #pragma cyclus var {\
+                      "alias": ["packageproperties","layer",["properties","property","value"]],\
+                      "uitype":["oneormore","string",["oneormore","string","double"]],\
+                      "tooltip":"packaged material properties ",\
+                      "doc":"packaged material properties such as ",\
+                      "uilabel":"properties"}
+  std::map<std::string, std::map<std::string, int>> package_properties;                    
 
   #pragma cyclus var {"tooltip":"Incoming material buffer"}
   cyclus::toolkit::ResBuf<cyclus::Material> inventory;
 
   #pragma cyclus var {"tooltip":"Output material buffer"}
-  cyclus::toolkit::ResBuf<cyclus::Material> stocks;
+  cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> stocks;
 
   #pragma cyclus var {"tooltip":"Buffer for material held for required residence_time"}
-  cyclus::toolkit::ResBuf<cyclus::Material> ready;
+  cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> ready;
 
   //// list of input times for materials entering the processing buffer
   #pragma cyclus var{"default": [],\
@@ -215,14 +218,14 @@ class Conditioning
   #pragma cyclus var {"tooltip":"Buffer for material still waiting for required residence_time"}
   cyclus::toolkit::ResBuf<cyclus::Material> processing;
 
-    #pragma cyclus var {"tooltip":"Buffer for material that just got packaged and are still waiting for required residence time "}
-  cyclus::toolkit::ResBuf<cyclus::Material> packaged;
+  #pragma cyclus var {"tooltip":"Buffer for material that just got packaged and are still waiting for required residence time "}
+  cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> packaged;
 
   //// A policy for requesting material
   cyclus::toolkit::MatlBuyPolicy buy_policy;
 
   //// A policy for sending material
-  cyclus::toolkit::MatlSellPolicy sell_policy;
+  cyclus::toolkit::PackagedMatlSellPolicy sell_policy;
 
   #pragma cyclus var { \
     "default": 0.0, \

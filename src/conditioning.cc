@@ -132,7 +132,7 @@ void Conditioning::Tock() {
   LOG(cyclus::LEV_INFO3, "ComCnv") << prototype() << " is tocking {";
 
   BeginProcessing_();  // place unprocessed inventory into processing
-  PackageMatl_();
+  PackageMatl_(package_size,package_properties);
 
   if (ready_time() >= 0 || residence_time == 0 && !inventory.empty()) {
     ReadyMatl_(ready_time());  // place processing into ready
@@ -144,30 +144,12 @@ void Conditioning::Tock() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::AddMat_(cyclus::Material::Ptr mat) {
-  LOG(cyclus::LEV_INFO5, "ComCnv") << prototype() << " is initially holding "
-                                   << inventory.quantity() << " total.";
-
-  try {
-    inventory.Push(mat);
-  } catch (cyclus::Error& e) {
-    e.msg(Agent::InformErrorMsg(e.msg()));
-    throw e;
-  }
-
-  LOG(cyclus::LEV_INFO5, "ComCnv")
-      << prototype() << " added " << mat->quantity()
-      << " of material to its inventory, which is holding "
-      << inventory.quantity() << " total.";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::BeginProcessing_() {
   while (inventory.count() > 0) {
     try {
       processing.Push(inventory.Pop());
       entry_times.push_back(context()->time());
-      std::cout << "processed" << std::endl;
+      std::cout << "began processing" << std::endl;
 
       LOG(cyclus::LEV_DEBUG2, "ComCnv")
           << "Conditioning " << prototype()
@@ -179,21 +161,32 @@ void Conditioning::BeginProcessing_() {
   }
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::PackageMatl_() {
-   while (processing.count() > 0) {
-    try {
-      packaged.Push(processing.Pop());
-      std::cout << "packaged" << std::endl;
+typedef std::map<std::string, std::map<std::string, int>> package_;
 
-      LOG(cyclus::LEV_DEBUG2, "ComCnv")
-          << "Conditioning " << prototype()
-          << " added resources to packaged at t= " << context()->time();
-    } catch (cyclus::Error& e) {
-      e.msg(Agent::InformErrorMsg(e.msg()));
-      throw e;
-    }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add package state variable, how to use fancy typedef 
+  while (processing.count() > pack_size) {
+    if (pack_size <= processing.count()) {
+      // try a for loop 
+      cyclus::PackagedMaterial::matstream temp_stream;
+      double assem_quantity = 0; 
+      for (int a = 1; a = pack_size; a = a + 1) {
+        // pop a bunch of assemblies from processing to our temp stream 
+        temp_stream.push_back(processing.Pop());
+        assem_quantity += (processing.Peek()->quantity());
+      }
+    // place that temp stream into our package_prop 
+    cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
+    // somehow make sure that assem quantities are added together 
+
+    // create a new packagedmaterial
+    cyclus::PackagedMaterial::Ptr pm; 
+    pm = cyclus::PackagedMaterial::Create(this, assem_quantity,temp_package);
+    // add packagedmaterial into packaged resbuf 
+    packaged.Push(pm);
+  } 
   }
+  std::cout << "packaged" << std::endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -213,28 +206,16 @@ void Conditioning::ReadyMatl_(int time) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::ProcessMat_(double cap) {
-  using cyclus::Material;
-  using cyclus::ResCast;
-  using cyclus::toolkit::ResBuf;
-  using cyclus::toolkit::Manifest;
+// move ready to stocks based on throughput 
 
   if (!ready.empty()) {
     try {
-      double max_pop = std::min(cap, ready.quantity());
-
-      if (discrete_handling) {
-        if (max_pop == ready.quantity()) {
-          stocks.Push(ready.PopN(ready.count()));
-        } else {
-          double cap_pop = ready.Peek()->quantity();
-          while (cap_pop <= max_pop && !ready.empty()) {
-            stocks.Push(ready.Pop());
-            cap_pop += ready.empty() ? 0 : ready.Peek()->quantity();
-          }
-        }
-      } else {
-        stocks.Push(ready.Pop(max_pop, cyclus::eps_rsrc()));
-        std::cout << "processedmat" << std::endl;
+      double count_num = ready.count(); 
+      double max_pop = std::min(cap, count_num);
+      int cap_pop = 0; 
+      while (cap_pop < max_pop){
+        stocks.Push(ready.Pop());
+        cap_pop = cap_pop+1;
       }
 
       LOG(cyclus::LEV_INFO1, "ComCnv") << "Conditioning " << prototype()
@@ -246,6 +227,8 @@ void Conditioning::ProcessMat_(double cap) {
       throw e;
     }
   }
+  std::cout << "processed" << std::endl;
+
 }
 
 
