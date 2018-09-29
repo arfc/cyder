@@ -5,7 +5,7 @@ CONFIGURE_FILE(cyder_version.h.in "${CMAKE_CURRENT_SOURCE_DIR}/cyder_version.h" 
 
 SET(CYCLUS_CUSTOM_HEADERS "cyder_version.h")
 
-USE_CYCLUS("cyder" "packaged_material")
+USE_CYCLUS("cyder" "conditioning")
 
 INSTALL_CYCLUS_MODULE("cyder" "" "NONE")
 
