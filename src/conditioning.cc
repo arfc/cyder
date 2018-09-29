@@ -161,8 +161,10 @@ void Conditioning::BeginProcessing_() {
   }
 }
 
+typedef std::map<std::string, std::map<std::string, double>> package_;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::PackageMatl_(int pack_size,std::map<std::string, std::map<std::string, double>> package_prop) { // add package state variable, how to use fancy typedef 
+void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add package state variable, how to use fancy typedef 
   while (processing.count() > pack_size) {
     if (pack_size <= processing.count()) {
       // try a for loop 
