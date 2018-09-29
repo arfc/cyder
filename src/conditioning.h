@@ -108,7 +108,7 @@ class Conditioning
 
 /// @brief move ready resources from processing to packaged after repackaging
   /// @param *** ADD HERE ***
-  void PackageMatl_(int size_package,std::map<std::string, std::map<std::string, double>> package_properties);
+  void PackageMatl_(int size_package,std::map<std::string, std::map<std::string, int>> package_properties);
 
   /// @brief move ready resources from packaged to ready at a certain time
   /// @param time the time of interest
@@ -199,7 +199,7 @@ class Conditioning
                       "tooltip":"packaged material properties ",\
                       "doc":"packaged material properties such as ",\
                       "uilabel":"properties"}
-  std::map<std::string, std::map<std::string, double>> package_properties;                    
+  std::map<std::string, std::map<std::string, int>> package_properties;                    
 
   #pragma cyclus var {"tooltip":"Incoming material buffer"}
   cyclus::toolkit::ResBuf<cyclus::Material> inventory;
