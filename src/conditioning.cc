@@ -149,7 +149,7 @@ void Conditioning::BeginProcessing_() {
     try {
       processing.Push(inventory.Pop());
       entry_times.push_back(context()->time());
-      std::cout << "processed" << std::endl;
+      std::cout << "began processing" << std::endl;
 
       LOG(cyclus::LEV_DEBUG2, "ComCnv")
           << "Conditioning " << prototype()
@@ -186,6 +186,7 @@ void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add p
     packaged.Push(pm);
   } 
   }
+  std::cout << "packaged" << std::endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,6 +227,8 @@ void Conditioning::ProcessMat_(double cap) {
       throw e;
     }
   }
+  std::cout << "processed" << std::endl;
+
 }
 
 
