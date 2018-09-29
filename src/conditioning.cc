@@ -174,6 +174,12 @@ void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add p
         // pop a bunch of assemblies from processing to our temp stream 
         temp_stream.push_back(processing.Pop());
         assem_quantity += (processing.Peek()->quantity());
+	// pop all entry times except the youngest material object 
+	if (a = pack_size) {
+	  pm_entry_times.push_back(entry_times.pop_front());
+	} else {
+	entry_times.pop_front();
+	}
       }
     // place that temp stream into our package_prop 
     cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
@@ -195,8 +201,8 @@ void Conditioning::ReadyMatl_(int time) {
 
   int to_ready = 0;
 
-  while (!entry_times.empty() && entry_times.front() <= time) {
-    entry_times.pop_front();
+  while (!pm_entry_times.empty() && pm_entry_times.front() <= time) {
+    pm_entry_times.pop_front();
     ++to_ready;
   }
 
