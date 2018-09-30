@@ -215,6 +215,11 @@ class Conditioning
                       "internal": True}
   std::list<int> entry_times;
 
+  //// list of input times for youngest material in a packagedmaterial
+  #pragma cyclus var{"default": [],\
+                      "internal": True}
+  std::list<int> pm_entry_times;
+
   #pragma cyclus var {"tooltip":"Buffer for material still waiting for required residence_time"}
   cyclus::toolkit::ResBuf<cyclus::Material> processing;
 

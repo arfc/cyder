@@ -130,7 +130,6 @@ void Conditioning::Tick() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::Tock() {
   LOG(cyclus::LEV_INFO3, "ComCnv") << prototype() << " is tocking {";
-
   BeginProcessing_();  // place unprocessed inventory into processing
   PackageMatl_(package_size,package_properties);
 
@@ -139,7 +138,7 @@ void Conditioning::Tock() {
   }
 
   ProcessMat_(throughput);  // place ready into stocks
-
+  std::cout << "tocked" << std::endl;
   LOG(cyclus::LEV_INFO3, "ComCnv") << "}";
 }
 
@@ -166,14 +165,17 @@ typedef std::map<std::string, std::map<std::string, int>> package_;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add package state variable, how to use fancy typedef 
   while (processing.count() > pack_size) {
-    if (pack_size <= processing.count()) {
       // try a for loop 
-      cyclus::PackagedMaterial::matstream temp_stream;
-      double assem_quantity = 0; 
-      for (int a = 1; a = pack_size; a = a + 1) {
-        // pop a bunch of assemblies from processing to our temp stream 
-        temp_stream.push_back(processing.Pop());
-        assem_quantity += (processing.Peek()->quantity());
+    cyclus::PackagedMaterial::matstream temp_stream;
+    double assem_quantity = 0; 
+    for (int a = 1; a <= pack_size; a = a + 1) {
+      // pop a bunch of assemblies from processing to our temp stream
+      assem_quantity += (processing.Peek()->quantity()); 
+      temp_stream.push_back(processing.Pop());
+	// pop all entry times except the youngest material object 
+	if (a = pack_size) {
+	  pm_entry_times.push_back(context()->time());
+	} 
       }
     // place that temp stream into our package_prop 
     cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
@@ -184,7 +186,7 @@ void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add p
     pm = cyclus::PackagedMaterial::Create(this, assem_quantity,temp_package);
     // add packagedmaterial into packaged resbuf 
     packaged.Push(pm);
-  } 
+
   }
   std::cout << "packaged" << std::endl;
 }
@@ -195,8 +197,8 @@ void Conditioning::ReadyMatl_(int time) {
 
   int to_ready = 0;
 
-  while (!entry_times.empty() && entry_times.front() <= time) {
-    entry_times.pop_front();
+  while (!pm_entry_times.empty() && pm_entry_times.front() <= time) {
+    pm_entry_times.pop_front();
     ++to_ready;
   }
 
