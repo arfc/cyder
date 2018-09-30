@@ -166,14 +166,13 @@ typedef std::map<std::string, std::map<std::string, int>> package_;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add package state variable, how to use fancy typedef 
   while (processing.count() >= pack_size) {
-    if (pack_size <= processing.count()) {
       // try a for loop 
-      cyclus::PackagedMaterial::matstream temp_stream;
-      double assem_quantity = 0; 
-      for (int a = 1; a = pack_size; a = a + 1) {
-        // pop a bunch of assemblies from processing to our temp stream 
-        temp_stream.push_back(processing.Pop());
-        assem_quantity += (processing.Peek()->quantity());
+    cyclus::PackagedMaterial::matstream temp_stream;
+    double assem_quantity = 0; 
+    for (int a = 1; a = pack_size; a = a + 1) {
+      // pop a bunch of assemblies from processing to our temp stream 
+      temp_stream.push_back(processing.Pop());
+      assem_quantity += (processing.Peek()->quantity());
 	// pop all entry times except the youngest material object 
 	if (a = pack_size) {
 	  pm_entry_times.push_back(context()->time());
@@ -188,7 +187,7 @@ void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add p
     pm = cyclus::PackagedMaterial::Create(this, assem_quantity,temp_package);
     // add packagedmaterial into packaged resbuf 
     packaged.Push(pm);
-  } 
+
   }
   std::cout << "packaged" << std::endl;
 }
