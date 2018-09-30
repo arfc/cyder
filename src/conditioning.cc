@@ -130,8 +130,6 @@ void Conditioning::Tick() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::Tock() {
   LOG(cyclus::LEV_INFO3, "ComCnv") << prototype() << " is tocking {";
-  std::cout <<  "time" << std::endl;
-  std::cout <<  context()->time() << std::endl;
   BeginProcessing_();  // place unprocessed inventory into processing
   PackageMatl_(package_size,package_properties);
 
@@ -166,17 +164,11 @@ typedef std::map<std::string, std::map<std::string, int>> package_;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add package state variable, how to use fancy typedef 
-  std::cout <<  "processing.count()" << std::endl;
-  std::cout <<  processing.count() << std::endl;
-  std::cout <<  "pack size" << std::endl;
-  std::cout <<  pack_size << std::endl;
   while (processing.count() > pack_size) {
       // try a for loop 
     cyclus::PackagedMaterial::matstream temp_stream;
     double assem_quantity = 0; 
     for (int a = 1; a <= pack_size; a = a + 1) {
-      std::cout <<  "a" << std::endl;
-      std::cout <<  a  << std::endl;
       // pop a bunch of assemblies from processing to our temp stream
       assem_quantity += (processing.Peek()->quantity()); 
       temp_stream.push_back(processing.Pop());
