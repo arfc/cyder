@@ -9,6 +9,7 @@ suffix.h
 rs.cred
 *.h5
 *.dat
+*.sh
 tests/run_inputs.py
 cyclus.sqlite
 recyle_version.h
