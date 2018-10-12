@@ -164,6 +164,7 @@ typedef std::map<std::string, std::map<std::string, int>> package_;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add package state variable, how to use fancy typedef 
+  std::cout << processing.count() << std::endl;
   while (processing.count() > pack_size) {
       // try a for loop 
     cyclus::PackagedMaterial::matstream temp_stream;
@@ -186,7 +187,7 @@ void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add p
     pm = cyclus::PackagedMaterial::Create(this, assem_quantity,temp_package);
     // add packagedmaterial into packaged resbuf 
     packaged.Push(pm);
-
+  std::cout << processing.count() << std::endl;
   }
   std::cout << "packaged" << std::endl;
 }
