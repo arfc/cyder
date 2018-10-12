@@ -102,10 +102,10 @@
           <layer>basic</layer>
           <properties>
             <item>
-              <property>radius</property><value>10</value>
+              <property>radius</property><value>10.1</value>
             </item>
             <item>
-              <property>tcond</property><value>20</value>
+              <property>tcond</property><value>20.1</value>
             </item>
           </properties>
           </item>
@@ -113,10 +113,10 @@
           <layer>layer1</layer>
           <properties>
             <item>
-              <property>radius</property><value>100</value>
+              <property>radius</property><value>100.1</value>
             </item>
             <item>
-              <property>tcond</property><value>200</value>
+              <property>tcond</property><value>200.1</value>
             </item>
           </properties>
           </item>
