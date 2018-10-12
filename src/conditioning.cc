@@ -166,13 +166,14 @@ typedef std::map<std::string, std::map<std::string, int>> package_;
 void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { 
   std::cout << processing.count() << std::endl;
   if (processing.count() > pack_size) {
-    while (temp_stream.count() < pack_size) { 
-      cyclus::PackagedMaterial::matstream temp_stream;
+    cyclus::PackagedMaterial::matstream temp_stream;
+    while (temp_stream.size() < pack_size) { 
       double assem_quantity = 0; 
       for (int a = 1; a <= pack_size; a = a + 1) {
         // pop a bunch of assemblies from processing to our temp stream
         assem_quantity += (processing.Peek()->quantity()); 
         temp_stream.push_back(processing.Pop());
+        std::cout << "pop" << std::endl;
     // pop all entry times except the youngest material object 
     if (a = pack_size) {
       pm_entry_times.push_back(context()->time());
