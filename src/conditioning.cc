@@ -174,10 +174,10 @@ void Conditioning::PackageMatl_(int pack_size, package_ package_prop) {
       temp_stream.push_back(processing.Pop());
       std::cout << "pop" << std::endl;
   // pop all entry times except the youngest material object 
-  if (a = pack_size) {
-    pm_entry_times.push_back(context()->time());
-  } 
-      }
+      if (a = pack_size) {
+      pm_entry_times.push_back(context()->time());
+      } 
+    }
     // place that temp stream into our package_prop 
     cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
     // somehow make sure that assem quantities are added together 
