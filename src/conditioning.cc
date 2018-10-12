@@ -168,7 +168,7 @@ void Conditioning::PackageMatl_(int pack_size, package_ package_prop) {
   if (processing.count() > pack_size) {
     cyclus::PackagedMaterial::matstream temp_stream;
     double assem_quantity = 0; 
-    for (int a = 1; a <= pack_size; a = a + 1) {
+    for (int a = 0; a < pack_size; a = a + 1) {
       std::cout << pack_size << std::endl;
       // pop a bunch of assemblies from processing to our temp stream
       assem_quantity += (processing.Peek()->quantity()); 
