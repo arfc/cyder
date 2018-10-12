@@ -90,10 +90,10 @@
         <in_commods>
           <val>spent_uox</val>
         </in_commods>
-        <residence_time>1</residence_time>
+        <residence_time>3</residence_time>
         <throughput>10</throughput>
         <max_inv_size>20</max_inv_size>
-        <package_size>2</package_size>
+        <package_size>5</package_size>
         <out_commods>
           <val>packaged_spent_uox</val>
         </out_commods>
@@ -103,6 +103,20 @@
           <properties>
             <item>
               <property>radius</property><value>10</value>
+            </item>
+            <item>
+              <property>tcond</property><value>20</value>
+            </item>
+          </properties>
+          </item>
+          <item>
+          <layer>layer1</layer>
+          <properties>
+            <item>
+              <property>radius</property><value>100</value>
+            </item>
+            <item>
+              <property>tcond</property><value>200</value>
             </item>
           </properties>
           </item>
