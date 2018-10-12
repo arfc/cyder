@@ -163,10 +163,9 @@ void Conditioning::BeginProcessing_() {
 typedef std::map<std::string, std::map<std::string, int>> package_;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { // add package state variable, how to use fancy typedef 
+void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { 
   std::cout << processing.count() << std::endl;
   while (processing.count() > pack_size) {
-      // try a for loop 
     cyclus::PackagedMaterial::matstream temp_stream;
     double assem_quantity = 0; 
     for (int a = 1; a <= pack_size; a = a + 1) {
