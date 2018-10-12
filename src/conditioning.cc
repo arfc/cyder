@@ -165,28 +165,30 @@ typedef std::map<std::string, std::map<std::string, int>> package_;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { 
   std::cout << processing.count() << std::endl;
-  while (processing.count() > pack_size) {
-    cyclus::PackagedMaterial::matstream temp_stream;
-    double assem_quantity = 0; 
-    for (int a = 1; a <= pack_size; a = a + 1) {
-      // pop a bunch of assemblies from processing to our temp stream
-      assem_quantity += (processing.Peek()->quantity()); 
-      temp_stream.push_back(processing.Pop());
-	// pop all entry times except the youngest material object 
-	if (a = pack_size) {
-	  pm_entry_times.push_back(context()->time());
-	} 
-      }
-    // place that temp stream into our package_prop 
-    cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
-    // somehow make sure that assem quantities are added together 
+  if (processing.count() > pack_size) {
+    while (temp_stream.count() < pack_size) { 
+      cyclus::PackagedMaterial::matstream temp_stream;
+      double assem_quantity = 0; 
+      for (int a = 1; a <= pack_size; a = a + 1) {
+        // pop a bunch of assemblies from processing to our temp stream
+        assem_quantity += (processing.Peek()->quantity()); 
+        temp_stream.push_back(processing.Pop());
+    // pop all entry times except the youngest material object 
+    if (a = pack_size) {
+      pm_entry_times.push_back(context()->time());
+    } 
+        }
+      // place that temp stream into our package_prop 
+      cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
+      // somehow make sure that assem quantities are added together 
 
-    // create a new packagedmaterial
-    cyclus::PackagedMaterial::Ptr pm; 
-    pm = cyclus::PackagedMaterial::Create(this, assem_quantity,temp_package);
-    // add packagedmaterial into packaged resbuf 
-    packaged.Push(pm);
-  std::cout << processing.count() << std::endl;
+      // create a new packagedmaterial
+      cyclus::PackagedMaterial::Ptr pm; 
+      pm = cyclus::PackagedMaterial::Create(this, assem_quantity,temp_package);
+      // add packagedmaterial into packaged resbuf 
+      packaged.Push(pm);
+    std::cout << processing.count() << std::endl;
+    }
   }
   std::cout << "packaged" << std::endl;
 }
