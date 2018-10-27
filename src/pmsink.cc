@@ -212,6 +212,8 @@ void PmSink::Tick() {
   using std::vector;
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is ticking {";
 
+  std::cout << "pm sink tick" << std::endl;
+
   double requestAmt = RequestAmt();
   // inform the simulation about what the sink facility will be requesting
   if (requestAmt > cyclus::eps()) {
@@ -231,6 +233,8 @@ void PmSink::Tick() {
 void PmSink::Tock() {
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is tocking {";
 
+  std::cout << "pm sink tock" << std::endl;
+  
   // On the tock, the sink facility doesn't really do much.
   // Maybe someday it will record things.
   // For now, lets just print out what we have at each timestep.
