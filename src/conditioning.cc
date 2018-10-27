@@ -76,6 +76,7 @@ void Conditioning::EnterNotify() {
   buy_policy.Start();
 
   if (out_commods.size() == 1) {
+    std::cout << "conditioning fac is selling!" << std::endl;
     sell_policy.Init(this, &stocks, std::string("stocks"))
         .Set(out_commods.front())
         .Start();
