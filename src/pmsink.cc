@@ -197,6 +197,7 @@ void PmSink::AcceptGenRsrcTrades(
 */
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void PmSink::AcceptPackagedMatlTrades(
+    std::cout << "packaged material trades" << std::endl;
     const std::vector< std::pair<cyclus::Trade<cyclus::PackagedMaterial>,
                                  cyclus::PackagedMaterial::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::PackagedMaterial>,
