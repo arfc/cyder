@@ -4,12 +4,12 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "sink.h"
+#include "pmsink.h"
 
-namespace cycamore {
+namespace cyder {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Sink::Sink(cyclus::Context* ctx)
+PmSink::PmSink(cyclus::Context* ctx)
     : cyclus::Facility(ctx),
       capacity(std::numeric_limits<double>::max()),
       latitude(0.0),
@@ -18,28 +18,28 @@ Sink::Sink(cyclus::Context* ctx)
   SetMaxInventorySize(std::numeric_limits<double>::max());}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Sink::~Sink() {}
+PmSink::~PmSink() {}
 
-#pragma cyclus def schema cycamore::Sink
+#pragma cyclus def schema cyder::PmSink
 
-#pragma cyclus def annotations cycamore::Sink
+#pragma cyclus def annotations cyder::PmSink
 
-#pragma cyclus def infiletodb cycamore::Sink
+#pragma cyclus def infiletodb cyder::PmSink
 
-#pragma cyclus def snapshot cycamore::Sink
+#pragma cyclus def snapshot cyder::PmSink
 
-#pragma cyclus def snapshotinv cycamore::Sink
+#pragma cyclus def snapshotinv cyder::PmSink
 
-#pragma cyclus def initinv cycamore::Sink
+#pragma cyclus def initinv cyder::PmSink
 
-#pragma cyclus def clone cycamore::Sink
+#pragma cyclus def clone cyder::PmSink
 
-#pragma cyclus def initfromdb cycamore::Sink
+#pragma cyclus def initfromdb cyder::PmSink
 
-#pragma cyclus def initfromcopy cycamore::Sink
+#pragma cyclus def initfromcopy cyder::PmSink
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::EnterNotify() {
+void PmSink::EnterNotify() {
   cyclus::Facility::EnterNotify();
 
   if (in_commod_prefs.size() == 0) {
@@ -56,7 +56,7 @@ void Sink::EnterNotify() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-std::string Sink::str() {
+std::string PmSink::str() {
   using std::string;
   using std::vector;
   std::stringstream ss;
@@ -77,7 +77,7 @@ std::string Sink::str() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
-Sink::GetMatlRequests() {
+PmSink::GetMatlRequests() {
   using cyclus::Material;
   using cyclus::RequestPortfolio;
   using cyclus::Request;
@@ -109,7 +109,7 @@ Sink::GetMatlRequests() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
-Sink::GetGenRsrcRequests() {
+PmSink::GetGenRsrcRequests() {
   using cyclus::CapacityConstraint;
   using cyclus::Product;
   using cyclus::RequestPortfolio;
@@ -137,7 +137,7 @@ Sink::GetGenRsrcRequests() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::AcceptMatlTrades(
+void PmSink::AcceptMatlTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
                                  cyclus::Material::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::Material>,
@@ -148,7 +148,7 @@ void Sink::AcceptMatlTrades(
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::AcceptGenRsrcTrades(
+void PmSink::AcceptGenRsrcTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
                                  cyclus::Product::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::Product>,
@@ -159,7 +159,7 @@ void Sink::AcceptGenRsrcTrades(
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::Tick() {
+void PmSink::Tick() {
   using std::string;
   using std::vector;
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is ticking {";
@@ -180,20 +180,20 @@ void Sink::Tick() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::Tock() {
+void PmSink::Tock() {
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is tocking {";
 
   // On the tock, the sink facility doesn't really do much.
   // Maybe someday it will record things.
   // For now, lets just print out what we have at each timestep.
-  LOG(cyclus::LEV_INFO4, "SnkFac") << "Sink " << this->id()
+  LOG(cyclus::LEV_INFO4, "SnkFac") << "PmSink " << this->id()
                                    << " is holding " << inventory.quantity()
                                    << " units of material at the close of month "
                                    << context()->time() << ".";
   LOG(cyclus::LEV_INFO3, "SnkFac") << "}";
 }
 
-void Sink::RecordPosition() {
+void PmSink::RecordPosition() {
   std::string specification = this->spec();
   context()
       ->NewDatum("AgentPosition")
@@ -206,8 +206,8 @@ void Sink::RecordPosition() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-extern "C" cyclus::Agent* ConstructSink(cyclus::Context* ctx) {
-  return new Sink(ctx);
+extern "C" cyclus::Agent* ConstructPmSink(cyclus::Context* ctx) {
+  return new PmSink(ctx);
 }
 
-}  // namespace cycamore
+}  // namespace cyder

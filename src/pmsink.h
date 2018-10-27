@@ -1,5 +1,5 @@
-#ifndef CYCAMORE_SRC_SINK_H_
-#define CYCAMORE_SRC_SINK_H_
+#ifndef CYDER_SRC_SINK_H_
+#define CYDER_SRC_SINK_H_
 
 #include <algorithm>
 #include <string>
@@ -7,30 +7,30 @@
 #include <vector>
 
 #include "cyclus.h"
-#include "cycamore_version.h"
+#include "cyder_version.h"
 
-namespace cycamore {
+namespace cyder {
 
 class Context;
 
-/// This facility acts as a sink of materials and products with a fixed
+/// This facility acts as a pmsink of materials and products with a fixed
 /// throughput (per time step) capacity and a lifetime capacity defined by a
 /// total inventory size.  The inventory size and throughput capacity both
 /// default to infinite. If a recipe is provided, it will request material with
 /// that recipe. Requests are made for any number of specified commodities.
-class Sink 
+class PmSink 
   : public cyclus::Facility,
     public cyclus::toolkit::Position  {
  public:
-  Sink(cyclus::Context* ctx);
+  PmSink(cyclus::Context* ctx);
 
-  virtual ~Sink();
+  virtual ~PmSink();
 
-  virtual std::string version() { return CYCAMORE_VERSION; }
+  virtual std::string version() { return CYDER_VERSION; }
 
   #pragma cyclus note { \
     "doc": \
-    " A sink facility that accepts materials and products with a fixed\n"\
+    " A pmsink facility that accepts materials and products with a fixed\n"\
     " throughput (per time step) capacity and a lifetime capacity defined by\n"\
     " a total inventory size. The inventory size and throughput capacity\n"\
     " both default to infinite. If a recipe is provided, it will request\n"\
@@ -48,23 +48,23 @@ class Sink
 
   virtual void Tock();
 
-  /// @brief SinkFacilities request Materials of their given commodity. Note
-  /// that it is assumed the Sink operates on a single resource type!
+  /// @brief PmSinkFacilities request Materials of their given commodity. Note
+  /// that it is assumed the PmSink operates on a single resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
       GetMatlRequests();
 
-  /// @brief SinkFacilities request Products of their given
-  /// commodity. Note that it is assumed the Sink operates on a single
+  /// @brief PmSinkFacilities request Products of their given
+  /// commodity. Note that it is assumed the PmSink operates on a single
   /// resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
       GetGenRsrcRequests();
 
-  /// @brief SinkFacilities place accepted trade Materials in their Inventory
+  /// @brief PmSinkFacilities place accepted trade Materials in their Inventory
   virtual void AcceptMatlTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
       cyclus::Material::Ptr> >& responses);
 
-  /// @brief SinkFacilities place accepted trade Materials in their Inventory
+  /// @brief PmSinkFacilities place accepted trade Materials in their Inventory
   virtual void AcceptGenRsrcTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
       cyclus::Product::Ptr> >& responses);
@@ -109,7 +109,7 @@ class Sink
  private:
   /// all facilities must have at least one input commodity
   #pragma cyclus var {"tooltip": "input commodities", \
-                      "doc": "commodities that the sink facility accepts", \
+                      "doc": "commodities that the pmsink facility accepts", \
                       "uilabel": "List of Input Commodities", \
                       "uitype": ["oneormore", "incommodity"]}
   std::vector<std::string> in_commods;
@@ -133,20 +133,20 @@ class Sink
 
   /// max inventory size
   #pragma cyclus var {"default": 1e299, \
-                      "tooltip": "sink maximum inventory size", \
+                      "tooltip": "pmsink maximum inventory size", \
                       "uilabel": "Maximum Inventory", \
                       "uitype": "range", \
                       "range": [0.0, 1e299], \
-                      "doc": "total maximum inventory size of sink facility"}
+                      "doc": "total maximum inventory size of pmsink facility"}
   double max_inv_size;
 
   /// monthly acceptance capacity
   #pragma cyclus var {"default": 1e299, \
-                      "tooltip": "sink capacity", \
+                      "tooltip": "pmsink capacity", \
                       "uilabel": "Maximum Throughput", \
                       "uitype": "range", \
                       "range": [0.0, 1e299], \
-                      "doc": "capacity the sink facility can " \
+                      "doc": "capacity the pmsink facility can " \
                              "accept at each time step"}
   double capacity;
 
@@ -175,6 +175,6 @@ class Sink
   void RecordPosition();
 };
 
-}  // namespace cycamore
+}  // namespace cyder
 
-#endif  // CYCAMORE_SRC_SINK_H_
+#endif  // CYDER_SRC_SINK_H_
