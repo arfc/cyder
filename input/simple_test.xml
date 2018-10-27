@@ -18,8 +18,8 @@
       <name>Reactor</name>
     </spec>
     <spec>
-      <lib>cycamore</lib>
-      <name>Sink</name>
+      <lib>cyder</lib>
+      <name>PmSink</name>
     </spec>
     <spec>
       <lib>cyder</lib>
@@ -44,18 +44,6 @@
       </Source>
     </config>
     <name>source</name>
-  </facility>
-
-  <facility>
-    <config>
-      <Sink>
-        <in_commods>
-          <val>packaged_spent_uox</val>
-        </in_commods>
-        <max_inv_size>1000</max_inv_size>
-      </Sink>
-    </config>
-    <name>sink</name>
   </facility>
 
   <facility>
@@ -126,6 +114,18 @@
     <name>conditioning_fac</name>
   </facility>  
 
+  <facility>
+    <config>
+      <PmSink>
+        <in_commods>
+          <val>packaged_spent_uox</val>
+        </in_commods>
+        <max_inv_size>1000</max_inv_size>
+      </PmSink>
+    </config>
+    <name>pmsink</name>
+  </facility>
+
   <recipe>
     <basis>mass</basis>
     <name>fresh_uox</name>
@@ -152,19 +152,6 @@
     </nuclide>
   </recipe>
 
-  <recipe>
-    <basis>mass</basis>
-    <name>oackaged_spent_uox</name>
-    <nuclide>
-      <comp>50</comp>
-      <id>U235</id>
-    </nuclide>
-    <nuclide>
-      <comp>50</comp>
-      <id>Cs137</id>
-    </nuclide>
-  </recipe>
-
 
   <region>
     <name>region</name>
@@ -174,7 +161,7 @@
       <initialfacilitylist>
         <entry>
           <number>1</number>
-          <prototype>sink</prototype>
+          <prototype>pmsink</prototype>
         </entry>
         <entry>
           <number>1</number>
