@@ -204,7 +204,6 @@ void PmSink::AcceptPackagedMatlTrades(
   for (it = responses.begin(); it != responses.end(); ++it) {
     inventory.Push(it->second);
   }
-  std::cout << "packaged material trades" << std::endl;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
