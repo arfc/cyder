@@ -227,8 +227,6 @@ void Conditioning::ProcessMat_(double cap) {
       throw e;
     }
   }
-  cyclus::toolkit::RecordTimeSeries<double>("supply"+outcommod, this, 
-                                            stocks.count());
   std::cout << "processed" << std::endl;
 
 }
