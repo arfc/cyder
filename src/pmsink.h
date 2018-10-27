@@ -59,15 +59,26 @@ class PmSink
   virtual std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
       GetGenRsrcRequests();
 
+  /// @brief PmSinkFacilities request PackagedMaterials of their given
+  /// commodity. Note that it is assumed the PmSink operates on a single
+  /// resource type!
+  virtual std::set<cyclus::RequestPortfolio<cyclus::PackagedMaterial>::Ptr>
+      GetPackagedMatlRequests();
+
   /// @brief PmSinkFacilities place accepted trade Materials in their Inventory
   virtual void AcceptMatlTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
       cyclus::Material::Ptr> >& responses);
 
-  /// @brief PmSinkFacilities place accepted trade Materials in their Inventory
+  /// @brief PmSinkFacilities place accepted trade Products in their Inventory
   virtual void AcceptGenRsrcTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
       cyclus::Product::Ptr> >& responses);
+
+  /// @brief PmSinkFacilities place accepted trade PackagedMaterials in their Inventory
+  virtual void AcceptPackagedMatlTrades(
+      const std::vector< std::pair<cyclus::Trade<cyclus::PackagedMaterial>,
+      cyclus::PackagedMaterial::Ptr> >& responses);
 
   ///  add a commodity to the set of input commodities
   ///  @param name the commodity name

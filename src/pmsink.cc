@@ -136,6 +136,37 @@ PmSink::GetGenRsrcRequests() {
   return ports;
 }
 
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+std::set<cyclus::RequestPortfolio<cyclus::PackagedMaterial>::Ptr>
+PmSink::GetPackagedMatlRequests() {
+  using cyclus::CapacityConstraint;
+  using cyclus::PackagedMaterial;
+  using cyclus::RequestPortfolio;
+  using cyclus::Request;
+
+  std::set<RequestPortfolio<PackagedMaterial>::Ptr> ports;
+  RequestPortfolio<PackagedMaterial>::Ptr
+      port(new RequestPortfolio<PackagedMaterial>());
+  double amt = RequestAmt();
+
+  if (amt > cyclus::eps()) {
+    CapacityConstraint<Product> cc(amt);
+    port->AddConstraint(cc);
+
+    std::vector<std::string>::const_iterator it;
+    for (it = in_commods.begin(); it != in_commods.end(); ++it) {
+      cyclus::PackagedMaterial::package quality; 
+      PackagedMaterial::Ptr rsrc = PackagedMaterial::CreateUntracked(amt, quality);
+      port->AddRequest(rsrc, this, *it);
+    }
+
+    ports.insert(port);
+  }  // if amt > eps
+  return ports;
+}
+
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void PmSink::AcceptMatlTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
@@ -153,6 +184,17 @@ void PmSink::AcceptGenRsrcTrades(
                                  cyclus::Product::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::Product>,
                          cyclus::Product::Ptr> >::const_iterator it;
+  for (it = responses.begin(); it != responses.end(); ++it) {
+    inventory.Push(it->second);
+  }
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void PmSink::AcceptPackagedMatlTrades(
+    const std::vector< std::pair<cyclus::Trade<cyclus::PackagedMaterial>,
+                                 cyclus::PackagedMaterial::Ptr> >& responses) {
+  std::vector< std::pair<cyclus::Trade<cyclus::PackagedMaterial>,
+                         cyclus::PackagedMaterial::Ptr> >::const_iterator it;
   for (it = responses.begin(); it != responses.end(); ++it) {
     inventory.Push(it->second);
   }
