@@ -151,7 +151,7 @@ PmSink::GetPackagedMatlRequests() {
   double amt = RequestAmt();
 
   if (amt > cyclus::eps()) {
-    CapacityConstraint<Product> cc(amt);
+    CapacityConstraint<PackagedMaterial> cc(amt);
     port->AddConstraint(cc);
 
     std::vector<std::string>::const_iterator it;
