@@ -74,7 +74,7 @@ std::string PmSink::str() {
   ss << msg << inventory.capacity() << " kg.";
   return "" + ss.str();
 }
-
+/*
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
 PmSink::GetMatlRequests() {
@@ -140,7 +140,7 @@ PmSink::GetGenRsrcRequests() {
   return ports;
 }
 
-
+*/
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::PackagedMaterial>::Ptr>
 PmSink::GetPackagedMatlRequests() {
@@ -172,7 +172,7 @@ PmSink::GetPackagedMatlRequests() {
   return ports;
 }
 
-
+/*
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void PmSink::AcceptMatlTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
@@ -194,7 +194,7 @@ void PmSink::AcceptGenRsrcTrades(
     inventory.Push(it->second);
   }
 }
-
+*/
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void PmSink::AcceptPackagedMatlTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::PackagedMaterial>,

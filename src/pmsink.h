@@ -47,7 +47,7 @@ class PmSink
   virtual void Tick();
 
   virtual void Tock();
-
+/*
   /// @brief PmSinkFacilities request Materials of their given commodity. Note
   /// that it is assumed the PmSink operates on a single resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
@@ -59,12 +59,14 @@ class PmSink
   virtual std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
       GetGenRsrcRequests();
 
+      */
+
   /// @brief PmSinkFacilities request PackagedMaterials of their given
   /// commodity. Note that it is assumed the PmSink operates on a single
   /// resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::PackagedMaterial>::Ptr>
       GetPackagedMatlRequests();
-
+/*
   /// @brief PmSinkFacilities place accepted trade Materials in their Inventory
   virtual void AcceptMatlTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
@@ -73,7 +75,7 @@ class PmSink
   /// @brief PmSinkFacilities place accepted trade Products in their Inventory
   virtual void AcceptGenRsrcTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
-      cyclus::Product::Ptr> >& responses);
+      cyclus::Product::Ptr> >& responses); */
 
   /// @brief PmSinkFacilities place accepted trade PackagedMaterials in their Inventory
   virtual void AcceptPackagedMatlTrades(
