@@ -202,10 +202,10 @@ class Conditioning
   cyclus::toolkit::ResBuf<cyclus::Material> inventory;
 
   #pragma cyclus var {"tooltip":"Output material buffer"}
-  cyclus::toolkit::ResBuf<cyclus::Material> stocks;
+  cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> stocks;
 
   #pragma cyclus var {"tooltip":"Buffer for material held for required residence_time"}
-  cyclus::toolkit::ResBuf<cyclus::Material> ready;
+  cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> ready;
 
   //// list of input times for materials entering the processing buffer
   #pragma cyclus var{"default": [],\
@@ -216,13 +216,13 @@ class Conditioning
   cyclus::toolkit::ResBuf<cyclus::Material> processing;
 
     #pragma cyclus var {"tooltip":"Buffer for material that just got packaged and are still waiting for required residence time "}
-  cyclus::toolkit::ResBuf<cyclus::Material> packaged;
+  cyclus::toolkit::ResBuf<cyclus::PackagedMaterial> packaged;
 
   //// A policy for requesting material
   cyclus::toolkit::MatlBuyPolicy buy_policy;
 
   //// A policy for sending material
-  cyclus::toolkit::MatlSellPolicy sell_policy;
+  cyclus::toolkit::PackagedMatlSellPolicy sell_policy;
 
   #pragma cyclus var { \
     "default": 0.0, \
