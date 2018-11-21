@@ -74,7 +74,7 @@ std::string PmSink::str() {
   ss << msg << inventory.capacity() << " kg.";
   return "" + ss.str();
 }
-/*
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
 PmSink::GetMatlRequests() {
@@ -111,7 +111,7 @@ PmSink::GetMatlRequests() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
-PmSink::GetGenRsrcRequests() {
+PmSink::GetProductRequests() {
   using cyclus::CapacityConstraint;
   using cyclus::Product;
   using cyclus::RequestPortfolio;
@@ -140,7 +140,7 @@ PmSink::GetGenRsrcRequests() {
   return ports;
 }
 
-*/
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::PackagedMaterial>::Ptr>
 PmSink::GetPackagedMatlRequests() {
@@ -172,11 +172,12 @@ PmSink::GetPackagedMatlRequests() {
   return ports;
 }
 
-/*
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void PmSink::AcceptMatlTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
                                  cyclus::Material::Ptr> >& responses) {
+  std::cout << "matl trades" << std::endl;
   std::vector< std::pair<cyclus::Trade<cyclus::Material>,
                          cyclus::Material::Ptr> >::const_iterator it;
   for (it = responses.begin(); it != responses.end(); ++it) {
@@ -185,7 +186,7 @@ void PmSink::AcceptMatlTrades(
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void PmSink::AcceptGenRsrcTrades(
+void PmSink::AcceptProductTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
                                  cyclus::Product::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::Product>,
@@ -194,7 +195,7 @@ void PmSink::AcceptGenRsrcTrades(
     inventory.Push(it->second);
   }
 }
-*/
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void PmSink::AcceptPackagedMatlTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::PackagedMaterial>,
@@ -214,6 +215,7 @@ void PmSink::Tick() {
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is ticking {";
 
   std::cout << "pm sink tick" << std::endl;
+  std::cout << inventory.quantity() << std::endl;
 
   double requestAmt = RequestAmt();
   // inform the simulation about what the sink facility will be requesting
@@ -234,7 +236,7 @@ void PmSink::Tick() {
 void PmSink::Tock() {
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is tocking {";
 
-  std::cout << "pm sink tock" << std::endl;
+  //std::cout << "pm sink tock" << std::endl;
   
   // On the tock, the sink facility doesn't really do much.
   // Maybe someday it will record things.
