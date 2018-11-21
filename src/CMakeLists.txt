@@ -7,6 +7,8 @@ SET(CYCLUS_CUSTOM_HEADERS "cyder_version.h")
 
 USE_CYCLUS("cyder" "conditioning")
 
+USE_CYCLUS("cyder" "pmsink")
+
 INSTALL_CYCLUS_MODULE("cyder" "" "NONE")
 
 SET(TestSource ${cyder_TEST_CC} PARENT_SCOPE)
