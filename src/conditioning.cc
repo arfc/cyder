@@ -1,6 +1,3 @@
-// taken from cyclus/cycamore storage.cc
-// conditioning.cc
-// Implements the Conditioning class
 #include "conditioning.h"
 
 namespace conditioning {
@@ -138,7 +135,6 @@ void Conditioning::Tock() {
   }
 
   ProcessMat_(throughput);  // place ready into stocks
-  std::cout << "tocked" << std::endl;
   LOG(cyclus::LEV_INFO3, "ComCnv") << "}";
 }
 
@@ -148,7 +144,6 @@ void Conditioning::BeginProcessing_() {
     try {
       processing.Push(inventory.Pop());
       entry_times.push_back(context()->time());
-      std::cout << "began processing" << std::endl;
 
       LOG(cyclus::LEV_DEBUG2, "ComCnv")
           << "Conditioning " << prototype()
@@ -185,7 +180,6 @@ void Conditioning::PackageMatl_(int pack_size, package_ package_prop) {
     // add packagedmaterial into packaged resbuf 
     packaged.Push(pm);
   }
-  std::cout << "packaged" << std::endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -200,7 +194,6 @@ void Conditioning::ReadyMatl_(int time) {
   }
 
   ready.Push(packaged.PopN(to_ready));
-  std::cout << "readyed" << std::endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,7 +219,8 @@ void Conditioning::ProcessMat_(double cap) {
       throw e;
     }
   }
-  std::cout << "processed" << std::endl;
+  std::cout << "stock count" << std::endl;
+  std::cout << stocks.count() << std::endl;
 
 }
 
