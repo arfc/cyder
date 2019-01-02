@@ -215,7 +215,7 @@ void PmSink::Tick() {
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is ticking {";
 
   std::cout << "pm sink tick" << std::endl;
-  std::cout << inventory.count() << std::endl;
+  std::cout << inventory.quantity() << std::endl;
 
   double requestAmt = RequestAmt();
   // inform the simulation about what the sink facility will be requesting

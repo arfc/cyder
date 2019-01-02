@@ -1,6 +1,3 @@
-// taken from cyclus/cycamore storage.cc
-// conditioning.cc
-// Implements the Conditioning class
 #include "conditioning.h"
 
 namespace conditioning {
