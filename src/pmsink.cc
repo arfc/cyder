@@ -1,3 +1,4 @@
+// Implements the Sink class
 #include <algorithm>
 #include <sstream>
 
