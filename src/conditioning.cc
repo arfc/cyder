@@ -219,8 +219,6 @@ void Conditioning::ProcessMat_(double cap) {
       throw e;
     }
   }
-  std::cout << "stock count" << std::endl;
-  std::cout << stocks.count() << std::endl;
 
 }
 

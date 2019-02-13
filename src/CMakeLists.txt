@@ -9,6 +9,8 @@ USE_CYCLUS("cyder" "conditioning")
 
 USE_CYCLUS("cyder" "pmsink")
 
+USE_CYCLUS("cyder" "pmstorage")
+
 INSTALL_CYCLUS_MODULE("cyder" "" "NONE")
 
 SET(TestSource ${cyder_TEST_CC} PARENT_SCOPE)
