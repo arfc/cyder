@@ -16,8 +16,8 @@ class Context;
 /// This facility acts as a pmsink of materials and products with a fixed
 /// throughput (per time step) capacity and a lifetime capacity defined by a
 /// total inventory size.  The inventory size and throughput capacity both
-/// default to infinite. If a recipe is provided, it will request material with
-/// that recipe. Requests are made for any number of specified commodities.
+/// default to infinite. 
+/// Requests are made for any number of specified commodities.
 class PmSink 
   : public cyclus::Facility,
     public cyclus::toolkit::Position  {
@@ -33,8 +33,8 @@ class PmSink
     " A pmsink facility that accepts materials and products with a fixed\n"\
     " throughput (per time step) capacity and a lifetime capacity defined by\n"\
     " a total inventory size. The inventory size and throughput capacity\n"\
-    " both default to infinite. If a recipe is provided, it will request\n"\
-    " material with that recipe. Requests are made for any number of\n"\
+    " both default to infinite. \n"\
+    " Requests are made for any number of\n"\
     " specified commodities.\n" \
     }
 
@@ -58,8 +58,6 @@ class PmSink
   /// resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
       GetProductRequests();
-
-      
 
   /// @brief PmSinkFacilities request PackagedMaterials of their given
   /// commodity. Note that it is assumed the PmSink operates on a single
