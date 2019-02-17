@@ -81,7 +81,7 @@ class PmSink
       cyclus::PackagedMaterial::Ptr> >& responses);
 
   ///  add a commodity to the set of input commodities
-  ///  @param name the commodity name
+  ///  @param name the commodity name (string)
   inline void AddCommodity(std::string name) { in_commods.push_back(name); }
 
   ///  sets the size of the storage inventory for received material
