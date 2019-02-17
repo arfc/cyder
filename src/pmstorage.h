@@ -36,8 +36,8 @@ namespace pmstorage {
 /// in_recipe (optional) describes the incoming resource by recipe
 /// 
 /// @section optionalparams Optional Parameters
-/// max_inv_size is the maximum capacity of the inventory pmstorage
-/// throughput is the maximum processing capacity per timestep
+/// max_inv_size is the maximum capacity (units: kg) of the inventory pmstorage
+/// throughput is the maximum processing capacity (units:kg) per timestep
 ///
 /// @section detailed Detailed Behavior
 /// 
