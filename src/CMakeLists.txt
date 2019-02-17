@@ -6,6 +6,11 @@ CONFIGURE_FILE(cyder_version.h.in "${CMAKE_CURRENT_SOURCE_DIR}/cyder_version.h" 
 SET(CYCLUS_CUSTOM_HEADERS "cyder_version.h")
 
 USE_CYCLUS("cyder" "conditioning")
+
+USE_CYCLUS("cyder" "pmsink")
+
+USE_CYCLUS("cyder" "pmstorage")
+
 INSTALL_CYCLUS_MODULE("cyder" "" "NONE")
 
 SET(TestSource ${cyder_TEST_CC} PARENT_SCOPE)

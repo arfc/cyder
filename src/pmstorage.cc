@@ -1,42 +1,44 @@
-#include "conditioning.h"
+// pmstorage.cc
+// Implements the PmStorage class
+#include "pmstorage.h"
 
-namespace conditioning {
+namespace pmstorage {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Conditioning::Conditioning(cyclus::Context* ctx) 
+PmStorage::PmStorage(cyclus::Context* ctx) 
     : cyclus::Facility(ctx),
       latitude(0.0),
       longitude(0.0),
       coordinates(latitude, longitude) {
   cyclus::Warn<cyclus::EXPERIMENTAL_WARNING>(
-      "The Conditioning Facility is experimental.");};
+      "The PmStorage Facility is experimental.");};
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // pragmas
 
-#pragma cyclus def schema conditioning::Conditioning
+#pragma cyclus def schema pmstorage::PmStorage
 
-#pragma cyclus def annotations conditioning::Conditioning
+#pragma cyclus def annotations pmstorage::PmStorage
 
-#pragma cyclus def initinv conditioning::Conditioning
+#pragma cyclus def initinv pmstorage::PmStorage
 
-#pragma cyclus def snapshotinv conditioning::Conditioning
+#pragma cyclus def snapshotinv pmstorage::PmStorage
 
-#pragma cyclus def infiletodb conditioning::Conditioning
+#pragma cyclus def infiletodb pmstorage::PmStorage
 
-#pragma cyclus def snapshot conditioning::Conditioning
+#pragma cyclus def snapshot pmstorage::PmStorage
 
-#pragma cyclus def clone conditioning::Conditioning
+#pragma cyclus def clone pmstorage::PmStorage
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::InitFrom(Conditioning* m) {
-#pragma cyclus impl initfromcopy conditioning::Conditioning
+void PmStorage::InitFrom(PmStorage* m) {
+#pragma cyclus impl initfromcopy pmstorage::PmStorage
   cyclus::toolkit::CommodityProducer::Copy(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::InitFrom(cyclus::QueryableBackend* b) {
-#pragma cyclus impl initfromdb conditioning::Conditioning
+void PmStorage::InitFrom(cyclus::QueryableBackend* b) {
+#pragma cyclus impl initfromdb pmstorage::PmStorage
 
   using cyclus::toolkit::Commodity;
   Commodity commod = Commodity(out_commods.front());
@@ -45,7 +47,7 @@ void Conditioning::InitFrom(cyclus::QueryableBackend* b) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::EnterNotify() {
+void PmStorage::EnterNotify() {
   cyclus::Facility::EnterNotify();
   buy_policy.Init(this, &inventory, std::string("inventory"));
 
@@ -68,7 +70,7 @@ void Conditioning::EnterNotify() {
   }
 
   for (int i = 0; i != in_commods.size(); ++i) {
-    buy_policy.Set(in_commods[i], comp, in_commod_prefs[i]);
+    buy_policy.Set(in_commods[i],in_commod_prefs[i]);
   }
   buy_policy.Start();
 
@@ -85,7 +87,7 @@ void Conditioning::EnterNotify() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-std::string Conditioning::str() {
+std::string PmStorage::str() {
   std::stringstream ss;
   std::string ans, out_str;
   if (out_commods.size() == 1) {
@@ -111,7 +113,7 @@ std::string Conditioning::str() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::Tick() {
+void PmStorage::Tick() {
   // Set available capacity for Buy Policy
   inventory.capacity(current_capacity());
 
@@ -119,98 +121,93 @@ void Conditioning::Tick() {
 
   if (current_capacity() > cyclus::eps_rsrc()) {
     LOG(cyclus::LEV_INFO4, "ComCnv")
-        << " has capacity for " << current_capacity() << " kg of material.";
+        << " has capacity for " << current_capacity() << " kg of packagedmatl.";
   }
   LOG(cyclus::LEV_INFO3, "ComCnv") << "}";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::Tock() {
+void PmStorage::Tock() {
   LOG(cyclus::LEV_INFO3, "ComCnv") << prototype() << " is tocking {";
+
   BeginProcessing_();  // place unprocessed inventory into processing
-  PackageMatl_(package_size, package_properties);
 
   if (ready_time() >= 0 || residence_time == 0 && !inventory.empty()) {
     ReadyMatl_(ready_time());  // place processing into ready
   }
 
   ProcessMat_(throughput);  // place ready into stocks
+
   LOG(cyclus::LEV_INFO3, "ComCnv") << "}";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::BeginProcessing_() {
+void PmStorage::AddMat_(cyclus::PackagedMaterial::Ptr mat) {
+  LOG(cyclus::LEV_INFO5, "ComCnv") << prototype() << " is initially holding "
+                                   << inventory.quantity() << " total.";
+
+  try {
+    inventory.Push(mat);
+  } catch (cyclus::Error& e) {
+    e.msg(Agent::InformErrorMsg(e.msg()));
+    throw e;
+  }
+
+
+  LOG(cyclus::LEV_INFO5, "ComCnv")
+      << prototype() << " added " << mat->quantity()
+      << " of packagedmatl to its inventory, which is holding "
+      << inventory.quantity() << " total.";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void PmStorage::BeginProcessing_() {
+
   while (inventory.count() > 0) {
     try {
       processing.Push(inventory.Pop());
       entry_times.push_back(context()->time());
 
       LOG(cyclus::LEV_DEBUG2, "ComCnv")
-          << "Conditioning " << prototype()
+          << "PmStorage " << prototype()
           << " added resources to processing at t= " << context()->time();
     } catch (cyclus::Error& e) {
       e.msg(Agent::InformErrorMsg(e.msg()));
       throw e;
     }
+
+
   }
-}
 
-typedef std::map<std::string, std::map<std::string, double>> package_;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::PackageMatl_(int pack_size, package_ package_prop) { 
-  if (processing.count() > pack_size) {
-    cyclus::PackagedMaterial::matstream temp_stream;
-    double assem_quantity = 0; 
-    for (int a = 1; a <= pack_size; ++a) {
-      // pop a bunch of assemblies from processing to our temp stream
-      // add assem quantities
-      assem_quantity += (processing.Peek()->quantity()); 
-      temp_stream.push_back(processing.Pop());
-      if (a == pack_size) {
-        pm_entry_times.push_back(context()->time());
-      }
-    }
-    // place that temp stream into our package_prop 
-    cyclus::PackagedMaterial::package temp_package (temp_stream,package_prop);
-
-    // create a new packagedmaterial
-    cyclus::PackagedMaterial::Ptr pm; 
-    pm = cyclus::PackagedMaterial::Create(this, assem_quantity,temp_package);
-    // add packagedmaterial into packaged resbuf 
-    packaged.Push(pm);
-  }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::ReadyMatl_(int time) {
+void PmStorage::ProcessMat_(double cap) {
+  using cyclus::PackagedMaterial;
+  using cyclus::ResCast;
   using cyclus::toolkit::ResBuf;
-
-  int to_ready = 0;
-
-  while (!pm_entry_times.empty() && pm_entry_times.front() <= time) {
-    pm_entry_times.pop_front();
-    ++to_ready;
-  }
-
-  ready.Push(packaged.PopN(to_ready));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Conditioning::ProcessMat_(double cap) {
-// move ready to stocks based on throughput 
+  using cyclus::toolkit::Manifest;
 
   if (!ready.empty()) {
     try {
-      double count_num = ready.count(); 
-      double max_pop = std::min(cap, count_num);
-      int cap_pop = 0; 
-      while (cap_pop < max_pop){
-        stocks.Push(ready.Pop());
-        cap_pop = cap_pop+1;
+      double max_pop = std::min(cap, ready.quantity());
+
+      if (discrete_handling) {
+        if (max_pop == ready.quantity()) {
+          stocks.Push(ready.PopN(ready.count()));
+        } else {
+          double cap_pop = ready.Peek()->quantity();
+          while (cap_pop <= max_pop && !ready.empty()) {
+            stocks.Push(ready.Pop());
+            cap_pop += ready.empty() ? 0 : ready.Peek()->quantity();
+          }
+        }
+      } else {
+        stocks.Push(ready.Pop(max_pop, cyclus::eps_rsrc()));
       }
 
-      LOG(cyclus::LEV_INFO1, "ComCnv") << "Conditioning " << prototype()
+
+      LOG(cyclus::LEV_INFO1, "ComCnv") << "PmStorage " << prototype()
                                        << " moved resources"
                                        << " from ready to stocks"
                                        << " at t= " << context()->time();
@@ -219,11 +216,24 @@ void Conditioning::ProcessMat_(double cap) {
       throw e;
     }
   }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void PmStorage::ReadyMatl_(int time) {
+  using cyclus::toolkit::ResBuf;
+
+  int to_ready = 0;
+
+  while (!entry_times.empty() && entry_times.front() <= time) {
+    entry_times.pop_front();
+    ++to_ready;
+  }
+
+  ready.Push(processing.PopN(to_ready));
 
 }
 
-
-void Conditioning::RecordPosition() {
+void PmStorage::RecordPosition() {
   std::string specification = this->spec();
   context()
       ->NewDatum("AgentPosition")
@@ -237,8 +247,8 @@ void Conditioning::RecordPosition() {
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-extern "C" cyclus::Agent* ConstructConditioning(cyclus::Context* ctx) {
-  return new Conditioning(ctx);
+extern "C" cyclus::Agent* ConstructPmStorage(cyclus::Context* ctx) {
+  return new PmStorage(ctx);
 }
 
-}  // namespace conditioning
+} // namespace pmstorage
