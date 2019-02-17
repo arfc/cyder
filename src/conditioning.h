@@ -168,7 +168,7 @@ class Conditioning
 
   #pragma cyclus var {"default": 1e299,\
                      "tooltip":"throughput per timestep",\
-                     "doc":"the max number of waste canisters that can be moved through the facility per timestep",\
+                     "doc":"the max throughput of waste canisters per timestep",\
                      "uilabel":"Throughput",\
                      "uitype": "range", \
                      "range": [0.0, 1e299], \
