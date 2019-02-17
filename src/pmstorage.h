@@ -109,7 +109,7 @@ class PmStorage
   void BeginProcessing_();
 
   /// @brief Move as many ready resources as allowable into stocks
-  /// @param cap current throughput capacity 
+  /// @param cap current throughput capacity (type: double, units:kg)
   void ProcessMat_(double cap);
 
   /// @brief move ready resources from processing to ready at a certain time
@@ -118,11 +118,11 @@ class PmStorage
 
     /* --- PmStorage Members --- */
 
-  /// @brief current maximum amount that can be added to processing
+  /// @brief current maximum amount (units:kg) that can be added to processing
   inline double current_capacity() const { 
     return (max_inv_size - processing.quantity() - stocks.quantity()); }
 
-  /// @brief returns the time key for ready materials
+  /// @brief returns the time for whether the material has reached its residence time
   int ready_time(){ return context()->time() - residence_time; }
 
   /* --- Module Members --- */
