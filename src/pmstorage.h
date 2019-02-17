@@ -113,7 +113,7 @@ class PmStorage
   void ProcessMat_(double cap);
 
   /// @brief move ready resources from processing to ready at a certain time
-  /// @param time the time of interest
+  /// @param time the timestep of interest
   void ReadyMatl_(int time);
 
     /* --- PmStorage Members --- */
