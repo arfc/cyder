@@ -128,7 +128,7 @@ void Conditioning::Tick() {
 void Conditioning::Tock() {
   LOG(cyclus::LEV_INFO3, "ComCnv") << prototype() << " is tocking {";
   BeginProcessing_();  // place unprocessed inventory into processing
-  PackageMatl_(package_size,package_properties);
+  PackageMatl_(package_size, package_properties);
 
   if (ready_time() >= 0 || residence_time == 0 && !inventory.empty()) {
     ReadyMatl_(ready_time());  // place processing into ready
