@@ -107,8 +107,13 @@ class Conditioning
   void BeginProcessing_();
 
 /// @brief move ready resources from processing to packaged after repackaging
+<<<<<<< HEAD
   /// @param size_package (number of fuel bundles accepted in package), package_properties 
   void PackageMatl_(int size_package,std::map<std::string, std::map<std::string, double>> package_properties);
+=======
+  /// @param *** ADD HERE ***
+  void PackageMatl_(int size_package, std::map<std::string, std::map<std::string, double>> package_properties);
+>>>>>>> 64994879d5f1cfd95b8f922cb36ee9fb47c8389a
 
   /// @brief move ready resources from packaged to ready at a certain time
   /// @param time the time of interest
