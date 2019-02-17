@@ -85,7 +85,7 @@ class PmSink
   inline void AddCommodity(std::string name) { in_commods.push_back(name); }
 
   ///  sets the size of the storage inventory for received material
-  ///  @param size the storage size
+  ///  @param size the storage size (type: double, size: kg)
   inline void SetMaxInventorySize(double size) {
     max_inv_size = size;
     inventory.capacity(size);
