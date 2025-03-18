@@ -18,12 +18,12 @@
       <name>Reactor</name>
     </spec>
     <spec>
-      <lib>cyder</lib>
-      <name>PmSink</name>
+      <lib>cycamore</lib>
+      <name>Sink</name>
     </spec>
     <spec>
-      <lib>cyder</lib>
-      <name>Conditioning</name>
+      <lib>cycamore</lib>
+      <name>Storage</name>
     </spec>
   </archetypes>
 
@@ -73,57 +73,32 @@
   </facility>
   
   <facility>
-    <config>
-      <Conditioning>
-        <in_commods>
-          <val>spent_uox</val>
-        </in_commods>
-        <residence_time>1</residence_time>
-        <throughput>10</throughput>
-        <max_inv_size>20</max_inv_size>
-        <package_size>5</package_size>
-        <out_commods>
-          <val>packaged_spent_uox</val>
-        </out_commods>
-        <packageproperties>
-          <item>
-          <layer>basic</layer>
-          <properties>
-            <item>
-              <property>radius</property><value>10.1</value>
-            </item>
-            <item>
-              <property>tcond</property><value>20.1</value>
-            </item>
-          </properties>
-          </item>
-          <item>
-          <layer>layer1</layer>
-          <properties>
-            <item>
-              <property>radius</property><value>100.1</value>
-            </item>
-            <item>
-              <property>tcond</property><value>200.1</value>
-            </item>
-          </properties>
-          </item>
-        </packageproperties>
-      </Conditioning>
-    </config>
-    <name>conditioning_fac</name>
-  </facility>  
+      <name>storage</name>
+      <config>
+          <Storage>
+              <in_commods>
+                  <val>spent_uox</val>
+              </in_commods>
+              <out_commods>
+                  <val>packaged_spent_uox</val>
+              </out_commods>
+              <residence_time>2</residence_time>
+              <throughput>1e299</throughput>
+              <max_inv_size>1e299</max_inv_size>
+          </Storage>
+      </config>
+</facility>
 
   <facility>
     <config>
-      <PmSink>
+      <Sink>
         <in_commods>
           <val>packaged_spent_uox</val>
         </in_commods>
         <max_inv_size>1000</max_inv_size>
-      </PmSink>
+      </Sink>
     </config>
-    <name>pmsink</name>
+    <name>sink</name>
   </facility>
 
   <recipe>
@@ -161,11 +136,11 @@
       <initialfacilitylist>
         <entry>
           <number>1</number>
-          <prototype>pmsink</prototype>
+          <prototype>sink</prototype>
         </entry>
         <entry>
           <number>1</number>
-          <prototype>conditioning_fac</prototype>
+          <prototype>storage</prototype>
         </entry>
         <entry>
           <number>1</number>

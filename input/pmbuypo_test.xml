@@ -19,6 +19,10 @@
     </spec>
     <spec>
       <lib>cyder</lib>
+      <name>PmStorage</name>
+    </spec>
+    <spec>
+      <lib>cyder</lib>
       <name>PmSink</name>
     </spec>
     <spec>
@@ -29,7 +33,7 @@
 
 
   <control>
-    <duration>10</duration>
+    <duration>20</duration>
     <startmonth>1</startmonth>
     <startyear>2000</startyear>
   </control>
@@ -115,10 +119,27 @@
   </facility>  
 
   <facility>
+      <name>pmstorage</name>
+      <config>
+          <PmStorage>
+              <in_commods>
+                  <val>packaged_spent_uox</val>
+              </in_commods>
+              <out_commods>
+                  <val>stored_packaged_spent_uox</val>
+              </out_commods>
+              <residence_time>1</residence_time>
+              <throughput>1E299</throughput>
+              <max_inv_size>1E299</max_inv_size>
+          </PmStorage>
+      </config>
+</facility>
+
+  <facility>
     <config>
       <PmSink>
         <in_commods>
-          <val>packaged_spent_uox</val>
+          <val>stored_packaged_spent_uox</val>
         </in_commods>
         <max_inv_size>1000</max_inv_size>
       </PmSink>
@@ -162,6 +183,10 @@
         <entry>
           <number>1</number>
           <prototype>pmsink</prototype>
+        </entry>
+        <entry>
+          <number>1</number>
+          <prototype>pmstorage</prototype>
         </entry>
         <entry>
           <number>1</number>
